@@ -1,0 +1,17 @@
+success
+<br>
+My user state is ={{ request.user }}
+<br>
+{% if request.user.is_authenticaated %}
+    {{ request.user.username }},你好
+{% else %}
+    请登录
+{% endif %}
+<br>
+当前网址:{{ request.path }}
+<br>
+获取当前get的参数:{{ request.GET.urlencode }}
+<br>
+合并一起使用:<a href="{{ request.path }}?{{ request.GET.urlencode }}%Delete=1">当前的网址加上参数 delete</a>
+<br>
+blog名称:{{ blog_name }},blog内容:{{ tagline }}

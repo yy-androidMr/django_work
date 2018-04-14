@@ -1,0 +1,1 @@
+shift+alt+z  trycache 或者if,do while

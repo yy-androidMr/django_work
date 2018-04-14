@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.3, maximum-scale=1.3, minimum-scale=1.3, user-scalable=no">
+</head>
+<body>
+<style type="text/css">
+    #nav {
+        list-style-type: none; /*去掉无序列表前面的点*/
+        margin: 50px auto 0px; /*上边界50px,左右居中，下边界为0*/
+        width: 960px; /*整个导航的宽度*/
+        height: 38px;
+        color: #333;
+        font-size: 14px;
+        padding: 0px; /*填充清0*/
+        overflow: hidden; /*超出尺寸的部分不显示*/
+    }
+
+    #nav li {
+        width: 105px;
+        height: 36px;
+        float: left; /*所有的li从左到右排列*/
+        text-align: center; /*文字居中对齐*/
+        line-height: 38px; /*设置行高，目的是让文字垂直居中*/
+        border-top: #C9CBCE solid 1px;
+        border-left: #C9CBCE solid 1px;
+        border-bottom: #C9CBCE solid 1px;
+        cursor: pointer; /*光标移动到li上变成手形*/
+    }
+
+    #nav li:last-child { /*#nav下的最后一个li*/
+        border-right: #C9CBCE solid 1px;
+    }
+
+    #nav .liclick {
+        border-top: #54B82A solid 2px;
+        border-bottom: none;
+    }
+
+    #nav span {
+        width: 100%;
+        height: 38px;
+        display: block; /*只有块显示标记才能设置宽度和高度*/
+        position: relative; /*相对定位，目的为了span可以移动*/
+        z-index: -1; /*设置span上下层的顺序，让它在文字的下面*/
+    }
+</style>
+<script src="jq.js"></script>
+<ul id="nav">
+    <li class="liclick">我的主页</li>
+    <li>新闻头条</li>
+    <li>电 视 剧</li>
+    <li>最新电影</li>
+    <li>小 游 戏</li>
+    <li>小说大全</li>
+    <li>旅游度假</li>
+    <li>今日团购</li>
+    <li>品牌特卖</li>
+</ul>
+<script type="text/javascript">
+    $(document).ready(function (e) {
+        //点击li
+        $('#nav li').click(function (e) {
+            $('.liclick').removeClass('liclick');
+            $(this).addClass('liclick');
+        });
+        //每个li下面添加一个底色
+        var color = ['#B9D329', '#C0EBF7', '#B9D329', '#69BCF3', '#79D9F3', '#FA5F94', '#ACD180', '#FAB4CC', '#FFAE5B'];
+        $('#nav li').append('<span>');
+        $('#nav span').each(function (index, element) {
+            $(this).css('background-color', color[index]);
+        });
+        //移动到li上的时候颜色色块升起
+        $('#nav li').hover(function () {
+            $(this).children('span').animate({'top': -38}, 200);
+            //获得当前li的索引编号
+            var index = $(this).index();
+            $('audio').get(index).play();   //播放第index个音乐
+        }, function () {
+            $(this).children('span').animate({'top': 0}, 200);
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>杨煜的家庭助理</title>
+    <script src="https://cdn.bootcss.com/react/15.4.2/react.min.js"></script>
+    <script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js"></script>
+    <script src="https://cdn.bootcss.com/babel-standalone/6.22.1/babel.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+
+    <script type="text/babel" src="/static/js/JSX_Control.js"></script>
+
+</head>
+<body>
+
+
+<div id="id" draggable="true"
+     style="width:100px;height:100px;background-color:red;position:absolute;"></div>
+{#<a id="text">qweqwe</a>#}
+{#<div id="div_bottomMenu" class="menu"></div>#}
+
+
+<script type="text/javascript">
+    var _x_start, _y_start, _x_move, _y_move, _x_end, _y_end, left_start, top_start;
+
+
+    var ids = $("#id");
+    document.getElementById("id").addEventListener("touchstart", function (e) {
+
+        _x_start = e.touches[0].pageX;
+        _y_start = e.touches[0].pageY;
+        // console.log("start",_x_start)
+        left_start = $("#id").css("left");
+        top_start = $("#id").css("top");
+
+    })
+    document.getElementById("id").addEventListener("touchmove", function (e) {
+        _x_move = e.touches[0].pageX;
+        _y_move = e.touches[0].pageY;
+        // console.log("move",_x_move)
+        var left = parseFloat(_x_move) - parseFloat(_x_start) + parseFloat(left_start) + "px";
+        document.getElementById("id").style.left = left;
+
+        var top = parseFloat(_y_move) - parseFloat(_y_start) + parseFloat(top_start) + "px";
+        document.getElementById("id").style.top = top;
+        console.log(parseFloat(_y_move) - parseFloat(_y_start) + parseFloat(top_start));
+    })
+    document.getElementById("id").addEventListener("touchend", function (e) {
+        var _x_end = e.changedTouches[0].pageX;
+        var _y_end = e.changedTouches[0].pageY;
+        // console.log("end",_x_end)
+    })
+    //阻止浏览器下拉事件
+    $('body').on('touchmove', function (event) {
+        event.preventDefault();
+    });
+    // or
+    // document.addEventListener('touchmove', function(e){e.preventDefault()}, false);
+
+</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+{{ intro }}
+
+<br><br>------------print list<br>
+{% for i in TutorialList %}
+    <br>{{ i }}
+{% endfor %}
+
+<br><br>---------------------- print map<br>
+mapitem1:{{ info_dict.site }}
+<br>
+mapitem2:{{ info_dict.content }}
+<br>
+循环打印map:
+{% for key,value in info_dict.items %}
+    <br>{{ key }},{{ value }}
+{% endfor %}
+
+<br><br>---------------------- print rang list<br>
+{% for item in rang_list %}
+    {{ item }}{% if not forloop.last %},{% endif %}
+{% endfor %}
+
+<br><br>---------------------- print urls abspath<br>
+{% url 'new_add2' 6 %}
+
+<br><br>---------------------- define html variable<br>
+{% url 'new_add2' 6 as the_add_url %}
+<a href="{{ the_add_url }}">链接到{{ the_add_url }}</a>
+
+<br><br>----------------------==, !=, >=, <=, >, <  logic test<br>
+当前数值:
+{% if logic_value >= 90 %}
+    数值很大
+{% elif logic_value >= 60 %}
+    数值一般大
+{% else %}
+    数值小啊.不及格
+{% endif %}
+:{{ logic_value }}
+<br><br>---------------------- and, or, not, in, not in 也可以在模板中使用<br>
+{% if logic_value > 50 and logic_value < 100 %}
+    逻辑数据在50 到100 之间
+{% elif logic_value < 30 %}
+    逻辑数据小于30
+{% endif %}
+<br>
+{% if 'Django' in TutorialList %}
+    django 语言在学习队列里.!!
+{% else %}
+    django 不在队列
+{% endif %}

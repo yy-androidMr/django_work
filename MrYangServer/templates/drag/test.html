@@ -1,0 +1,60 @@
+<!DOCTYPE html>  
+<html>  
+<head lang="en">  
+    <meta charset="UTF-8">  
+    <title></title>  
+    <style>  
+        body{  
+            margin:0;  
+            position: relative;  
+        }  
+        img{  
+            position:absolute;  
+        }  
+    </style>  
+</head>  
+<body>  
+<h3>随着鼠标拖动而移动的小飞机</h3>  
+<div >aaaa</div>
+<img id="p3" alt="" src="1.jpg" />  
+<script>  
+   document.ondragover = function(e){  
+      e.preventDefault(); //使得drop事件可以触发  
+    }  
+    document.ondrop = function(e){  
+      e.preventDefault(); //阻止在新窗口中打开图片，否则仍然会执行下载操作！！！  
+    }  
+  
+    //监听div#container的drop事件，设法读取到释放的图片数据，显示出来  
+    p3.ondragover = function(e){  
+      e.preventDefault();  
+    }  
+    p3.ondragstart=function(e){  
+        console.log('事件源p3开始拖动');  
+        //记录刚一拖动时，鼠标在飞机上的偏移量  
+        offsetX= e.offsetX;  
+        offsetY= e.offsetY;  
+    }  
+    p3.ondrag=function(e){  
+        console.log('事件源p3拖动中');  
+        var x= e.pageX;  
+        var y= e.pageY;  
+        console.log(x+'-'+y);  
+        //drag事件最后一刻，无法读取鼠标的坐标，pageX和pageY都变为0  
+        if(x==0 && y==0){  
+            return; //不处理拖动最后一刻X和Y都为0的情形  
+        }  
+        x-=offsetX;  
+        y-=offsetY;  
+  
+        p3.style.left=x+'px';  
+        p3.style.top=y+'px';  
+    }  
+
+    p3.ondragend=function(){  
+
+        console.log('源对象p3拖动结束');  
+    }  
+</script>  
+</body>  
+</html>  

@@ -1,0 +1,365 @@
+<!doctype html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html lang="en"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <META HTTP-EQUIV="pragma" CONTENT="no-cache">
+
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+
+    <META HTTP-EQUIV="expires" CONTENT="0">
+
+    <!--
+    ••••••••••••••••••••••••
+
+    Powered by Type & Grids™
+    www.typeandgrids.com
+
+    ••••••••••••••••••••••••
+    -->
+
+    <title>杨煜的网站</title>
+    {#    <meta name="description" content="The portfolio of designer Ivan Designostrom">#}
+    {#    <meta name="author" content="Ivan Designostrom">#}
+    {#    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">#}
+
+    <!-- CSS
+    ================================================================================================= -->
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/themes/type_04.css">
+    <link rel="stylesheet" href="/static/css/themes/color_13.css">
+
+    <!--[if lt IE 9]>
+	<script src="/static/http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+    <!-- Favicons
+    ================================================================================================= -->
+    <link rel="shortcut icon" href="/static/images/favicons/favicon.ico">
+    <link rel="apple-touch-icon" href="/static/images/favicons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/static/images/favicons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/static/images/favicons/apple-touch-icon-114x114.png">
+
+    <!-- JS
+    ================================================================================================= -->
+    <script src="/static/js/libs/modernizr.min.js"></script>
+    <script src="/static/js/libs/jquery-1.8.3.min.js"></script>
+    <script src="/static/js/libs/jquery.easing.1.3.min.js"></script>
+    <script src="/static/js/libs/jquery.fitvids.js"></script>
+    <script src="/static/js/js_file_map.js"></script>
+    <script src="/static/js/script.js"></script>
+    <script>
+        loadJS(['yy_script']);
+    </script>
+
+    <script>
+        {#        pageIndex = 0;#}
+        {#        movieId = 0;#}
+        {#        {% for media in movies %}#}
+        {#            js_movies[{{ forloop.counter0 }}] = {#}
+        {#                name: '{{ media.name }}',#}
+        {#                nginx_path: '{{ media.nginx_path }}',#}
+        {#                depth: '{{   media.depth  }}',#}
+        {#                dir: '{{   media.dir  }}',#}
+        {#                id: movieId,#}
+        {#            }#}
+        {#            movieId++;#}
+        {#                <div class="project">#}
+        {#                    <div class="projectThumbnail">#}
+        {#                        <a href="http://192.168.1.226/{{ media.nginxPath }}" target="_blank">#}
+        {#                            <h4>{{ media.name }}</h4>#}
+        {#                        </a>#}
+        {#                    </div>#}
+        {#                </div>#}
+        {#                <!-- Project ends =================================================================== -->#}
+        {##}
+        {#                <!-- Project begins ================================================================= -->#}
+        {#        {% endfor %}#}
+
+        {#        for (var i = 0; i < 10; i++) {#}
+        var dirs = new Array();
+        {% for dir in movie_dir %}
+            dirs[{{ forloop.counter0 }}] = {
+                id: {{  dir.id }},
+                parent: null,
+                name: '{{  dir.name }}',
+                children: [],
+                isDir: convertBoolean('{{  dir.isdir }}'),
+                relaPath: '{{  dir.rel_path }}',
+                {% if  dir.parent_dir %}
+                    parent_id:{{ dir.parent_dir.id }},
+                {% else %}
+                    parent_id: -1,
+                {% endif %}
+            }
+        {% endfor %}
+
+        //组织父子关系
+        for (var i = 0; i < dirs.length; i++) {
+            var find_parent_item = dirs[i];
+            var parent_id = find_parent_item.parent_id;
+            if (parent_id == -1) {
+                js_dir = find_parent_item;
+                continue;
+            }
+            for (var j = 0; j < dirs.length; j++) {
+                var find_list_item = dirs[j];
+                if (find_parent_item != find_list_item) {
+                    if (find_list_item.id == find_parent_item.parent_id) {
+                        //找到父节点.
+                        find_list_item.children[find_list_item.children.length] = find_parent_item;
+                        find_parent_item.parent = find_list_item;
+                    }
+                }
+            }
+        }
+
+
+        {#        js_dir = {#}
+        {#            parent: null,#}
+        {#            name: 'movie',#}
+        {#            children: [],#}
+        {#            isDir: true,#}
+        {#            relaPath: '/'#}
+        {#        }#}
+        {#        js_dir_child1 = {#}
+        {#            parent: js_dir,#}
+        {#            children: [],#}
+        {#            name: 'depth_1',#}
+        {#            isDir: true,#}
+        {#            relaPath: '/depth_1'#}
+        {#        }#}
+        {##}
+        {#        for (var i = 0; i < 1; i++) {#}
+        {##}
+        {#            js_dir_child2 = {#}
+        {#                parent: js_dir_child1,#}
+        {#                children: [],#}
+        {#                name: '星球大战外传：侠盗一号.BD720P.特效中英双字.mkv',#}
+        {#                isDir: false,#}
+        {#                relaPath: '/depth_1/a/' + i#}
+        {#            }#}
+        {#            js_dir_child1.children[i] = js_dir_child2;#}
+        {##}
+        {#        }#}
+        {#        js_dir.children[0] = js_dir_child1;#}
+
+        {#        }#}
+
+
+        {#        window.onload = showpage();#}
+    </script>
+</head>
+<body>
+<div hidden id="movieItemClone">
+    <div class="project">
+        <div class="projectThumbnail">
+            <a target="_blank">
+                <h4 id="name">111</h4>
+            </a>
+        </div>
+    </div>
+</div>
+<!-- Write preloader to page - this allows the site to load for users with JS disabled -->
+<script type="text/javascript">
+    document.write("<div id='sitePreloader'><div id='preloaderImage'><img src='/static/images/site_preloader.gif' alt='Preloader' /></div></div>");
+</script>
+
+<div class="container">
+
+    <!-- Header begins ========================================================================== -->
+    <header class="sixteen columns">
+        <div id="logo">
+            <h1>杨煜设计</h1>
+            <h2>提供家庭数据浏览</h2>
+            {#            <img src="/static/images/logo.png" width="275" height="35" alt="Logo"/>#}
+        </div>
+        <nav>
+            <ul>
+                <li>
+                    <button id="videoPage">视频</button>
+                </li>
+                <li>
+                    <button id="photoPage">照片</button>
+                </li>
+                <li>
+                    <button id="aboutPage">帮助</button>
+                </li>
+                <!--<li><a href="/static/http://wordpress.org" target="_blank">Blog</a></li>-->
+            </ul>
+        </nav>
+        <hr/>
+    </header>
+    <!-- Header ends ============================================================================ -->
+    <div class="copyrights">Collect from <a href="http://www.cssmoban.com/">网页模板</a></div>
+    <!-- video page begins ======================================================================= -->
+    <div id="video">
+
+        <div id="overview" class="sixteen columns">
+            <h4 hidden id="depth">0</h4>
+            <a id="toBack" style="cursor:pointer">
+                <h4 id="backDir"></h4>
+            </a>
+            <hr/>
+        </div>
+        <div class="eight columns" id="col1">
+            <!-- Project begins ================================================================= -->
+            {#            {% for media in movies %}#}
+            {#                <div class="project">#}
+            {#                    <div class="projectThumbnail">#}
+            {#                        <a href="http://192.168.1.226/{{ media.nginxPath }}" target="_blank">#}
+            {#                            <h4>{{ media.name }}</h4>#}
+            {#                        </a>#}
+            {#                    </div>#}
+            {#                </div>#}
+            {#                <!-- Project ends =================================================================== -->#}
+            {##}
+            {#                <!-- Project begins ================================================================= -->#}
+            {#            {% endfor %}#}
+        </div><!-- col1 -->
+
+        <!-- Even numbered projects are dynamically moved into this second column via JS -->
+        <div class="eight columns" id="col2">
+        </div>
+
+    </div>
+    <!-- video page ends ========================================================================= -->
+    <!-- Photo page begins ====================================================================== -->
+    <div id="photo">
+
+    </div>
+
+    <!-- Photo page ends ========================================================================= -->
+    <!-- About page begins ====================================================================== -->
+    <div id="about">
+
+        <!-- Column 1 begins ==================================================================== -->
+        <div class="eight columns">
+
+            <h3>About page header</h3>
+            <p>
+                Type &amp; Grids is a HTML5 template that focuses on typography and grids. It's responsive which means
+                it looks great on all devices from desktops to laptops to tablets and mobile phones. It's
+                super-customizable and comes with lots of nicely designed type and color themes. Download the <a
+                    href="/static/#typeandgrids.com/downloads/type_and_grids_free.zip">free zip file</a> to get started!
+            </p>
+
+            <h4>Subheader lorem ipsum</h4>
+            <p>
+                10% of every sale is donated to the <strong><a href="/static/#audubon.org/" target="_blank">National
+                Audubon Society</a></strong>. Audubon's mission: To conserve and restore natural ecosystems, focusing on
+                birds, other wildlife, and their habitats for the benefit of humanity and the earth's biological
+                diversity.
+            </p>
+
+            <h4>Subheader lorem ipsum</h4>
+            <p>
+                Type &amp; Grids comes with 19 different type theme CSS files and 28 different color theme CSS files.
+                You can easily mix and match the type and color themes to create a unique design for your site. No CSS
+                knowledge is needed and all of the fonts shown in the <a href="/static/http://demo.typeandgrids.com"
+                                                                         target="_blank">demo</a> are included. 58
+                different background textures come with the download as well.
+            </p>
+
+            <ul class="disc">
+                <li>Simple to set up and update &ndash; all of the content is inside a single "index.html" page</li>
+                <li>Contains 19 type themes and 28 color themes which gives you over 500 unique design combinations
+                    &ndash; 58 background textures are included as well
+                </li>
+                <li>Each type theme is meticulously handcrafted to ensure attention is paid to the small typographic
+                    details
+                </li>
+                <li>Fully responsive design &ndash; looks great on all devices from desktops to laptops to tablets and
+                    mobile phones
+                </li>
+                <li>Swipe-enabled with hardware accelerated transitions &ndash; videos super-smoothly on touch devices
+                    like the iPhone and iPad
+                </li>
+                <li>Coded using the latest HTML5/CSS3 standards and all code is <a
+                        href="http://validator.w3.org/check?uri=http%3A%2F%2Fdemo.typeandgrids.com%2F" target="_blank">W3C
+                    valid</a> and cross-browser compatible
+                </li>
+                <li>Video support &ndash; easily embed your videos from Vimeo or YouTube</li>
+                <li>Clean and semantic SEO-friendly code</li>
+                <li>Design featured on the <a href="/static/#thefwa.com/shortlist/jeremiah-shoaf" target="_blank">FWA
+                    Public Shortlist</a>, <a href="http://creattica.com/css/jeremiah-shoaf/90288"
+                                             target="_blank">Creattica</a>
+                    and numerous other design sites
+                </li>
+                <li><a href="/static/#typeandgrids.com/support/" target="_blank">Support and documentation</a> is
+                    available but everything is so simple to set up you probably won't need it
+                </li>
+            </ul>
+
+            <h4>Subheader lorem ipsum</h4>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac ante arcu, quis auctor sapien. Morbi
+                magna leo, dapibus a pulvinar et, pharetra scelerisque felis. Mauris massa magna, gravida vitae
+                convallis sagittis, sagittis ac ipsum. Integer arcu justo, vehicula vel accumsan ac, venenatis in massa.
+                Curabitur in dui in urna interdum ullamcorper. Pellentesque ut imperdiet libero.
+            </p>
+
+            <blockquote>
+                &ldquo;Lorem ipsum dolor sit amet, <a href="/static/#google.com" target="_blank">consectetur
+                adipiscing</a> elit. Donec ac ante arcu, quis auctor sapien. Morbi magna leo, dapibus a pulvinar et,
+                pharetra scelerisque felis. Mauris massa magna, gravida vitae convallis sagittis, sagittis ac ipsum.
+                Integer arcu justo, vehicula vel accumsan ac, venenatis in massa. Curabitur in dui in urna interdum
+                ullamcorper. Pellentesque ut imperdiet libero.&rdquo;
+                <cite>John Doe, <a href="/static/#google.com" target="_blank">Google</a></cite>
+            </blockquote>
+
+            <h4>Subheader lorem ipsum</h4>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac ante arcu, quis auctor sapien. Morbi
+                magna leo, dapibus a pulvinar et, pharetra scelerisque felis. Mauris massa magna, gravida vitae
+                convallis sagittis, sagittis ac ipsum. Integer arcu justo, vehicula vel accumsan ac, venenatis in massa.
+                Curabitur in dui in urna interdum ullamcorper. Pellentesque ut imperdiet libero.
+            </p>
+
+            <h4>Subheader lorem ipsum</h4>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac ante arcu, quis auctor sapien. Morbi
+                magna leo, dapibus a pulvinar et, pharetra scelerisque felis. Mauris massa magna, gravida vitae
+                convallis sagittis, sagittis ac ipsum. Integer arcu justo, vehicula vel accumsan ac, venenatis in massa.
+                Curabitur in dui in urna interdum ullamcorper. Pellentesque ut imperdiet libero.
+            </p>
+
+        </div>
+        <!-- Column 1 ends ====================================================================== -->
+
+        <!-- Column 2 begins ==================================================================== -->
+        <div class="eight columns">
+
+            <img src="/static/images/about.jpg" alt="About"/>
+
+            <ul class="linedList">
+                <li><strong>Location:</strong> Stockholm, Sweden</li>
+                <li><strong>Email:</strong> <a
+                        href="/static/mailto:hello@ivandesignostrom.com">hello@ivandesignostrom.com</a>
+                </li>
+                <li><strong>R&eacute;sum&eacute;:</strong> <a href="/static/resume.pdf">resume.pdf</a></li>
+                <li><strong>LinkedIn:</strong> <a href="/static/#"
+                                                  target="_blank">www.linkedin.com/in/ivandesignostrom</a></li>
+            </ul>
+
+        </div>
+        <!-- Column 2 ends ====================================================================== -->
+
+    </div>
+    <!-- About page ends ======================================================================== -->
+
+    <!-- Footer begins ========================================================================== -->
+    <footer class="sixteen columns">
+        <hr/>
+        <ul id="footerLinks">
+            <li>杨煜的家庭网站助理</li>
+        </ul>
+    </footer>
+    <!-- Footer ends ============================================================================ -->
+
+</div><!-- container -->
+</body>
+</html>

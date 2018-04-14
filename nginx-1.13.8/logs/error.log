@@ -1,0 +1,15 @@
+2018/01/11 22:31:34 [error] 159252#165636: *1 CreateFile() "G:\pyWorkspace\svn\trunk\nginx-1.13.8/MrYangServer/static/media/110.mp4" failed (3: The system cannot find the path specified), client: 192.168.1.226, server: localhost, request: "GET /110.mp4 HTTP/1.1", host: "192.168.1.226", referrer: "http://localhost:909/"
+2018/01/11 22:31:34 [error] 159252#165636: *1 CreateFile() "G:\pyWorkspace\svn\trunk\nginx-1.13.8/html/favicon.ico" failed (2: The system cannot find the file specified), client: 192.168.1.226, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "192.168.1.226"
+2018/01/11 22:31:34 [error] 159252#165636: *1 CreateFile() "G:\pyWorkspace\svn\trunk\nginx-1.13.8/html/favicon.ico" failed (2: The system cannot find the file specified), client: 192.168.1.226, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "192.168.1.226"
+2018/01/11 22:31:53 [notice] 147888#150164: signal process started
+2018/01/12 19:42:38 [error] 158224#109512: *20 CreateFile() "G:\pyWorkspace\svn\trunk\nginx-1.13.8/html/favicon.ico" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "127.0.0.1"
+2018/01/12 21:02:52 [error] 158224#109512: *22 CreateFile() "G:\pyWorkspace\svn\trunk\nginx-1.13.8/html/favicon.ico" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "127.0.0.1"
+2018/01/17 12:50:13 [emerg] 12192#8196: unknown directive "rtmp" in G:\pyWorkspace\svn\trunk\nginx-1.13.8/conf/nginx.conf:15
+2018/01/17 12:50:33 [emerg] 12932#8372: unknown directive "rtmp" in G:\pyWorkspace\svn\trunk\nginx-1.13.8/conf/nginx.conf:15
+2018/01/17 12:52:01 [emerg] 11992#4664: unknown directive "rtmp_stat" in G:\pyWorkspace\svn\trunk\nginx-1.13.8/conf/nginx.conf:70
+2018/01/17 12:58:24 [emerg] 11532#880: unknown directive "rtmp" in G:\pyWorkspace\svn\trunk\nginx-1.13.8/conf/nginx.conf:15
+2018/01/17 13:05:18 [emerg] 9924#14032: unknown directive "rtmp" in G:\pyWorkspace\svn\trunk\nginx-1.13.8/conf/nginx.conf:15
+2018/01/17 13:11:54 [emerg] 15064#3256: unknown directive "rtmp" in G:\pyWorkspace\svn\trunk\nginx-1.13.8/conf/nginx.conf:15
+2018/01/17 13:12:02 [emerg] 14952#15232: unknown directive "rtmp" in G:\pyWorkspace\svn\trunk\nginx-1.13.8/conf/nginx.conf:15
+2018/01/17 13:12:10 [notice] 12324#10652: signal process started
+2018/01/17 13:12:10 [error] 12324#10652: OpenEvent("Global\ngx_stop_160540") failed (2: The system cannot find the file specified)

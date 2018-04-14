@@ -1,0 +1,20 @@
+.menu {
+    bottom: 0;
+    width: 100%;
+    height: 70px;
+    color: #5a5a5a;
+}
+
+.header {
+    background: #777;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    line-height: 40px;
+
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    height: 40px;
+    padding: 0 50px;
+}

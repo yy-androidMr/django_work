@@ -1,0 +1,29 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+{#  style="border:1px solid #c3c3c3;"   <link href="{% static '/css/c_css.css' %}" rel='stylesheet' type='text/css'/>#}
+
+</head>
+<body>
+<canvas width="200" height="200" id="myCanvas">
+
+</canvas>
+
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="190">
+  <polygon points="100,10 40,180 190,60 10,60 160,180"
+  style="fill:lime;stroke:purple;stroke-width:5;fill-rule:evenodd;" />
+</svg>
+
+<button onclick="getLocation()">获取坐标</button>
+
+<a id="demo_local"></a>
+<script type="text/javascript" src="{% static '/js/canvas_tes.js' %}"></script>
+<script type="text/javascript" src="{% static '/js/location_.js' %}"></script>
+</body>
+</html>

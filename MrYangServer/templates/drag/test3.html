@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset='utf-8'/>
+    <meta name="viewport"
+          content="
+        width = device-width ,
+  height = device-height ,
+        initial-scale = 1,
+        minimum-scale = 1,
+        maximum-scale = 1,
+        user-scalable =no,
+
+  "
+    />
+    <title></title>
+    <script type="text/script"></script>
+</head>
+<body>
+<a id="xy"></a>
+<a id="content"></a>
+<div id="div" style="width:100px;height:100px;background-color:red;position:absolute;"></div>
+<script>
+    var div = document.getElementById('div');
+    var x, y, end_x, end_y;
+    document.addEventListener("touchstart", function (evt) {
+        x = parseInt(touch.pageX),
+            y = parseInt(touch.pageY);
+        end_x = x,
+            end_y = y;
+        $("xy").innerHTML = x + "," + y;
+        $("#content").innerHTML = "";
+    }, false);
+
+    div.addEventListener('touchmove', function (event) {
+        event.preventDefault();//阻止其他事件
+        // 如果这个元素的位置内只有一个手指的话
+        if (event.targetTouches.length == 1) {
+            var touch = event.targetTouches[0];  // 把元素放在手指所在的位置
+            div.style.left = touch.pageX + 'px';
+            div.style.top = touch.pageY + 'px';
+        }
+    }, false);
+
+    document.addEventListener("touchend", function (evt) {
+        var x_x = end_x - x;
+        var y_y = end_y - y;
+        endxy.innerHTML = x_x + "," + y_y;
+        document.title = "x轴移动了" + x_x + " ,y轴移动了" + y_y;
+        if (y_y < -50) {
+            $("#content").innerHTML = "由于你向上滑动了一段距离，所以我要插入内容了";
+        } else {
+            $("#content").innerHTML = "";
+        }
+    }, false);
+</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+2018/01/17 13:20:16 [emerg] 16228#15380: CreateFile() "G:\pyWorkspace\svn\trunk\nginx 1.7.11.3 Gryphon/conf/nginx.conf" failed (2: The system cannot find the file specified)
+2018/01/17 13:21:33 [emerg] 10180#16256: CreateFile() "G:\pyWorkspace\svn\trunk\nginx 1.7.11.3 Gryphon/conf/nginx.conf" failed (2: The system cannot find the file specified)
+2018/01/17 13:22:11 [emerg] 6780#15068: CreateFile() "G:\pyWorkspace\svn\trunk\nginx 1.7.11.3 Gryphon/conf/nginx.conf" failed (2: The system cannot find the file specified)
+2018/01/17 13:22:26 [emerg] 10492#14560: CreateFile() "G:\pyWorkspace\svn\trunk\nginx 1.7.11.3 Gryphon/conf/nginx.conf" failed (2: The system cannot find the file specified)
+2018/01/17 13:22:42 [emerg] 15932#10120: CreateDirectory() "nginx-rtmp-module/tmp/app/" failed (3: The system cannot find the path specified)
+2018/01/17 13:23:16 [notice] 16336#14840: sockinit() attempting to access sockapi
+2018/01/17 13:23:16 [notice] 16336#14840: Access to sockapi succeded!
+2018/01/17 13:23:16 [notice] 16336#14840: using sockapi from "4;8;"
+2018/01/17 13:23:16 [notice] 16360#13780: sockinit() attempting to access sockapi
+2018/01/17 13:23:16 [notice] 16360#13780: Access to sockapi succeded!
+2018/01/17 13:23:16 [notice] 16360#13780: using sockapi from "4;8;"
+2018/01/17 13:23:30 [notice] 13772#15544: sockinit() attempting to access sockapi
+2018/01/17 13:23:30 [notice] 13772#15544: Access to sockapi succeded!
+2018/01/17 13:23:30 [notice] 13772#15544: using sockapi from "4;8;"
+2018/01/17 13:23:32 [notice] 14828#15496: sockinit() attempting to access sockapi
+2018/01/17 13:23:32 [notice] 14828#15496: Access to sockapi succeded!
+2018/01/17 13:23:32 [notice] 14828#15496: using sockapi from "4;8;"
+2018/01/17 13:23:41 [error] 13772#16028: *1 CreateFile() "G:\pyWorkspace\svn\trunk\nginx 1.7.11.3 Gryphon/html/favicon.ico" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "localhost"
+2018/01/17 13:39:39 [emerg] 18896#14276: CreateFile() "G:\pyWorkspace\svn\trunk\nginx 1.7.11.3 Gryphon/conf/nginx.conf" failed (2: The system cannot find the file specified)
+2018/01/17 13:39:45 [emerg] 13428#11796: CreateFile() "G:\pyWorkspace\svn\trunk\nginx 1.7.11.3 Gryphon/conf/nginx.conf" failed (2: The system cannot find the file specified)
+2018/01/17 13:40:00 [emerg] 5276#18980: CreateFile() "G:\pyWorkspace\svn\trunk\nginx 1.7.11.3 Gryphon/conf/nginx.conf" failed (2: The system cannot find the file specified)
+2018/01/17 13:40:08 [notice] 19408#16776: sockinit() attempting to access sockapi
+2018/01/17 13:40:08 [notice] 19408#16776: Access to sockapi succeded!
+2018/01/17 13:40:08 [notice] 19408#16776: using sockapi from "4;8;"
+2018/01/17 13:40:11 [notice] 19400#15768: sockinit() attempting to access sockapi
+2018/01/17 13:40:11 [notice] 19400#15768: Access to sockapi succeded!
+2018/01/17 13:40:11 [notice] 19400#15768: using sockapi from "4;8;"
+2018/01/17 13:40:27 [notice] 18932#17244: sockinit() attempting to access sockapi
+2018/01/17 13:40:27 [notice] 18932#17244: Access to sockapi succeded!
+2018/01/17 13:40:27 [notice] 18932#17244: using sockapi from "4;8;"
+2018/01/17 13:40:27 [notice] 18756#18244: sockinit() attempting to access sockapi
+2018/01/17 13:40:27 [notice] 18756#18244: Access to sockapi succeded!
+2018/01/17 13:40:27 [notice] 18756#18244: using sockapi from "4;8;"
+2018/01/17 13:40:50 [error] 18932#17628: *1 CreateFile() "G:\pyWorkspace\svn\trunk\nginx 1.7.11.3 Gryphon/html/html/hls/out.m3u8" failed (3: The system cannot find the path specified), client: 127.0.0.1, server: localhost, request: "GET /html/hls/out.m3u8 HTTP/1.1", host: "localhost"
+2018/01/17 13:42:06 [error] 18932#17628: *2 CreateFile() "G:\pyWorkspace\svn\trunk\nginx 1.7.11.3 Gryphon/html/favicon.ico" failed (2: The system cannot find the file specified), client: 192.168.112.13, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "192.168.1.226", referrer: "http://192.168.1.226/hls/out.m3u8"
+2018/01/17 13:42:06 [error] 18932#17628: *2 CreateFile() "G:\pyWorkspace\svn\trunk\nginx 1.7.11.3 Gryphon/html/favicon.ico" failed (2: The system cannot find the file specified), client: 192.168.112.13, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "192.168.1.226", referrer: "http://192.168.1.226/hls/out.m3u8"
+2018/01/17 13:54:45 [error] 18756#18960: *22 CreateFile() "G:\pyWorkspace\svn\trunk\nginx 1.7.11.3 Gryphon/html/favicon.ico" failed (2: The system cannot find the file specified), client: 192.168.112.28, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "192.168.1.226", referrer: "http://192.168.1.226/hls/out.m3u8"
+2018/01/17 14:00:20 [notice] 10220#6572: sockinit() attempting to access sockapi
+2018/01/17 14:00:20 [notice] 10220#6572: Access to sockapi succeded!
+2018/01/17 14:00:20 [notice] 10220#6572: using sockapi from "4;8;"
+2018/01/17 14:00:20 [notice] 18072#14680: sockinit() attempting to access sockapi
+2018/01/17 14:00:20 [notice] 18072#14680: Access to sockapi succeded!
+2018/01/17 14:00:20 [notice] 18072#14680: using sockapi from "4;8;"
+2018/01/17 14:00:32 [error] 10220#19448: *1 CreateFile() "G:/media/乘风破浪BD高清国语中英双字[飘花www.piaohua.com].mkv" failed (3: The system cannot find the path specified), client: 127.0.0.1, server: localhost, request: "GET /%E4%B9%98%E9%A3%8E%E7%A0%B4%E6%B5%AABD%E9%AB%98%E6%B8%85%E5%9B%BD%E8%AF%AD%E4%B8%AD%E8%8B%B1%E5%8F%8C%E5%AD%97[%E9%A3%98%E8%8A%B1www.piaohua.com].mkv HTTP/1.1", host: "localhost"
+2018/01/17 14:00:34 [error] 10220#19448: *1 CreateFile() "G:/media/乘风破浪BD高清国语中英双字[飘花www.piaohua.com].mkv" failed (3: The system cannot find the path specified), client: 127.0.0.1, server: localhost, request: "GET /%E4%B9%98%E9%A3%8E%E7%A0%B4%E6%B5%AABD%E9%AB%98%E6%B8%85%E5%9B%BD%E8%AF%AD%E4%B8%AD%E8%8B%B1%E5%8F%8C%E5%AD%97[%E9%A3%98%E8%8A%B1www.piaohua.com].mkv HTTP/1.1", host: "localhost"
+2018/01/17 14:00:46 [error] 10220#19448: *1 CreateFile() "G:/media/乘风破浪BD高清国语中英双字[飘花www.piaohua.com].mkv" failed (3: The system cannot find the path specified), client: 127.0.0.1, server: localhost, request: "GET /%E4%B9%98%E9%A3%8E%E7%A0%B4%E6%B5%AABD%E9%AB%98%E6%B8%85%E5%9B%BD%E8%AF%AD%E4%B8%AD%E8%8B%B1%E5%8F%8C%E5%AD%97[%E9%A3%98%E8%8A%B1www.piaohua.com].mkv HTTP/1.1", host: "localhost"
+2018/01/17 14:01:24 [error] 10220#19448: *2 CreateFile() "G:/media/1.mkv" failed (3: The system cannot find the path specified), client: 127.0.0.1, server: localhost, request: "GET /1.mkv HTTP/1.1", host: "localhost"
+2018/01/17 14:02:20 [notice] 18764#18116: sockinit() attempting to access sockapi
+2018/01/17 14:02:20 [notice] 18764#18116: Access to sockapi succeded!
+2018/01/17 14:02:20 [notice] 18764#18116: using sockapi from "4;8;"
+2018/01/17 14:02:22 [notice] 15760#16696: sockinit() attempting to access sockapi
+2018/01/17 14:02:22 [notice] 15760#16696: Access to sockapi succeded!
+2018/01/17 14:02:22 [notice] 15760#16696: using sockapi from "4;8;"
+2018/01/17 14:02:38 [notice] 17776#16700: sockinit() attempting to access sockapi
+2018/01/17 14:02:38 [notice] 17776#16700: Access to sockapi succeded!
+2018/01/17 14:02:38 [notice] 17776#16700: using sockapi from "4;8;"
+2018/01/17 14:02:38 [notice] 14688#19276: sockinit() attempting to access sockapi
+2018/01/17 14:02:38 [notice] 14688#19276: Access to sockapi succeded!
+2018/01/17 14:02:38 [notice] 14688#19276: using sockapi from "4;8;"
+2018/01/17 01:28:15 [error] 17776#15044: *13 CreateFile() "G:\pyWorkspace\svn\trunk\nginx 1.7.11.3 Gryphon/html/favicon.ico" failed (2: The system cannot find the file specified), client: 192.168.112.13, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "192.168.1.226", referrer: "http://192.168.1.226/hls/avi/playlist.m3u8"
+2018/01/17 16:08:59 [error] 17776#15044: *56 CreateFile() "G:\pyWorkspace\svn\trunk\nginx 1.7.11.3 Gryphon/html/favicon.ico" failed (2: The system cannot find the file specified), client: 192.168.1.226, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "192.168.1.226"
+2018/01/17 16:09:01 [error] 14688#14868: *57 CreateFile() "G:\pyWorkspace\svn\trunk\nginx 1.7.11.3 Gryphon/html/favicon.ico" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "127.0.0.1"
+2018/01/18 17:49:00 [error] 17776#15044: *59 CreateFile() "G:\pyWorkspace\svn\trunk\nginx 1.7.11.3 Gryphon/html/favicon.ico" failed (2: The system cannot find the file specified), client: 192.168.1.226, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "192.168.1.226"
+2018/01/18 17:49:25 [error] 17776#15044: *60 CreateFile() "G:\pyWorkspace\svn\trunk\nginx 1.7.11.3 Gryphon/html/favicon.ico" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "127.0.0.1"
+2018/01/18 20:05:24 [error] 17776#15044: *61 CreateFile() "G:\pyWorkspace\svn\trunk\nginx 1.7.11.3 Gryphon/media/depth_0/0.mp4" failed (3: The system cannot find the path specified), client: 192.168.1.226, server: localhost, request: "GET /depth_0/0.mp4 HTTP/1.1", host: "192.168.1.226", referrer: "http://localhost:909/"
+2018/01/18 20:05:24 [error] 17776#15044: *61 CreateFile() "G:\pyWorkspace\svn\trunk\nginx 1.7.11.3 Gryphon/html/favicon.ico" failed (2: The system cannot find the file specified), client: 192.168.1.226, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "192.168.1.226"
+2018/01/18 20:31:17 [error] 14688#14868: *63 CreateFile() "G:\pyWorkspace\svn\trunk\nginx 1.7.11.3 Gryphon/media/depth_2/2层的东西/2层的第二层/2.mp4" failed (3: The system cannot find the path specified), client: 192.168.1.226, server: localhost, request: "GET /depth_2/2%E5%B1%82%E7%9A%84%E4%B8%9C%E8%A5%BF/2%E5%B1%82%E7%9A%84%E7%AC%AC%E4%BA%8C%E5%B1%82/2.mp4 HTTP/1.1", host: "192.168.1.226", referrer: "http://localhost:909/"

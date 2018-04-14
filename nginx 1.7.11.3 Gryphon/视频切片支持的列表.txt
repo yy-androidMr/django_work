@@ -1,0 +1,14 @@
+也支持在线播放...?
+ffmpeg -i 1.mkv -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_list out.m3u8 -segment_time 30 out%03d.ts
+mp4
+mkv
+
+
+多线程转码:
+https://www.cnblogs.com/MikeZhang/archive/2012/09/16/timeOutputRedirect20120916.html
+
+
+
+任何格式转码:
+ffmpeg -i test.h264 -vcodec copy -f mpegts test.ts  
+ffmpeg -i output.ts -c copy -map 0 -f segment -segment_list playlist.m3u8 -segment_time 10 output%03d.ts 
