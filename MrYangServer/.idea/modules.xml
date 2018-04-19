@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/MrYangServer.iml" filepath="$PROJECT_DIR$/.idea/MrYangServer.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../pytest1/.idea/pytest1.iml" filepath="$PROJECT_DIR$/../pytest1/.idea/pytest1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../pyHelper/.idea/pyHelper.iml" filepath="$PROJECT_DIR$/../pyHelper/.idea/pyHelper.iml" />
     </modules>
   </component>
 </project>

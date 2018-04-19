@@ -118,10 +118,6 @@ def player_3(request):
     return render(request, 'player_3/index.html', {'json': json})
 
 
-def yy_index(request):
-    return render(request, 'index.html')
-
-
 def pic(request):
     json = yquery.dir_2json(yutils.M_FTYPE_PIC)
     return HttpResponse(json, content_type='application/json')
@@ -134,3 +130,9 @@ def movie(request):
 
 def yy_all(request, path):
     return render(request, path + '.html')
+
+
+def m_index(request):
+    return render(request,  'own_index/index.html')
+
+
