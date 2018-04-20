@@ -5,14 +5,14 @@ import os
 
 
 def replace(lines, preStr):
-    data_tuple = [(r'<script src="js', r'<script src="' + preStr + 'js'),
+    regex = [(r'<script src="js', r'<script src="' + preStr + 'js'),
                   (r'<img src="img', r'<img src="' + preStr + 'img'),
                   (r'href="css', r'href="' + preStr + 'css'),
                   (r'href="img', r'href="' + preStr + 'img')]
     index = 0
     for line in lines:
         new_line = line
-        for src, desc in data_tuple:
+        for src, desc in regex:
             new_line = new_line.replace(src, desc)
             lines[index] = new_line
         index += 1

@@ -1,0 +1,9 @@
+1.pip install PyQt5
+2.pip install pyqt5-tools
+3.ctrl+alt+s  ->tools->external Tools ->
+    3.1 添加QTDesigner:add path:\Python35\Lib\site-packages\pyqt5-tools\designer.exe
+    3.2 添加PyUIC:program添加python.exe, Parameters添加:[-m PyQt5.uic.pyuic  $FileName$ -o $FileNameWithoutExtension$.py]
+    3.3 Work directory 使用变量 $FileDir$
+4.tools->External Tools->QT Desinger 制作窗口保存.ui文件
+5.在.ui文件上右键External Tools->PyUIC
+6.资源文件配置等用到了再更新.
