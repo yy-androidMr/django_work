@@ -66,7 +66,7 @@ def create_ffmpeg_bat():
 
 
 def convert_media():
-    bat_list = convert_media()
+    bat_list = create_ffmpeg_bat()
     index = 0
     for i in bat_list:
         file_ = "./bats/%s.bat" % index

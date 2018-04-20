@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" readonly="true" id="c62f6587-43e4-4e9f-909e-420ce487cd2a" name="Default" comment="" />
+    <list default="true" readonly="true" id="c62f6587-43e4-4e9f-909e-420ce487cd2a" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Mryang_App/bats/addMove/MediaConvert.py" afterPath="$PROJECT_DIR$/Mryang_App/bats/addMove/MediaConvert.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Mryang_App/bats/addMove/ffmpeg/link_gitProj_files.txt" afterPath="$PROJECT_DIR$/Mryang_App/bats/addMove/ffmpeg/link_gitProj_files.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../pyHelper/PyQt/windows/main/MainWindow.py" afterPath="$PROJECT_DIR$/../pyHelper/PyQt/windows/main/MainWindow.py" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -26,18 +31,8 @@
       <file leaf-file-name="MediaConvert.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Mryang_App/bats/addMove/MediaConvert.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="31" column="59" lean-forward="true" selection-start-line="31" selection-start-column="59" selection-end-line="31" selection-end-column="59" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="HtmlStaticConvert.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../pyHelper/HtmlStaticConvert.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="544">
-              <caret line="32" column="37" lean-forward="false" selection-start-line="32" selection-start-column="37" selection-end-line="32" selection-end-column="37" />
+            <state relative-caret-position="81">
+              <caret line="73" column="28" lean-forward="true" selection-start-line="73" selection-start-column="28" selection-end-line="73" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -55,7 +50,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>li'</find>
       <find>main</find>
       <find>itemoptions</find>
       <find>wookmark</find>
@@ -85,6 +79,7 @@
       <find>href</find>
       <find>MainWindow</find>
       <find>setWindowTitle</find>
+      <find>convert_media</find>
     </findStrings>
     <replaceStrings>
       <replace>href=&quot;/static</replace>
@@ -101,8 +96,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/static/js/video.js" />
-        <option value="$PROJECT_DIR$/static/js/drag.js" />
         <option value="$PROJECT_DIR$/static/css/control_style.css" />
         <option value="$PROJECT_DIR$/templates/h5_test.html" />
         <option value="$PROJECT_DIR$/static/js/canvas.js" />
@@ -151,6 +144,8 @@
         <option value="$PROJECT_DIR$/文档/配置pyqt5" />
         <option value="$PROJECT_DIR$/../pyHelper/PyQt.py" />
         <option value="$PROJECT_DIR$/../pyHelper/untitled.py" />
+        <option value="$PROJECT_DIR$/../pyHelper/PyQt/windows/main/MainWindow.py" />
+        <option value="$PROJECT_DIR$/Mryang_App/bats/addMove/ffmpeg/link_gitProj_files.txt" />
         <option value="$PROJECT_DIR$/Mryang_App/bats/addMove/MediaConvert.py" />
       </list>
     </option>
@@ -212,7 +207,28 @@
             <path>
               <item name="MrYangServer" type="b2602c69:ProjectViewProjectNode" />
               <item name="MrYangServer" type="462c0819:PsiDirectoryNode" />
+              <item name="Mryang_App" type="462c0819:PsiDirectoryNode" />
+              <item name="bats" type="462c0819:PsiDirectoryNode" />
+              <item name="addMove" type="462c0819:PsiDirectoryNode" />
+              <item name="ffmpeg" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MrYangServer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MrYangServer" type="462c0819:PsiDirectoryNode" />
               <item name="static" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MrYangServer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MrYangServer" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="projects" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MrYangServer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MrYangServer" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="projects" type="462c0819:PsiDirectoryNode" />
+              <item name="own_index" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="MrYangServer" type="b2602c69:ProjectViewProjectNode" />
@@ -228,17 +244,29 @@
             <path>
               <item name="MrYangServer" type="b2602c69:ProjectViewProjectNode" />
               <item name="MrYangServer" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-              <item name="player_3" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="MrYangServer" type="b2602c69:ProjectViewProjectNode" />
-              <item name="MrYangServer" type="462c0819:PsiDirectoryNode" />
               <item name="文档" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="MrYangServer" type="b2602c69:ProjectViewProjectNode" />
               <item name="pyHelper" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MrYangServer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pyHelper" type="462c0819:PsiDirectoryNode" />
+              <item name="PyQt" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MrYangServer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pyHelper" type="462c0819:PsiDirectoryNode" />
+              <item name="PyQt" type="462c0819:PsiDirectoryNode" />
+              <item name="windows" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MrYangServer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pyHelper" type="462c0819:PsiDirectoryNode" />
+              <item name="PyQt" type="462c0819:PsiDirectoryNode" />
+              <item name="windows" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -682,15 +710,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/static/css/yy.css" />
-    <entry file="file://$PROJECT_DIR$/Mryang_App/Beans.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="384">
-          <caret line="24" column="0" lean-forward="true" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://G:/py/pySoft/Python27/Lib/site-packages/Django-1.10.8-py2.7.egg/django/http/response.py" />
     <entry file="file://$PROJECT_DIR$/Mryang_App/forms.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="203">
@@ -878,13 +897,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/文档/快捷键.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="48">
-          <caret line="3" column="14" lean-forward="true" selection-start-line="3" selection-start-column="14" selection-end-line="3" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../pyHelper/test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="32">
@@ -892,38 +904,72 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/文档/开发列表.txt">
+    <entry file="file://$PROJECT_DIR$/../pyHelper/PyQt.py" />
+    <entry file="file://$PROJECT_DIR$/../pyHelper/untitled.ui" />
+    <entry file="file://$PROJECT_DIR$/../pyHelper/untitled.py" />
+    <entry file="file://$PROJECT_DIR$/../pyHelper/PyQt/windows/main/MainWindow.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="9" column="10" lean-forward="false" selection-start-line="9" selection-start-column="10" selection-end-line="9" selection-end-column="10" />
+        <state relative-caret-position="187">
+          <caret line="11" column="28" lean-forward="true" selection-start-line="11" selection-start-column="28" selection-end-line="11" selection-end-column="28" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Mryang_App/bats/addMove/MediaConvert.py">
+    <entry file="file://$PROJECT_DIR$/../pyHelper/PyQt/windows/main/MainControl.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="31" column="59" lean-forward="true" selection-start-line="31" selection-start-column="59" selection-end-line="31" selection-end-column="59" />
+        <state relative-caret-position="34">
+          <caret line="2" column="33" lean-forward="false" selection-start-line="2" selection-start-column="33" selection-end-line="2" selection-end-column="33" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/文档/配置pyqt5">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="128">
-          <caret line="8" column="16" lean-forward="true" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
+        <state relative-caret-position="119">
+          <caret line="7" column="30" lean-forward="false" selection-start-line="7" selection-start-column="30" selection-end-line="7" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/文档/快捷键.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="4" lean-forward="false" selection-start-line="0" selection-start-column="4" selection-end-line="0" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/文档/开发列表.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="10" lean-forward="false" selection-start-line="9" selection-start-column="10" selection-end-line="9" selection-end-column="10" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../pyHelper/HtmlStaticConvert.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="544">
+        <state relative-caret-position="321">
           <caret line="32" column="37" lean-forward="false" selection-start-line="32" selection-start-column="37" selection-end-line="32" selection-end-column="37" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../pyHelper/PyQt.py" />
-    <entry file="file://$PROJECT_DIR$/../pyHelper/untitled.ui" />
-    <entry file="file://$PROJECT_DIR$/../pyHelper/untitled.py" />
+    <entry file="file://$PROJECT_DIR$/Mryang_App/bats/addMove/ffmpeg/link_gitProj_files.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Mryang_App/bats/addMove/MediaConvert.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="81">
+          <caret line="73" column="28" lean-forward="true" selection-start-line="73" selection-start-column="28" selection-end-line="73" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
   </component>
 </project>
