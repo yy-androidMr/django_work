@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="c62f6587-43e4-4e9f-909e-420ce487cd2a" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../.idea/vcs.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/projects/own_index/img/right-home-image.png" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/static/projects/own_index/img/about-image.png" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/own_index/index.html" afterPath="$PROJECT_DIR$/templates/own_index/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../pyHelper/HtmlStaticConvert.py" afterPath="$PROJECT_DIR$/../pyHelper/HtmlStaticConvert.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../pyHelper/PyQt/windows/main/MainControl.py" afterPath="$PROJECT_DIR$/../pyHelper/PyQt/windows/main/MainControl.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -43,8 +39,8 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/templates/own_index/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="21" column="71" lean-forward="false" selection-start-line="21" selection-start-column="63" selection-end-line="21" selection-end-column="71" />
+            <state relative-caret-position="428">
+              <caret line="144" column="92" lean-forward="false" selection-start-line="144" selection-start-column="92" selection-end-line="144" selection-end-column="92" />
               <folding />
             </state>
           </provider>
@@ -54,7 +50,7 @@
         <entry file="file://$PROJECT_DIR$/文档/配置pyqt5">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="119">
-              <caret line="7" column="32" lean-forward="true" selection-start-line="7" selection-start-column="32" selection-end-line="7" selection-end-column="32" />
+              <caret line="7" column="32" lean-forward="false" selection-start-line="7" selection-start-column="32" selection-end-line="7" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -64,7 +60,7 @@
         <entry file="file://$PROJECT_DIR$/../pyHelper/PyQt/windows/main/MainWindow.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="261">
-              <caret line="27" column="47" lean-forward="true" selection-start-line="27" selection-start-column="47" selection-end-line="27" selection-end-column="47" />
+              <caret line="27" column="47" lean-forward="false" selection-start-line="27" selection-start-column="47" selection-end-line="27" selection-end-column="47" />
               <folding />
             </state>
           </provider>
@@ -94,18 +90,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>video.html</find>
-      <find>play_video</find>
-      <find>css</find>
-      <find>css/</find>
-      <find>js/</find>
-      <find>&quot;img/</find>
-      <find>scrip</find>
-      <find>ffmpeg</find>
-      <find>ffplay</find>
-      <find>ffprobe</find>
-      <find>walk</find>
-      <find>end</find>
       <find>img</find>
       <find>href=</find>
       <find>src=</find>
@@ -124,6 +108,18 @@
       <find>contact us</find>
       <find>send message1</find>
       <find>stacked - f</find>
+      <find>about</find>
+      <find>about-image</find>
+      <find>Curabitur varius sapien</find>
+      <find>之无文</find>
+      <find>discover</find>
+      <find>Recent Projects</find>
+      <find>pro</find>
+      <find>行</find>
+      <find>乏其身，行拂乱</find>
+      <find>rota</find>
+      <find>nav__link c</find>
+      <find>03</find>
     </findStrings>
     <replaceStrings>
       <replace>href=&quot;/static</replace>
@@ -201,8 +197,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="149" />
-    <option name="y" value="173" />
+    <option name="x" value="240" />
+    <option name="y" value="112" />
     <option name="width" value="1936" />
     <option name="height" value="1066" />
   </component>
@@ -714,8 +710,8 @@
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18369566" sideWeight="0.49573562" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.34711644" sideWeight="0.41098082" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.34711644" sideWeight="0.5890192" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.0914037" sideWeight="0.41098082" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.0914037" sideWeight="0.5890192" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32869378" sideWeight="0.48722044" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.47002143" sideWeight="0.59797657" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3576017" sideWeight="0.54206604" order="10" side_tool="false" content_ui="tabs" />
@@ -767,17 +763,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://G:/../../../jquery滑动菜单插件mmenu最新版_files/integrator.js" />
-    <entry file="file://G:/../../../jquery滑动菜单插件mmenu最新版_files/demo(1).css" />
-    <entry file="file://G:/../../../jquery滑动菜单插件mmenu最新版_files/demo.css" />
-    <entry file="file://$PROJECT_DIR$/static/css/jquery.mmenu.all.css" />
-    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavaScriptLanguage.jar!/com/intellij/lang/javascript/index/predefined/DHTML.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="1219" column="0" lean-forward="false" selection-start-line="1219" selection-start-column="0" selection-end-line="1219" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://G:/../../../jquery滑动菜单插件mmenu最新版.html" />
     <entry file="file://$PROJECT_DIR$/static/js/libs/jquery.jpanelmenu.js" />
     <entry file="file://$PROJECT_DIR$/templates/index.html" />
@@ -983,7 +968,7 @@
     <entry file="file://$PROJECT_DIR$/文档/配置pyqt5">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
-          <caret line="7" column="32" lean-forward="true" selection-start-line="7" selection-start-column="32" selection-end-line="7" selection-end-column="32" />
+          <caret line="7" column="32" lean-forward="false" selection-start-line="7" selection-start-column="32" selection-end-line="7" selection-end-column="32" />
           <folding />
         </state>
       </provider>
@@ -991,7 +976,7 @@
     <entry file="file://$PROJECT_DIR$/../pyHelper/PyQt/windows/main/MainWindow.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="261">
-          <caret line="27" column="47" lean-forward="true" selection-start-line="27" selection-start-column="47" selection-end-line="27" selection-end-column="47" />
+          <caret line="27" column="47" lean-forward="false" selection-start-line="27" selection-start-column="47" selection-end-line="27" selection-end-column="47" />
           <folding />
         </state>
       </provider>
@@ -1001,7 +986,7 @@
         <state relative-caret-position="289">
           <caret line="17" column="29" lean-forward="true" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
           <folding>
-            <element signature="e#0#27#0" expanded="true" />
+            <element signature="e#0#27#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1029,10 +1014,38 @@
         <state />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/static/projects/own_index/img/shidu_icon.jpg">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/projects/own_index/img/project-item-01.jpg">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/projects/own_index/css/templatemo-style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="460" column="25" lean-forward="true" selection-start-line="460" selection-start-column="25" selection-end-line="460" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/projects/own_index/img/history/01_.jpg">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/projects/own_index/img/home-icon.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/templates/own_index/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="21" column="71" lean-forward="false" selection-start-line="21" selection-start-column="63" selection-end-line="21" selection-end-column="71" />
+        <state relative-caret-position="428">
+          <caret line="144" column="92" lean-forward="false" selection-start-line="144" selection-start-column="92" selection-end-line="144" selection-end-column="92" />
           <folding />
         </state>
       </provider>
