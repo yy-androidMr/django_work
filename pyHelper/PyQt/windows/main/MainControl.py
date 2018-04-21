@@ -6,7 +6,7 @@ from PyQt.windows.main.MainWindow import Ui_MainWindow
 
 
 class MainControl(QMainWindow, Ui_MainWindow):
-    def __init__(self,parent = None):
+    def __init__(self, parent=None):
         super(MainControl, self).__init__(parent)
         self.setupUi(self)
         # self.action_exit.triggered.connect(self.onExitTriggered)

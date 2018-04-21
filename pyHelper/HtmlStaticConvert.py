@@ -4,11 +4,11 @@
 import os
 
 
-def replace(lines, preStr):
-    regex = [(r'<script src="js', r'<script src="' + preStr + 'js'),
-                  (r'<img src="img', r'<img src="' + preStr + 'img'),
-                  (r'href="css', r'href="' + preStr + 'css'),
-                  (r'href="img', r'href="' + preStr + 'img')]
+def replace(lines, pre_str):
+    regex = [(r'<script src="js', r'<script src="' + pre_str + 'js'),
+                  (r'<img src="img', r'<img src="' + pre_str + 'img'),
+                  (r'href="css', r'href="' + pre_str + 'css'),
+                  (r'href="img', r'href="' + pre_str + 'img')]
     index = 0
     for line in lines:
         new_line = line
@@ -18,10 +18,10 @@ def replace(lines, preStr):
         index += 1
 
 
-def replace_content(path, preStr):
+def replace_content(path, pre_str):
     fp = open(path, 'r+', encoding='utf-8')  # 打开你要写得文件test2.txt
     lines = fp.readlines()  # 打开文件，读入每一行
-    replace(lines, preStr)
+    replace(lines, pre_str)
     fp.seek(0)
     fp.writelines(lines)
     fp.close()  # 关闭文件
