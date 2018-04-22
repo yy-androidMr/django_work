@@ -1,9 +1,4 @@
 *.pyc
 MrYangServer/.idea/
-.idea/django_work.iml
-.idea/misc.xml
-.idea/modules.xml
-.idea/vcs.xml
-.idea/workspace.xml
-.idea/vcs.xml
-MrYangServer/.idea/workspace.xml
+.idea/
+MrYangServer/.idea/
