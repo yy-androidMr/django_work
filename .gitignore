@@ -2,3 +2,6 @@
 MrYangServer/.idea/
 .idea/
 MrYangServer/.idea/
+MrYangServer/venv/
+.DS_Store
+MrYangServer/.DS_Store
