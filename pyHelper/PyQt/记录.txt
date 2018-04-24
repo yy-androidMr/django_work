@@ -1,0 +1,22 @@
+单行输入框
+self.singlelineEdit.text()
+单选radiobox,单选按钮本来就没有value的
+self.radiobutton.isCheck()
+滑动取值spinbox
+self.spinbox.value()
+获得日期值
+thedate=self.calendarWidget.selectedDate()
+日期值转化为string
+thedatestring=str(thedate.toPyDate())
+下拉列表combobox值的初始化
+    def __init__(self, parent = None):
+        self.typelist=['first', 'second', 'third']
+        self.addcommobox()
+
+    def addcommobox(self):
+        for i in self.typelist:
+            self.typecomboBox.addItem(i)
+下拉列表combobox值
+self.typecomboBox.currentText()
+下拉列表combobox的index
+self.typecomboBox.currentIndex()

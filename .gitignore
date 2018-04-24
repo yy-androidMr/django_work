@@ -1,7 +1,6 @@
 *.pyc
 MrYangServer/.idea/
 .idea/
-MrYangServer/.idea/
 MrYangServer/venv/
 .DS_Store
 */.DS_Store
