@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>897</width>
-    <height>549</height>
+    <width>1014</width>
+    <height>539</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -115,24 +115,27 @@
          <property name="text">
           <string>选择文件夹</string>
          </property>
+         <property name="id" stdset="0">
+          <number>10002</number>
+         </property>
         </widget>
         <widget class="QLabel" name="label_6">
          <property name="geometry">
           <rect>
            <x>10</x>
            <y>10</y>
-           <width>81</width>
+           <width>161</width>
            <height>16</height>
           </rect>
          </property>
          <property name="text">
-          <string>template路径:</string>
+          <string>template中存放网页的路径:</string>
          </property>
         </widget>
         <widget class="QLineEdit" name="template_dir">
          <property name="geometry">
           <rect>
-           <x>90</x>
+           <x>170</x>
            <y>10</y>
            <width>600</width>
            <height>20</height>
@@ -158,7 +161,7 @@
          <rect>
           <x>120</x>
           <y>300</y>
-          <width>113</width>
+          <width>500</width>
           <height>20</height>
          </rect>
         </property>
@@ -190,6 +193,9 @@
          <property name="text">
           <string>选择文件夹</string>
          </property>
+         <property name="id" stdset="0">
+          <number>10003</number>
+         </property>
         </widget>
         <widget class="QLabel" name="label_8">
          <property name="geometry">
@@ -215,6 +221,22 @@
          </property>
         </widget>
        </widget>
+       <widget class="QPushButton" name="pushButton">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>350</y>
+          <width>91</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>我已确认:执行</string>
+        </property>
+        <property name="id" stdset="0">
+         <number>10004</number>
+        </property>
+       </widget>
       </widget>
       <widget class="QWidget" name="tab_2">
        <attribute name="title">
@@ -230,7 +252,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>897</width>
+     <width>1014</width>
      <height>19</height>
     </rect>
    </property>
@@ -256,8 +278,56 @@
      <y>117</y>
     </hint>
     <hint type="destinationlabel">
-     <x>188</x>
-     <y>24</y>
+     <x>122</x>
+     <y>116</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_5</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>select_dir()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>102</x>
+     <y>202</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>118</x>
+     <y>196</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_6</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>select_dir()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>106</x>
+     <y>294</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>120</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>select_dir()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>84</x>
+     <y>403</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>128</x>
+     <y>405</y>
     </hint>
    </hints>
   </connection>
