@@ -10,8 +10,6 @@ import imageio
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MrYangServer.settings')
 django.setup()
-from Mryang_App.models import Movie
-
 # 设置解码环境
 imageio.plugins.ffmpeg.download()
 

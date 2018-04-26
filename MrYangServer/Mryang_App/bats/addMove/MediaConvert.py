@@ -11,7 +11,7 @@ import django
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MrYangServer.settings')
 django.setup()
-from Mryang_App.models import Movie, Dir
+from Mryang_App.models import Dir
 
 # 设置解码环境
 # imageio.plugins.ffmpeg.download()
@@ -114,7 +114,8 @@ def create_dirs(media_root, depthName, fileType):
 
 
 def instart_dirs():
-    Dir.objects.all().delete(type=yutils.M_FTYPE_MOIVE)
+    Dir.objects.all().delete()
+    # Dir.objects.filter(type=yutils.M_FTYPE_MOIVE).delete()
     media_root = '../../../static/media/'
     create_dirs(media_root, 'movie', yutils.M_FTYPE_MOIVE)
     # create_dirs(media_root, 'pic', yutils.M_FTYPE_PIC)

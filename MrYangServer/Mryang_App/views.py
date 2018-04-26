@@ -135,6 +135,7 @@ def yy_all(request, path):
 def m_index(request):
     return render(request,  'own_index/index.html')
 
+
 def m_gallery(request):
     return render(request,'gallery/firstLevel/index-color.html')
 

@@ -3,7 +3,6 @@ import os
 
 def find_src():
     src_root = '../../../static/media/pic/src'
-
     for root, dirs, files in os.walk(src_root):
         for dir in dirs:
             source_path = os.path.join(root, dir).replace('\\', '/') + '/'
