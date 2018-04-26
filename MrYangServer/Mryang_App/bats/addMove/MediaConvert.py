@@ -114,10 +114,10 @@ def create_dirs(media_root, depthName, fileType):
 
 
 def instart_dirs():
-    Dir.objects.all().delete()
+    Dir.objects.all().delete(type=yutils.M_FTYPE_MOIVE)
     media_root = '../../../static/media/'
     create_dirs(media_root, 'movie', yutils.M_FTYPE_MOIVE)
-    create_dirs(media_root, 'pic', yutils.M_FTYPE_PIC)
+    # create_dirs(media_root, 'pic', yutils.M_FTYPE_PIC)
     pass
 
 

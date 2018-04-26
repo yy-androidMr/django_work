@@ -60,7 +60,8 @@ class Movie(models.Model):
 class Dir(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
-    parent_dir = models.ForeignKey('self', related_name='child', on_delete=models.CASCADE, null=True, blank=True)
+    parent_dir = models.ForeignKey('self', related_name='parent', on_delete=models.CASCADE, null=True, blank=True)
+    child_dir = models.ForeignKey('self', related_name='child', on_delete=models.CASCADE, null=True, blank=True)
     isdir = models.BooleanField(default=True)
     # 一些标记,存储格式自定义.
     tags = models.CharField(max_length=100, default='')
