@@ -17,8 +17,8 @@ class Tab1():
         index = 0
         for line in lines:
             new_line = line
-            for src, desc in regex:
-                new_line = new_line.replace(src, desc)
+            for old, new in regex:
+                new_line = new_line.replace(old, new)
                 lines[index] = new_line
             index += 1
 
