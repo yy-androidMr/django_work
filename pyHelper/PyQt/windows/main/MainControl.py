@@ -19,5 +19,5 @@ class MainControl(WindowsBase, Ui_MainWindow):
     def select_dir(self):
         try:
             Tab1().handle_click(self, super().sender_id())
-        except  Exception as e:
+        except  Exception:
             traceback.print_exc()
