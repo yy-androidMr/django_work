@@ -59,7 +59,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
     <!----End-search-box-script--->
     <script type="text/javascript" src="/static/js/yy_script.js"></script>
     <script>
-        js_dir = convert_dirsjson({{ json|safe }}, MOVIE_TYPE);
+        js_dir = convert_dirsjson({{ json|safe }});
+        page_type = MOVIE_TYPE;
     </script>
 </head>
 <body>

@@ -46,6 +46,8 @@ class Dir(models.Model):
     rel_path = models.CharField(max_length=100)
     # 该文件的根目录类型, movie, pic, doc
     type = models.IntegerField()
+    # 有必要给予一个子id.做复杂的父子关系处理
+    c_id = models.IntegerField(default=0)
 
     def __str__(self):
         parent_dir_name = ''
@@ -53,5 +55,5 @@ class Dir(models.Model):
             parent_dir_name = 'None'
         else:
             parent_dir_name = self.parent_dir.name
-        return 'name:%s,isDir:%r,parent_dir:%s,tags:%s,abs_path:%s,rel_path:%s,type:%s' % (
-            self.name, self.isdir, parent_dir_name, self.tags, self.abs_path, self.rel_path, self.type)
+        return 'name:%s,isDir:%r,parent_dir:%s,tags:%s,rel_path:%s,type:%s,c_id:%s' % (
+            self.name, self.isdir, parent_dir_name, self.tags, self.rel_path, self.type, self.c_id)

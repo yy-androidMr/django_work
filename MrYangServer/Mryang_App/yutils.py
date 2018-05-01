@@ -104,7 +104,7 @@ def sizeConvert(size):  # 单位换算
         return str(round(size, 1)) + 'Bytes'
 
 
-def timeConvert(size):  # 单位换算
+def time_convert(size):  # 单位换算
     M, H = 60, 60 ** 2
     if size < M:
         return str(size) + u'秒'

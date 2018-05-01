@@ -32,7 +32,7 @@ function showTargetDir(clickData) {
 
 }
 
-function showDir3() {
+function moviePage() {
     var tiles = $('#tiles');
     var titleName = $('#titleName');
     titleName.unbind();
@@ -65,11 +65,7 @@ function showDir3() {
         //修改显示内容
         var aTag = cloneNode.find('#item_name');
         var typeTag = cloneNode.find('#item_type');
-        if (js_dir.mType == PIC_TYPE) {
-            typeTag.html("图片");
-        } else if (js_dir.mType == MOVIE_TYPE) {
-            typeTag.html("影视");
-        }
+        typeTag.html("影视");
 
         var itemImg = cloneNode.find('#itemImg');//需要改变宽高
         aTag.html(file_item.name);
@@ -104,6 +100,12 @@ function showDir3() {
         }
         tiles.append(cloneNode);
     }
+}
+
+
+function showDir3() {
+    moviePage();
+
 }
 
 function showVideo(videoUrl) {
@@ -149,7 +151,8 @@ function _showPic() {
 }
 
 
-function convert_dirsjson(dirsJson, type) {
+function convert_dirsjson(dirsJson) {
+    page_type = type;
     var rootDir;
     var dirs = new Array();
     for (var i = 0, count = dirsJson.length; i < count; i++) {
@@ -162,7 +165,6 @@ function convert_dirsjson(dirsJson, type) {
             isDir: item.isdir,
             path: item.path,
             tags: item.tags,
-            mType: type,//1代表图片. 2代表电影.
 
         }
         var dir_split = item.path.split('/');

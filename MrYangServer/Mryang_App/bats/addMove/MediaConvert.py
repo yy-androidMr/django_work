@@ -117,6 +117,7 @@ def instart_dirs():
     Dir.objects.all().delete()
     # Dir.objects.filter(type=yutils.M_FTYPE_MOIVE).delete()
     media_root = '../../../static/media/'
+
     create_dirs(media_root, 'movie', yutils.M_FTYPE_MOIVE)
     # create_dirs(media_root, 'pic', yutils.M_FTYPE_PIC)
     pass
