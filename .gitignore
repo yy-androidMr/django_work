@@ -5,5 +5,5 @@ MrYangServer/venv/
 .DS_Store
 */.DS_Store
 MrYangServer/db.sqlite3
-MrYangServer/static/media/pic/*.jpg
+MrYangServer/static/media/pic/*
 *.mp4
