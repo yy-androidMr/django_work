@@ -43,14 +43,13 @@ class PhotoConvert(ConvertBase):
         for l1 in level1:
             child_count = Dir.objects.filter(c_id=l1.c_id * THUM_PIC_ID_POW).count()
             if child_count < 1:
-                l1.delete()
                 # 删除一级文件夹
-                pass
-                # Dir.objects.get(c_id=l1.c_id).delete()
+                l1.delete()
+
 
 
 if __name__ == '__main__':
-    PhotoConvert().go()
+    # PhotoConvert().go()
     print(Dir.objects.filter(c_id__lt=100))
 
 
