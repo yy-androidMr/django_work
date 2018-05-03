@@ -4,6 +4,8 @@ import platform
 
 import os
 
+from PIL import Image
+
 
 def is_mac():
     sys_str = platform.system()
@@ -31,8 +33,25 @@ def src2middle():
     desc = '../../MrYangServer/static/media/pic/middle'
     # print(os.path.exists(src))
 
-    cmd = 'for i in '+src+'/*.jpg;do jpegoptim -m50 -d ' + desc + ' -p "$i";done'
+    cmd = 'for i in ' + src + '/*.jpg;do jpegoptim -m50 -d ' + desc + ' -p "$i";done'
     os.system(cmd)
 
+
+def middle2thum():
+    desc = '../../MrYangServer/static/media/pic/middle/20180430_183820.jpg'
+    thum = '../../MrYangServer/static/media/pic/thum/20180430_183820.jpg'
+    img = Image.open(desc)
+    w, h = img.size
+    img.resize((int(w/2), int(h/2))).save(thum, "JPEG")
+    # for root, dirs, dirsfiles in os.walk(desc):
+    #
+    #     for file in files:
+    #         source_path = os.path.join(root, file).replace('\\', '/')
+
+    pass
+    # Image.
+
+
 if __name__ == '__main__':
-    src2middle()
+    # src2middle()
+    middle2thum()

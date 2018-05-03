@@ -18,3 +18,4 @@
 
 这个牛皮这个牛皮
 https://www.linuxidc.com/Linux/2015-05/117441.htm
+jpegoptim -m50 photo.jpg
