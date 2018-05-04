@@ -47,7 +47,6 @@ class PhotoConvert(ConvertBase):
                 l1.delete()
 
 
-
 if __name__ == '__main__':
     PhotoConvert().go()
     # print(Dir.objects.filter(c_id__lt=100))
