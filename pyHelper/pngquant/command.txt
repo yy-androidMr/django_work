@@ -19,3 +19,7 @@
 这个牛皮这个牛皮
 https://www.linuxidc.com/Linux/2015-05/117441.htm
 jpegoptim -m50 photo.jpg
+find . ( -name "*.jpeg" -or -name "*.jpg" ) -exec jpegoptim --all-progressive --strip-all {} ; 
+
+
+http://nukesaq88.github.io/Pngyu/

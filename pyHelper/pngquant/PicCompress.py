@@ -32,17 +32,24 @@ def src2middle():
     src = '../../MrYangServer/static/media/pic/src'
     desc = '../../MrYangServer/static/media/pic/middle'
     # print(os.path.exists(src))
+    middle_size =(2000,2000)
 
     cmd = 'for i in ' + src + '/*.jpg;do jpegoptim -m50 -d ' + desc + ' -p "$i";done'
     os.system(cmd)
 
 
 def middle2thum():
-    desc = '../../MrYangServer/static/media/pic/middle/20180430_183820.jpg'
-    thum = '../../MrYangServer/static/media/pic/thum/20180430_183820.jpg'
-    img = Image.open(desc)
-    w, h = img.size
-    img.resize((int(w/2), int(h/2))).save(thum, "JPEG")
+    middle = '../../MrYangServer/static/media/pic/middle/1.jpg'
+    thum = '../../MrYangServer/static/media/pic/thum/1.jpg'
+    # img = Image.open(desc)
+    # w, h = img.size
+    # img.resize((int(w/2), int(h/2))).save(thum, "JPEG")
+
+    img = Image.open(middle)
+    # print(img.getbands())
+    img.thumbnail((2000, 2000), Image.ANTIALIAS)
+    img.save(thum, "JPEG", quality=50)
+
     # for root, dirs, dirsfiles in os.walk(desc):
     #
     #     for file in files:

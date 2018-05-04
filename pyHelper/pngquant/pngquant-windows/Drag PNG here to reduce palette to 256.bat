@@ -8,3 +8,4 @@ set path=%~d0%~p0
 
 shift
 if NOT x%1==x goto start
+pause
