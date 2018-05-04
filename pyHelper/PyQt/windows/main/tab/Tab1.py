@@ -13,7 +13,14 @@ class Tab1():
         regex = [(r'<script src="js', r'<script src="' + pre_str + 'js'),
                  (r'<img src="img', r'<img src="' + pre_str + 'img'),
                  (r'href="css', r'href="' + pre_str + 'css'),
-                 (r'href="img', r'href="' + pre_str + 'img')]
+                 (r'href="img', r'href="' + pre_str + 'img'),
+                 (r'href="image', r'href="' + pre_str + 'image'),
+                 (r'<script src="/js', r'<script src="' + pre_str + 'js'),
+                 (r'<img src="/img', r'<img src="' + pre_str + 'img'),
+                 (r'href="/css', r'href="' + pre_str + 'css'),
+                 (r'href="/img', r'href="' + pre_str + 'img'),
+                 (r'href="/image', r'href="' + pre_str + 'image'),
+                 ]
         index = 0
         for line in lines:
             new_line = line

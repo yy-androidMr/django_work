@@ -141,5 +141,8 @@ def m_gallery(request):
     print(json)
     return render(request, 'gallery/firstLevel/index-color.html', {'json': json})
 
-# def m_gallery_2(request):
 
+def m_second_gallery(request):
+    return render(request, 'gallery/secondLevel/index.html')
+
+# def m_gallery_2(request):
