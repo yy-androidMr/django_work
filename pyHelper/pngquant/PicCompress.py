@@ -31,29 +31,49 @@ def get_md5(file_path):
 def src2middle():
     src = '../../MrYangServer/static/media/pic/src'
     desc = '../../MrYangServer/static/media/pic/middle'
-    # print(os.path.exists(src))
-    middle_size =(2000,2000)
-
-    cmd = 'for i in ' + src + '/*.jpg;do jpegoptim -m50 -d ' + desc + ' -p "$i";done'
-    os.system(cmd)
+    middle_size = (2000, 2000)
+    # cmd = 'for i in ' + src + '/*.jpg;do jpegoptim -m50 -d ' + desc + ' -p "$i";done'
+    # os.system(cmd)
+    for root, dirs, files in os.walk(src):
+        for file in files:
+            source_path = os.path.join(root, file).replace('\\', '/')
+            if not any(str_ in file for str_ in ('.jpeg', '.jpg', 'png')):
+                continue
+            desc_path = desc + source_path[len(src):]
+            dir = os.path.dirname(desc_path)
+            exten = os.path.splitext(desc_path)[1]
+            rename_path = dir + '/' + get_md5(source_path) + exten
+            if os.path.exists(rename_path):
+                print('文件已存在!' + rename_path)
+                continue
+            if not os.path.exists(dir):
+                os.makedirs(dir)
+            img = Image.open(source_path)
+            img.thumbnail(middle_size, Image.ANTIALIAS)
+            img.save(rename_path, "JPEG", quality=50)
+            print(rename_path)
 
 
 def middle2thum():
-    middle = '../../MrYangServer/static/media/pic/middle/1.jpg'
-    thum = '../../MrYangServer/static/media/pic/thum/1.jpg'
+    middle = '../../MrYangServer/static/media/pic/middle'
+    thum = '../../MrYangServer/static/media/pic/thum'
+    thum_size = (300, 300)
+
     # img = Image.open(desc)
-    # w, h = img.size
-    # img.resize((int(w/2), int(h/2))).save(thum, "JPEG")
+    for root, dirs, files in os.walk(middle):
+        for file in files:
+            if not any(str_ in file for str_ in ('.jpeg', '.jpg', 'png')):
+                continue
+            source_path = os.path.join(root, file).replace('\\', '/')
 
-    img = Image.open(middle)
-    # print(img.getbands())
-    img.thumbnail((2000, 2000), Image.ANTIALIAS)
-    img.save(thum, "JPEG", quality=50)
+            desc_path = thum + source_path[len(middle):]
+            dir = os.path.dirname(desc_path)
+            if not os.path.exists(dir):
+                os.makedirs(dir)
 
-    # for root, dirs, dirsfiles in os.walk(desc):
-    #
-    #     for file in files:
-    #         source_path = os.path.join(root, file).replace('\\', '/')
+            img = Image.open(source_path)
+            img.thumbnail(thum_size, Image.ANTIALIAS)
+            img.save(desc_path, 'JPEG', quality=50)
 
     pass
     # Image.

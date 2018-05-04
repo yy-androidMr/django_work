@@ -4,6 +4,9 @@ shift+alt+z  trycache 或者if,do while
 Ctrl + Space    基本的代码完成
 alt + enter 提示
 
+查找类名的关键词
+File Structure
+
 mac:
 导包:option+enter
 删除一行:command+delete
