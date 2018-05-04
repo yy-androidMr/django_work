@@ -4,6 +4,7 @@ import platform
 
 import os
 
+import piexif
 from PIL import Image
 
 
@@ -49,21 +50,25 @@ def src2middle(delete_exist):
             if not os.path.exists(dir):
                 os.makedirs(dir)
             img = Image.open(source_path)
-            # img = img.rotate(0)
-            # img.thumbnail(middle_size, Image.ANTIALIAS)
-            img.save(rename_path)
-            # copy EXIF data
-            source_image = pyexiv2.Image(source_path)
-            source_image.readMetadata()
-            dest_image = pyexiv2.Image(dest_path)
-            dest_image.readMetadata()
-            source_image.copyMetadataTo(dest_image)
 
-            # set EXIF image size info to resized size
-            dest_image["Exif.Photo.PixelXDimension"] = image.size[0]
-            dest_image["Exif.Photo.PixelYDimension"] = image.size[1]
-            dest_image.writeMetadata()
-            # img.save(rename_path, "JPEG", quality=50)
+            img.thumbnail(middle_size, Image.ANTIALIAS)
+            # print(exif_dict['0th'][piexif.ImageIFD.Orientation])
+
+            old_exif = piexif.load(img.info["exif"])
+            orientation = old_exif['0th'][piexif.ImageIFD.Orientation]
+            exif_dict = {"0th": {piexif.ImageIFD.Orientation: orientation}}
+            exif_bytes = piexif.dump(exif_dict)
+
+            img.save(rename_path, 'JPEG', quality=50, exif=exif_bytes)
+
+            # new_img = Image.open(rename_path)
+            # exif_dict = piexif.load(new_img.info["exif"])
+            # exif_dict['0th'][piexif.ImageIFD.Orientation] = orientation
+            # # print(exif_dict['0th'][piexif.ImageIFD.Orientation])
+            #
+            # exif_bytes = piexif.dump(exif_dict)
+            # new_img.paste(exif=exif_bytes)
+
             print(rename_path)
 
 
@@ -97,10 +102,11 @@ def middle2thum():
 
             cropImg = img.crop(region)  # 保存裁切后的图片
             cropImg.thumbnail(thum_size, Image.ANTIALIAS)
-            cropImg.save(desc_path, 'JPEG', quality=50)
-            # cropImg.save(desc_path)
+            exif_dict = piexif.load(cropImg.info["exif"])
+            exif_bytes = piexif.dump(exif_dict)
+            cropImg.save(desc_path, 'JPEG', quality=50,exif=exif_bytes)
 
 
 if __name__ == '__main__':
     src2middle(True)
-    # middle2thum()
+    middle2thum()
