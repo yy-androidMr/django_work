@@ -1,0 +1,2 @@
+git下载:https://git-scm.com/downloads
+python安装:Django pillow
