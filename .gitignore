@@ -11,7 +11,7 @@ MrYangServer/static/media/pic/*.png
 MrYangServer/static/media/thum/*.jpg
 MrYangServer/static/media/thum/*.jpeg
 MrYangServer/static/media/thum/*.png
-MrYangServer/static/media/middle/*.jpg
+MrYangServer/static/media/middle/.jpg
 MrYangServer/static/media/middle/*.jpeg
 MrYangServer/static/media/middle/*.png
 *.mp4
