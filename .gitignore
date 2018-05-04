@@ -5,7 +5,13 @@ MrYangServer/venv/
 .DS_Store
 */.DS_Store
 MrYangServer/db.sqlite3
-MrYangServer/static/media/pic/*
-MrYangServer/static/media/thum/*
-MrYangServer/static/media/middle/*
+MrYangServer/static/media/pic/*.jpg
+MrYangServer/static/media/pic/*.jpeg
+MrYangServer/static/media/pic/*.png
+MrYangServer/static/media/thum/*.jpg
+MrYangServer/static/media/thum/*.jpeg
+MrYangServer/static/media/thum/*.png
+MrYangServer/static/media/middle/*.jpg
+MrYangServer/static/media/middle/*.jpeg
+MrYangServer/static/media/middle/*.png
 *.mp4
