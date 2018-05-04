@@ -104,7 +104,7 @@ def middle2thum():
             cropImg.thumbnail(thum_size, Image.ANTIALIAS)
             exif_dict = piexif.load(cropImg.info["exif"])
             exif_bytes = piexif.dump(exif_dict)
-            cropImg.save(desc_path, 'JPEG', quality=50,exif=exif_bytes)
+            cropImg.save(desc_path, 'JPEG',exif=exif_bytes)#是否需要压缩质量,具体看情况而定.
 
 
 if __name__ == '__main__':
