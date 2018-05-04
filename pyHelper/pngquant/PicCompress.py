@@ -57,7 +57,8 @@ def src2middle():
 def middle2thum():
     middle = '../../MrYangServer/static/media/pic/middle'
     thum = '../../MrYangServer/static/media/pic/thum'
-    thum_size = (300, 300)
+    thum_width = 350
+    thum_size = (thum_width, thum_width)
 
     # img = Image.open(desc)
     for root, dirs, files in os.walk(middle):
@@ -72,11 +73,19 @@ def middle2thum():
                 os.makedirs(dir)
 
             img = Image.open(source_path)
-            img.thumbnail(thum_size, Image.ANTIALIAS)
-            img.save(desc_path, 'JPEG', quality=50)
+            w, h = img.size
+            # region = (0, 0, w, h)  # xy起点左上角  zw偏移
+            if w > h:
+                region = (int((w - h) / 2), 0, thum_width, thum_width)
+            else:
+                region = (0, int((h - w) / 2), thum_width, thum_width)
 
-    pass
-    # Image.
+            cropImg = img.crop(region)  # 保存裁切后的图片
+            cropImg.save(desc_path)
+
+            # img.thumbnail(thum_size, Image.ANTIALIAS)
+            # img.save(desc_path, 'JPEG', quality=50)
+
 
 
 if __name__ == '__main__':
