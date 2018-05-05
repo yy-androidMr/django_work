@@ -7,7 +7,7 @@ from Mryang_App import yutils
 from Mryang_App.models import Dir
 
 # src->middle->thum
-THUM_PIC_ID_POW = 100
+THUM_PIC_ID_POW = 100000
 LEVEL_TAG_SPLITE = '%'
 
 
@@ -15,6 +15,7 @@ class PhotoConvert(ConvertBase):
     def __init__(self):
         super().__init__()
         self.dir_id = 1
+        self.dir_list = []
 
     def go(self):
         thum_root = '../../../static/media/pic'
@@ -35,17 +36,20 @@ class PhotoConvert(ConvertBase):
         if is_dir:
             d_model.c_id = self.dir_id
             self.dir_id += 1
+            d_model.save()
         else:
             d_model.parent_dir = parent_dir  # 外键共生
-            d_model.c_id = parent_dir.c_id * THUM_PIC_ID_POW  # 照片id为文件夹*100??存疑
-        d_model.save()
+            d_model.c_id = parent_dir.c_id + THUM_PIC_ID_POW  # 照片id为文件夹*100??存疑
+            self.dir_list.append(d_model)
         print(rel_path)
 
     def walk_over(self):
+        Dir.objects.bulk_create(self.dir_list)
+
         # 结束时,将没有child的dir给删除!!!
         level1 = Dir.objects.filter(c_id__lt=100)
         for l1 in level1:
-            childs = Dir.objects.filter(c_id=l1.c_id * THUM_PIC_ID_POW)
+            childs = Dir.objects.filter(c_id=l1.c_id + THUM_PIC_ID_POW)
             child_count = childs.count()
             if child_count < 1:
                 # 删除一级文件夹
@@ -68,6 +72,7 @@ class PhotoConvert(ConvertBase):
                 tags += childs[random.randrange(0, child_count)].name
                 l1.tags = tags
                 l1.save()
+        print('done')
 
 
 if __name__ == '__main__':

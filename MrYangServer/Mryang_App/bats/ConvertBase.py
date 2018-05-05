@@ -31,14 +31,14 @@ class ConvertBase:
         self.walk_call(self_abs_path, rel_path, parent, name, is_dir)
 
     def create_dirs(self, media_root, depth_name, type):
-        movie_name = depth_name + '/'
+        movie_name = depth_name
         movie_root = os.path.join(media_root, movie_name)
         self.flush_dirs(movie_root, movie_name, True, depth_name, type)
 
         movie_root = movie_root.replace('\\', '/')
         for root, dirs, files in os.walk(movie_root):
             for dir in dirs:
-                source_path = os.path.join(root, dir).replace('\\', '/') + '/'
+                source_path = os.path.join(root, dir).replace('\\', '/')
                 rel_path = source_path[len(movie_root):]
                 self.flush_dirs(source_path, rel_path, True, dir, type)
 

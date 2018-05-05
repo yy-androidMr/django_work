@@ -22,7 +22,7 @@ function picPage() {
         var pTag = item.find('#item_intro');
         pTag.html(data_item.intro + '<br>' + data_item.time);
         var itemImg = item.find('#pic_thum');
-        itemImg.attr('src', media_root + '/' + pre_path + '/' + data_item.rel_path + '/' + data_item.thum);
+        itemImg.attr('src', media_root + pre_path + data_item.rel_path + '/' + data_item.thum);
         parent.append(item);
 
     }
