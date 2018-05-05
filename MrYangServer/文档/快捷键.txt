@@ -6,6 +6,8 @@ alt + enter 提示
 
 查找类名的关键词
 File Structure
+所有文件查找
+find in path
 
 mac:
 导包:option+enter

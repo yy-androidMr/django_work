@@ -5,7 +5,12 @@ import platform
 import os
 
 import piexif
+import shutil
 from PIL import Image
+
+src = '../../MrYangServer/static/media/pic/src'
+middle = '../../MrYangServer/static/media/pic/middle'
+thum = '../../MrYangServer/static/media/pic/thum'
 
 
 def is_mac():
@@ -30,8 +35,6 @@ def get_md5(file_path):
 
 
 def src2middle(delete_exist):
-    src = '../../MrYangServer/static/media/pic/src'
-    desc = '../../MrYangServer/static/media/pic/middle'
     middle_size = (2000, 2000)
     # cmd = 'for i in ' + src + '/*.jpg;do jpegoptim -m50 -d ' + desc + ' -p "$i";done'
     # os.system(cmd)
@@ -40,7 +43,7 @@ def src2middle(delete_exist):
             source_path = os.path.join(root, file).replace('\\', '/')
             if not any(str_ in file for str_ in ('.jpeg', '.jpg', 'png')):
                 continue
-            desc_path = desc + source_path[len(src):]
+            desc_path = middle + source_path[len(src):]
             dir = os.path.dirname(desc_path)
             exten = os.path.splitext(desc_path)[1]
             rename_path = dir + '/' + get_md5(source_path) + exten
@@ -73,8 +76,6 @@ def src2middle(delete_exist):
 
 
 def middle2thum():
-    middle = '../../MrYangServer/static/media/pic/middle'
-    thum = '../../MrYangServer/static/media/pic/thum'
     thum_width = 350
     thum_size = (thum_width, thum_width)
 
@@ -104,9 +105,23 @@ def middle2thum():
             cropImg.thumbnail(thum_size, Image.ANTIALIAS)
             exif_dict = piexif.load(cropImg.info["exif"])
             exif_bytes = piexif.dump(exif_dict)
-            cropImg.save(desc_path, 'JPEG',exif=exif_bytes)#是否需要压缩质量,具体看情况而定.
+            cropImg.save(desc_path, 'JPEG', exif=exif_bytes)  # 是否需要压缩质量,具体看情况而定.
+
+
+def move_info():
+    for root, dirs, files in os.walk(src):
+        for file in files:
+            if 'info' in file:
+                src_path = os.path.join(root, file).replace('\\', '/')
+                # thum = '../../MrYangServer/static/media/pic/thum'
+                desc_path = thum + src_path[len(src):]
+
+                shutil.copy(src_path, desc_path)
+
+                # print(source_path)
 
 
 if __name__ == '__main__':
-    src2middle(True)
-    middle2thum()
+    # src2middle(True)
+    # middle2thum()
+    move_info()

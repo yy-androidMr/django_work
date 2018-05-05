@@ -67,7 +67,6 @@ class PhotoConvert(ConvertBase):
 
                 tags += childs[random.randrange(0, child_count)].name
                 l1.tags = tags
-
                 l1.save()
 
 
@@ -76,5 +75,6 @@ if __name__ == '__main__':
     #     lines = file_object.readlines()  # 读取全部内容
     #     for line in lines:
     #         print(line.rstrip('\n'))
-    PhotoConvert().go()
+    # PhotoConvert().go()
+    PhotoConvert().walk_over()
     # print(Dir.objects.filter(c_id__lt=100))
