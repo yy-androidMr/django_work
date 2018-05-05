@@ -22,7 +22,7 @@ class PhotoConvert(ConvertBase):
 
     def walk_call(self, abs_path, rel_path, parent_dir, name, is_dir):
         if not is_dir:
-            if not any(str_ in name for str_ in ('.jpeg', '.jpg')):
+            if not '.thum' in name:
                 return
         d_model = Dir()
         d_model.name = name
@@ -38,8 +38,8 @@ class PhotoConvert(ConvertBase):
         else:
             d_model.parent_dir = parent_dir  # 外键共生
             d_model.c_id = parent_dir.c_id * THUM_PIC_ID_POW  # 照片id为文件夹*100??存疑
-
         d_model.save()
+        print(rel_path)
 
     def walk_over(self):
         # 结束时,将没有child的dir给删除!!!
@@ -75,6 +75,6 @@ if __name__ == '__main__':
     #     lines = file_object.readlines()  # 读取全部内容
     #     for line in lines:
     #         print(line.rstrip('\n'))
-    # PhotoConvert().go()
-    PhotoConvert().walk_over()
+    PhotoConvert().go()
+    # PhotoConvert().walk_over()
     # print(Dir.objects.filter(c_id__lt=100))
