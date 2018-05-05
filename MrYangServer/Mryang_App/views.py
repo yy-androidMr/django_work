@@ -139,7 +139,7 @@ def m_index(request):
 def m_gallery(request):
     json = yquery.pic_level1_2json()
     print(json)
-    return render(request, 'gallery/firstLevel/index-color.html', {'json': json})
+    return render(request, 'gallery/firstLevel/index-color.html', {'json': json, 'pre_path': 'pic/thum'})
 
 
 def m_second_gallery(request):

@@ -1,3 +1,7 @@
+import random
+
+import os
+
 from Mryang_App.bats.ConvertBase import ConvertBase
 from Mryang_App import yutils
 from Mryang_App.models import Dir
@@ -41,15 +45,36 @@ class PhotoConvert(ConvertBase):
         # 结束时,将没有child的dir给删除!!!
         level1 = Dir.objects.filter(c_id__lt=100)
         for l1 in level1:
-            child_count = Dir.objects.filter(c_id=l1.c_id * THUM_PIC_ID_POW).count()
+            childs = Dir.objects.filter(c_id=l1.c_id * THUM_PIC_ID_POW)
+            child_count = childs.count()
             if child_count < 1:
                 # 删除一级文件夹
                 l1.delete()
+            else:
+                # 这里要读取描述文件
+                info_path = l1.abs_path + '/info'
+                tags = ''
+                info_tags_count = 3
+                cur_info_tags = 0
+                if os.path.exists(info_path):
+                    with open(info_path, encoding='utf-8') as file_object:
+                        lines = file_object.readlines()  # 读取全部内容
+                        for line in lines:
+                            tags += line.rstrip('\n') + ' '
+                            cur_info_tags += 1
+                if cur_info_tags < info_tags_count:
+                    tags += ' ' * (info_tags_count - cur_info_tags)
+
+                tags += childs[random.randrange(0, child_count)].name
+                l1.tags = tags
+
+                l1.save()
 
 
 if __name__ == '__main__':
+    # with open(r'G:\pyWorkspace\django_work\MrYangServer\static\media\pic\thum\info', encoding='utf-8') as file_object:
+    #     lines = file_object.readlines()  # 读取全部内容
+    #     for line in lines:
+    #         print(line.rstrip('\n'))
     PhotoConvert().go()
     # print(Dir.objects.filter(c_id__lt=100))
-
-
-

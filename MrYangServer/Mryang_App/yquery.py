@@ -18,15 +18,16 @@ def dir_2json(dirtype):
 
 def pic_level1_2json():
     # id  名字, 父亲的id, 是否是文件夹, tag, 相对路径.
-    dirs = Dir.objects.filter(type=yutils.M_FTYPE_PIC, c_id__lt=PhotoConvert.THUM_PIC_ID_POW).values('id', 'tags','name',
-                                                                                                     'c_id')
+    dirs = Dir.objects.filter(type=yutils.M_FTYPE_PIC, c_id__lt=PhotoConvert.THUM_PIC_ID_POW).values('id', 'tags',
+                                                                                                     'name',
+                                                                                                     'c_id', 'rel_path')
     # show_list = []
     # for d in dirs:
     #     d['tags'] = d['name'].split()
     # item = {'id': d.id, 'p_id': d.p_id, 'isdir': d.isdir, 'tags': d.name.split(), 'path': d.path, 'c_id': d.c_id}
     # show_list.append(item)
     for item in dirs:
-        item['tags'] = item['name'].split()
+        item['tags'] = item['tags'].split(' ')  # (item['name'] + ' ' + thum).split()
         item.pop('name')
 
     jsonstr = json.dumps(list(dirs))

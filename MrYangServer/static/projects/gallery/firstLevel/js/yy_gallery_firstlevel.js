@@ -1,5 +1,6 @@
 var level1_dir;
-
+var media_root = '/static/media';
+var pre_path;//指定到thum目录
 $(document).ready(function () {
         picPage()
     }
@@ -19,9 +20,9 @@ function picPage() {
         var h2Tag = item.find('#item_name');
         h2Tag.html(data_item.name);
         var pTag = item.find('#item_intro');
-        pTag.html(data_item.intro+'<br>'+data_item.time);
-
-
+        pTag.html(data_item.intro + '<br>' + data_item.time);
+        var itemImg = item.find('#pic_thum');
+        itemImg.attr('src', media_root + '/' + pre_path + '/' + data_item.rel_path + '/' + data_item.thum);
         parent.append(item);
 
     }
@@ -30,7 +31,8 @@ function picPage() {
 }
 
 
-function convert_pic(dirsJson) {
+function convert_pic(dirsJson, path) {
+    pre_path = path;
     var dirs = new Array();
     for (var i = 0, count = dirsJson.length; i < count; i++) {
         var item = dirsJson[i];
@@ -38,17 +40,29 @@ function convert_pic(dirsJson) {
             id: item.id,
             // name: null,
             // tags: item.tags,
+            rel_path: item.rel_path,
             c_id: item.c_id,
-
         }
-        dirs[i].name = item.tags[0];//dir_split[dir_split.length - 1];
-        dirs[i].intro = '没有任何描述';
+        if (item.tags[0].length != 0) {
+            dirs[i].name = item.tags[0];//dir_split[dir_split.length - 1];
+        } else {
+            dirs[i].name = '暂未命名';//dir_split[dir_split.length - 1];
+        }
         if (item.tags.length > 1) {
-            dirs[i].intro = item.tags[1];//dir_split[dir_split.length - 1];
+            if (item.tags[1].length != 0) {
+                dirs[i].intro = item.tags[1];//dir_split[dir_split.length - 1];
+            } else {
+                dirs[i].intro = '没有任何描述';
+            }
         }
         dirs[i].time = '';
         if (item.tags.length > 2) {
             dirs[i].time = item.tags[2];//dir_split[dir_split.length - 1];
+        }
+
+        if (item.tags.length > 3) {
+            dirs[i].thum = item.tags[3];//dir_split[dir_split.length - 1];
+            // 这里没有临时文件
         }
 
         // if (item.p_id != null) {

@@ -33,7 +33,7 @@
     <!-- jQuery (https://jquery.com/download/) -->
     <script type="text/javascript" src="/static/projects/gallery/firstLevel/js/yy_gallery_firstlevel.js"></script>
     <script>
-        convert_pic({{ json|safe }});
+        convert_pic({{ json|safe }}, '{{ pre_path }}');
     </script>
     <script>
 
@@ -51,7 +51,8 @@
 <body>
 <div class="grid-item" hidden id="pic_item">
     <figure class="effect-sadie">
-        <img src="/static/projects/gallery/firstLevel/img/tm-img-01-tn.jpg" alt="Image"
+        {#        /static/projects/gallery/firstLevel/img/tm-img-01-tn.jpg#}
+        <img id='pic_thum' src="/static/media/pic/thum/054d9bdc23c02fe78cc499d8b917646d.jpg" alt="Image"
              class="img-fluid tm-img">
         <figcaption>
             <h2 class="tm-figure-title" id="item_name">Image</h2>
