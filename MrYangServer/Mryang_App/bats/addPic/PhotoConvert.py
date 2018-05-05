@@ -44,10 +44,11 @@ class PhotoConvert(ConvertBase):
         print(rel_path)
 
     def walk_over(self):
-        Dir.objects.bulk_create(self.dir_list)
+        if self.dir_list.count() > 0:
+            Dir.objects.bulk_create(self.dir_list)
 
         # 结束时,将没有child的dir给删除!!!
-        level1 = Dir.objects.filter(c_id__lt=100)
+        level1 = Dir.objects.filter(c_id__lt=THUM_PIC_ID_POW)
         for l1 in level1:
             childs = Dir.objects.filter(c_id=l1.c_id + THUM_PIC_ID_POW)
             child_count = childs.count()
@@ -76,10 +77,6 @@ class PhotoConvert(ConvertBase):
 
 
 if __name__ == '__main__':
-    # with open(r'G:\pyWorkspace\django_work\MrYangServer\static\media\pic\thum\info', encoding='utf-8') as file_object:
-    #     lines = file_object.readlines()  # 读取全部内容
-    #     for line in lines:
-    #         print(line.rstrip('\n'))
     PhotoConvert().go()
     # PhotoConvert().walk_over()
     # print(Dir.objects.filter(c_id__lt=100))

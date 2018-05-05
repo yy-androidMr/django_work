@@ -1,12 +1,30 @@
 var level1_dir;
 var media_root = '/static/media';
 var pre_path;//指定到thum目录
+var page_max_album = 20; //页签控制,一页最多多少个相册
 $(document).ready(function () {
         picPage()
     }
 );
 
+function loadTitle() {
+    var parent = $('#page_title_parent');
+    var tilte_count = level1_dir.length / page_max_album + 1;
+    for (var i = 0; i < tilte_count; i++) {
+        var item = $('#page_title_item').clone(true);
+        item.removeAttr('hidden');
+        item.removeAttr('id');
+        // active selected
+        var class_attr = i == 0 ? 'nav-item active selected' : 'nav-item';
+        item.attr('class', class_attr);
+        var pagedata = item.find('#page_title_item_data');
+        pagedata.attr('data-no', '' + (i + 1));
+        parent.append(item);
+    }
+}
+
 function picPage() {
+    loadTitle();
 // testJson
 //     window.alert($('#testJson'))
 //     $('#testJson').html(js_dir[0].name);
