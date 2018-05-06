@@ -152,7 +152,6 @@ function _showPic() {
 
 
 function convert_dirsjson(dirsJson) {
-    page_type = type;
     var rootDir;
     var dirs = new Array();
     for (var i = 0, count = dirsJson.length; i < count; i++) {
