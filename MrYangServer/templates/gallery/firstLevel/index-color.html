@@ -35,17 +35,6 @@
     <script>
         convert_pic({{ json|safe }}, '{{ pre_path }}');
     </script>
-    <script>
-
-        var tm_gray_site = false;
-
-        if (tm_gray_site) {
-            $('html').addClass('gray');
-        }
-        else {
-            $('html').removeClass('gray');
-        }
-    </script>
 </head>
 
 <body>
@@ -60,7 +49,6 @@
         <div class="container-fluid js-tm-page-content" data-page-no="1" data-page-type="gallery">
             <div class="tm-img-gallery-container">
                 <div class="tm-img-gallery">
-                    {#                    id="gallery_pool"#}
                 </div>
             </div>
         </div>
