@@ -79,7 +79,7 @@ def src2middle(delete_exist):
             # exif_bytes = piexif.dump(exif_dict)
             # new_img.paste(exif=exif_bytes)
 
-            print(rename_path)
+            print(rename_path + ' orientation:' + str(orientation))
 
 
 def middle2thum():
@@ -113,6 +113,7 @@ def middle2thum():
             crop_img.thumbnail(thum_size, Image.ANTIALIAS)
             exif_dict = piexif.load(crop_img.info["exif"])
             exif_bytes = piexif.dump(exif_dict)
+            # crop_img.save(desc_path, 'JPEG')  # 是否需要压缩质量,具体看情况而定.
             crop_img.save(desc_path, 'JPEG', exif=exif_bytes)  # 是否需要压缩质量,具体看情况而定.
             print(desc_path)
 
@@ -132,6 +133,6 @@ def move_info():
 
 
 if __name__ == '__main__':
-    # src2middle(True)
-    # middle2thum()
+    src2middle(True)
+    middle2thum()
     move_info()

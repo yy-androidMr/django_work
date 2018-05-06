@@ -44,8 +44,8 @@ class PhotoConvert(ConvertBase):
         print(rel_path)
 
     def walk_over(self):
-        if self.dir_list.count() > 0:
-            Dir.objects.bulk_create(self.dir_list)
+        # if self.dir_list.count() > 0:
+        Dir.objects.bulk_create(self.dir_list)
 
         # 结束时,将没有child的dir给删除!!!
         level1 = Dir.objects.filter(c_id__lt=THUM_PIC_ID_POW)
