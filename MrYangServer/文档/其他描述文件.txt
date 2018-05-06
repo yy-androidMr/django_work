@@ -1,0 +1,5 @@
+1.提高github下载速度
+http://tool.chinaz.com/dns
+找ttl值较小的 ping一下 然后修改host
+151.101.229.194 github.global.ssl.fastly.net
+151.101.100.133 assets-cdn.github.com
