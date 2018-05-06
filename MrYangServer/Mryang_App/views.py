@@ -138,11 +138,14 @@ def m_index(request):
 
 def m_gallery(request):
     json = yquery.pic_level1_2json()
-    print(json)
     return render(request, 'gallery/firstLevel/index-color.html', {'json': json, 'pre_path': '/pic/thum'})
 
 
-def m_second_gallery(request):
-    return render(request, 'gallery/secondLevel/index.html')
-
-# def m_gallery_2(request):
+def m_second_gallery(request, dir_id):
+    print(dir_id, type(dir_id))
+    try:
+        c_id = int(dir_id)
+        json = yquery.pic_level2_2json(c_id)
+        return render(request, 'gallery/secondLevel/index.html', {'json': json, 'show_path': '/pic/middle'})
+    except:
+        print('非法参数:' + dir_id)

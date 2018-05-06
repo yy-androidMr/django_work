@@ -38,5 +38,5 @@ urlpatterns = [
     url(r'^aj_mov/$', views.movie),
     url(r'^own/$', views.m_index),
     url(r'^gallery/$', views.m_gallery),
-    url(r'^gallery2/$', views.m_second_gallery),
+    url(r'^gallery/l2/([0-9]+)$', views.m_second_gallery),
 ]

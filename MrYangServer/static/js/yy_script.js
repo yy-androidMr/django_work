@@ -82,17 +82,9 @@ function moviePage() {
             //
         } else {
             cloneNode.unbind();
-            if (js_dir.mType == PIC_TYPE)//相册
-            {
-                itemImg.attr('src', '/static/media/pic/' + file_item.path);
-
-            } else {
-
-                itemImg.attr('src', '/static/images/movie_icon.png');
-            }
+            itemImg.attr('src', '/static/images/movie_icon.png');
 
             // cloneNode.attr('href', 'http://192.168.199.124/movie/' + file_item.path);
-
             var encode = 'http://192.168.199.124/movie/' + file_item.path;
 
             cloneNode.bind('click', encode, showVideo);
@@ -152,6 +144,7 @@ function _showPic() {
 
 
 function convert_dirsjson(dirsJson) {
+    page_type = type;
     var rootDir;
     var dirs = new Array();
     for (var i = 0, count = dirsJson.length; i < count; i++) {

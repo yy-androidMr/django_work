@@ -15,6 +15,7 @@ class PhotoConvert(ConvertBase):
     def __init__(self):
         super().__init__()
         self.dir_id = 1
+        self.child_id = {}
         self.dir_list = []
 
     def go(self):
@@ -39,7 +40,17 @@ class PhotoConvert(ConvertBase):
             d_model.save()
         else:
             d_model.parent_dir = parent_dir  # 外键共生
-            d_model.c_id = parent_dir.c_id + THUM_PIC_ID_POW  # 照片id为文件夹*100??存疑
+            c_id = parent_dir.c_id * THUM_PIC_ID_POW
+            cur_child_id = 1
+            if parent_dir.c_id in self.child_id:
+                cur_child_id = self.child_id[parent_dir.c_id]
+                cur_child_id += 1
+            self.child_id[parent_dir.c_id] = cur_child_id
+            # self.child_id[str(parent_dir.c_id)] = cur_child_id
+            c_id += cur_child_id
+            print(str(c_id) + " type:" + str(type(parent_dir.c_id * THUM_PIC_ID_POW)) + "  type2:" + str(type(c_id)))
+            d_model.c_id = c_id  # 照片id为文件夹*100??存疑
+            # d_model.save()
             self.dir_list.append(d_model)
         print(rel_path)
 
@@ -50,7 +61,8 @@ class PhotoConvert(ConvertBase):
         # 结束时,将没有child的dir给删除!!!
         level1 = Dir.objects.filter(c_id__lt=THUM_PIC_ID_POW)
         for l1 in level1:
-            childs = Dir.objects.filter(c_id=l1.c_id + THUM_PIC_ID_POW)
+            childs = Dir.objects.filter(c_id__lt=(l1.c_id + 1) * THUM_PIC_ID_POW,
+                                        c_id__gt=l1.c_id * THUM_PIC_ID_POW)  # 查找区间内的id
             child_count = childs.count()
             if child_count < 1:
                 # 删除一级文件夹
@@ -78,5 +90,6 @@ class PhotoConvert(ConvertBase):
 
 if __name__ == '__main__':
     PhotoConvert().go()
+
     # PhotoConvert().walk_over()
     # print(Dir.objects.filter(c_id__lt=100))
