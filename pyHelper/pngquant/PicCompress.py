@@ -34,6 +34,12 @@ def get_md5(file_path):
     return md5
 
 
+def md5_of_str(src):
+    md1 = hashlib.md5()
+    md1.update(src.encode("utf-8"))
+    return md1.hexdigest()
+
+
 def src2middle(delete_exist):
     middle_size = (2000, 2000)
     # cmd = 'for i in ' + src + '/*.jpg;do jpegoptim -m50 -d ' + desc + ' -p "$i";done'
@@ -43,15 +49,16 @@ def src2middle(delete_exist):
             source_path = os.path.join(root, file).replace('\\', '/')
             if not any(str_ in file for str_ in ('.jpeg', '.jpg', 'png')):
                 continue
-            desc_path = middle + source_path[len(src):]
-            dir = os.path.dirname(desc_path)
-            exten = os.path.splitext(desc_path)[1]
-            rename_path = dir + '/' + get_md5(source_path) + exten
+            exten = os.path.splitext(source_path)[1]
+            simple_path = source_path[len(src):]
+            print(os.path.dirname(simple_path))
+            desc_path = middle + '/' + md5_of_str(os.path.dirname(simple_path))
+            rename_path = desc_path + '/' + get_md5(source_path) + exten
             if (not delete_exist) and os.path.exists(rename_path):
                 print('文件已存在!' + rename_path)
                 continue
-            if not os.path.exists(dir):
-                os.makedirs(dir)
+            if not os.path.exists(desc_path):
+                os.makedirs(desc_path)
             img = Image.open(source_path)
 
             img.thumbnail(middle_size, Image.ANTIALIAS)
@@ -88,7 +95,7 @@ def middle2thum():
 
             desc_path = thum + source_path[len(middle):]
             dir = os.path.dirname(desc_path)
-            desc_path = dir + '/' + os.path.splitext(os.path.basename(desc_path))[0]+'.thum'
+            desc_path = dir + '/' + os.path.splitext(os.path.basename(desc_path))[0] + '.thum'
             if not os.path.exists(dir):
                 os.makedirs(dir)
 
@@ -102,11 +109,11 @@ def middle2thum():
                 yoff = int((h - w) / 2)
                 region = (0, yoff, w, w + yoff)
 
-            cropImg = img.crop(region)  # 保存裁切后的图片
-            cropImg.thumbnail(thum_size, Image.ANTIALIAS)
-            exif_dict = piexif.load(cropImg.info["exif"])
+            crop_img = img.crop(region)  # 保存裁切后的图片
+            crop_img.thumbnail(thum_size, Image.ANTIALIAS)
+            exif_dict = piexif.load(crop_img.info["exif"])
             exif_bytes = piexif.dump(exif_dict)
-            cropImg.save(desc_path, 'JPEG', exif=exif_bytes)  # 是否需要压缩质量,具体看情况而定.
+            crop_img.save(desc_path, 'JPEG', exif=exif_bytes)  # 是否需要压缩质量,具体看情况而定.
             print(desc_path)
 
 
@@ -116,7 +123,8 @@ def move_info():
             if 'info' in file:
                 src_path = os.path.join(root, file).replace('\\', '/')
                 # thum = '../../MrYangServer/static/media/pic/thum'
-                desc_path = thum + src_path[len(src):]
+                simple_dir = src_path[len(src):]
+                desc_path = thum + '/' + md5_of_str(os.path.dirname(simple_dir)) + '/info'
 
                 shutil.copy(src_path, desc_path)
 
@@ -124,6 +132,6 @@ def move_info():
 
 
 if __name__ == '__main__':
-    src2middle(True)
-    middle2thum()
+    # src2middle(True)
+    # middle2thum()
     move_info()
