@@ -8,6 +8,15 @@
     <link rel="stylesheet" href="/static/projects/gallery/secondLevel/css/main.css"/>
     <!--[if lte IE 9]><link rel="stylesheet" href="/static/projects/gallery/secondLevel/css/ie9.css" /><![endif]-->
     <!--[if lte IE 8]><link rel="stylesheet" href="/static/projects/gallery/secondLevel/css/ie8.css" /><![endif]-->
+    <script src="/static/projects/gallery/firstLevel/js/jquery-1.11.3.min.js"></script>
+
+    <script type="text/javascript" src="/static/projects/gallery/firstLevel/js/jquery.cookie.js"></script>
+
+    <script type="text/javascript" src="/static/projects/gallery/firstLevel/js/yy_gallery_secondlevel.js"></script>
+
+    <script>
+        convert_2pic({{ json|safe }}, '{{ pre_path }}');
+    </script>
 </head>
 <body>
 

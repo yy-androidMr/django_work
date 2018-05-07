@@ -61,8 +61,7 @@ def src2middle(delete_exist):
                 os.makedirs(desc_path)
             img = Image.open(source_path)
 
-            img.thumbnail(middle_size, Image.ANTIALIAS)
-            # print(exif_dict['0th'][piexif.ImageIFD.Orientation])
+            # img.thumbnail(middle_size, Image.ANTIALIAS)
 
             old_exif = piexif.load(img.info["exif"])
             orientation = old_exif['0th'][piexif.ImageIFD.Orientation]
@@ -95,7 +94,7 @@ def middle2thum():
 
             desc_path = thum + source_path[len(middle):]
             dir = os.path.dirname(desc_path)
-            desc_path = dir + '/' + os.path.splitext(os.path.basename(desc_path))[0] + '.thum'
+            # desc_path = dir + '/' + os.path.splitext(os.path.basename(desc_path))[0] + '.thum'
             if not os.path.exists(dir):
                 os.makedirs(dir)
 
