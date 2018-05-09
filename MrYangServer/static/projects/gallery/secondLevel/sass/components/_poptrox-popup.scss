@@ -34,7 +34,7 @@
 
 		.closer {
 			@include vendor('transition', 'opacity #{_duration(transition)} ease-in-out');
-			background-image: url('images/close.svg');
+			background-image: url('/static/css/images/close.svg');
 			background-position: center;
 			background-repeat: no-repeat;
 			background-size: 3em;
@@ -50,7 +50,7 @@
 		.nav-previous,
 		.nav-next {
 			@include vendor('transition', 'opacity #{_duration(transition)} ease-in-out');
-			background-image: url('images/arrow.svg');
+			background-image: url('/static/css/images/arrow.svg');
 			background-position: center;
 			background-repeat: no-repeat;
 			background-size: 5em;
@@ -95,7 +95,7 @@
 
 		.loader {
 			@include vendor('animation', 'spinner 1s infinite linear !important');
-			background-image: url('images/spinner.svg');
+			background-image: url('/static/css/images/spinner.svg');
 			background-position: center;
 			background-repeat: no-repeat;
 			background-size: contain;

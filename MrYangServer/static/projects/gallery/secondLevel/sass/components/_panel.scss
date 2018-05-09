@@ -45,7 +45,7 @@
 
 		> .closer {
 			@include vendor('transition', 'opacity #{_duration(transition)} ease-in-out');
-			background-image: url('images/close.svg');
+			background-image: url('/static/css/images/close.svg');
 			background-position: center;
 			background-repeat: no-repeat;
 			background-size: 3em;

@@ -32,18 +32,6 @@ function insertContent() {
         item.removeAttr('style');
         item.removeAttr('id');
 
-        // var thum_pic = item.find('#thum_pic');
-        // var t_p = media_root + thum_path + dir_path + '/' + data_item.name;
-        // thum_pic.attr('src', t_p);
-        //
-        //
-        // var m_p = media_root + middle_path + dir_path + '/' + data_item.name;
-        // thum_pic.attr('data-original', m_p);
-        //
-        // // middle_pic.removeAttr('href');
-        // // middle_pic.attr('data-original', m_p);
-        //
-
         var thum_pic = item.find('#pic');
         var t_p = media_root + thum_path + dir_path + '/' + data_item.name;
         var m_p = media_root + middle_path + dir_path + '/' + data_item.name;
@@ -55,7 +43,7 @@ function insertContent() {
 
     }
 
-    $('#pic_thum_item').remove();
+    // $('#pic_thum_item').remove();
 }
 
 function GetCookie()//两个参数，一个是cookie的名子，一个是值
