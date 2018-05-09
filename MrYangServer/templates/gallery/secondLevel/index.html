@@ -58,6 +58,15 @@
 <script src="/static/projects/gallery/secondLevel/js/main.js"></script>
 
 <script>
+    var useCss3Trans = true;
+    try {
+        if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+            useCss3Trans = false;
+        } else {
+            useCss3Trans = true;
+        }
+    } catch (e) {
+    }
     $(function () {
         var $main = $('#main');
 
@@ -65,6 +74,7 @@
             url: 'data-original',
             navbar: true,
             fullscreen: false,
+            transition: useCss3Trans,
         });
     });
 </script>
