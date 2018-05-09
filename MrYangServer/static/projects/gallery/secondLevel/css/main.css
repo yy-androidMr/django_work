@@ -1394,7 +1394,7 @@
 		left: 0;
 		line-height: 4em;
 		padding: 0 1.5em;
-		position: fixed;
+		/*position: fixed;*/
 		user-select: none;
 		width: 100%;
 		z-index: 10002;
@@ -1472,7 +1472,7 @@
 	@media screen and (max-width: 736px) {
 
 		body {
-			padding: 4em 0 0 0;
+			padding: 0 0 0 0;
 		}
 
 		#header {

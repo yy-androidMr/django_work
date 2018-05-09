@@ -79,6 +79,8 @@ class PhotoConvert(ConvertBase):
                         for line in lines:
                             tags += line.rstrip('\n') + ' '
                             cur_info_tags += 1
+                            if cur_info_tags == info_tags_count:
+                                break
                 if cur_info_tags < info_tags_count:
                     tags += ' ' * (info_tags_count - cur_info_tags)
 

@@ -9,8 +9,21 @@ $(document).ready(function () {
     }
 );
 
+var fullscreen = function () {
+    elem = document.body;
+    if (elem.webkitRequestFullScreen) {
+        elem.webkitRequestFullScreen();
+    } else if (elem.mozRequestFullScreen) {
+        elem.mozRequestFullScreen();
+    } else if (elem.requestFullScreen) {
+        elem.requestFullscreen();
+    } else {
+        //浏览器不支持全屏API或已被禁用
+    }
+}
+
 function insertContent() {
-    return;
+    // return;
     // pic_thum_item
     var parent = $('#main');
     for (var i = 0; i < level2_dir.length; i++) {
@@ -31,25 +44,18 @@ function insertContent() {
         // // middle_pic.attr('data-original', m_p);
         //
 
-        var thum_pic = item.find('#thum_pic');
+        var thum_pic = item.find('#pic');
         var t_p = media_root + thum_path + dir_path + '/' + data_item.name;
-        thum_pic.attr('src', t_p);
-
-        var middle_pic = item.find('#middle_pic');
-        middle_pic.attr('id', 'middleParent')
         var m_p = media_root + middle_path + dir_path + '/' + data_item.name;
-        middle_pic.attr('href', m_p);
 
-        // middle_pic.removeAttr('href');
-        // middle_pic.attr('data-original', m_p);
+        thum_pic.attr('src', t_p);
+        thum_pic.attr('data-original', m_p);
 
         parent.append(item);
 
     }
 
-    var $main = $('#middleParent');
-    $main.magnify();
-
+    $('#pic_thum_item').remove();
 }
 
 function GetCookie()//两个参数，一个是cookie的名子，一个是值

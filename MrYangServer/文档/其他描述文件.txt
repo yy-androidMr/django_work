@@ -3,3 +3,7 @@ http://tool.chinaz.com/dns
 找ttl值较小的 ping一下 然后修改host
 151.101.229.194 github.global.ssl.fastly.net
 151.101.100.133 assets-cdn.github.com
+
+
+2.viewer api
+https://www.cnblogs.com/yi0921/p/7080284.html

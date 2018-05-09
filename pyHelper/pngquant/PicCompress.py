@@ -51,7 +51,6 @@ def src2middle(delete_exist):
                 continue
             exten = os.path.splitext(source_path)[1]
             simple_path = source_path[len(src):]
-            print(os.path.dirname(simple_path))
             desc_path = middle + '/' + md5_of_str(os.path.dirname(simple_path))
             rename_path = desc_path + '/' + get_md5(source_path) + exten
             if (not delete_exist) and os.path.exists(rename_path):
@@ -64,9 +63,13 @@ def src2middle(delete_exist):
             # img.thumbnail(middle_size, Image.ANTIALIAS)
 
             old_exif = piexif.load(img.info["exif"])
-            orientation = old_exif['0th'][piexif.ImageIFD.Orientation]
-            exif_dict = {"0th": {piexif.ImageIFD.Orientation: orientation}}
-            exif_bytes = piexif.dump(exif_dict)
+
+            if '0th' in old_exif and piexif.ImageIFD.Orientation in old_exif['0th']:
+                orientation = old_exif['0th'][piexif.ImageIFD.Orientation]
+                exif_dict = {"0th": {piexif.ImageIFD.Orientation: orientation}}
+                exif_bytes = piexif.dump(exif_dict)
+            else:
+                exif_bytes = piexif.dump({})
 
             img.save(rename_path, 'JPEG', quality=50, exif=exif_bytes)
 
@@ -78,7 +81,7 @@ def src2middle(delete_exist):
             # exif_bytes = piexif.dump(exif_dict)
             # new_img.paste(exif=exif_bytes)
 
-            print(rename_path + ' orientation:' + str(orientation))
+            print(rename_path)
 
 
 def middle2thum():
