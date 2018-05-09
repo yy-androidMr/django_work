@@ -1,11 +1,38 @@
 var thum_path;
 var middle_path;
 var dir_path;
+var media_root = '/static/media';
+
 
 $(document).ready(function () {
+        insertContent();
     }
 );
 
+function insertContent() {
+    // pic_thum_item
+    var parent = $('#main');
+    for (var i = 0; i < level2_dir.length; i++) {
+        var data_item = level2_dir[i];
+        var item = $('#pic_thum_item').clone(true);
+        item.removeAttr('style');
+        item.removeAttr('id');
+
+        var thum_pic = item.find('#thum_pic');
+        var t_p = media_root + thum_path + dir_path + '/' + data_item.name;
+        thum_pic.attr('src', t_p);
+
+
+        var middle_pic = item.find('#middle_pic');
+        var m_p = media_root + middle_path + dir_path + '/' + data_item.name;
+        middle_pic.attr('href', m_p);
+
+        parent.append(item);
+
+
+    }
+
+}
 
 function GetCookie()//两个参数，一个是cookie的名子，一个是值
 {
