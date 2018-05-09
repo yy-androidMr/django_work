@@ -6,14 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
     <!--[if lte IE 8]><script src="/static/projects/gallery/secondLevel/js/ie/html5shiv.js"></script><![endif]-->
     <link rel="stylesheet" href="/static/projects/gallery/secondLevel/css/main.css"/>
+    <link rel="stylesheet" href="/static/projects/gallery/secondLevel/css/jquery.magnify.css">
     <!--[if lte IE 9]><link rel="stylesheet" href="/static/projects/gallery/secondLevel/css/ie9.css" /><![endif]-->
     <!--[if lte IE 8]><link rel="stylesheet" href="/static/projects/gallery/secondLevel/css/ie8.css" /><![endif]-->
-    <script src="/static/projects/gallery/firstLevel/js/jquery-1.11.3.min.js"></script>
+    {#    <script src="/static/projects/gallery/firstLevel/js/jquery-1.11.3.min.js"></script>#}
+    <script src="/static/projects/gallery/secondLevel/js/jquery.min.js"></script>
+
 
     <script type="text/javascript" src="/static/projects/gallery/firstLevel/js/jquery.cookie.js"></script>
 
     <script type="text/javascript" src="/static/projects/gallery/secondLevel/js/yy_gallery_secondlevel.js"></script>
-
+    <script type="text/javascript" src="/static/projects/gallery/secondLevel/js/jquery.magnify.js"></script>
+    {#    <script type="text/javascript" src="/static/projects/gallery/secondLevel/js/viewer-jquery.min.js"></script>#}
+    {#    <script src="https://cdn.bootcss.com/magnify/2.3.0/js/jquery.magnify.min.js"></script>#}
     <script>
         convert_2pic({{ json|safe }}, '{{ pre_path }}');
     </script>
@@ -23,12 +28,13 @@
 
 <article class="thumb" style="visibility: hidden" id="pic_thum_item">
     <a id="middle_pic"
-       href=""
        class="image">
-        <img id="thum_pic" src="jpg" alt=""/></a>
+        <img id="thum_pic" src="" border="0" hidden>
+    </a>
     <h2>图片描述</h2>
     <p></p>
 </article>
+{#/static/media/pic/middle/fe2e8a53be2f45d0d692aa84ff2e04d2/2af973d52dd38cc982ea97c9167628a7.jpg#}
 <!-- Wrapper -->
 <div id="wrapper">
 
@@ -37,17 +43,59 @@
         <h1><a href="/gallery"><strong>返回主界面</strong></a></h1>
     </header>
     <div id="main">
-
+        <article class="thumb" id="pic_thum_item">
+            <a data-magnify="gallery" id="middle_pic"
+               href="/static/media/pic/middle/fe2e8a53be2f45d0d692aa84ff2e04d2/2af973d52dd38cc982ea97c9167628a7.jpg"
+               class="image">
+                <img id="thum_pic"
+                     src="/static/media/pic/middle/fe2e8a53be2f45d0d692aa84ff2e04d2/2af973d52dd38cc982ea97c9167628a7.jpg"
+                     hidden>
+            </a>
+            <h2>图片描述</h2>
+            <p></p>
+        </article>
     </div>
 </div>
 
 <!-- Scripts -->
-<script src="/static/projects/gallery/secondLevel/js/jquery.min.js"></script>
 <script src="/static/projects/gallery/secondLevel/js/jquery.poptrox.min.js"></script>
 <script src="/static/projects/gallery/secondLevel/js/skel.min.js"></script>
 <script src="/static/projects/gallery/secondLevel/js/util.js"></script>
 <!--[if lte IE 8]><script src="/static/projects/gallery/secondLevel/js/ie/respond.min.js"></script><![endif]-->
 <script src="/static/projects/gallery/secondLevel/js/main.js"></script>
+
+<script>
+    {#    $(function () {#}
+    {#        var $main = $('#main');#}
+    {##}
+    {#        $main.viewer({#}
+    {#            url: 'data-original',#}
+    {#            navbar: true,#}
+    {#        });#}
+    {#    });#}
+    $(function () {
+        $('[data-magnify]').magnify({
+            headToolbar: [
+                'close'
+            ],
+            footToolbar: [
+                'maximize',
+                'zoomIn',
+                'zoomOut',
+                'prev',
+                'fullscreen',
+                'next',
+                'actualSize',
+                'rotateLeft',
+                'rotateRight'
+            ],
+            modalWidth: 400,
+            modalHeight: 400,
+{#            initMaximized: true#}
+        });
+
+    });
+</script>
 
 </body>
 </html>

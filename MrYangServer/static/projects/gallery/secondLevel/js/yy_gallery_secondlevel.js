@@ -10,6 +10,7 @@ $(document).ready(function () {
 );
 
 function insertContent() {
+    return;
     // pic_thum_item
     var parent = $('#main');
     for (var i = 0; i < level2_dir.length; i++) {
@@ -18,19 +19,36 @@ function insertContent() {
         item.removeAttr('style');
         item.removeAttr('id');
 
+        // var thum_pic = item.find('#thum_pic');
+        // var t_p = media_root + thum_path + dir_path + '/' + data_item.name;
+        // thum_pic.attr('src', t_p);
+        //
+        //
+        // var m_p = media_root + middle_path + dir_path + '/' + data_item.name;
+        // thum_pic.attr('data-original', m_p);
+        //
+        // // middle_pic.removeAttr('href');
+        // // middle_pic.attr('data-original', m_p);
+        //
+
         var thum_pic = item.find('#thum_pic');
         var t_p = media_root + thum_path + dir_path + '/' + data_item.name;
         thum_pic.attr('src', t_p);
 
-
         var middle_pic = item.find('#middle_pic');
+        middle_pic.attr('id', 'middleParent')
         var m_p = media_root + middle_path + dir_path + '/' + data_item.name;
         middle_pic.attr('href', m_p);
 
+        // middle_pic.removeAttr('href');
+        // middle_pic.attr('data-original', m_p);
+
         parent.append(item);
 
-
     }
+
+    var $main = $('#middleParent');
+    $main.magnify();
 
 }
 
