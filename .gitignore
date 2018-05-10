@@ -12,3 +12,5 @@ MrYangServer/static/media/thum/
 MrYangServer/static/media/middle/
 !MrYangServer/static/media/middle/1.txt
 *.mp4
+PyHelper/Plugins/
+!PyHelper/Plugins/说明.txt

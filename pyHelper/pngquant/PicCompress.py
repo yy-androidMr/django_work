@@ -59,19 +59,22 @@ def src2middle(delete_exist):
             if not os.path.exists(desc_path):
                 os.makedirs(desc_path)
             img = Image.open(source_path)
-
-            # img.thumbnail(middle_size, Image.ANTIALIAS)
-
+            #压缩尺寸
+            img.thumbnail(middle_size, Image.ANTIALIAS)
+            #处理旋转信息.
             old_exif = piexif.load(img.info["exif"])
-
             if '0th' in old_exif and piexif.ImageIFD.Orientation in old_exif['0th']:
                 orientation = old_exif['0th'][piexif.ImageIFD.Orientation]
-                exif_dict = {"0th": {piexif.ImageIFD.Orientation: orientation}}
-                exif_bytes = piexif.dump(exif_dict)
-            else:
-                exif_bytes = piexif.dump({})
+                if orientation == 6:
+                    img = img.rotate(-90, expand=True)
+                if orientation == 3:
+                    img = img.rotate(180)
+                if orientation == 8:
+                    img = img.rotate(90, expand=True)
+            exif_bytes = piexif.dump({})
+            img.save(rename_path, 'JPEG', exif=exif_bytes)
 
-            img.save(rename_path, 'JPEG', quality=50, exif=exif_bytes)
+            # img.save(rename_path, 'JPEG', quality=50, exif=exif_bytes)
 
             # new_img = Image.open(rename_path)
             # exif_dict = piexif.load(new_img.info["exif"])
@@ -134,7 +137,30 @@ def move_info():
                 # print(source_path)
 
 
+def delete_exif(pic_idr):
+    for root, dirs, files in os.walk(pic_idr):
+        for file in files:
+            if not any(str_ in file for str_ in ('.jpeg', '.jpg', 'png')):
+                continue
+            source_path = os.path.join(root, file).replace('\\', '/')
+
+            img = Image.open(source_path)
+            old_exif = piexif.load(img.info["exif"])
+            if '0th' in old_exif and piexif.ImageIFD.Orientation in old_exif['0th']:
+                orientation = old_exif['0th'][piexif.ImageIFD.Orientation]
+                if orientation == 6:
+                    img = img.rotate(-90, expand=True)
+                if orientation == 3:
+                    img = img.rotate(180)
+                if orientation == 8:
+                    img = img.rotate(90, expand=True)
+            exif_bytes = piexif.dump({})
+            img.save(source_path + '.jpg', 'JPEG', exif=exif_bytes)
+    pass
+
+
 if __name__ == '__main__':
+
     src2middle(True)
     middle2thum()
     move_info()
