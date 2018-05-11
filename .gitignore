@@ -5,12 +5,14 @@ MrYangServer/venv/
 .DS_Store
 */.DS_Store
 MrYangServer/db.sqlite3
-MrYangServer/static/media/pic/
+MrYangServer/static/media/
 !MrYangServer/static/media/pic/1.txt
-MrYangServer/static/media/thum/
 !MrYangServer/static/media/thum/1.txt
-MrYangServer/static/media/middle/
 !MrYangServer/static/media/middle/1.txt
 *.mp4
 PyHelper/Plugins/
 !PyHelper/Plugins/说明.txt
+MrYangServer/media_source/pic/
+!MrYangServer/media_source/pic/src/1.txt
+!MrYangServer/media_source/pic/middle/1.txt
+!MrYangServer/media_source/pic/thum/1.txt
