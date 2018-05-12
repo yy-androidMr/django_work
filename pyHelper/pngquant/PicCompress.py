@@ -10,10 +10,11 @@ from PIL import Image
 
 import yy_utils
 
+media_target = '../../MrYangServer/static/media'
 media_source = '../../MrYangServer/media_source'
 src = media_source + '/pic/src'
-middle = media_source + '/pic/middle'
-thum = media_source + '/pic/thum'
+middle = media_target + '/pic/middle'
+thum = media_target + '/pic/thum'
 
 
 def is_mac():
@@ -50,7 +51,7 @@ def is_photo(path):
 
 
 def src2pc(delete_exist):
-    middle_size = (2000, 2000)
+    middle_size = (1500, 1500)
     # cmd = 'for i in ' + src + '/*.jpg;do jpegoptim -m50 -d ' + desc + ' -p "$i";done'
     # os.system(cmd)
     for root, dirs, files in os.walk(src):
@@ -91,7 +92,7 @@ def middle2thum():
     for root, dirs, files in os.walk(middle):
         for file in files:
             if not is_photo(file):
-                continue;
+                continue
             source_path = os.path.join(root, file).replace('\\', '/')
 
             desc_path = thum + source_path[len(middle):]
@@ -129,34 +130,33 @@ def move_info():
 
                 # print(source_path)
 
-
-webp_target = '../../MrYangServer/static/media'
-webp_middle = webp_target + '/pic/middle'
-webp_thum = webp_target + '/pic/thum'
-webp_terminal = r'.\..\Plugins\webp\bin\cwebp'
-
-
-def walk_pic2webp():
-    convert_webp(middle, webp_middle)
-    convert_webp(thum, webp_thum)
-
-
-def convert_webp(src_path, to_path):
-    for root, dirs, files in os.walk(src_path):
-        for file in files:
-            if not is_photo(file):
-                continue
-            source_path = os.path.join(root, file).replace('\\', '/')
-            desc_path = to_path + source_path[len(src_path):]
-            desc_path = yy_utils.re_exten(desc_path, '.webp')
-            desc_dir = os.path.dirname(desc_path)
-            if not os.path.exists(desc_dir):
-                os.mkdir(desc_dir)
-            os.system('%s    %s -o %s ' % (webp_terminal, source_path, desc_path))  # -size 204800
+#
+# webp_middle = webp_target + '/pic/middle'
+# webp_thum = webp_target + '/pic/thum'
+# webp_terminal = r'.\..\Plugins\webp\bin\cwebp'
+#
+#
+# def walk_pic2webp():
+#     convert_webp(middle, webp_middle)
+#     convert_webp(thum, webp_thum)
+#
+#
+# def convert_webp(src_path, to_path):
+#     for root, dirs, files in os.walk(src_path):
+#         for file in files:
+#             if not is_photo(file):
+#                 continue
+#             source_path = os.path.join(root, file).replace('\\', '/')
+#             desc_path = to_path + source_path[len(src_path):]
+#             desc_path = yy_utils.re_exten(desc_path, '.webp')
+#             desc_dir = os.path.dirname(desc_path)
+#             if not os.path.exists(desc_dir):
+#                 os.mkdir(desc_dir)
+#             os.system('%s    %s -o %s ' % (webp_terminal, source_path, desc_path))  # -size 204800
 
 
 if __name__ == '__main__':
-    # src2pc(True)
-    # middle2thum()
-    # # move_info()
-    walk_pic2webp()
+    src2pc(True)
+    middle2thum()
+    move_info()
+    # walk_pic2webp()

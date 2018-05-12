@@ -24,7 +24,7 @@ class PhotoConvert(ConvertBase):
 
     def walk_call(self, abs_path, rel_path, parent_dir, name, is_dir):
         if not is_dir:
-            if not any(str_ in name for str_ in ('.webp')):
+            if not any(str_ in name for str_ in ('.jpg','jpeg','png')):
                 return
         d_model = Dir()
         d_model.name = name
