@@ -120,8 +120,8 @@ def movie(request):
     return HttpResponse(json, content_type='application/json')
 
 
-def yy_all(request, path):
-    return render(request, path + '.html')
+# def yy_all(request, path):
+#     return render(request, path + '.html')
 
 
 def m_index(request):
@@ -133,23 +133,7 @@ def m_gallery(request):
     return render(request, 'gallery/firstLevel/index-color.html', {'json': json, 'pre_path': '/pic/thum'})
 
 
-def readFile(fn, buf_size=262144):
-    f = open(fn, "rb")
-    while True:
-        c = f.read(buf_size)
-        if c:
-            yield c
-        else:
-            break
-    f.close()
-
-
-def m_gallery_swf(request):
-    response = HttpResponse()  # readFile('F:\django_work\MrYangServer\static\js\WebP.sw')
-    return response
-
-
-def m_second_gallery(request, dir_id):
+def m_second_gallery(request, dir_id, page):
     print(dir_id, type(dir_id))
     try:
         c_id = int(dir_id)

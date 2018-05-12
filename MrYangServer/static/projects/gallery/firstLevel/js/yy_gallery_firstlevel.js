@@ -19,7 +19,7 @@ function gallery2(c_idproxy) {
     SetCookie('thum_path', encode.thum_path);
     SetCookie('dir_path', encode.dir_path);
     SetCookie('gallery_name', encode.gallery_name);
-    window.open('l2/' + encode.id, '_parent');
+    window.open('l2/' + encode.id + '/0', '_parent');
 }
 
 function loadTitle(pageCount) {
