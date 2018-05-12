@@ -1,10 +1,12 @@
 var thum_path;
 var middle_path;
 var dir_path;
+var gallery_name;
 var media_root = '/static/media';
 
 
 $(document).ready(function () {
+        $('#gallery_name').html(gallery_name);
         insertContent();
     }
 );
@@ -50,6 +52,7 @@ function GetCookie()//两个参数，一个是cookie的名子，一个是值
 {
     thum_path = decodeURI($.cookie('thum_path'));
     dir_path = decodeURI($.cookie('dir_path'));
+    gallery_name = decodeURI($.cookie('gallery_name'));
 }
 
 var level2_dir;
