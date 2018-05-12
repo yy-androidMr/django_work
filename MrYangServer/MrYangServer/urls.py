@@ -17,7 +17,6 @@ from django.conf.urls import url
 from django.contrib import admin
 
 from Mryang_App import views
-
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     # url(r'^login/',views.login),
@@ -38,5 +37,8 @@ urlpatterns = [
     url(r'^aj_mov/$', views.movie),
     url(r'^own/$', views.m_index),
     url(r'^gallery/$', views.m_gallery),
+    url(r'^h5/(.*)/$', views.h5_test),
     url(r'^gallery/l2/([0-9]+)$', views.m_second_gallery),
+    url(r'^gallery/static/js/WebP.swf$', views.m_gallery_swf),
 ]
+

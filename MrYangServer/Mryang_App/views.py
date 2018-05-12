@@ -24,16 +24,8 @@ def h5_test(request, param1):
     return render(request, param1 + '.html')
 
 
-def h5_demo(request):
-    return render(request, 'tpmo_506_tinker/index.html')
-
-
 def h5_307(request):
-    return render(request, 'cpts_307_mq/index.html')
-
-
-def h5_23(request):
-    return render(request, 'dstp_23_picxa/index1.html')
+    return render(request, 'h5_test2.html')
 
 
 def login(request):
@@ -139,6 +131,22 @@ def m_index(request):
 def m_gallery(request):
     json = yquery.pic_level1_2json()
     return render(request, 'gallery/firstLevel/index-color.html', {'json': json, 'pre_path': '/pic/thum'})
+
+
+def readFile(fn, buf_size=262144):
+    f = open(fn, "rb")
+    while True:
+        c = f.read(buf_size)
+        if c:
+            yield c
+        else:
+            break
+    f.close()
+
+
+def m_gallery_swf(request):
+    response = HttpResponse()  # readFile('F:\django_work\MrYangServer\static\js\WebP.sw')
+    return response
 
 
 def m_second_gallery(request, dir_id):
