@@ -114,7 +114,7 @@ def create_dirs(media_root, depthName, fileType):
 
 
 def instart_dirs():
-    Dir.objects.all().delete()
+    Dir.objects.filter(yutils.M_FTYPE_MOIVE).delete()
     # Dir.objects.filter(type=yutils.M_FTYPE_MOIVE).delete()
     media_root = '../../../static/media/'
 
