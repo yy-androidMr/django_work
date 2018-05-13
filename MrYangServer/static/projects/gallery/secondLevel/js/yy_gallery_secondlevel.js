@@ -41,7 +41,7 @@ $(window).scroll(function () {
             //     document.getElementById("myDiv").innerHTML = xmlhttp.responseText;
             // }
         }
-        $("#curstate2").html(csrftoken);
+        // $("#curstate2").html(csrftoken);
         xmlhttp.open("POST", document.URL, true);
         xmlhttp.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
         xmlhttp.setRequestHeader('X-CSRFToken', csrftoken);
