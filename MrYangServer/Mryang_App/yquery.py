@@ -1,6 +1,7 @@
 # -*-coding:utf-8 -*-
 import json
 
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import F
 
 from Mryang_App import yutils
@@ -26,10 +27,18 @@ def pic_level1_2json():
     return jsonstr
 
 
-def pic_level2_2json(c_id):
-    # c_id__lt = (l1.c_id + 1) * THUM_PIC_ID_POW,
-    # c_id__gt = l1.c_id * THUM_PIC_ID_POW
+def pic_level2_2json(c_id, page):
     dirs = Dir.objects.filter(type=yutils.M_FTYPE_PIC, c_id__lt=(c_id + 1) * PhotoConvert.THUM_PIC_ID_POW,
-                              c_id__gt=c_id * PhotoConvert.THUM_PIC_ID_POW).values('tags', 'name', 'c_id')
-    jsonstr = json.dumps(list(dirs))
+                              c_id__gt=c_id * PhotoConvert.THUM_PIC_ID_POW).values('tags', 'name', 'c_id').order_by(
+        'c_id')
+    paginator = Paginator(dirs, 10)
+    try:
+        contacts = paginator.page(page)
+    except PageNotAnInteger:
+        return ''
+        # contacts = paginator.page(1)
+    except EmptyPage:
+        return ''
+        # contacts = paginator.page(1)
+    jsonstr = json.dumps(list(contacts.object_list))
     return jsonstr

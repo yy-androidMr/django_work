@@ -10,6 +10,7 @@ from Mryang_App.forms import CreateUserF, LoginUserF, UserAlbumF
 from Mryang_App.models import Dir
 from Mryang_App.result.Enums import LOGIN, UPLOAD
 from Mryang_App import yutils, yquery
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 
 def hello(request):
@@ -133,11 +134,39 @@ def m_gallery(request):
     return render(request, 'gallery/firstLevel/index-color.html', {'json': json, 'pre_path': '/pic/thum'})
 
 
-def m_second_gallery(request, dir_id, page):
-    print(dir_id, type(dir_id))
-    try:
-        c_id = int(dir_id)
-        json = yquery.pic_level2_2json(c_id)
-        return render(request, 'gallery/secondLevel/index.html', {'json': json, 'pre_path': '/pic/middle'})
-    except:
-        print('非法参数:' + dir_id)
+@ensure_csrf_cookie
+def m_second_gallery(request, dir_id):
+    if request.method == "POST":
+        try:
+            page = request.POST.get('page')
+            c_id = int(dir_id)
+            json = yquery.pic_level2_2json(c_id, page)
+            print(dir_id, page)
+            # return HttpResponse(json)
+            return HttpResponse(json)
+            # render(request, 'gallery/secondLevel/index.html', {'json': json, 'pre_path': '/pic/middle'})
+        except:
+            print('非法参数:' + dir_id)
+    else:
+        print(dir_id, type(dir_id))
+        try:
+            c_id = int(dir_id)
+            json = yquery.pic_level2_2json(c_id, 1)
+            return render(request, 'gallery/secondLevel/index.html', {'json': json, 'pre_path': '/pic/middle'})
+        except:
+            print('非法参数:' + dir_id)
+
+
+def m_second_gallery_json(request):
+    if request.method == "POST":
+        try:
+            page = request.POST.get('page')
+            dir_id = request.POST.get('dir_id')
+            c_id = int(dir_id)
+            json = yquery.pic_level2_2json(c_id, page)
+            print(dir_id, json)
+            # return HttpResponse(json)
+            return HttpResponse(json)
+            # render(request, 'gallery/secondLevel/index.html', {'json': json, 'pre_path': '/pic/middle'})
+        except:
+            print('非法参数:' + dir_id)

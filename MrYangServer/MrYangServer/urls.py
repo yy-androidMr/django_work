@@ -39,5 +39,6 @@ urlpatterns = [
     url(r'^own/$', views.m_index),
     url(r'^gallery/$', views.m_gallery),
     url(r'^h5/(.*)/$', views.h5_test),
-    url(r'^gallery/l2/([0-9]+)/([0-9]+)$', views.m_second_gallery),
+    url(r'^gallery/l2/([0-9]+)$', views.m_second_gallery),
+    url(r'^gallery/l2$', views.m_second_gallery_json),
 ]
