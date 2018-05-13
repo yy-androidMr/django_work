@@ -64,23 +64,22 @@ $(window).scroll(function () {
 });
 
 function onLoad(ret) {
-    if (ret == null || ret == '') {
-        pageError = true;
-        $('#curstate').html('已经到底了...');
-    } else {
 
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            console.log("加载成功:" + ret);
-            var message = xmlhttp.responseText;
-            var data = JSON.parse(message);
-            var next_page = convert_json(data);
-            var item_list = insertContent(next_page);
-            play_fateInAnim(item_list);
-            $("#main").viewer('update');
-            setTimeout(resetLoad, 100)
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        var message = xmlhttp.responseText;
+        console.log("加载成功:" + message);
+        if (message == null || message == '') {
+            pageError = true;
+            $('#curstate').html('已经到底了...');
+            return;
         }
+        var data = JSON.parse(message);
+        var next_page = convert_json(data);
+        var item_list = insertContent(next_page);
+        play_fateInAnim(item_list);
+        $("#main").viewer('update');
+        setTimeout(resetLoad, 100)
     }
-
 }
 
 function resetLoad() {
