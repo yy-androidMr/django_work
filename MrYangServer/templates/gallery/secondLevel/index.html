@@ -56,8 +56,10 @@
         $main.viewer({
             url: 'data-original',
             navbar: true,
+            loop: false,
             fullscreen: false,
             transition: useCss3Trans,
+            onViewEnd: load_more,
         });
     });
 </script>

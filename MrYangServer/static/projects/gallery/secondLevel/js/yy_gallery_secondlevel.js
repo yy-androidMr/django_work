@@ -19,49 +19,47 @@ $(window).scroll(function () {
         return;
     }
     if (Math.ceil(wh + c) >= h - 100) {
-        if (inload) {
-            return;
-        }
-        $('#curstate').html('正在加载图片....');
-        inload = true;
-
-        curPage++;
-        var csrftoken = getMyCookie('csrftoken');
-
-        if (window.XMLHttpRequest) {
-            //  IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
-            xmlhttp = new XMLHttpRequest();
-        }
-        else {
-            // IE6, IE5 浏览器执行代码
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        xmlhttp.onreadystatechange = function () {
-            // if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            //     document.getElementById("myDiv").innerHTML = xmlhttp.responseText;
-            // }
-        }
-        // $("#curstate2").html(csrftoken);
-        xmlhttp.open("POST", document.URL, true);
-        xmlhttp.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
-        xmlhttp.setRequestHeader('X-CSRFToken', csrftoken);
-        // xmlhttp.setData("page", curPage)
-        xmlhttp.onreadystatechange = onLoad;
-        // xmlhttp.data = {"page": curPage};
-        xmlhttp.send("page=" + curPage);//'page=' + curPage
-
-        // $.ajax({
-        //     beforeSend: function (request) {
-        //         request.setRequestHeader('X-CSRFToken', csrftoken);
-        //     },
-        //     url: document.URL,
-        //     type: "POST",
-        //     data: {"page": curPage},
-        //     success: onLoad,
-        // });
-        // $.post('', onLoad)
+        load_more();
     }
 });
+
+function load_more() {
+    if (inload) {
+        return;
+    }
+    $('#curstate').html('正在加载图片....');
+    inload = true;
+    curPage++;
+    var csrftoken = getMyCookie('csrftoken');
+
+    if (window.XMLHttpRequest) {
+        //  IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+        xmlhttp = new XMLHttpRequest();
+    }
+    else {
+        // IE6, IE5 浏览器执行代码
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    // $("#curstate2").html(csrftoken);
+    xmlhttp.open("POST", document.URL, true);
+    xmlhttp.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+    xmlhttp.setRequestHeader('X-CSRFToken', csrftoken);
+    // xmlhttp.setData("page", curPage)
+    xmlhttp.onreadystatechange = onLoad;
+    // xmlhttp.data = {"page": curPage};
+    xmlhttp.send("page=" + curPage);//'page=' + curPage
+
+    // $.ajax({
+    //     beforeSend: function (request) {
+    //         request.setRequestHeader('X-CSRFToken', csrftoken);
+    //     },
+    //     url: document.URL,
+    //     type: "POST",
+    //     data: {"page": curPage},
+    //     success: onLoad,
+    // });
+    // $.post('', onLoad)
+}
 
 function onLoad(ret) {
 
