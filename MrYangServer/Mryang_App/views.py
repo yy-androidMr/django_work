@@ -12,6 +12,12 @@ from Mryang_App.result.Enums import LOGIN, UPLOAD
 from Mryang_App import yutils, yquery
 from django.views.decorators.csrf import ensure_csrf_cookie
 
+# 显示权限
+COMMON_SHOW = 4
+FAMILY = 5
+
+NOT_SEE = 9
+
 
 def hello(request):
     return HttpResponse('hello')
@@ -129,12 +135,22 @@ def m_index(request):
     return render(request, 'own_index/index.html')
 
 
-def m_gallery(request):
-    json = yquery.pic_level1_2json()
+def s_gallery(request):
+    json = yquery.pic_level1_2json(COMMON_SHOW)
     return render(request, 'gallery/firstLevel/index-color.html', {'json': json, 'pre_path': '/pic/thum'})
 
 
-@ensure_csrf_cookie
+def m_gallery(request):
+    json = yquery.pic_level1_2json(FAMILY)
+    return render(request, 'gallery/firstLevel/index-color.html', {'json': json, 'pre_path': '/pic/thum'})
+
+
+def spe_gallery(request):
+    json = yquery.pic_level1_2json(NOT_SEE)
+    return render(request, 'gallery/firstLevel/index-color.html', {'json': json, 'pre_path': '/pic/thum'})
+
+
+# @ensure_csrf_cookie
 def m_second_gallery(request, dir_id):
     if request.method == "POST":
         try:
@@ -154,4 +170,4 @@ def m_second_gallery(request, dir_id):
             json = yquery.pic_level2_2json(c_id, 1)
             return render(request, 'gallery/secondLevel/index.html', {'json': json, 'pre_path': '/pic/middle'})
         except:
-            print('非法参数:' + dir_id)
+            print('没有该id的照片:' + dir_id)

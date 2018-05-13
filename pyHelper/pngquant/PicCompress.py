@@ -50,8 +50,13 @@ def is_photo(path):
     return True
 
 
+def make_gif():
+    pass
+    # , 'gif'
+
+
 def src2pc(delete_exist):
-    ImageFile.LOAD_TRUNCATED_IMAGES =True
+    ImageFile.LOAD_TRUNCATED_IMAGES = True
     middle_size = (1500, 1500)
     # cmd = 'for i in ' + src + '/*.jpg;do jpegoptim -m50 -d ' + desc + ' -p "$i";done'
     # os.system(cmd)
@@ -69,22 +74,30 @@ def src2pc(delete_exist):
                 continue
             if not os.path.exists(desc_path):
                 os.makedirs(desc_path)
-            print('源：'+source_path)
+            print('源：' + source_path)
             img = Image.open(source_path)
             # 压缩尺寸
             img.thumbnail(middle_size, Image.ANTIALIAS)
             # 处理旋转信息.
-            old_exif = piexif.load(img.info["exif"])
-            if '0th' in old_exif and piexif.ImageIFD.Orientation in old_exif['0th']:
-                orientation = old_exif['0th'][piexif.ImageIFD.Orientation]
-                if orientation == 6:
-                    img = img.rotate(-90, expand=True)
-                if orientation == 3:
-                    img = img.rotate(180)
-                if orientation == 8:
-                    img = img.rotate(90, expand=True)
-            exif_bytes = piexif.dump({})
-            img.save(rename_path, 'JPEG', exif=exif_bytes)
+            if 'exif' in img.info:
+                old_exif = piexif.load(img.info["exif"])
+                if '0th' in old_exif and piexif.ImageIFD.Orientation in old_exif['0th']:
+                    orientation = old_exif['0th'][piexif.ImageIFD.Orientation]
+                    if orientation == 6:
+                        img = img.rotate(-90, expand=True)
+                    if orientation == 3:
+                        img = img.rotate(180)
+                    if orientation == 8:
+                        img = img.rotate(90, expand=True)
+                exif_bytes = piexif.dump({})
+                img.save(rename_path, 'JPEG', exif=exif_bytes)
+            else:
+                try:
+                    img.save(rename_path)
+                except:
+                    img = img.convert('RGB')
+                    img.save(rename_path)
+
             print(rename_path)
 
 
@@ -96,6 +109,7 @@ def middle2thum():
             if not is_photo(file):
                 continue
             source_path = os.path.join(root, file).replace('\\', '/')
+            print(source_path)
 
             desc_path = thum + source_path[len(middle):]
             dir = os.path.dirname(desc_path)
@@ -113,10 +127,17 @@ def middle2thum():
 
             crop_img = img.crop(region)  # 保存裁切后的图片
             crop_img.thumbnail(thum_size, Image.ANTIALIAS)
-            exif_dict = piexif.load(crop_img.info["exif"])
-            exif_bytes = piexif.dump(exif_dict)
-            # crop_img.save(desc_path, 'JPEG')  # 是否需要压缩质量,具体看情况而定.
-            crop_img.save(desc_path, 'JPEG', exif=exif_bytes)  # 是否需要压缩质量,具体看情况而定.
+            if 'exif' in img.info:
+                exif_dict = piexif.load(crop_img.info["exif"])
+                exif_bytes = piexif.dump(exif_dict)
+                # crop_img.save(desc_path, 'JPEG')  # 是否需要压缩质量,具体看情况而定.
+                crop_img.save(desc_path, 'JPEG', exif=exif_bytes)  # 是否需要压缩质量,具体看情况而定.
+            else:
+                try:
+                    crop_img.save(desc_path)
+                except:
+                    crop_img = crop_img.convert('RGB')
+                    crop_img.save(desc_path)
             print(desc_path)
 
 
@@ -131,6 +152,7 @@ def move_info():
                 shutil.copy(src_path, desc_path)
 
                 # print(source_path)
+
 
 #
 # webp_middle = webp_target + '/pic/middle'
@@ -158,7 +180,7 @@ def move_info():
 
 
 if __name__ == '__main__':
-    src2pc(True)
+    src2pc(False)
     middle2thum()
     move_info()
     # walk_pic2webp()

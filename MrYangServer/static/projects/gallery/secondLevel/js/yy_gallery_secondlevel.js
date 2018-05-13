@@ -135,9 +135,13 @@ function insertContent(data_list) {
 
 function GetCookie()//两个参数，一个是cookie的名子，一个是值
 {
-    thum_path = decodeURI($.cookie('thum_path'));
-    dir_path = decodeURI($.cookie('dir_path'));
-    gallery_name = decodeURI($.cookie('gallery_name'));
+    console.log(document.cookie);
+    // thum_path = decodeURI($.cookie('thum_path'));
+    // dir_path = decodeURI($.cookie('dir_path'));
+    // gallery_name = decodeURI($.cookie('gallery_name'));
+    thum_path = sessionStorage.getItem('thum_path');
+    dir_path = sessionStorage.getItem('dir_path');
+    gallery_name = sessionStorage.getItem('gallery_name');
 }
 
 var level2_dir;

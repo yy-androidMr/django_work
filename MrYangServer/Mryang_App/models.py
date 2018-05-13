@@ -48,6 +48,8 @@ class Dir(models.Model):
     type = models.IntegerField()
     # 有必要给予一个子id.做复杂的父子关系处理
     c_id = models.IntegerField(default=0)
+    # 这是显示等级, 显示不同内容.
+    show_level = models.IntegerField(default=0)
 
     def __str__(self):
         parent_dir_name = ''

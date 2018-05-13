@@ -9,6 +9,7 @@ from Mryang_App.models import Dir
 # src->middle->thum
 THUM_PIC_ID_POW = 100000
 LEVEL_TAG_SPLITE = '%'
+LEVEL_INDEX = 4
 
 
 class PhotoConvert(ConvertBase):
@@ -24,7 +25,7 @@ class PhotoConvert(ConvertBase):
 
     def walk_call(self, abs_path, rel_path, parent_dir, name, is_dir):
         if not is_dir:
-            if not any(str_ in name for str_ in ('.jpg','jpeg','png')):
+            if not any(str_ in name for str_ in ('.jpg', 'jpeg', 'png', 'gif')):
                 return
         d_model = Dir()
         d_model.name = name
@@ -81,6 +82,11 @@ class PhotoConvert(ConvertBase):
                             cur_info_tags += 1
                             if cur_info_tags == info_tags_count:
                                 break
+                        if len(lines) >= LEVEL_INDEX:
+                            print(lines[LEVEL_INDEX - 1])
+                            l1.show_level = int(lines[LEVEL_INDEX - 1])
+                        else:
+                            l1.show_level = 0
                 if cur_info_tags < info_tags_count:
                     tags += ' ' * (info_tags_count - cur_info_tags)
 
