@@ -159,7 +159,7 @@ def m_second_gallery(request, dir_id):
             json = yquery.pic_level2_2json(c_id, page)
             print(dir_id, page)
             # return HttpResponse(json)
-            return HttpResponse(json)
+            return HttpResponse(json, 'content-type=application/x-www-form-urlencoded')
             # render(request, 'gallery/secondLevel/index.html', {'json': json, 'pre_path': '/pic/middle'})
         except:
             print('非法参数:' + dir_id)

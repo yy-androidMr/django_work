@@ -1524,6 +1524,7 @@ body.loading #header {
 }
 
 #main .thumb {
+    border: 1px solid #242629;
     -moz-transition: opacity 1.25s ease-in-out;
     -webkit-transition: opacity 1.25s ease-in-out;
     -ms-transition: opacity 1.25s ease-in-out;
@@ -1739,8 +1740,8 @@ body.loading #main .thumb {
         -webkit-transition-delay: 2.075s;
         -ms-transition-delay: 2.075s;
         transition-delay: 2.075s;
-        height:33.3333vw;
-        min-height:20em;
+        height: 33.3333vw;
+        min-height: 20em;
         /* calc(40vh - 2em);*/
         width: 33.33333%;
     }
@@ -1817,8 +1818,8 @@ body.loading #main .thumb {
         -webkit-transition-delay: 1.625s;
         -ms-transition-delay: 1.625s;
         transition-delay: 1.625s;
-        height:33.3333vw;
-    /*calc(40vh - 2em);*/
+        height: 33.3333vw;
+        /*calc(40vh - 2em);*/
         min-height: 20em;
         width: 33.3333%;
     }

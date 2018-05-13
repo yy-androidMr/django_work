@@ -5,6 +5,8 @@ var gallery_name;
 var media_root = '/static/media';
 var curPage = 0;
 var pageError = false;
+var xmlhttp;
+
 
 var inload = false;
 $(window).scroll(function () {
@@ -16,22 +18,46 @@ $(window).scroll(function () {
     if (pageError) {
         return;
     }
-    if (Math.ceil(wh + c) >= h) {
+    if (Math.ceil(wh + c) >= h - 100) {
         if (inload) {
             return;
         }
+        $('#curstate').html('正在加载图片....');
         inload = true;
+
         curPage++;
         var csrftoken = getMyCookie('csrftoken');
-        $.ajax({
-            beforeSend: function (request) {
-                request.setRequestHeader('X-CSRFToken', csrftoken);
-            },
-            url: document.URL,
-            type: "POST",
-            data: {"page": curPage},
-            success: onLoad,
-        });
+
+        if (window.XMLHttpRequest) {
+            //  IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+            xmlhttp = new XMLHttpRequest();
+        }
+        else {
+            // IE6, IE5 浏览器执行代码
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function () {
+            // if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            //     document.getElementById("myDiv").innerHTML = xmlhttp.responseText;
+            // }
+        }
+        xmlhttp.open("POST", document.URL, true);
+        xmlhttp.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+        xmlhttp.setRequestHeader('X-CSRFToken', csrftoken);
+        // xmlhttp.setData("page", curPage)
+        xmlhttp.onreadystatechange = onLoad;
+        // xmlhttp.data = {"page": curPage};
+        xmlhttp.send("page=" + curPage);//'page=' + curPage
+
+        // $.ajax({
+        //     beforeSend: function (request) {
+        //         request.setRequestHeader('X-CSRFToken', csrftoken);
+        //     },
+        //     url: document.URL,
+        //     type: "POST",
+        //     data: {"page": curPage},
+        //     success: onLoad,
+        // });
         $.post('', onLoad)
     }
 });
@@ -39,20 +65,26 @@ $(window).scroll(function () {
 function onLoad(ret) {
     if (ret == null || ret == '') {
         pageError = true;
-        console.log("加载失败,页码错误:" + curPage);
+        $('#curstate').html('已经到底了...');
     } else {
-        console.log("加载成功:" + ret);
-        var data = JSON.parse(ret);
-        next_page = convert_json(data);
-        item_list = insertContent(next_page);
-        play_fateInAnim(item_list);
-        $("#main").viewer('update');
-        setTimeout(resetLoad, 100)
+        $('#curstate').html(ret + "  xmlhttp.status:" + xmlhttp.status);
+
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            console.log("加载成功:" + ret);
+            var message = xmlhttp.responseText;
+            var data = JSON.parse(message);
+            var next_page = convert_json(data);
+            var item_list = insertContent(next_page);
+            play_fateInAnim(item_list);
+            $("#main").viewer('update');
+            setTimeout(resetLoad, 100)
+        }
     }
 
 }
 
 function resetLoad() {
+    $('#curstate').html('加载完了');
     inload = false;
 }
 
