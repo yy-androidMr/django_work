@@ -58,7 +58,7 @@ $(window).scroll(function () {
         //     data: {"page": curPage},
         //     success: onLoad,
         // });
-        $.post('', onLoad)
+        // $.post('', onLoad)
     }
 });
 
