@@ -6,7 +6,7 @@ import os
 
 import piexif
 import shutil
-from PIL import Image
+from PIL import Image, ImageFile
 
 import yy_utils
 
@@ -51,6 +51,7 @@ def is_photo(path):
 
 
 def src2pc(delete_exist):
+    ImageFile.LOAD_TRUNCATED_IMAGES =True
     middle_size = (1500, 1500)
     # cmd = 'for i in ' + src + '/*.jpg;do jpegoptim -m50 -d ' + desc + ' -p "$i";done'
     # os.system(cmd)
@@ -68,6 +69,7 @@ def src2pc(delete_exist):
                 continue
             if not os.path.exists(desc_path):
                 os.makedirs(desc_path)
+            print('源：'+source_path)
             img = Image.open(source_path)
             # 压缩尺寸
             img.thumbnail(middle_size, Image.ANTIALIAS)
