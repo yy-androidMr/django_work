@@ -155,18 +155,3 @@ def m_second_gallery(request, dir_id):
             return render(request, 'gallery/secondLevel/index.html', {'json': json, 'pre_path': '/pic/middle'})
         except:
             print('非法参数:' + dir_id)
-
-
-def m_second_gallery_json(request):
-    if request.method == "POST":
-        try:
-            page = request.POST.get('page')
-            dir_id = request.POST.get('dir_id')
-            c_id = int(dir_id)
-            json = yquery.pic_level2_2json(c_id, page)
-            print(dir_id, json)
-            # return HttpResponse(json)
-            return HttpResponse(json)
-            # render(request, 'gallery/secondLevel/index.html', {'json': json, 'pre_path': '/pic/middle'})
-        except:
-            print('非法参数:' + dir_id)
