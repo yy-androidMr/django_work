@@ -41,6 +41,7 @@ $(window).scroll(function () {
             //     document.getElementById("myDiv").innerHTML = xmlhttp.responseText;
             // }
         }
+        $("#curstate2").html(csrftoken);
         xmlhttp.open("POST", document.URL, true);
         xmlhttp.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
         xmlhttp.setRequestHeader('X-CSRFToken', csrftoken);
@@ -67,7 +68,6 @@ function onLoad(ret) {
         pageError = true;
         $('#curstate').html('已经到底了...');
     } else {
-        $('#curstate').html(ret + "  xmlhttp.status:" + xmlhttp.status);
 
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             console.log("加载成功:" + ret);
