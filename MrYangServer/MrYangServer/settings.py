@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Mryang_App.apps.MryangAppConfig',
 ]
+MIDDLEWARE_CLASSES = (
+    'django.middleware.gzip.GZipMiddleware',
+)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
