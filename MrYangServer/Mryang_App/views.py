@@ -6,6 +6,8 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 # Create your views here.
+from django.views.decorators.gzip import gzip_page
+
 from Mryang_App.forms import CreateUserF, LoginUserF, UserAlbumF
 from Mryang_App.models import Dir
 from Mryang_App.result.Enums import LOGIN, UPLOAD
@@ -135,21 +137,25 @@ def m_index(request):
     return render(request, 'own_index/index.html')
 
 
+@gzip_page
 def s_gallery(request):
     json = yquery.pic_level1_2json(COMMON_SHOW)
     return render(request, 'gallery/firstLevel/index-color.html', {'json': json, 'pre_path': '/pic/thum'})
 
 
+@gzip_page
 def m_gallery(request):
     json = yquery.pic_level1_2json(FAMILY)
     return render(request, 'gallery/firstLevel/index-color.html', {'json': json, 'pre_path': '/pic/thum'})
 
 
+@gzip_page
 def spe_gallery(request):
     json = yquery.pic_level1_2json(NOT_SEE)
     return render(request, 'gallery/firstLevel/index-color.html', {'json': json, 'pre_path': '/pic/thum'})
 
 
+@gzip_page
 # @ensure_csrf_cookie
 def m_second_gallery(request, dir_id):
     if request.method == "POST":
