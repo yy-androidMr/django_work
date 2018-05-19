@@ -49,6 +49,11 @@ def is_photo(path):
         return False
     return True
 
+def is_gif(path):
+    if '.gif' in path:
+        return True
+    return False
+
 
 def make_gif():
     pass
@@ -154,29 +159,15 @@ def move_info():
                 # print(source_path)
 
 
-#
-# webp_middle = webp_target + '/pic/middle'
-# webp_thum = webp_target + '/pic/thum'
-# webp_terminal = r'.\..\Plugins\webp\bin\cwebp'
-#
-#
-# def walk_pic2webp():
-#     convert_webp(middle, webp_middle)
-#     convert_webp(thum, webp_thum)
-#
-#
-# def convert_webp(src_path, to_path):
-#     for root, dirs, files in os.walk(src_path):
-#         for file in files:
-#             if not is_photo(file):
-#                 continue
-#             source_path = os.path.join(root, file).replace('\\', '/')
-#             desc_path = to_path + source_path[len(src_path):]
-#             desc_path = yy_utils.re_exten(desc_path, '.webp')
-#             desc_dir = os.path.dirname(desc_path)
-#             if not os.path.exists(desc_dir):
-#                 os.mkdir(desc_dir)
-#             os.system('%s    %s -o %s ' % (webp_terminal, source_path, desc_path))  # -size 204800
+def move_gif():
+    for root, dirs, files in os.walk(src):
+        for file in files:
+            source_path = os.path.join(root, file).replace('\\', '/')
+            exten = os.path.splitext(source_path)[1]
+            simple_path = source_path[len(src):]
+            desc_path = middle + '/' + md5_of_str(os.path.dirname(simple_path))
+            pass
+
 
 
 if __name__ == '__main__':
