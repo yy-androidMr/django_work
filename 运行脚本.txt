@@ -1,2 +1,3 @@
+/mnt/sdcard
 python manage.py runserver 0.0.0.0:9000
 git pull https://github.com/yy-androidMr/django_work.git

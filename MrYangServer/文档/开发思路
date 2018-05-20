@@ -47,3 +47,9 @@ webp开发思路
 1.首先使用PILLOW压缩图片尺寸.简化大小.
 2.使用webp创建middle图片和thum图片.
 增加一个路径. pc  (pilconvert) 作为中间文件.并且不能被访问.
+
+
+1.gif
+2.图片算面积.
+3.视频处理用python内的库
+4.
