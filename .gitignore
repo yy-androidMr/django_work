@@ -20,3 +20,5 @@ pyHelper/Plugins/
 MrYangServer/media_source/
 
 MrYangServer/Mryang_App/migrations
+
+!pyHelper/DirActions/movie/output/exe/1.txt

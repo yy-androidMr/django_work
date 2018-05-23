@@ -1,5 +1,12 @@
+import json
 import os
 import urllib
+
+import imageio
+import numpy
+import pylab
+import skvideo.io
+import skvideo.datasets
 
 import yy_utils
 
@@ -47,7 +54,7 @@ def create_ffmpeg_bat():
 
             # if not os.path.exists(target_abs_path):
             bat_list.append('./ffmpeg/bin/ffmpeg -i %s %s' % (source_abs_path, target_abs_path))
-            print('source_abs_path:%s ,target_abs_path:%s' % (source_abs_path, target_abs_path))
+            # print('source_abs_path:%s ,target_abs_path:%s' % (source_abs_path, target_abs_path))
             # subprocess.call('ffmpeg -i %s %s' % (source_abs_path, target_abs_path))
             # else:
             #     print('已存在.')
@@ -64,18 +71,31 @@ def create_ffmpeg_bat():
 
 def convert_media():
     bat_list = create_ffmpeg_bat()
-    index = 0
-    for i in bat_list:
-        file_ = "../bats/%s.bat" % index
-        index += 1
-        if os.path.exists(file_):
-            os.remove(file_)
-        yy_utils.create_dirs(file_)
-        with open(file_, 'w+') as f:
-            f.write(i)
+    # for i in bat_list:
+    file_ = "command_cache.txt"
+    if os.path.exists(file_):
+        os.remove(file_)
+    yy_utils.create_dirs(file_)
+    with open(file_, 'w+') as f:
+        for bat_line in bat_list:
+            f.write(bat_line)
+
+    with open(file_, 'r+') as f:
+        data = f.readlines()  # txt中所有字符串读入data
+
+        for line in data:
+            print(line)
 
 
+#
 convert_media()
+import subprocess
+
+# cmd = '%s -i %s %s' % (
+# os.path.abspath('./bats/ffmpeg'), os.path.abspath('./bats/1.mkv'), os.path.abspath('./bats/1.mp4'))
+# print(cmd)
+# subprocess.call(['./bats/ffmpeg','-i','./bats/1.mkv','./bats/1.mp4'])
+
 # index += 1
 # 负责生成bat文件.
 # print('start')
@@ -83,3 +103,32 @@ convert_media()
 #     'ffmpeg -i F:/pywork/MrYangServer/static/media/sourceFile/源/英雄时刻_20171028-10点01分58s.avi F:/pywork/MrYangServer/static/media/targetFile/asdfwer/英雄时刻.mp4')
 # print('success')
 # os.popen3('ffmpeg.exe -i F:/static/media/video/1080.avi  F:/static/media/ffvideo/1080.mov')
+# from glob import  glob
+
+
+video = '/Users/mryang/Documents/git/django_work/MrYangServer/media_source/movie/电影1/[阳光电影www.ygdy8.net].银翼杀手2049.BD.720p.中英双字幕.mkv'
+# metadata = skvideo.io.ffprobe(skvideo.datasets.bigbuckbunny())
+# print(metadata.keys())
+# print(json.dumps(metadata["video"], indent=4))
+
+# def get_sorted_ts(user_path):
+#     ts_list = glob(os.path.join(user_path,'*.ts'))
+#     boxer = []
+#     for ts in ts_list:
+
+# get_sorted_ts(video)
+
+
+# videodata = skvideo.io.vread(skvideo.datasets.bigbuckbunny())
+# print(videodata.shape)
+
+# imageio.plugins.ffmpeg.download()
+# vid = imageio.get_reader(video, 'ffmpeg')
+# for im in enumerate(vid):
+#     print(vid)
+#  #image的类型是mageio.core.util.Image可用下面这一注释行转换为arrary
+#  #image = skimage.img_as_float(im).astype(np.float32)
+# #     fig = pylab.figure()
+# #     fig.suptitle('image #{}'.format(num), fontsize=20)
+# #     pylab.imshow(image)
+# # pylab.show()

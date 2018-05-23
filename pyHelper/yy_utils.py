@@ -11,5 +11,6 @@ def re_exten(path, exten):
 
 def create_dirs(file_path):
     target_dir = os.path.dirname(file_path)
-    if not os.path.exists(target_dir):
-        os.makedirs(target_dir)
+    if target_dir:
+        if not os.path.exists(target_dir):
+            os.makedirs(target_dir)
