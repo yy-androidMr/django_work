@@ -1,4 +1,5 @@
 import os
+media_source = '../../MrYangServer/media_source'
 
 
 def re_exten(path, exten):

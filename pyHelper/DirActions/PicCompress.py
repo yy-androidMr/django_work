@@ -11,8 +11,7 @@ from PIL import Image, ImageFile
 import yy_utils
 
 media_target = '../../MrYangServer/static/media'
-media_source = '../../MrYangServer/media_source'
-src = media_source + '/pic/src'
+src = yy_utils.media_source + '/pic/src'
 middle = media_target + '/pic/middle'
 thum = media_target + '/pic/thum'
 
@@ -48,6 +47,7 @@ def is_photo(path):
     if not any(str_ in path for str_ in ('.jpeg', '.jpg', 'png')):
         return False
     return True
+
 
 def is_gif(path):
     if '.gif' in path:
@@ -167,7 +167,6 @@ def move_gif():
             simple_path = source_path[len(src):]
             desc_path = middle + '/' + md5_of_str(os.path.dirname(simple_path))
             pass
-
 
 
 if __name__ == '__main__':

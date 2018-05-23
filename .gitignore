@@ -16,7 +16,6 @@ pyHelper/Plugins/
 
 MrYangServer/media_source/
 !MrYangServer/media_source/pic/src/1.txt
-!MrYangServer/media_source/pic/middle/1.txt
-!MrYangServer/media_source/pic/thum/1.txt
+!MrYangServer/media_source/movie/1.txt
 
 MrYangServer/Mryang_App/migrations
