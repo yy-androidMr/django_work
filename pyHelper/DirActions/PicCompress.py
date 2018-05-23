@@ -10,10 +10,9 @@ from PIL import Image, ImageFile
 
 import yy_utils
 
-media_target = '../../MrYangServer/static/media'
 src = yy_utils.media_source + '/pic/src'
-middle = media_target + '/pic/middle'
-thum = media_target + '/pic/thum'
+middle = yy_utils.static_root + '/pic/middle'
+thum = yy_utils.static_root + '/pic/thum'
 
 
 def is_mac():
@@ -117,9 +116,7 @@ def middle2thum():
             print(source_path)
 
             desc_path = thum + source_path[len(middle):]
-            dir = os.path.dirname(desc_path)
-            if not os.path.exists(dir):
-                os.makedirs(dir)
+            yy_utils.create_dirs(desc_path)
 
             img = Image.open(source_path)
             w, h = img.size
