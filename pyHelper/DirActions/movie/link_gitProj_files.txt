@@ -1,0 +1,4 @@
+找到对应系统的ffmpeg
+1.转换视频格式:bin/ffmpeg
+2.切片(务必保证视频格式是mp4!):
+https://github.com/yy-androidMr/files/tree/master/ffmpeg
