@@ -10,8 +10,10 @@ import skvideo.datasets
 
 import yy_utils
 
-source_root = yy_utils.media_source + '/movie'
-target_root = yy_utils.media_source + '/movie_bat'
+cd_count = '../' * 3
+
+source_root = ''.join([cd_count, yy_utils.media_source, '/movie'])
+target_root = ''.join([cd_count, yy_utils.media_source, '/movie_bat'])
 
 
 def is_movie(path):
@@ -51,9 +53,9 @@ def create_ffmpeg_bat():
             # target_abs_path = os.path.abspath(target_dir) + '\\' + os.path.basename(shotname) + '.mp4'
             # target_abs_path = target_abs_path.replace('\\', '/')
             yy_utils.create_dirs(target_abs_path)
-
+            peg = os.path.abspath('output/exe/ffmpeg')
             # if not os.path.exists(target_abs_path):
-            bat_list.append('./ffmpeg/bin/ffmpeg -i %s %s' % (source_abs_path, target_abs_path))
+            bat_list.append('%s -i %s %s' % (peg, source_abs_path, target_abs_path))
             # print('source_abs_path:%s ,target_abs_path:%s' % (source_abs_path, target_abs_path))
             # subprocess.call('ffmpeg -i %s %s' % (source_abs_path, target_abs_path))
             # else:
@@ -72,19 +74,23 @@ def create_ffmpeg_bat():
 def convert_media():
     bat_list = create_ffmpeg_bat()
     # for i in bat_list:
-    file_ = "command_cache.txt"
-    if os.path.exists(file_):
-        os.remove(file_)
-    yy_utils.create_dirs(file_)
-    with open(file_, 'w+') as f:
-        for bat_line in bat_list:
+    dir = "output/"
+    # if os.path.exists(dir):
+    #     os.remove(dir)
+    yy_utils.create_dirs(dir)
+    index = 0
+    for bat_line in bat_list:
+        # name = '%d.sh' % index
+        file_ = ''.join([dir, str(index), '.sh' if yy_utils.is_mac() else '.bat'])
+        index += 1
+        with open(file_, 'w+') as f:
             f.write(bat_line)
 
-    with open(file_, 'r+') as f:
-        data = f.readlines()  # txt中所有字符串读入data
-
-        for line in data:
-            print(line)
+            # with open(file_, 'r+') as f:
+            #     data = f.readlines()  # txt中所有字符串读入data
+            #
+            #     for line in data:
+            #         print(line)
 
 
 #

@@ -10,16 +10,13 @@ from PIL import Image, ImageFile
 
 import yy_utils
 
-src = yy_utils.media_source + '/pic/src'
-middle = yy_utils.static_root + '/pic/middle'
-thum = yy_utils.static_root + '/pic/thum'
+cd_count = '../' * 2
+src = ''.join([cd_count, yy_utils.media_source, '/pic/src'])
+middle = ''.join([cd_count, yy_utils.static_root, '/pic/middle'])
+thum = ''.join([cd_count, yy_utils.static_root, '/pic/thum'])
 
 
-def is_mac():
-    sys_str = platform.system()
-    if (sys_str == "Windows"):
-        return False
-    return True
+
 
 
 def get_md5(file_path):
