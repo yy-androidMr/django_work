@@ -2,11 +2,13 @@ import json
 import os
 import urllib
 
+# import imageio
+# import numpy
+# import pylab
+# import skvideo.io
+# import skvideo.datasets
 import imageio
-import numpy
-import pylab
-import skvideo.io
-import skvideo.datasets
+from moviepy.video.io.VideoFileClip import VideoFileClip
 
 import yy_utils
 
@@ -94,8 +96,12 @@ def convert_media():
 
 
 #
-convert_media()
+# convert_media()
 import subprocess
+vid = imageio.get_reader('G:\pyWorkspace\django_work\MrYangServer\media_source\movie\电影1\香水BD中字[电影天堂www.dy2018.com].mp4','ffmpeg')
+#
+# clip = VideoFileClip('G:\pyWorkspace\django_work\MrYangServer\media_source\movie\电影1\香水BD中字[电影天堂www.dy2018.com].mp4')
+# print(clip.duration)
 
 # cmd = '%s -i %s %s' % (
 # os.path.abspath('./bats/ffmpeg'), os.path.abspath('./bats/1.mkv'), os.path.abspath('./bats/1.mp4'))

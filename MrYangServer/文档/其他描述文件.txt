@@ -13,3 +13,6 @@ http://616pic.com/
 
 webp
 http://www.etherdream.com/WebP/
+
+比特率:最好1000
+https://www.cnblogs.com/liusx0303/p/7572050.html
