@@ -4,14 +4,13 @@ import os
 import urllib
 
 import django
-import imageio
+# import imageio
 
 # 设置django 环境
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MrYangServer.settings')
 django.setup()
 # 设置解码环境
-imageio.plugins.ffmpeg.download()
 
 from Mryang_App import yutils
 

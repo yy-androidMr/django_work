@@ -1,4 +1,5 @@
 import os
+import pickle
 
 import yy_utils
 
@@ -7,6 +8,13 @@ cd_count = '../' * 3
 source_root = ''.join([cd_count, yy_utils.media_source, '/movie/src'])
 target_root = ''.join([cd_count, yy_utils.media_source, '/movie/desc'])
 net_static_root = ''.join([cd_count, yy_utils.static_root, '/movie'])
+
+
+class MoiveInfo:
+    def __init__(self):
+        self.name = ''
+        self.size = 0
+        self.extern = ''
 
 
 def is_movie(path):
@@ -56,15 +64,18 @@ def cut_video():
             if '.mp4' in file.lower():
                 source_rela_path = os.path.join(root, file)
                 target_dir = '/'.join([net_static_root, yy_utils.md5_of_str(source_rela_path)])
-                if os.path.exists(target_dir):
-                    # 不做处理.重复切片
-                    pass
-                else:
-                    yy_utils.create_dirs(target_dir, True)
-                    with open(''.join([target_dir, '/info']), 'w+') as f:
-                        f.write('') #需要写入信息.使用二进制?
-
-
+                # if os.path.exists(target_dir):
+                #     # 不做处理.重复切片
+                #     pass
+                # else:
+                yy_utils.create_dirs(target_dir, True)
+                info = {}
+                info['name'] = os.path.basename(file)
+                pickle_file = open(''.join([target_dir, '/info']), 'wb')
+                pickle.dump(info, pickle_file)  # 只能以二进制写入
+                pickle_file.close()
+                # with open(''.join([target_dir, '/info']), 'w+') as f:
+                #     f.write('')  # 需要写入信息.使用二进制?
 
 
 cut_video()
