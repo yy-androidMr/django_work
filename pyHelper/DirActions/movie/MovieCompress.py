@@ -10,12 +10,6 @@ target_root = ''.join([cd_count, yy_utils.media_source, '/movie/desc'])
 net_static_root = ''.join([cd_count, yy_utils.static_root, '/movie'])
 
 
-class MoiveInfo:
-    def __init__(self):
-        self.name = ''
-        self.size = 0
-        self.extern = ''
-
 
 def is_movie(path):
     if not any(str_ in path for str_ in ('.mp4', '.mkv', '.rmvb', '.avi')):
