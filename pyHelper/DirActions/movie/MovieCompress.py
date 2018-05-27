@@ -7,7 +7,7 @@ cd_count = '../' * 3
 
 source_root = ''.join([cd_count, yy_utils.media_source, '/movie/src'])
 target_root = ''.join([cd_count, yy_utils.media_source, '/movie/desc'])
-net_static_root = ''.join([cd_count, yy_utils.static_root, '/movie'])
+net_static_root = ''.join([cd_count, yy_utils.static_media_root, '/movie'])
 
 
 

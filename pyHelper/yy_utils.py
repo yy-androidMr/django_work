@@ -3,7 +3,8 @@ import os
 import platform
 
 media_source = 'MrYangServer/media_source'
-static_root = 'MrYangServer/static/media'
+static_root = 'MrYangServer/static'
+static_media_root = ''.join([static_root, '/media'])
 
 
 def re_exten(path, exten):

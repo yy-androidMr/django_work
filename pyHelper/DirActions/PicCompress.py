@@ -12,11 +12,9 @@ import yy_utils
 
 cd_count = '../' * 2
 src = ''.join([cd_count, yy_utils.media_source, '/pic/src'])
-middle = ''.join([cd_count, yy_utils.static_root, '/pic/middle'])
-thum = ''.join([cd_count, yy_utils.static_root, '/pic/thum'])
-
-
-
+middle = ''.join([cd_count, yy_utils.static_media_root, '/pic/middle'])
+thum = ''.join([cd_count, yy_utils.static_media_root, '/pic/thum'])
+gif_pic = ''.join([cd_count, yy_utils.static_root, '/pic/gif_bannder.png'])  # media_source +
 
 
 def get_md5(file_path):
@@ -58,7 +56,7 @@ def make_gif():
 
 def src2pc(delete_exist):
     ImageFile.LOAD_TRUNCATED_IMAGES = True
-    middle_size = (1500, 1500)
+    middle_area = 1500 * 1500
     # cmd = 'for i in ' + src + '/*.jpg;do jpegoptim -m50 -d ' + desc + ' -p "$i";done'
     # os.system(cmd)
     for root, dirs, files in os.walk(src):
@@ -76,9 +74,23 @@ def src2pc(delete_exist):
             if not os.path.exists(desc_path):
                 os.makedirs(desc_path)
             print('源：' + source_path)
+
+            if is_gif(file):
+                shutil.copy(source_path, rename_path)
+                continue
+                # 直接移动
+            if not is_photo(file):
+                continue
+
             img = Image.open(source_path)
             # 压缩尺寸
-            img.thumbnail(middle_size, Image.ANTIALIAS)
+            w, h = img.size
+            pic_area = w * h
+            if pic_area > middle_area:
+                proportion = (middle_area / pic_area) ** 0.5
+                w = int(w * proportion)
+                h = int(h * proportion)
+            img.thumbnail((w, h), Image.ANTIALIAS)
             # 处理旋转信息.
             if 'exif' in img.info:
                 old_exif = piexif.load(img.info["exif"])
@@ -107,14 +119,20 @@ def middle2thum():
     thum_size = (thum_width, thum_width)
     for root, dirs, files in os.walk(middle):
         for file in files:
-            if not is_photo(file):
-                continue
+
             source_path = os.path.join(root, file).replace('\\', '/')
             print(source_path)
 
             desc_path = thum + source_path[len(middle):]
-            yy_utils.create_dirs(desc_path)
-
+            dir = os.path.dirname(desc_path)
+            if not os.path.exists(dir):
+                os.makedirs(dir)
+            if is_gif(file):
+                # gif_pic
+                shutil.copy(gif_pic, desc_path)
+                pass
+            if not is_photo(file):
+                continue
             img = Image.open(source_path)
             w, h = img.size
             if w > h:
