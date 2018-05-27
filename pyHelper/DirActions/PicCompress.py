@@ -38,13 +38,13 @@ def md5_of_str(src):
 
 
 def is_photo(path):
-    if not any(str_ in path for str_ in ('.jpeg', '.jpg', 'png')):
+    if not any(str_ in path.lower() for str_ in ('.jpeg', '.jpg', 'png')):
         return False
     return True
 
 
 def is_gif(path):
-    if '.gif' in path:
+    if '.gif' in path.lower():
         return True
     return False
 
@@ -63,6 +63,7 @@ def src2pc(delete_exist):
         for file in files:
             if not is_photo(file):
                 continue
+
             source_path = os.path.join(root, file).replace('\\', '/')
             exten = os.path.splitext(source_path)[1]
             simple_path = source_path[len(src):]
@@ -163,8 +164,11 @@ def move_info():
         for file in files:
             if 'info' in file:
                 src_path = os.path.join(root, file).replace('\\', '/')
+                if not os.path.exists(src_path):
+                    continue
                 simple_dir = src_path[len(src):]
                 desc_path = thum + '/' + md5_of_str(os.path.dirname(simple_dir)) + '/info'
+                print(':'.join([src_path, desc_path, os.path.dirname(simple_dir)]))
 
                 shutil.copy(src_path, desc_path)
 
@@ -182,7 +186,7 @@ def move_gif():
 
 
 if __name__ == '__main__':
-    src2pc(False)
+    # src2pc(False)
     middle2thum()
     move_info()
     # walk_pic2webp()
