@@ -42,10 +42,10 @@ class MediaConvert(ConvertBase):
 # 插入数据库
 # MediaConvert().go()
 
-path = ''.join(['../../../static/media/movie/09f5bc8ebc65e1efbcd9105adf052da7', '/info'])
-print(os.path.abspath(path))
-pickle_file = open(path, 'wb+')
-print(pickle_file.readlines())
-sss = pickle.load(pickle_file)
-pickle_file.close()
-print(sss)
+# path = ''.join(['../../../static/media/movie/09f5bc8ebc65e1efbcd9105adf052da7', '/info'])
+# print(os.path.abspath(path))
+# pickle_file = open(path, 'wb+')
+# print(pickle_file.readlines())
+# sss = pickle.load(pickle_file)
+# pickle_file.close()
+# print(sss)

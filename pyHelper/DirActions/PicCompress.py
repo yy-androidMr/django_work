@@ -12,8 +12,8 @@ import yy_utils
 
 cd_count = '../' * 2
 src = ''.join([cd_count, yy_utils.media_source, '/pic/src'])
-middle = ''.join([cd_count, yy_utils.static_media_root, '/pic/middle'])
-thum = ''.join([cd_count, yy_utils.static_media_root, '/pic/thum'])
+middle = yy_utils.transform_path(cd_count, yy_utils.static_media_root, '/pic/middle')
+thum = yy_utils.transform_path(cd_count, yy_utils.static_media_root, '/pic/thum')
 gif_pic = ''.join([cd_count, yy_utils.static_root, '/pic/gif_bannder.png'])  # media_source +
 
 
@@ -115,7 +115,7 @@ def src2pc(delete_exist):
             print(rename_path)
 
 
-def middle2thum():
+def middle2thum(delete_exist):
     thum_width = 350
     thum_size = (thum_width, thum_width)
     for root, dirs, files in os.walk(middle):
@@ -125,6 +125,9 @@ def middle2thum():
             print(source_path)
 
             desc_path = thum + source_path[len(middle):]
+            if (not delete_exist) and os.path.exists(desc_path):
+                print('文件已存在!' + desc_path)
+                continue
             dir = os.path.dirname(desc_path)
             if not os.path.exists(dir):
                 os.makedirs(dir)
@@ -175,18 +178,13 @@ def move_info():
                 # print(source_path)
 
 
-def move_gif():
-    for root, dirs, files in os.walk(src):
-        for file in files:
-            source_path = os.path.join(root, file).replace('\\', '/')
-            exten = os.path.splitext(source_path)[1]
-            simple_path = source_path[len(src):]
-            desc_path = middle + '/' + md5_of_str(os.path.dirname(simple_path))
-            pass
+def delete_not_exist():
+
+    pass
 
 
 if __name__ == '__main__':
     # src2pc(False)
-    middle2thum()
+    middle2thum(False)
     move_info()
     # walk_pic2webp()
