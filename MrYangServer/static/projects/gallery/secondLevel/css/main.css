@@ -1740,7 +1740,7 @@ body.loading #main .thumb {
         -webkit-transition-delay: 2.075s;
         -ms-transition-delay: 2.075s;
         transition-delay: 2.075s;
-        height: 33.3333vw;
+        height: calc(33.3333vw - 0.66666em);
         min-height: 20em;
         /* calc(40vh - 2em);*/
         width: 33.33333%;
@@ -1818,7 +1818,7 @@ body.loading #main .thumb {
         -webkit-transition-delay: 1.625s;
         -ms-transition-delay: 1.625s;
         transition-delay: 1.625s;
-        height: 33.3333vw;
+        height: calc(33.3333vw - 0.66666em);
         /*calc(40vh - 2em);*/
         min-height: 20em;
         width: 33.3333%;
@@ -1876,7 +1876,7 @@ body.loading #main .thumb {
         -ms-transition-delay: 2.075s;
         transition-delay: 2.075s;
         /*height: calc(28.57143vh - 1.33333em);*/
-        height: 50vw;
+        height: calc(50vw - 1em);
         /*calc(28.57143vh - 1.33333em);*/
         min-height: 18em;
         width: 50%;
@@ -1954,10 +1954,10 @@ body.loading #main .thumb {
         -webkit-transition-delay: 1.175s;
         -ms-transition-delay: 1.175s;
         transition-delay: 1.175s;
-        height: 100vw;
+        height:calc(50vw - 1em);
         /*calc(40vh - 2em);*/
         /*min-height: 13em;*/
-        width: 100%;
+        width: 50%;
     }
 
     #main .thumb:nth-child(1) {
