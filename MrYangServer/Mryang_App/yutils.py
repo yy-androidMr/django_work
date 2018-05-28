@@ -1,8 +1,10 @@
 # coding:utf-8
+import hashlib
 import os
 import random
 import string
-import sys
+import platform
+
 
 # reload(sys)
 # sys.setdefaultencoding('utf-8')
@@ -20,8 +22,6 @@ def random_str():
     # fun2:
     salt = ''.join(random.sample(string.ascii_letters + string.digits, random.randint(8, 20)))
     return salt
-
-
 
 
 LOGIN_TIME_OUT = 7 * 24 * 60 * 60  # 7天失效
@@ -104,7 +104,15 @@ def time_convert(size):  # 单位换算
         return tim_srt
 
 
+def create_dirs(file_path, is_dir=False):
+    if is_dir:
+        target_dir = file_path
+    else:
+        target_dir = os.path.dirname(file_path)
 
+    if target_dir:
+        if not os.path.exists(target_dir):
+            os.makedirs(target_dir)
 
 
 # 分解路径1.src的相对路径. 2.src的根目录. 3.目标的路径
@@ -136,6 +144,7 @@ def decompose_path(root, file, source_root, target_root, exten=None, rename=None
 
     return (rela_file_name, source_abs_path, target_abs_path, target_rela_path)
 
+
 # 5.所有路径标志符都换成/
 
 
@@ -154,9 +163,8 @@ def transform_path(cd_count, middle, last):
         return ''.join([cd_count, middle, last])
 
 
-
 def is_mac():
-    sys_str = sys.platform.system()
+    sys_str = platform.system()
     if (sys_str == "Windows"):
         return False
     return True

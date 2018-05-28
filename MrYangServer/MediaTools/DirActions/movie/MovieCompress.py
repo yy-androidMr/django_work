@@ -5,7 +5,7 @@ import sys
 
 from Mryang_App import yutils
 
-cd_count = '../' * 3
+cd_count = '../' * 4
 
 source_root = ''.join([cd_count, yutils.media_source, '/movie/src'])
 target_root = ''.join([cd_count, yutils.media_source, '/movie/desc'])

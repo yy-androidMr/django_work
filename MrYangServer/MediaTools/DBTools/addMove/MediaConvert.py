@@ -41,11 +41,12 @@ class MediaConvert(ConvertBase):
 
 
 # 插入数据库
-# MediaConvert().go()
+if __name__ == '__main__':
+    MediaConvert().go()
 
-with open(r'G:\pyWorkspace\django_work\MrYangServer\static\media\movie\57e3b93ac0c52886ac923a9d0ff7a572\info',
-          'rb') as f:
-    print(pickle.load(f))  # 只能以二进制写入
+# with open(r'G:\pyWorkspace\django_work\MrYangServer\static\media\movie\57e3b93ac0c52886ac923a9d0ff7a572\info',
+#           'rb') as f:
+#     print(pickle.load(f))  # 只能以二进制写入
 
 
 # with open(''.join([target_dir, '/info']), 'wb') as f:

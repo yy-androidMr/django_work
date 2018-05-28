@@ -10,7 +10,7 @@ from PIL import Image, ImageFile
 
 from Mryang_App import yutils
 
-cd_count = '../' * 2
+cd_count = '../' * 3
 src = ''.join([cd_count, yutils.media_source, '/pic/src'])
 middle = yutils.transform_path(cd_count, yutils.static_media_root, '/pic/middle')
 thum = yutils.transform_path(cd_count, yutils.static_media_root, '/pic/thum')
@@ -179,12 +179,11 @@ def move_info():
 
 
 def delete_not_exist():
-
     pass
 
 
 if __name__ == '__main__':
-    # src2pc(False)
+    src2pc(False)
     middle2thum(False)
     move_info()
     # walk_pic2webp()
