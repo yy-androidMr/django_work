@@ -8,13 +8,13 @@ import piexif
 import shutil
 from PIL import Image, ImageFile
 
-import yy_utils
+from Mryang_App import yutils
 
 cd_count = '../' * 2
-src = ''.join([cd_count, yy_utils.media_source, '/pic/src'])
-middle = yy_utils.transform_path(cd_count, yy_utils.static_media_root, '/pic/middle')
-thum = yy_utils.transform_path(cd_count, yy_utils.static_media_root, '/pic/thum')
-gif_pic = ''.join([cd_count, yy_utils.static_root, '/pic/gif_bannder.png'])  # media_source +
+src = ''.join([cd_count, yutils.media_source, '/pic/src'])
+middle = yutils.transform_path(cd_count, yutils.static_media_root, '/pic/middle')
+thum = yutils.transform_path(cd_count, yutils.static_media_root, '/pic/thum')
+gif_pic = ''.join([cd_count, yutils.static_root, '/pic/gif_bannder.png'])  # media_source +
 
 
 def get_md5(file_path):

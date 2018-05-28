@@ -1,8 +1,7 @@
+import os
 import random
 
-import os
-
-from Mryang_App.bats.ConvertBase import ConvertBase
+from MediaTools.DBTools.ConvertBase import ConvertBase
 from Mryang_App import yutils
 from Mryang_App.models import Dir
 
@@ -96,8 +95,7 @@ class PhotoConvert(ConvertBase):
         print('done')
 
 
-if __name__ == '__main__':
-    PhotoConvert().go()
+PhotoConvert().go()
 
     # PhotoConvert().walk_over()
     # print(Dir.objects.filter(c_id__lt=100))

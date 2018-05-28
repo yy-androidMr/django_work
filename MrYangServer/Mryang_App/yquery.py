@@ -4,8 +4,8 @@ import json
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import F
 
+from MediaTools.DBTools.addPic import PhotoConvert
 from Mryang_App import yutils
-from Mryang_App.bats.addPic import PhotoConvert
 from Mryang_App.models import Dir
 
 

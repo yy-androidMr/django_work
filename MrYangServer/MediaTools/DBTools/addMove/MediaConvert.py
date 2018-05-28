@@ -4,7 +4,7 @@ import pickle
 import django
 
 # 设置django 环境
-from Mryang_App.bats.ConvertBase import ConvertBase
+from MediaTools.DBTools.ConvertBase import ConvertBase
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MrYangServer.settings')
 django.setup()
@@ -41,7 +41,12 @@ class MediaConvert(ConvertBase):
 
 
 # 插入数据库
-MediaConvert().go()
+# MediaConvert().go()
+
+with open(r'G:\pyWorkspace\django_work\MrYangServer\static\media\movie\57e3b93ac0c52886ac923a9d0ff7a572\info',
+          'rb') as f:
+    print(pickle.load(f))  # 只能以二进制写入
+
 
 # with open(''.join([target_dir, '/info']), 'wb') as f:
 #                    pickle.dump(info, f)  # 只能以二进制写入

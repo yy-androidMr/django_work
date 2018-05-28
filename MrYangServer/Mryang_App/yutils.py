@@ -6,7 +6,6 @@ import sys
 
 # reload(sys)
 # sys.setdefaultencoding('utf-8')
-from Mryang_App.models import User
 
 
 def random_int():
@@ -23,8 +22,6 @@ def random_str():
     return salt
 
 
-def random_account():
-    return random.choice(User.objects.all())
 
 
 LOGIN_TIME_OUT = 7 * 24 * 60 * 60  # 7天失效
@@ -74,17 +71,6 @@ def get_s_account_c(cookie):
     return act
 
 
-def download_file():
-    a = ''
-    # win32api.ShellExecute(0, 'open', 'D:\迅雷\Program\Thunder.exe', '', '', 1)
-    # , unicode('ftp://ygdy8:ygdy8@yg72.dydytt.net:6018/[阳光电影www.ygdy8.net].正yi联盟.HD.720p.韩版中英双字幕.rmvb', "utf-8")
-    # thunder: // QUFmdHA6Ly9nOmdAdHYua2FpZGEzNjUuY29tOjMxMDAvJUU1JUE0JUE3JUU1JTg2JTlCJUU1JUI4JTg4JUU1JThGJUI4JUU5JUE5JUFDJUU2JTg3JUJGJUU0JUI5JThCJUU4JTk5JThFJUU1JTk1JUI4JUU5JUJFJTk5JUU1JTkwJTlGMDUubXA0Wlo =
-    # MulThreadDownload.download(unicode('ftp://ygdy8:ygdy8@yg72.dydytt.net:6018/[阳光电影www.ygdy8.net].正yi联盟.HD.720p.韩版中英双字幕.rmvb', "utf-8"))
-    # url ="https://www.python.org/ftp/python/2.7.12/python-2.7.12.amd64.msi"
-    # local = os.path.join('static/download', 'cui.zip')
-    # urllib.urlretrieve(url, local, print_download_prog)
-
-
 def print_download_prog(downloaded, bytelist, totalbyte):
     per = 100.0 * downloaded * bytelist / totalbyte
     if per > 100:
@@ -116,3 +102,67 @@ def time_convert(size):  # 单位换算
         second = int(size % H % M)
         tim_srt = u'%s小时%s分钟%s秒' % (hour, mine, second)
         return tim_srt
+
+
+
+
+
+# 分解路径1.src的相对路径. 2.src的根目录. 3.目标的路径
+def decompose_path(root, file, source_root, target_root, exten=None, rename=None):
+    source_rela_path = os.path.join(root, file)
+    target_root = target_root.replace('\\', '/').replace('//', '/')
+
+    # 需要返回几个值:
+    # 1.去掉source_root的相对路径.
+    rela_file_name = source_rela_path[len(source_root):].replace('\\', '/').replace('//', '/')
+
+    # 2.老的绝对路径
+    source_abs_path = os.path.abspath(source_rela_path)
+    source_abs_path = source_abs_path.replace('\\', '/').replace('//', '/')
+
+    # 3.替换后缀
+    if exten:
+        rela_file_name = ''.join([os.path.splitext(rela_file_name)[0], exten])
+
+    # 3.5改名 暂时不需要.
+    # if rename:
+
+    # 4.新的绝对路径|替换后缀
+    target_abs_path = '/'.join([os.path.abspath(target_root), rela_file_name])
+    target_abs_path = target_abs_path.replace('\\', '/').replace('//', '/')
+
+    # 5.新相对路径|替换后缀
+    target_rela_path = ''.join([target_root, rela_file_name])
+
+    return (rela_file_name, source_abs_path, target_abs_path, target_rela_path)
+
+# 5.所有路径标志符都换成/
+
+
+output_neighbor = False
+neighbor_meida_root1 = r'\\Desktop-089j9k4\media'
+
+media_source = 'MrYangServer/media_source'
+static_root = 'MrYangServer/static'
+static_media_root = neighbor_meida_root1 if output_neighbor else ''.join([static_root, '/media'])
+
+
+def transform_path(cd_count, middle, last):
+    if output_neighbor:
+        return ''.join([middle, last])
+    else:
+        return ''.join([cd_count, middle, last])
+
+
+
+def is_mac():
+    sys_str = sys.platform.system()
+    if (sys_str == "Windows"):
+        return False
+    return True
+
+
+def md5_of_str(src):
+    md1 = hashlib.md5()
+    md1.update(src.encode("utf-8"))
+    return md1.hexdigest()
