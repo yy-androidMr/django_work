@@ -14,7 +14,7 @@ LEVEL_INDEX = 4
 
 class PhotoConvert(ConvertBase):
     def __init__(self):
-        super().__init__()
+        super().__init__(2)
         self.dir_id = 1
         self.child_id = {}
         self.dir_list = []

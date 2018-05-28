@@ -2,7 +2,7 @@ import hashlib
 import os
 import platform
 
-output_neighbor = True
+output_neighbor = False
 neighbor_meida_root1 = r'\\Desktop-089j9k4\media'
 
 media_source = 'MrYangServer/media_source'

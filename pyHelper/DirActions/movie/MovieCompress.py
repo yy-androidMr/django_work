@@ -10,7 +10,6 @@ target_root = ''.join([cd_count, yy_utils.media_source, '/movie/desc'])
 net_static_root = ''.join([cd_count, yy_utils.static_media_root, '/movie'])
 
 
-
 def is_movie(path):
     if not any(str_ in path for str_ in ('.mp4', '.mkv', '.rmvb', '.avi')):
         return False
@@ -65,9 +64,8 @@ def cut_video():
                 yy_utils.create_dirs(target_dir, True)
                 info = {}
                 info['name'] = os.path.basename(file)
-                pickle_file = open(''.join([target_dir, '/info']), 'wb')
-                pickle.dump(info, pickle_file)  # 只能以二进制写入
-                pickle_file.close()
+                with open(''.join([target_dir, '/info']), 'wb') as f:
+                    pickle.dump(info, f)  # 只能以二进制写入
                 # with open(''.join([target_dir, '/info']), 'w+') as f:
                 #     f.write('')  # 需要写入信息.使用二进制?
 

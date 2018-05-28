@@ -15,11 +15,12 @@ from Mryang_App import yutils
 
 class MediaConvert(ConvertBase):
     def __init__(self):
-        super().__init__()
+        # ConvertBase.__init__(self)
+        super().__init__(2)
 
     def go(self):
-        thum_root = '../../../static/media/pic'
-        self.insert_dirs(yutils.M_FTYPE_MOIVE, thum_root, 'movie')
+        # pass
+        self.insert_dirs(yutils.M_FTYPE_MOIVE, self.media_root, 'movie')
 
     def walk_call(self, abs_path, rel_path, parent_dir, name, is_dir):
         source_path = abs_path.replace('\\', '/')
@@ -40,7 +41,10 @@ class MediaConvert(ConvertBase):
 
 
 # 插入数据库
-# MediaConvert().go()
+MediaConvert().go()
+
+# with open(''.join([target_dir, '/info']), 'wb') as f:
+#                    pickle.dump(info, f)  # 只能以二进制写入
 
 # path = ''.join(['../../../static/media/movie/09f5bc8ebc65e1efbcd9105adf052da7', '/info'])
 # print(os.path.abspath(path))
