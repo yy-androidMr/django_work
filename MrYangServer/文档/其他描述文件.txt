@@ -16,3 +16,6 @@ http://www.etherdream.com/WebP/
 
 比特率:最好1000
 https://www.cnblogs.com/liusx0303/p/7572050.html
+
+视频切片命令
+ffmpeg -i 1.mkv -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_list out.m3u8 -segment_time 30 out%03d.ts

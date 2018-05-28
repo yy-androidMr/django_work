@@ -115,6 +115,25 @@ def create_dirs(file_path, is_dir=False):
             os.makedirs(target_dir)
 
 
+# 文件名
+def file_name(file):
+    return os.path.splitext(file)[0]
+
+
+# 拓展名.
+def file_exten(file):
+    return os.path.splitext(file)[1]
+
+
+# 路径操作
+output_neighbor = False
+neighbor_meida_root1 = r'\\Desktop-089j9k4\media'
+
+media_source = 'MrYangServer/media_source'
+static_root = 'MrYangServer/static'
+static_media_root = neighbor_meida_root1 if output_neighbor else ''.join([static_root, '/media'])
+
+
 # 分解路径1.src的相对路径. 2.src的根目录. 3.目标的路径
 def decompose_path(root, file, source_root, target_root, exten=None, rename=None):
     source_rela_path = os.path.join(root, file)
@@ -146,14 +165,6 @@ def decompose_path(root, file, source_root, target_root, exten=None, rename=None
 
 
 # 5.所有路径标志符都换成/
-
-
-output_neighbor = False
-neighbor_meida_root1 = r'\\Desktop-089j9k4\media'
-
-media_source = 'MrYangServer/media_source'
-static_root = 'MrYangServer/static'
-static_media_root = neighbor_meida_root1 if output_neighbor else ''.join([static_root, '/media'])
 
 
 def transform_path(cd_count, middle, last):

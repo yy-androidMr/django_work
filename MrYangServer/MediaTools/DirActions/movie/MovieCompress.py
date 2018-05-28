@@ -55,18 +55,26 @@ def cut_video():
             if '.mp4' in file.lower():
                 source_rela_path = os.path.join(root, file)
                 target_dir = '/'.join([net_static_root, yutils.md5_of_str(source_rela_path)])
-                # if os.path.exists(target_dir):
-                #     # 不做处理.重复切片
-                #     pass
-                # else:
-                yutils.create_dirs(target_dir, True)
-                info = {}  # map形式存储
-                info['name'] = os.path.basename(file)
-                with open(''.join([target_dir, '/info']), 'wb') as f:
-                    pickle.dump(info, f)  # 只能以二进制写入
-                    # with open(''.join([target_dir, '/info']), 'w+') as f:
-                    #     f.write('')  # 需要写入信息.使用二进制?
+                if os.path.exists(target_dir):
+                    # 不做处理.重复切片
+                    print('cut exists %s %s' % (source_rela_path, target_dir))
+                    pass
+                else:
+                    yutils.create_dirs(target_dir, True)
+                    info = {}  # map形式存储
+                    info['name'] = yutils.file_name(os.path.basename(file))
+                    with open(''.join([target_dir, '/info']), 'wb') as f:
+                        pickle.dump(info, f)  # 只能以二进制写入
+                        # with open(''.join([target_dir, '/info']), 'w+') as f:
+                        #     f.write('')  # 需要写入信息.使用二进制?
 
 
-cut_video()
-# create_convert_bats()
+                        # if __name__ == '__main__':
+                        #     cut_video()
+                        # create_convert_bats()
+
+# import subprocess
+# output = subprocess.Popen("/usr/local/ffmpeg/bin/ffmpeg -i '" + r"G:\pyWorkspace\django_work\MrYangServer\media_source\movie\src\香水BD中字[电影天堂www.dy2018.com].mp4" + "' 2>&1 | grep 'Duration'", shell=True,
+#                           stdout=subprocess.PIPE).stdout.read()
+#
+# print(output)
