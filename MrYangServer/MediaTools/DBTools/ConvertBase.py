@@ -4,6 +4,8 @@ import traceback
 
 import django
 
+from Mryang_App import yutils
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MrYangServer.settings')
 django.setup()
 from Mryang_App.models import Dir
@@ -11,7 +13,7 @@ from Mryang_App.models import Dir
 
 class ConvertBase:
     def __init__(self, cd_count):
-        self.media_root = ''.join(['../' * cd_count, 'static/media'])
+        self.media_root = ''.join(['../' * cd_count, yutils.static_media_root])
 
     def walk_call(self, abs_path, rel_path, parent_dir, name, is_dir):
         pass
@@ -22,7 +24,6 @@ class ConvertBase:
     def flush_dirs(self, source_path, rel_path, is_dir, name, type):
         source_path = source_path.replace('\\', '/')
         self_abs_path = os.path.realpath(source_path).replace('\\', '/')
-        # self_abs_path += ('/' if is_dir else '')
         parent_abs_path = os.path.dirname(self_abs_path)
         parent = None
         try:

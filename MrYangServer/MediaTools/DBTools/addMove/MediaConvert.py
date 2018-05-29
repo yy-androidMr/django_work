@@ -16,13 +16,15 @@ from Mryang_App import yutils
 class MediaConvert(ConvertBase):
     def __init__(self):
         # ConvertBase.__init__(self)
-        super().__init__(2)
+        super().__init__(4)
 
     def go(self):
         # pass
         self.insert_dirs(yutils.M_FTYPE_MOIVE, self.media_root, 'movie')
 
     def walk_call(self, abs_path, rel_path, parent_dir, name, is_dir):
+        if not is_dir and not '.m3u8' in name:
+            return
         source_path = abs_path.replace('\\', '/')
         d_model = Dir()
         d_model.name = name
@@ -41,21 +43,9 @@ class MediaConvert(ConvertBase):
 
 
 # 插入数据库
-# if __name__ == '__main__':
-#     MediaConvert().go()
+if __name__ == '__main__':
+    MediaConvert().go()
 
-with open(r'G:\pyWorkspace\django_work\MrYangServer\static\media\movie\d5e3f566488ffd2c59d394808ab9325b\info',
-          'rb') as f:
-    print(pickle.load(f))  # 只能以二进制写入
-
-
-# with open(''.join([target_dir, '/info']), 'wb') as f:
-#                    pickle.dump(info, f)  # 只能以二进制写入
-
-# path = ''.join(['../../../static/media/movie/09f5bc8ebc65e1efbcd9105adf052da7', '/info'])
-# print(os.path.abspath(path))
-# pickle_file = open(path, 'wb+')
-# print(pickle_file.readlines())
-# sss = pickle.load(pickle_file)
-# pickle_file.close()
-# print(sss)
+# with open(r'G:\pyWorkspace\django_work\MrYangServer\static\media\movie\d5e3f566488ffd2c59d394808ab9325b\info',
+#           'rb') as f:
+#     print(pickle.load(f))  # 只能以二进制写入

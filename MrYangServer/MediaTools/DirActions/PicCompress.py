@@ -17,43 +17,6 @@ thum = yutils.transform_path(cd_count, yutils.static_media_root, '/pic/thum')
 gif_pic = ''.join([cd_count, yutils.static_root, '/pic/gif_bannder.png'])  # media_source +
 
 
-def get_md5(file_path):
-    f = open(file_path, 'rb')
-    md5_obj = hashlib.md5()
-    while True:
-        d = f.read(8096)
-        if not d:
-            break
-        md5_obj.update(d)
-    hash_code = md5_obj.hexdigest()
-    f.close()
-    md5 = str(hash_code).lower()
-    return md5
-
-
-def md5_of_str(src):
-    md1 = hashlib.md5()
-    md1.update(src.encode("utf-8"))
-    return md1.hexdigest()
-
-
-def is_photo(path):
-    if not any(str_ in path.lower() for str_ in ('.jpeg', '.jpg', 'png')):
-        return False
-    return True
-
-
-def is_gif(path):
-    if '.gif' in path.lower():
-        return True
-    return False
-
-
-def make_gif():
-    pass
-    # , 'gif'
-
-
 def src2pc(delete_exist):
     ImageFile.LOAD_TRUNCATED_IMAGES = True
     middle_area = 1500 * 1500
@@ -61,14 +24,14 @@ def src2pc(delete_exist):
     # os.system(cmd)
     for root, dirs, files in os.walk(src):
         for file in files:
-            if not is_photo(file):
+            if not yutils.is_photo(file):
                 continue
 
             source_path = os.path.join(root, file).replace('\\', '/')
             exten = os.path.splitext(source_path)[1]
             simple_path = source_path[len(src):]
-            desc_path = middle + '/' + md5_of_str(os.path.dirname(simple_path))
-            rename_path = desc_path + '/' + get_md5(source_path) + exten
+            desc_path = middle + '/' + yutils.md5_of_str(os.path.dirname(simple_path))
+            rename_path = desc_path + '/' + yutils.get_md5(source_path) + exten
             if (not delete_exist) and os.path.exists(rename_path):
                 print('文件已存在!' + rename_path)
                 continue
@@ -76,11 +39,11 @@ def src2pc(delete_exist):
                 os.makedirs(desc_path)
             print('源：' + source_path)
 
-            if is_gif(file):
+            if yutils.is_gif(file):
                 shutil.copy(source_path, rename_path)
                 continue
                 # 直接移动
-            if not is_photo(file):
+            if not yutils.is_photo(file):
                 continue
 
             img = Image.open(source_path)
@@ -117,7 +80,6 @@ def src2pc(delete_exist):
 
 def middle2thum(delete_exist):
     thum_width = 350
-    thum_size = (thum_width, thum_width)
     for root, dirs, files in os.walk(middle):
         for file in files:
 
@@ -131,11 +93,11 @@ def middle2thum(delete_exist):
             dir = os.path.dirname(desc_path)
             if not os.path.exists(dir):
                 os.makedirs(dir)
-            if is_gif(file):
+            if yutils.is_gif(file):
                 # gif_pic
                 shutil.copy(gif_pic, desc_path)
                 pass
-            if not is_photo(file):
+            if not yutils.is_photo(file):
                 continue
             img = Image.open(source_path)
             w, h = img.size
@@ -147,7 +109,7 @@ def middle2thum(delete_exist):
                 region = (0, yoff, w, w + yoff)
 
             crop_img = img.crop(region)  # 保存裁切后的图片
-            crop_img.thumbnail(thum_size, Image.ANTIALIAS)
+            crop_img.thumbnail((thum_width,thum_width), Image.ANTIALIAS)
             if 'exif' in img.info:
                 exif_dict = piexif.load(crop_img.info["exif"])
                 exif_bytes = piexif.dump(exif_dict)
@@ -170,7 +132,7 @@ def move_info():
                 if not os.path.exists(src_path):
                     continue
                 simple_dir = src_path[len(src):]
-                desc_path = thum + '/' + md5_of_str(os.path.dirname(simple_dir)) + '/info'
+                desc_path = thum + '/' + yutils.md5_of_str(os.path.dirname(simple_dir)) + '/info'
                 print(':'.join([src_path, desc_path, os.path.dirname(simple_dir)]))
 
                 shutil.copy(src_path, desc_path)
@@ -178,6 +140,7 @@ def move_info():
                 # print(source_path)
 
 
+# 删除多余的middle 和thum
 def delete_not_exist():
     pass
 

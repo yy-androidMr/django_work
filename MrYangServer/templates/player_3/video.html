@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>Video.js 6.2.8</title>
     <link href="/static/css/video-js.css" rel="stylesheet">
+
     <style>
         body {
             background-color: #191919
@@ -20,29 +21,41 @@
 </head>
 
 <body>
-<video src="{{ nginxPath }}" controls="controls" autoplay="autoplay" webkit-playsinline='true' playsinline='true'
-       x-webkit-airplay='true' x5-video-player-type='h5' x5-video-player-fullscreen='true'
-       x5-video-ignore-metadata='true' width='100%' height='100%'>
 
-</video>
-{#<div class="m">#}
-{#    <video src="{{ medias.filepath.url }}" id="my-video" class="video-js" controls preload="auto" width="740" height="400"#}
-{#           poster="m.png" data-setup="{}">#}
-{#         type="video/mp4"#}
-{#        <p class="vjs-no-js">#}
-{#            To view this video please enable JavaScript, and consider upgrading to a web browser that#}
-{#            <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>#}
-{#        </p>#}
-{#    </video>#}
-{#    <script src="/static/js/video.min.js"></script>#}
-{#    <script type="text/javascript">#}
-{#        var myPlayer = videojs('my-video');#}
-{#        videojs("my-video").ready(function () {#}
-{#            var myPlayer = this;#}
-{#            myPlayer.play();#}
-{#        });#}
-{#    </script>#}
-{#</div>#}
+<div id="playercontainer"></div>
+<script type="text/javascript" src="/static/js/player/cyberplayer.js"></script>
+<script>
+    function enterFullScreen() {
+        var de = document.documentElement;
+        if (de.requestFullscreen) {
+            de.requestFullscreen();
+        } else if (de.mozRequestFullScreen) {
+            de.mozRequestFullScreen();
+        } else if (de.webkitRequestFullScreen) {
+            de.webkitRequestFullScreen();
+        }
+    }
+
+</script>
+<script type="text/javascript">
+
+
+    var player = cyberplayer("playercontainer").setup({
+        width: 854,
+        height: 480,
+        stretching: "uniform",
+        file: "/static/media/movie/973e6065ce6a65f4c0d544d540b4580f/out.m3u8",
+        autostart: true,
+        repeat: false,
+        volume: 100,
+        controls: true,
+        barLogo: false,
+        ak: '81a83ca8762949ccb55c27a0416336ff' // 公有云平台注册即可获得accessKey
+    });
+    _api.setFullscreen();
+    {#    player.setFullscreen(true);#}
+    {#    player.requestFullscreen();#}
+</script>
 
 
 </body>

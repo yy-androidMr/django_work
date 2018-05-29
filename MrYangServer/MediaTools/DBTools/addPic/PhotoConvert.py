@@ -13,14 +13,13 @@ LEVEL_INDEX = 4
 
 class PhotoConvert(ConvertBase):
     def __init__(self):
-        super().__init__(2)
+        super().__init__(4)
         self.dir_id = 1
         self.child_id = {}
         self.dir_list = []
 
     def go(self):
-        thum_root = '../../../static/media/pic'
-        self.insert_dirs(yutils.M_FTYPE_PIC, thum_root, 'thum')
+        self.insert_dirs(yutils.M_FTYPE_PIC, self.media_root + '/pic', 'thum')
 
     def walk_call(self, abs_path, rel_path, parent_dir, name, is_dir):
         if not is_dir:

@@ -185,3 +185,35 @@ def md5_of_str(src):
     md1 = hashlib.md5()
     md1.update(src.encode("utf-8"))
     return md1.hexdigest()
+
+
+def is_movie(path):
+    if not any(str_ in path.lower() for str_ in ('.mp4', '.mkv', '.rmvb', '.avi')):
+        return False
+    return True
+
+
+def get_md5(file_path):
+    f = open(file_path, 'rb')
+    md5_obj = hashlib.md5()
+    while True:
+        d = f.read(8096)
+        if not d:
+            break
+        md5_obj.update(d)
+    hash_code = md5_obj.hexdigest()
+    f.close()
+    md5 = str(hash_code).lower()
+    return md5
+
+def is_photo(path):
+    if not any(str_ in path.lower() for str_ in ('.jpeg', '.jpg', 'png')):
+        return False
+    return True
+
+
+def is_gif(path):
+    if '.gif' in path.lower():
+        return True
+    return False
+

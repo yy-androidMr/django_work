@@ -12,17 +12,11 @@ target_root = ''.join([cd_count, yutils.media_source, '/movie/desc'])
 net_static_root = ''.join([cd_count, yutils.static_media_root, '/movie'])
 
 
-def is_movie(path):
-    if not any(str_ in path.lower() for str_ in ('.mp4', '.mkv', '.rmvb', '.avi')):
-        return False
-    return True
-
-
 def create_ffmpeg_bat():
     bat_list = []
     for root, dirs, files in os.walk(source_root):
         for file in files:
-            if not is_movie(file):
+            if not yutils.is_movie(file):
                 continue
             (_, source_abs_path, target_abs_path, _) = yutils.decompose_path(
                 root, file, source_root, target_root, exten='.mp4')
@@ -65,13 +59,21 @@ def cut_video():
                     info['name'] = yutils.file_name(os.path.basename(file))
                     with open(''.join([target_dir, '/info']), 'wb') as f:
                         pickle.dump(info, f)  # 只能以二进制写入
-                        # with open(''.join([target_dir, '/info']), 'w+') as f:
-                        #     f.write('')  # 需要写入信息.使用二进制?
+
+                    peg = os.path.abspath('output/exe/ffmpeg')
+                    from_path = os.path.abspath(source_rela_path)
+                    to_path = os.path.abspath(target_dir)
+
+                    cmd = peg + ' -i ' + from_path + ' -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_list ' + to_path + r'\out.m3u8 -segment_time 5 ' + to_path + r'\%03d.ts'
+                    print(cmd)
+                    os.system(cmd)
+                    # with open(''.join([target_dir, '/info']), 'w+') as f:
+                    #     f.write('')  # 需要写入信息.使用二进制?
 
 
-                        # if __name__ == '__main__':
-                        #     cut_video()
-                        # create_convert_bats()
+if __name__ == '__main__':
+    cut_video()
+# create_convert_bats()
 
 # import subprocess
 # output = subprocess.Popen("/usr/local/ffmpeg/bin/ffmpeg -i '" + r"G:\pyWorkspace\django_work\MrYangServer\media_source\movie\src\香水BD中字[电影天堂www.dy2018.com].mp4" + "' 2>&1 | grep 'Duration'", shell=True,
