@@ -29,12 +29,19 @@ class MediaConvert(ConvertBase):
         if yutils.M3U8_DIR_EXTEN in name:
             # 这里做文件组织.
             is_dir = False
-            name = name + '/' + yutils.M3U8_NAME
+
+            with open(abs_path + '/' + yutils.INFO_FILE, 'rb') as f:
+                info = pickle.load(f)
+                name = info[yutils.MOVIE_INFO_NAME]
+                # print(pickle.load(f))  # 只能以二进制写入
+            # name = name + '/' + yutils.M3U8_NAME
             abs_path = abs_path + '/' + yutils.M3U8_NAME
             source_path = abs_path.replace('\\', '/')
             self_abs_path = os.path.realpath(source_path).replace('\\', '/')
             rel_path = rel_path + '/' + yutils.M3U8_NAME
             parent_abs_path = os.path.dirname(os.path.dirname(self_abs_path))
+
+            # 这里读取info文件内容.
         else:
             source_path = abs_path.replace('\\', '/')
             self_abs_path = os.path.realpath(source_path).replace('\\', '/')

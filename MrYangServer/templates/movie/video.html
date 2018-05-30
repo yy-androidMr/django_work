@@ -51,9 +51,44 @@
         barLogo: false,
         ak: '81a83ca8762949ccb55c27a0416336ff' // 公有云平台注册即可获得accessKey
     });
-{#    _api.setFullscreen();#}
+    {#    _api.setFullscreen();#}
     player.setFullscreen(true);
-{#    player.requestFullscreen();#}
+
+
+    var docElm = document.documentElement;
+
+    //W3C
+
+    if (docElm.requestFullscreen) {
+
+        docElm.requestFullscreen();
+
+    }
+
+//FireFox
+
+    else if (docElm.mozRequestFullScreen) {
+
+        docElm.mozRequestFullScreen();
+
+    }
+
+//Chrome等
+
+    else if (docElm.webkitRequestFullScreen) {
+
+        docElm.webkitRequestFullScreen();
+
+    }
+
+//IE11
+
+    else if (elem.msRequestFullscreen) {
+
+        elem.msRequestFullscreen();
+
+    }
+    {#    player.requestFullscreen();#}
 </script>
 
 

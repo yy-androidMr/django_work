@@ -219,9 +219,11 @@ def is_gif(path):
     return False
 
 
+INFO_FILE = 'info'
 # 如果是切片视频.文件夹是这个后缀.
 M3U8_DIR_EXTEN = '.ym3'
 M3U8_NAME = 'out.m3u8'
+MOVIE_INFO_NAME = 'name'
 
 
 def is_m3u8_dir(path):

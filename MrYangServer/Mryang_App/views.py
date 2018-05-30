@@ -97,16 +97,12 @@ def download_test(request):
     return render(request, 'login.html')
 
 
-def show_gallery(request):
-    return render(request, 'player_2/index.html', {'movie_dir': Dir.objects.get(type=yutils.M_FTYPE_MOIVE)})
-
-
 def play_video(request, nginxPath):
     # if param1:
     #     return render(request, 'player_2/' + param1)
     # else:
 
-    return render(request, 'player_3/video.html', {'nginxPath': urllib.parse.unquote(nginxPath)})
+    return render(request, 'movie/video.html', {'nginxPath': urllib.parse.unquote(nginxPath)})
 
 
 #
@@ -114,23 +110,19 @@ def play_video(request, nginxPath):
 #     return render(request, 'player_2/video.html', {'medias': Movie.objects.get(showname='abc')})
 
 
-def player_3(request):
+def move_index(request):
     json = yquery.dir_2json(yutils.M_FTYPE_MOIVE)
-    return render(request, 'player_3/index.html', {'json': json})
+    return render(request, 'movie/index.html', {'json': json})
 
 
-def pic(request):
-    json = yquery.dir_2json(yutils.M_FTYPE_PIC)
-    return HttpResponse(json, content_type='application/json')
-
-
-def movie(request):
-    json = yquery.dir_2json(yutils.M_FTYPE_MOIVE)
-    return HttpResponse(json, content_type='application/json')
-
-
-# def yy_all(request, path):
-#     return render(request, path + '.html')
+# def pic(request):
+#     json = yquery.dir_2json(yutils.M_FTYPE_PIC)
+#     return HttpResponse(json, content_type='application/json')
+#
+#
+# def movie(request):
+#     json = yquery.dir_2json(yutils.M_FTYPE_MOIVE)
+#     return HttpResponse(json, content_type='application/json')
 
 
 def m_index(request):

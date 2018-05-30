@@ -43,7 +43,6 @@ def create_convert_bats():
 # 第二需求: 视频切片
 def cut_video():
     # 假设已经读取了
-    infos = ''
     for root, dirs, files in os.walk(target_root):
         for file in files:
             if '.mp4' in file.lower():
@@ -51,10 +50,8 @@ def cut_video():
                                                                                                              target_root,
                                                                                                              net_static_root)
                 # source_rela_path = os.path.join(root, file)
-
-
-
-                target_dir = yutils.file_name(target_abs_path) + yutils.M3U8_DIR_EXTEN
+                target_dir = os.path.dirname(target_abs_path) + '/' + yutils.md5_of_str(
+                    os.path.basename(target_abs_path)) + yutils.M3U8_DIR_EXTEN
                 if os.path.exists(target_dir):
                     # 不做处理.重复切片
                     print('cut exists %s %s' % (source_abs_path, target_dir))
@@ -62,7 +59,7 @@ def cut_video():
                 else:
                     yutils.create_dirs(target_dir, True)
                     info = {}  # map形式存储
-                    info['name'] = yutils.file_name(os.path.basename(file))
+                    info[yutils.MOVIE_INFO_NAME] = yutils.file_name(os.path.basename(file))
                     with open(''.join([target_dir, '/info']), 'wb') as f:
                         pickle.dump(info, f)  # 只能以二进制写入
 
@@ -72,8 +69,6 @@ def cut_video():
                     cmd = peg + ' -i ' + source_abs_path + ' -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_list ' + to_path + '\\' + yutils.M3U8_NAME + ' -segment_time 5 ' + to_path + r'\%03d.ts'
                     print(cmd)
                     os.system(cmd)
-                    # with open(''.join([target_dir, '/info']), 'w+') as f:
-                    #     f.write('')  # 需要写入信息.使用二进制?
 
 
 if __name__ == '__main__':

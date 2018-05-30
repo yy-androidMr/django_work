@@ -101,6 +101,7 @@ function showDir3() {
 }
 
 function showVideo(videoUrl) {
+
     var encode = encodeURIComponent(videoUrl.data);
     window.open('video/' + encode);
 }
@@ -156,13 +157,13 @@ function convert_dirsjson(dirsJson) {
             isDir: item.isdir,
             path: item.path,
             tags: item.tags,
-
+            name: item.name,
         }
         var dir_split = item.path.split('/');
         dir_split = dir_split.filter(function (n) {
             return n;
         });
-        dirs[i].name = dir_split[dir_split.length - 1];
+        // dirs[i].name = dir_split[dir_split.length - 1];
         if (item.p_id != null) {
             dirs[i].parent = item.p_id;
         } else {
