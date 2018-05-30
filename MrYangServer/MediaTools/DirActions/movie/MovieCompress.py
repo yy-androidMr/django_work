@@ -66,7 +66,7 @@ def cut_video():
                     peg = os.path.abspath('output/exe/ffmpeg')
                     to_path = target_dir
 
-                    cmd = peg + ' -i ' + source_abs_path + ' -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_list ' + to_path + '\\' + yutils.M3U8_NAME + ' -segment_time 5 ' + to_path + r'\%03d.ts'
+                    cmd = peg + ' -i ' + source_abs_path + ' -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_list ' + to_path + '/' + yutils.M3U8_NAME + ' -segment_time 5 ' + to_path + '/%03d.ts'
                     print(cmd)
                     os.system(cmd)
 
