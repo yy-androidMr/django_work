@@ -206,6 +206,7 @@ def get_md5(file_path):
     md5 = str(hash_code).lower()
     return md5
 
+
 def is_photo(path):
     if not any(str_ in path.lower() for str_ in ('.jpeg', '.jpg', 'png')):
         return False
@@ -217,3 +218,13 @@ def is_gif(path):
         return True
     return False
 
+
+# 如果是切片视频.文件夹是这个后缀.
+M3U8_DIR_EXTEN = '.ym3'
+M3U8_NAME = 'out.m3u8'
+
+
+def is_m3u8_dir(path):
+    if M3U8_DIR_EXTEN in path.lower():
+        return True
+    return False

@@ -23,16 +23,28 @@ class MediaConvert(ConvertBase):
         self.insert_dirs(yutils.M_FTYPE_MOIVE, self.media_root, 'movie')
 
     def walk_call(self, abs_path, rel_path, parent_dir, name, is_dir):
-        if not is_dir and not '.m3u8' in name:
+        if not is_dir:  # 不是文件的要return
             return
-        source_path = abs_path.replace('\\', '/')
+
+        if yutils.M3U8_DIR_EXTEN in name:
+            # 这里做文件组织.
+            is_dir = False
+            name = name + '/' + yutils.M3U8_NAME
+            abs_path = abs_path + '/' + yutils.M3U8_NAME
+            source_path = abs_path.replace('\\', '/')
+            self_abs_path = os.path.realpath(source_path).replace('\\', '/')
+            rel_path = rel_path + '/' + yutils.M3U8_NAME
+            parent_abs_path = os.path.dirname(os.path.dirname(self_abs_path))
+        else:
+            source_path = abs_path.replace('\\', '/')
+            self_abs_path = os.path.realpath(source_path).replace('\\', '/')
+            parent_abs_path = os.path.dirname(self_abs_path)
+            # pass
         d_model = Dir()
         d_model.name = name
         d_model.isdir = is_dir
-        self_abs_path = os.path.realpath(source_path).replace('\\', '/')
-        d_model.abs_path = self_abs_path + ('/' if not is_dir else '')
+        d_model.abs_path = self_abs_path
         d_model.rel_path = rel_path
-        parent_abs_path = os.path.dirname(self_abs_path)
         d_model.type = yutils.M_FTYPE_MOIVE
         try:
             parent_dir = Dir.objects.get(abs_path=parent_abs_path)
