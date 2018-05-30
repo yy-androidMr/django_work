@@ -38,7 +38,6 @@
 
 </script>
 <script type="text/javascript">
-
     var player = cyberplayer("playercontainer").setup({
         width: 854,
         height: 480,
@@ -52,43 +51,51 @@
         ak: '81a83ca8762949ccb55c27a0416336ff' // 公有云平台注册即可获得accessKey
     });
     {#    _api.setFullscreen();#}
+    {#    player.file = "/static/media/movie/电视剧1/a9203849b98945c5f56ddaad6d85fab9.ym3/out.m3u8";#}
+    {#    player.play();#}
+    {#    player.stop();#}
+    {#    player.play();#}
     player.setFullscreen(true);
+    $(document).ready(function () {
 
+            var docElm = document.documentElement;
 
-    var docElm = document.documentElement;
+            //W3C
 
-    //W3C
+            if (docElm.requestFullscreen) {
 
-    if (docElm.requestFullscreen) {
+                docElm.requestFullscreen();
 
-        docElm.requestFullscreen();
-
-    }
+            }
 
 //FireFox
 
-    else if (docElm.mozRequestFullScreen) {
+            else if (docElm.mozRequestFullScreen) {
 
-        docElm.mozRequestFullScreen();
+                docElm.mozRequestFullScreen();
 
-    }
+            }
 
 //Chrome等
 
-    else if (docElm.webkitRequestFullScreen) {
+            else if (docElm.webkitRequestFullScreen) {
 
-        docElm.webkitRequestFullScreen();
+                docElm.webkitRequestFullScreen();
 
-    }
+            }
 
 //IE11
 
-    else if (elem.msRequestFullscreen) {
+            else if (elem.msRequestFullscreen) {
 
-        elem.msRequestFullscreen();
+                elem.msRequestFullscreen();
 
-    }
-    {#    player.requestFullscreen();#}
+            }
+            {#    player.requestFullscreen();#}
+        }
+    );
+
+
 </script>
 
 
