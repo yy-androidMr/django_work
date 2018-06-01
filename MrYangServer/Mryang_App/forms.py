@@ -66,3 +66,11 @@ class UserAlbumF(forms.Form):
             album_path = self.cleaned_data['album_path']
             name = self.cleaned_data['name']
             # return user
+
+
+class upload_f(forms.Form):
+    pwd = forms.CharField(max_length=200)
+
+    # def fill_random(self):
+    #     user = utils.random_account()
+    #     return user

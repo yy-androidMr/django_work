@@ -59,3 +59,7 @@ class Dir(models.Model):
             parent_dir_name = self.parent_dir.name
         return 'name:%s,isDir:%r,parent_dir:%s,tags:%s,rel_path:%s,type:%s,c_id:%s' % (
             self.name, self.isdir, parent_dir_name, self.tags, self.rel_path, self.type, self.c_id)
+
+
+class UpLoadDir(models.Model):
+    path = models.CharField(max_length=100, default='')

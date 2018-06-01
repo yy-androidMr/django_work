@@ -6,7 +6,7 @@ from django.db.models import F
 
 from MediaTools.DBTools.addPic import PhotoConvert
 from Mryang_App import yutils
-from Mryang_App.models import Dir
+from Mryang_App.models import Dir, UpLoadDir
 
 
 def dir_2json(dirtype):
@@ -43,4 +43,10 @@ def pic_level2_2json(c_id, page):
         return ''
         # contacts = paginator.page(1)
     jsonstr = json.dumps(list(contacts.object_list))
+    return jsonstr
+
+
+def upp_json():
+    dirs = UpLoadDir.objects.all()
+    jsonstr = json.dumps(list(dirs))
     return jsonstr

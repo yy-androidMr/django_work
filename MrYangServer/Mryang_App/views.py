@@ -9,9 +9,9 @@ from django.shortcuts import render, redirect
 from django.views.decorators.gzip import gzip_page
 
 from Mryang_App.forms import CreateUserF, LoginUserF, UserAlbumF
-from Mryang_App.models import Dir
+from Mryang_App.models import Dir, UpLoadDir
 from Mryang_App.result.Enums import LOGIN, UPLOAD
-from Mryang_App import yutils, yquery
+from Mryang_App import yutils, yquery, forms
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 # 显示权限
@@ -31,10 +31,6 @@ def login(request):
 
 def h5_test(request, param1):
     return render(request, param1 + '.html')
-
-
-def h5_307(request):
-    return render(request, 'h5_test2.html')
 
 
 def login(request):
@@ -92,9 +88,24 @@ def upload_file(request):
         return redirect('../login/', {'err': UPLOAD.NO_LOGIN})
 
 
-def download_test(request):
-    yutils.download_file()
-    return render(request, 'login.html')
+# def download_test(request):
+#     yutils.download_file()
+#     return render(request, 'login.html')
+
+def up_pic(request):
+    if (request.method == "POST"):
+        # 提交了表单
+        uf = forms.upload_f(request.POST, request.FILES)
+        if uf.is_valid():
+            # 获取表单信息
+            pwd = uf.cleaned_data['pwd']
+            print(pwd)
+            # 写入数据库
+            # user = User.objects.get(account=utils.get_s_account())
+        return render(request, 'gallery/upload_pic.html', {'p_dir': yquery.upp_json()})
+    else:
+        uf = forms.upload_f()
+        return render(request, 'gallery/upload_pic.html', {'uf': forms.upload_f()})
 
 
 def play_video(request):
