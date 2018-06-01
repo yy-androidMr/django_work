@@ -85,7 +85,7 @@ function moviePage() {
             itemImg.attr('src', '/static/images/movie_icon.png');
 
             // cloneNode.attr('href', 'http://192.168.199.124/movie/' + file_item.path);
-            var encode = 'http://192.168.199.124/movie/' + file_item.path;
+            var encode = file_item.path;
 
             cloneNode.bind('click', encode, showVideo);
             // cloneNode.attr('href', '{% url \'video/\' ' + encode + ' %}');
@@ -100,10 +100,16 @@ function showDir3() {
 
 }
 
+function SetCookie(name, value)//两个参数，一个是cookie的名子，一个是值
+{
+    sessionStorage.setItem(name, value);
+    // $.cookie(name, encodeURI(value));
+}
+
 function showVideo(videoUrl) {
 
-    var encode = encodeURIComponent(videoUrl.data);
-    window.open('video/' + encode);
+    SetCookie('url', videoUrl.data);
+    window.open('video');
 }
 
 function applyLayout1() {

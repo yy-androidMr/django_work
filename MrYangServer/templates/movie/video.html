@@ -38,11 +38,12 @@
 
 </script>
 <script type="text/javascript">
+    var url = sessionStorage.getItem('url');
     var player = cyberplayer("playercontainer").setup({
         width: 854,
         height: 480,
         stretching: "uniform",
-        file: "/static/media/movie/电视剧1/英雄时刻_20180507-19点05分03s2.ym3/out.m3u8",
+        file: "/static/media/movie" + url,
         autostart: true,
         repeat: false,
         volume: 100,

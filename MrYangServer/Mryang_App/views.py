@@ -97,12 +97,12 @@ def download_test(request):
     return render(request, 'login.html')
 
 
-def play_video(request, nginxPath):
+def play_video(request):
     # if param1:
     #     return render(request, 'player_2/' + param1)
     # else:
 
-    return render(request, 'movie/video.html', {'nginxPath': urllib.parse.unquote(nginxPath)})
+    return render(request, 'movie/video.html')
 
 
 #

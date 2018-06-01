@@ -29,7 +29,7 @@ urlpatterns = [
     # url(r'^regist/', views.regist),
     # url(r'^login/', views.login),
     # url(r'^download/', views.download_test),
-    url(r'^video/(.*)/$', views.play_video),
+    url(r'^video/$', views.play_video),
     url(r'^$', views.move_index),
     # url(r'^index/$', views.yy_index),
     # url(r'^i/(.*)$', views.yy_all),
