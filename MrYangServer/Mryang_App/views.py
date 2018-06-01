@@ -100,8 +100,11 @@ def up_pic(request):
             # 获取表单信息
             pwd = uf.cleaned_data['pwd']
             print(pwd)
-            # 写入数据库
-            # user = User.objects.get(account=utils.get_s_account())
+            if not pwd is 'temp1234':
+                return render(request, 'gallery/upload_pic.html', {'uf': forms.upload_f()})
+
+                # 写入数据库
+                # user = User.objects.get(account=utils.get_s_account())
         return render(request, 'gallery/upload_pic.html', {'p_dir': yquery.upp_json()})
     else:
         uf = forms.upload_f()
