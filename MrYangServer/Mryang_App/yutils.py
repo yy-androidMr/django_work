@@ -115,6 +115,17 @@ def create_dirs(file_path, is_dir=False):
             os.makedirs(target_dir)
 
 
+def delete_null_dir(dirr):
+    if os.path.isdir(dirr):
+        for p in os.listdir(dirr):
+            d = os.path.join(dirr, p)
+            if (os.path.isdir(d) == True):
+                delete_null_dir(d)
+    if not os.listdir(dirr):
+        os.rmdir(dirr)
+        print('移除空目录: ', dirr)
+
+
 # 文件名
 def file_name(file):
     return os.path.splitext(file)[0]
