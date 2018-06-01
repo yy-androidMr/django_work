@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Mryang_App.apps.MryangAppConfig',
+    'werkzeug_debugger_runserver',
+    'django_extensions',
 ]
 MIDDLEWARE_CLASSES = (
     'django.middleware.gzip.GZipMiddleware',
