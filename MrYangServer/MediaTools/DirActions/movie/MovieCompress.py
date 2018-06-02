@@ -21,7 +21,8 @@ def create_ffmpeg_bat():
             (_, source_abs_path, target_abs_path, _) = yutils.decompose_path(
                 root, file, source_root, target_root, exten='.mp4')
             peg = os.path.abspath('output/exe/ffmpeg')
-            bat_list.append('%s -i %s -d 900 %s' % (peg, source_abs_path, target_abs_path))
+            # '%s -i %s -d 900 %s'
+            bat_list.append('%s -i %s %s' % (peg, source_abs_path, target_abs_path))
 
     return bat_list
 

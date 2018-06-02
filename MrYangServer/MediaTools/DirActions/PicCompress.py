@@ -137,8 +137,8 @@ def move_info():
         for file in files:
             if 'info' in file:
                 src_path = os.path.join(root, file).replace('\\', '/')
-                if not os.path.exists(src_path):
-                    continue
+                # if not os.path.exists(src_path):
+                #     continue
                 simple_dir = src_path[len(src):]
                 desc_path = thum + '/' + yutils.md5_of_str(os.path.dirname(simple_dir)) + '/info'
                 print(':'.join([src_path, desc_path, os.path.dirname(simple_dir)]))

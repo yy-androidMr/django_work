@@ -178,11 +178,16 @@ def decompose_path(root, file, source_root, target_root, exten=None, rename=None
 # 5.所有路径标志符都换成/
 
 
-def transform_path(cd_count, middle, last):
+def transform_path(cd_count, middle, last=''):
     if output_neighbor:
         return ''.join([middle, last])
     else:
         return ''.join([cd_count, middle, last])
+
+
+def media_root(cd_count):
+    rt = transform_path('../' * cd_count, media_source)
+    return rt
 
 
 def is_mac():

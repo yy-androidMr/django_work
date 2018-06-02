@@ -162,6 +162,12 @@ def spe_gallery(request):
 
 
 @gzip_page
+def dead_gallery(request):
+    json = yquery.dead_2json()
+    return render(request, 'gallery/firstLevel/index-color.html', {'json': json, 'pre_path': '/pic/thum'})
+
+
+@gzip_page
 # @ensure_csrf_cookie
 def m_second_gallery(request, dir_id):
     if request.method == "POST":
