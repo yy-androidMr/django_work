@@ -1,46 +1,94 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title id="gallery_name">照片缩略图</title>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-    <!--[if lte IE 8]><script src="/static/projects/gallery/secondLevel/js/ie/html5shiv.js"></script><![endif]-->
-    <link rel="stylesheet" href="/static/projects/gallery/secondLevel/css/main.css"/>
-    <link rel="stylesheet" href="/static/projects/gallery/secondLevel/css/jquery.magnify.css">
+    <title>相册</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>
+    <link href="/static/projects/gallery/secondLevel/css/style.css" rel="stylesheet" type="text/css" media="all"/>
+    <!--  jquery plguin -->
+    {#    <script type="text/javascript" src="/static/projects/gallery/secondLevel/js/jquery.min.js"></script>#}
+    <script src="/static/projects/gallery/firstLevel/js/jquery-1.11.3.min.js"></script>
+
+    <!-- Add fancyBox main JS and CSS files -->
+    <link href="/static/projects/gallery/secondLevel/css/magnific-popup.css" rel="stylesheet" type="text/css">
+    <script src="/static/projects/gallery/secondLevel/js/jquery.magnific-popup.js" type="text/javascript"></script>
+    <script src="/static/projects/gallery/secondLevel/js/yy_gallery_secondlevel.js" type="text/javascript"></script>
     <link rel="stylesheet" href="/static/projects/gallery/secondLevel/css/viewer/viewer.min.css">
-    <!--[if lte IE 9]><link rel="stylesheet" href="/static/projects/gallery/secondLevel/css/ie9.css" /><![endif]-->
-    <!--[if lte IE 8]><link rel="stylesheet" href="/static/projects/gallery/secondLevel/css/ie8.css" /><![endif]-->
-    <script src="/static/projects/gallery/secondLevel/js/jquery.min.js"></script>
-
-
-    <script type="text/javascript" src="/static/projects/gallery/firstLevel/js/jquery.cookie.js"></script>
-
-    <script type="text/javascript" src="/static/projects/gallery/secondLevel/js/yy_gallery_secondlevel.js"></script>
     <script type="text/javascript" src="/static/projects/gallery/secondLevel/js/viewer/viewer.min.js"></script>
     <script>
+        $(document).ready(function () {
+            $('.popup-with-zoom-anim').magnificPopup({
+                type: 'inline',
+                fixedContentPos: false,
+                fixedBgPos: true,
+                overflowY: 'auto',
+                closeBtnInside: true,
+                preloader: false,
+                midClick: true,
+                removalDelay: 300,
+                mainClass: 'my-mfp-zoom-in'
+            });
+        });
+
         convert_2pic({{ json|safe }}, '{{ pre_path }}');
 
     </script>
 </head>
-
-<article class="thumb" style="visibility: hidden" id="pic_thum_item">
-    <img class="image" id="pic" src="" border="0">
-    <h2></h2>
-    <p></p>
-</article>
 <body>
-{% csrf_token %}
-
-<div id="main">
+<li hidden id="pic_thum_item2">
+    <a class="popup-with-zoom-anim">
+        <img id="pic" src="/static/projects/gallery/secondLevel/images/pic2.jpg" alt="Image 2"/>
+    </a>
+</li>
+<div hidden id="pic_thum_item">
+    <ul class="folio_list">
+        <div class="clear"></div>
+    </ul>
 </div>
 
-<!-- Scripts -->
-<script src="/static/projects/gallery/secondLevel/js/jquery.poptrox.min.js"></script>
-<script src="/static/projects/gallery/secondLevel/js/skel.min.js"></script>
-<script src="/static/projects/gallery/secondLevel/js/util.js"></script>
-<!--[if lte IE 8]><script src="/static/projects/gallery/secondLevel/js/ie/respond.min.js"></script><![endif]-->
-<script src="/static/projects/gallery/secondLevel/js/main.js"></script>
-
+<!-- start slider -->
+<div class="slider_bg">
+    <div class="wrap">
+        <div class="slider">
+            <h2>portfolio</h2>
+            <h3>What we Think, latest news</h3>
+        </div>
+    </div>
+</div>
+<!-- start main -->
+<div class="main_bg">
+    <div class="wrap">
+        <div class="main">
+            <div class="content" id="first_content">
+                <!-- end popup -->
+                {#                <ul class="folio_list">#}
+                {#                    <li>#}
+                {#                        <a class="popup-with-zoom-anim" href="#small-dialog">#}
+                {#                            <img src="/static/projects/gallery/secondLevel/images/pic2.jpg" alt="Image 2"/>#}
+                {#                        </a>#}
+                {#                    </li>#}
+                {#                    <li>#}
+                {#                        <a class="popup-with-zoom-anim" href="#small-dialog">#}
+                {#                            <img src="/static/projects/gallery/secondLevel/images/pic2.jpg" alt="Image 2"/>#}
+                {#                        </a>#}
+                {#                    </li>#}
+                {#                    <li>#}
+                {#                        <a class="popup-with-zoom-anim" href="#small-dialog">#}
+                {#                            <img src="/static/projects/gallery/secondLevel/images/pic2.jpg" alt="Image 2"/>#}
+                {#                        </a>#}
+                {#                    </li>#}
+                {#                    <li>#}
+                {#                        <a class="popup-with-zoom-anim" href="#small-dialog">#}
+                {#                            <img src="/static/projects/gallery/secondLevel/images/pic2.jpg" alt="Image 2"/>#}
+                {#                        </a>#}
+                {#                    </li>#}
+                {#                    <div class="clear"></div>#}
+                {#                </ul>#}
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     var useCss3Trans = true;
     try {
@@ -52,7 +100,7 @@
     } catch (e) {
     }
     $(function () {
-        var $main = $('#main');
+        var $main = $('#first_content');
         $main.viewer({
             url: 'data-original',
             navbar: true,
@@ -63,6 +111,5 @@
         });
     });
 </script>
-<a id="curstate">...</a><br>
 </body>
 </html>

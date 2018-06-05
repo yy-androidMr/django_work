@@ -6,7 +6,8 @@ var media_root = '/static/media';
 var curPage = 0;
 var pageError = false;
 var xmlhttp;
-
+var cur_pool;
+var page = 4;
 
 var inload = false;
 $(window).scroll(function () {
@@ -139,24 +140,35 @@ function play_fateInAnim(item_list) {
 function insertContent(data_list) {
     // return;
     // pic_thum_item
-    var parent = $('#main');
+    var parent = $('#first_content');
     var item_list = new Array();
+    var cur_poolIndex = 0;
+
     for (var i = 0; i < data_list.length; i++) {
         var data_item = data_list[i];
-        var item = $('#pic_thum_item').clone(true);
-        item.removeAttr('style');
-        item.removeAttr('id');
+        if (cur_pool == null || cur_pool.children('li').length == page) {
+            var item = $('#pic_thum_item').clone(true);
+            cur_pool = item.find('.folio_list');
+            item.children().remove();
+            parent.append(cur_pool);
+        }
+        // pool.parentNode.removeChild(pool);
+        // item.removeChild(pool);
+        var item2 = $('#pic_thum_item2').clone(true);
 
-        var thum_pic = item.find('#pic');
+        item2.removeAttr('id');
+        item2.removeAttr('hidden');
+
+        var thum_pic = item2.find('#pic');
         var t_p = media_root + thum_path + dir_path + '/' + data_item.name;
         var m_p = media_root + middle_path + dir_path + '/' + data_item.name;
 
         thum_pic.attr('src', t_p);
         thum_pic.attr('data-original', m_p);
-        item_list.push(item);
-        parent.append(item);
-
+        item_list.push(item2);
+        cur_pool.prepend(item2);
     }
+
 
     return item_list;
     // $('#pic_thum_item').remove();
