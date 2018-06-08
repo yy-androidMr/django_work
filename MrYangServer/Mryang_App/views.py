@@ -164,7 +164,7 @@ def spe_gallery(request):
 @gzip_page
 def dead_gallery(request):
     return HttpResponse(
-        r"<!DOCTYPE HTML><html><head><meta charset=\"utf-8\"/></head><title>Test</title><body><table width=100% height=100%><tr> <td><center><font face=\"times\"><span style=\"font-size:100px;color:green;font-family:century\"><a style=\"text-decoration:none;\">我有温暖,亦系极寒孤煞<br>我有梦想,亦似落空黄粱<br>我有痴心,亦如梦醒南柯<br>我有悲伤,亦可传播四方</a></span></font></center></td></tr></table>")
+        r"<!DOCTYPE HTML><html><head><meta charset=\"utf-8\"/></head><title>希望,亦如黎明中的花朵</title><body><table width=100% height=100%><tr> <td><center><font face=\"times\"><span style=\"font-size:100px;color:green;font-family:century\"><a style=\"text-decoration:none;\">我有温暖,亦系极寒孤煞<br>我有梦想,亦似落空黄粱<br>我有痴心,亦如梦醒南柯<br>我有悲伤,亦可传播四方</a></span></font></center></td></tr></table>")
     # json = yquery.dead_2json()
     # return render(request, 'gallery/firstLevel/index-color.html', {'json': json, 'pre_path': '/pic/thum'})
 
