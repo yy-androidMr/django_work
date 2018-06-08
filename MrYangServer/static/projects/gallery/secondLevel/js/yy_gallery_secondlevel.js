@@ -15,7 +15,7 @@ $(window).scroll(function () {
     var c = $(document).scrollTop();//滚动条距离网页顶部的高度
     var wh = $(window).height(); //页面可视化区域高度
 
-    // console.log("wh:" + wh + " c:" + c + "  h:" + h);
+    console.log("wh:" + wh + " c:" + c + "  h:" + h);
     if (pageError) {
         return;
     }
@@ -28,7 +28,7 @@ function load_more() {
     if (inload) {
         return;
     }
-    $('#curstate').html('正在加载图片....');
+    // $('#load_tips').html('正在加载下一页');
     inload = true;
     curPage++;
     var csrftoken = getMyCookie('csrftoken');
@@ -49,40 +49,28 @@ function load_more() {
     xmlhttp.onreadystatechange = onLoad;
     // xmlhttp.data = {"page": curPage};
     xmlhttp.send("page=" + curPage);//'page=' + curPage
-
-    // $.ajax({
-    //     beforeSend: function (request) {
-    //         request.setRequestHeader('X-CSRFToken', csrftoken);
-    //     },
-    //     url: document.URL,
-    //     type: "POST",
-    //     data: {"page": curPage},
-    //     success: onLoad,
-    // });
-    // $.post('', onLoad)
 }
 
 function onLoad(ret) {
-
+    return;
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
         var message = xmlhttp.responseText;
         console.log("加载成功:" + message);
         if (message == null || message == '') {
             pageError = true;
-            $('#curstate').html('已经到底了...');
+            $('#load_tips').html('已经加载完了');
             return;
         }
         var data = JSON.parse(message);
         var next_page = convert_json(data);
         var item_list = insertContent(next_page);
-        play_fateInAnim(item_list);
-        $("#main").viewer('update');
+        $("#first_content").viewer('update');
         setTimeout(resetLoad, 100)
     }
 }
 
 function resetLoad() {
-    $('#curstate').html('加载完了');
+    $('#load_tips').html('已经加载完了');
     inload = false;
 }
 
@@ -122,21 +110,6 @@ var fullscreen = function () {
     }
 }
 
-function play_fateInAnim(item_list) {
-    // for (var i = 0; i < item_list.length; i++) {
-    //     var thum_ = item_list[i].find('.thumb');
-    //     thum_.css({
-    //         "-moz-transition-delay": i + '.25s',
-    //         '-webkit-transition-delay': i + '.25s',
-    //         '-ms-transition-delay': i + '.25s'
-    //     });
-    // thum_.setAttribute('-moz-transition-delay', i + '.25s');
-    // thum_.setAttribute('-webkit-transition-delay', i + '.25s');
-    // thum_.setAttribute('-ms-transition-delay', i + '.25s');
-    // thum_.setAttribute('transition-delay', i + '.25s');
-    // }
-}
-
 function insertContent(data_list) {
     // return;
     // pic_thum_item
@@ -166,6 +139,7 @@ function insertContent(data_list) {
         thum_pic.attr('src', t_p);
         thum_pic.attr('data-original', m_p);
         item_list.push(item2);
+        // cur_pool.append(item2);
         cur_pool.prepend(item2);
     }
 
@@ -177,9 +151,6 @@ function insertContent(data_list) {
 function GetCookie()//两个参数，一个是cookie的名子，一个是值
 {
     console.log(document.cookie);
-    // thum_path = decodeURI($.cookie('thum_path'));
-    // dir_path = decodeURI($.cookie('dir_path'));
-    // gallery_name = decodeURI($.cookie('gallery_name'));
     thum_path = sessionStorage.getItem('thum_path');
     dir_path = sessionStorage.getItem('dir_path');
     gallery_name = sessionStorage.getItem('gallery_name');
@@ -204,5 +175,6 @@ function convert_2pic(dirsJson, path) {
     middle_path = path;
     pageError = false;
     GetCookie();
+    $('#load_tips').html('滑动底部自动加载');
     level2_dir = convert_json(dirsJson);
 }

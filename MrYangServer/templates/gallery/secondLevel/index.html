@@ -34,11 +34,14 @@
         convert_2pic({{ json|safe }}, '{{ pre_path }}');
 
     </script>
+    {% csrf_token %}
+
 </head>
 <body>
+
 <li hidden id="pic_thum_item2">
     <a class="popup-with-zoom-anim">
-        <img id="pic" src="/static/projects/gallery/secondLevel/images/pic2.jpg" alt="Image 2"/>
+        <img id="pic" src="" alt="Image 2"/>
     </a>
 </li>
 <div hidden id="pic_thum_item">
@@ -60,35 +63,29 @@
 <div class="main_bg">
     <div class="wrap">
         <div class="main">
-            <div class="content" id="first_content">
-                <!-- end popup -->
-                {#                <ul class="folio_list">#}
-                {#                    <li>#}
-                {#                        <a class="popup-with-zoom-anim" href="#small-dialog">#}
-                {#                            <img src="/static/projects/gallery/secondLevel/images/pic2.jpg" alt="Image 2"/>#}
-                {#                        </a>#}
-                {#                    </li>#}
-                {#                    <li>#}
-                {#                        <a class="popup-with-zoom-anim" href="#small-dialog">#}
-                {#                            <img src="/static/projects/gallery/secondLevel/images/pic2.jpg" alt="Image 2"/>#}
-                {#                        </a>#}
-                {#                    </li>#}
-                {#                    <li>#}
-                {#                        <a class="popup-with-zoom-anim" href="#small-dialog">#}
-                {#                            <img src="/static/projects/gallery/secondLevel/images/pic2.jpg" alt="Image 2"/>#}
-                {#                        </a>#}
-                {#                    </li>#}
-                {#                    <li>#}
-                {#                        <a class="popup-with-zoom-anim" href="#small-dialog">#}
-                {#                            <img src="/static/projects/gallery/secondLevel/images/pic2.jpg" alt="Image 2"/>#}
-                {#                        </a>#}
-                {#                    </li>#}
-                {#                    <div class="clear"></div>#}
-                {#                </ul>#}
+            <div>
+                <div class="content" id="first_content">
+
+                </div>
             </div>
         </div>
+
     </div>
 </div>
+
+<style>
+    #load_tips {
+        width: 20px;
+        height: auto;
+        border: 1px solid #D4CD49;
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        color: #e3e3e3;
+    }
+</style>
+<a id="load_tips">正在加载下一页</a>
+
 <script>
     var useCss3Trans = true;
     try {
