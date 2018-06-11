@@ -1,7 +1,8 @@
 import os
 import pickle
+import shutil
 
-import sys
+from Mryang_App import yutils
 
 from Mryang_App import yutils
 
@@ -9,7 +10,7 @@ cd_count = '../' * 4
 
 source_root = ''.join([cd_count, yutils.media_source, '/movie/src'])
 target_root = ''.join([cd_count, yutils.media_source, '/movie/desc'])
-net_static_root = ''.join([cd_count, yutils.static_media_root, '/movie'])
+net_static_root = yutils.transform_path(cd_count, yutils.static_media_root, '/movie')
 
 
 def create_ffmpeg_bat():
@@ -21,7 +22,14 @@ def create_ffmpeg_bat():
             (_, source_abs_path, target_abs_path, _) = yutils.decompose_path(
                 root, file, source_root, target_root, exten='.mp4')
             peg = os.path.abspath('output/exe/ffmpeg')
+            if os.path.exists(target_abs_path):
+                continue
+            yutils.create_dirs(target_abs_path)
+            if '.mp4' in file:
+                shutil.copy(source_abs_path, target_abs_path)
+                continue
             # '%s -i %s -d 900 %s'
+
             bat_list.append('%s -i %s %s' % (peg, source_abs_path, target_abs_path))
 
     return bat_list
@@ -32,6 +40,12 @@ def create_convert_bats():
     bat_list = create_ffmpeg_bat()
     dir = "output/"
     yutils.create_dirs(dir)
+
+    for root, dirs, files in os.walk(source_root):
+        for file in files:
+            if '.bat' in file:
+                os.remove(file)
+    # shutil.del
     index = 0
     for bat_line in bat_list:
         # name = '%d.sh' % index
@@ -51,8 +65,9 @@ def cut_video():
                                                                                                              target_root,
                                                                                                              net_static_root)
                 # source_rela_path = os.path.join(root, file)
-                target_dir = os.path.dirname(target_abs_path) + '/' + yutils.md5_of_str(
+                target_dir = os.path.dirname(target_rela_path) + '/' + yutils.md5_of_str(
                     os.path.basename(target_abs_path)) + yutils.M3U8_DIR_EXTEN
+                print(target_dir)
                 if os.path.exists(target_dir):
                     # 不做处理.重复切片
                     print('cut exists %s %s' % (source_abs_path, target_dir))
@@ -74,7 +89,7 @@ def cut_video():
 
 if __name__ == '__main__':
     cut_video()
-# create_convert_bats()
+    # create_convert_bats()
 
 # import subprocess
 # output = subprocess.Popen("/usr/local/ffmpeg/bin/ffmpeg -i '" + r"G:\pyWorkspace\django_work\MrYangServer\media_source\movie\src\香水BD中字[电影天堂www.dy2018.com].mp4" + "' 2>&1 | grep 'Duration'", shell=True,

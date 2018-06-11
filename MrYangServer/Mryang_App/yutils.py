@@ -148,7 +148,8 @@ static_media_root = neighbor_meida_root1 if output_neighbor else ''.join([static
 # 分解路径1.src的相对路径. 2.src的根目录. 3.目标的路径
 def decompose_path(root, file, source_root, target_root, exten=None, rename=None):
     source_rela_path = os.path.join(root, file)
-    target_root = target_root.replace('\\', '/').replace('//', '/')
+    if not output_neighbor:
+        target_root = target_root.replace('\\', '/').replace('//', '/')
 
     # 需要返回几个值:
     # 1.去掉source_root的相对路径.
@@ -166,8 +167,11 @@ def decompose_path(root, file, source_root, target_root, exten=None, rename=None
     # if rename:
 
     # 4.新的绝对路径|替换后缀
-    target_abs_path = '/'.join([os.path.abspath(target_root), rela_file_name])
-    target_abs_path = target_abs_path.replace('\\', '/').replace('//', '/')
+    if  output_neighbor:
+        target_abs_path = target_root
+    else:
+        target_abs_path = '/'.join([os.path.abspath(target_root), rela_file_name])
+        target_abs_path = target_abs_path.replace('\\', '/').replace('//', '/')
 
     # 5.新相对路径|替换后缀
     target_rela_path = ''.join([target_root, rela_file_name])
