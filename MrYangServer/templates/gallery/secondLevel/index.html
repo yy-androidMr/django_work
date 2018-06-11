@@ -34,10 +34,10 @@
         convert_2pic({{ json|safe }}, '{{ pre_path }}');
 
     </script>
-    {% csrf_token %}
 
 </head>
 <body>
+    {% csrf_token %}
 
 <li hidden id="pic_thum_item2">
     <a class="popup-with-zoom-anim">

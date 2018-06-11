@@ -52,7 +52,6 @@ function load_more() {
 }
 
 function onLoad(ret) {
-    return;
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
         var message = xmlhttp.responseText;
         console.log("加载成功:" + message);
