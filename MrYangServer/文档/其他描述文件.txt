@@ -25,3 +25,6 @@ ffmpeg -i 1.mkv -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_li
 https:
 https://blog.csdn.net/huplion/article/details/52892901
 http://www.freehao123.com/gogetssl-comodo-ssl-rapidssl/
+
+
+https://www.jianshu.com/p/d9b64514f8cc
