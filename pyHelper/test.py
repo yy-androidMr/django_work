@@ -24,7 +24,9 @@
 #     for j, l in enumerate(table.row_values(i)):
 #         newTable.write(i % pageRecorders, j, l)
 # newFile.save(newFileName + str(page) + newFileNameType)
-
-if __name__ == '__main__':
-    a = 1 << 2
-    print(36/32)
+# import  docx
+# if __name__ == '__main__':
+#     file = docx.Document(r"I:\largue_of_memory\ere\一些文件\心 - 副本.doc")
+#     print("段落数:" + str(len(file.paragraphs)))
+#     # a = 1 << 2
+#     # print(36/32)

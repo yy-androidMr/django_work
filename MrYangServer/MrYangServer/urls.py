@@ -31,6 +31,9 @@ urlpatterns = [
     # url(r'^download/', views.download_test),
     url(r'^upp/', views.up_pic),
     url(r'^video/$', views.play_video),
+    url(r'^ck/$', views.ck_player),
+
+
     url(r'^$', views.move_index),
     url(r'^own/$', views.m_index),
     url(r'^sg/$', views.s_gallery),

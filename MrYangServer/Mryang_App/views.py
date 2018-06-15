@@ -118,6 +118,12 @@ def play_video(request):
 
     return render(request, 'movie/video.html')
 
+def ck_player(request):
+    # if param1:
+    #     return render(request, 'player_2/' + param1)
+    # else:
+
+    return render(request, 'gallery/ck/index.html')
 
 #
 # def uploadTest(request):
