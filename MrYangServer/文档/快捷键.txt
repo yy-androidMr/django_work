@@ -3,6 +3,8 @@ https://blog.csdn.net/JHON07/article/details/76797498
 shift+alt+z  trycache 或者if,do while
 Ctrl + Space    基本的代码完成
 alt + enter 提示
+command+options+left 光标上一个地方
+command+[ 回去.   ] 下一个
 
 查找类名的关键词
 File Structure
