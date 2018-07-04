@@ -118,12 +118,14 @@ def play_video(request):
 
     return render(request, 'movie/video.html')
 
+
 def ck_player(request):
     # if param1:
     #     return render(request, 'player_2/' + param1)
     # else:
 
     return render(request, 'gallery/ck/index.html')
+
 
 #
 # def uploadTest(request):
@@ -197,3 +199,4 @@ def m_second_gallery(request, dir_id):
             return render(request, 'gallery/secondLevel/index.html', {'json': json, 'pre_path': '/pic/middle'})
         except:
             print('没有该id的照片:' + dir_id)
+

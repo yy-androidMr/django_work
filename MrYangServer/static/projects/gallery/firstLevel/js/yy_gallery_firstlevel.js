@@ -11,7 +11,7 @@ $(document).ready(function () {
 
 function SetCookie(name, value)//两个参数，一个是cookie的名子，一个是值
 {
-    sessionStorage.setItem(name,value);
+    sessionStorage.setItem(name, value);
     // $.cookie(name, encodeURI(value));
 }
 
@@ -20,6 +20,8 @@ function gallery2(c_idproxy) {
     SetCookie('thum_path', encode.thum_path);
     SetCookie('dir_path', encode.dir_path);
     SetCookie('gallery_name', encode.gallery_name);
+    SetCookie('intro_1', encode.intro_1);
+    SetCookie('intro_2', encode.intro_2);
     window.open('/g2/' + encode.id, '_parent');
 }
 
@@ -67,7 +69,9 @@ function loadPageContent(pageCount) {
                 id: data_item.c_id,
                 thum_path: pre_path,
                 dir_path: data_item.rel_path,
-                gallery_name: data_item.name
+                gallery_name: data_item.name,
+                intro_1: data_item.intro,
+                intro_2: data_item.time,
             }, gallery2);
             pool_parent.append(child);
         }

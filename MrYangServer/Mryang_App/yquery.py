@@ -45,7 +45,7 @@ def pic_level2_2json(c_id, page):
                               c_id__gt=c_id * PhotoConvert.THUM_PIC_ID_POW).values(
         'tags', 'name', 'c_id').order_by(
         'c_id')
-    paginator = Paginator(dirs, 10)
+    paginator = Paginator(dirs, 12)
     try:
         contacts = paginator.page(page)
     except PageNotAnInteger:

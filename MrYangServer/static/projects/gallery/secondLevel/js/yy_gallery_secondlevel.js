@@ -2,6 +2,8 @@ var thum_path;
 var middle_path;
 var dir_path;
 var gallery_name;
+var intro_1;
+var intro_2;
 var media_root = '/static/media';
 var curPage = 0;
 var pageError = false;
@@ -28,7 +30,7 @@ function load_more() {
     if (inload) {
         return;
     }
-    // $('#load_tips').html('正在加载下一页');
+    $('#load_tips').html('正在加载下一页');
     inload = true;
     curPage++;
     var csrftoken = getMyCookie('csrftoken');
@@ -57,7 +59,7 @@ function onLoad(ret) {
         console.log("加载成功:" + message);
         if (message == null || message == '') {
             pageError = true;
-            $('#load_tips').html('已经加载完了');
+            $('#load_tips').html('所有都加载完毕');
             return;
         }
         var data = JSON.parse(message);
@@ -69,12 +71,15 @@ function onLoad(ret) {
 }
 
 function resetLoad() {
-    $('#load_tips').html('已经加载完了');
+    $('#load_tips').html('加载完毕');
     inload = false;
 }
 
 $(document).ready(function () {
-        $('#gallery_name').html(gallery_name);
+        $('#g_title').html(gallery_name);
+        $('#g_intro').html(intro_1);
+        $('#g_intro2').html(intro_2);
+        $('#load_tips').html('滑动加载');
         insertContent(level2_dir);
     }
 );
@@ -153,6 +158,8 @@ function GetCookie()//两个参数，一个是cookie的名子，一个是值
     thum_path = sessionStorage.getItem('thum_path');
     dir_path = sessionStorage.getItem('dir_path');
     gallery_name = sessionStorage.getItem('gallery_name');
+    intro_1 = sessionStorage.getItem('intro_1');
+    intro_2 = sessionStorage.getItem('intro_2');
 }
 
 var level2_dir;
@@ -174,6 +181,5 @@ function convert_2pic(dirsJson, path) {
     middle_path = path;
     pageError = false;
     GetCookie();
-    $('#load_tips').html('滑动底部自动加载');
     level2_dir = convert_json(dirsJson);
 }

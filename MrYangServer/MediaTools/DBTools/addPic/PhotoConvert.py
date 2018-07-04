@@ -68,6 +68,11 @@ class PhotoConvert(ConvertBase):
                 l1.delete()
             else:
                 # 这里要读取描述文件
+                # 名称1
+                # 描述
+                # 2018
+                # 年2月
+                # 1
                 info_path = l1.abs_path + '/info'
                 tags = ''
                 info_tags_count = 3
