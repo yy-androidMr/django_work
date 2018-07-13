@@ -29,10 +29,13 @@ urlpatterns = [
     # url(r'^regist/', views.regist),
     # url(r'^login/', views.login),
     # url(r'^download/', views.download_test),
-    url(r'^upp/', views.up_pic),
+    # 上传照片的控制台
+    url(r'^upp/$', views.up_pic),
+    url(r'^upp/c1/$', views.up_pic_c1),
+    # ----------end---------------
+
     url(r'^video/$', views.play_video),
     url(r'^ck/$', views.ck_player),
-
 
     url(r'^$', views.move_index),
     url(r'^own/$', views.m_index),
@@ -43,4 +46,5 @@ urlpatterns = [
     url(r'^g2/([0-9]+)$', views.m_second_gallery),
 
     url(r'^h5/(.*)/$', views.h5_test),
+    # url(r'^any/(.*)/$', views.any_page),
 ]

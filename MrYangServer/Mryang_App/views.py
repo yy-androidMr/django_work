@@ -92,6 +92,30 @@ def upload_file(request):
 #     yutils.download_file()
 #     return render(request, 'login.html')
 
+def any_page(request, str):
+    return render(request, str)
+
+
+# 上传照片的控制台
+def check_pic_cmd_login(request):
+    if 'login' in request.COOKIES:
+        value = request.COOKIES['login']
+        if None is not value and value == 'true':
+            return True
+    return False
+
+
+def to_pic_cmd_login(request):
+    return render(request, 'upload/gallery/upload_pic_login.html', {'uf': forms.upload_f()})
+
+
+def up_pic_c1(request):
+    if (check_pic_cmd_login(request)):
+        return render(request, 'upload/gallery/child_item/upload.html')
+    return to_pic_cmd_login(request)
+    # def up_pic_c2(request):
+
+
 def up_pic(request):
     if (request.method == "POST"):
         # 提交了表单
@@ -101,15 +125,19 @@ def up_pic(request):
             pwd = uf.cleaned_data['pwd']
             print(pwd)
             if not pwd is 'temp1234':
-                return render(request, 'gallery/upload_pic.html', {'uf': forms.upload_f()})
-
+                hr = render(request, 'upload/gallery/upload_pic.html')
+                hr.set_cookie('login', 'true', max_age=7 * 24 * 60 * 60)
+                return hr
                 # 写入数据库
                 # user = User.objects.get(account=utils.get_s_account())
-        return render(request, 'gallery/upload_pic.html', {'p_dir': yquery.upp_json()})
+        return to_pic_cmd_login(request)
     else:
-        uf = forms.upload_f()
-        return render(request, 'gallery/upload_pic.html', {'uf': forms.upload_f()})
+        if (check_pic_cmd_login(request)):
+            return render(request, 'upload/gallery/upload_pic.html')
+        return to_pic_cmd_login(request)
 
+
+# ----------------end--------------
 
 def play_video(request):
     # if param1:
@@ -199,4 +227,3 @@ def m_second_gallery(request, dir_id):
             return render(request, 'gallery/secondLevel/index.html', {'json': json, 'pre_path': '/pic/middle'})
         except:
             print('没有该id的照片:' + dir_id)
-

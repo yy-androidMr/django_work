@@ -1,0 +1,39 @@
+{#需求:#}
+{#1.查看和删除当前照片列表#}
+{#2.查看和删除当前缓存照片列表#}
+{#3.转换按钮.#}
+
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script src="/static/projects/gallery/mid/jquery-1.11.3.min.js"></script>
+    {#    <script type="text/javascript" src="/static/projects/gallery/mid/jquery-1.11.3.min.js"></script>#}
+    <title>控制台</title>
+    <script>
+        function page1_btn() {
+            var item = $('#menus');
+            item.prop('hidden', true);
+            var page1 = $('#page1');
+            page1.prop('hidden', false);
+        }
+
+    </script>
+</head>
+<body>
+
+<div hidden id="page1">
+    {% include  'upload/gallery/child_item/upload.html' %}
+</div>
+
+<div hidden id="page2">
+    {% include  'upload/gallery/child_item/watch.html' %}
+</div>
+<div id="menus">
+    <a href="#" onclick="page1_btn()">上传照片</a>
+    <a>查看当前列表</a>
+    <a>缓存冲入</a>
+</div>
+
+</body>
+</html>
