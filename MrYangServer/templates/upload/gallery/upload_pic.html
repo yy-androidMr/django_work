@@ -18,6 +18,19 @@
             page1.prop('hidden', false);
         }
 
+        function page2_btn() {
+            var item = $('#menus');
+            item.prop('hidden', true);
+            var page1 = $('#page2');
+            page1.prop('hidden', false);
+        }
+
+        function add_back_btn() {
+            var item = $('#page1');
+            item.html('<a href=\"#\" onclick=\"page1_btn()\">上传照片</a>');
+        }
+
+        add_back_btn();
     </script>
 </head>
 <body>
@@ -31,7 +44,7 @@
 </div>
 <div id="menus">
     <a href="#" onclick="page1_btn()">上传照片</a>
-    <a>查看当前列表</a>
+    <a href="#" onclick="page2_btn()">查看当前列表</a>
     <a>缓存冲入</a>
 </div>
 
