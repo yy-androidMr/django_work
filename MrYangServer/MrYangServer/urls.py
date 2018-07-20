@@ -31,7 +31,7 @@ urlpatterns = [
     # url(r'^download/', views.download_test),
     # 上传照片的控制台
     url(r'^upp/$', views.up_pic),
-    url(r'^upp/c1/$', views.up_pic_c1),
+    url(r'^upp/begin_upload$', views.up_pic_c1),
     # ----------end---------------
 
     url(r'^video/$', views.play_video),
