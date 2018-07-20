@@ -11,42 +11,57 @@
     {#    <script type="text/javascript" src="/static/projects/gallery/mid/jquery-1.11.3.min.js"></script>#}
     <title>控制台</title>
     <script>
-        function page1_btn() {
+        var curShowContent = "";
+
+        function show_content(contentStr) {
             var item = $('#menus');
             item.prop('hidden', true);
-            var page1 = $('#page1');
-            page1.prop('hidden', false);
+            var page = $('#' + contentStr);
+            curShowContent = contentStr;
+            page.prop('hidden', false);
         }
 
-        function page2_btn() {
-            var item = $('#menus');
-            item.prop('hidden', true);
-            var page1 = $('#page2');
-            page1.prop('hidden', false);
+        function hide_content() {
+            if (null != curShowContent && "" != curShowContent) {
+                var item = $('#menus');
+                item.prop('hidden', false);
+                var page = $('#' + curShowContent);
+                page.prop('hidden', true);
+                curShowContent = "";
+            }
         }
-
-        function add_back_btn() {
-            var item = $('#page1');
-            item.html('<a href=\"#\" onclick=\"page1_btn()\">上传照片</a>');
-        }
-
-        add_back_btn();
     </script>
 </head>
 <body>
 
 <div hidden id="page1">
+    <p id="back_div"></p>
     {% include  'upload/gallery/child_item/upload.html' %}
 </div>
 
 <div hidden id="page2">
+    <p id="back_div"></p>
     {% include  'upload/gallery/child_item/watch.html' %}
 </div>
 <div id="menus">
-    <a href="#" onclick="page1_btn()">上传照片</a>
-    <a href="#" onclick="page2_btn()">查看当前列表</a>
+    <a href="#" onclick="show_content('page1')">上传照片</a>
+    <a href="#" onclick="show_content('page2')">查看当前列表</a>
     <a>缓存冲入</a>
 </div>
+<script>
+    function add_back_btn() {
+        var item = $('p#back_div');
+        item.html('<a href=\"#\" onclick=\"hide_content()\">返回</a>');
+    }
+
+    add_back_btn();
+
+    window.history.pushState(null, null, "#");
+    window.addEventListener("popstate", function (e) {
+        window.history.pushState(null, null, "#");
+        hide_content();
+    }, false);
+</script>
 
 </body>
 </html>
