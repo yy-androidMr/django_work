@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>ckplayer</title>
+    <script type="text/javascript" src="/static/projects/gallery/video_player/js/video.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="/static/projects/gallery/video_player/js/videojs-contrib-hls.min.js"
+            charset="UTF-8"></script>
+    <link rel="stylesheet" href="/static/projects/gallery/video_player/css/video-js.min.css">
+
+</head>
+
+<body>
+<video id="example-video" class="video-js vjs-default-skin" autoplay
+       controls>
+    <source
+            src="/static/media/movie/电视剧1/a9203849b98945c5f56ddaad6d85fab9.ym3/out.m3u8"
+            type="application/x-mpegURL">
+</video>
+{#<script src="video.js"></script>#}
+{#<script src="videojs-contrib-hls.min.js"></script>#}
+<script>
+    var player = videojs('example-video');
+    player.play();
+    player.requestFullscreen();
+</script>
+</body>
+
+</html>

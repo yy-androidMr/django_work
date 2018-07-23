@@ -144,7 +144,7 @@ def play_video(request):
     #     return render(request, 'player_2/' + param1)
     # else:
 
-    return render(request, 'movie/video.html')
+    return render(request, 'movie/video_js.html')
 
 
 def ck_player(request):
