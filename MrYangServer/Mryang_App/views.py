@@ -111,7 +111,7 @@ def to_pic_cmd_login(request):
 # 上传的文件处理
 def up_pic_c1(request):
     if (check_pic_cmd_login(request)):
-        return render(request, 'upload/gallery/child_item/upload.html')
+        return render(request, 'upload/gallery/child_item/upload.html',)
     return to_pic_cmd_login(request)
     # def up_pic_c2(request):
 
