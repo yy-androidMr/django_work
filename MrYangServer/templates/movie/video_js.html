@@ -17,13 +17,14 @@
        controls>
     <source
             id="video_source"
-            {#            src="/static/media/movie/mp4/82a6af46b166451642dc2b6314407465.ym3/out.m3u8"#}
+            {#                src="/static/media/movie/mp4/82a6af46b166451642dc2b6314407465.ym3/out.m3u8"#}
             type="application/x-mpegURL">
 </video>
 
 <a onclick="requestFullScreen()">sadfsadf</a>
 {#<div id="show"></div>#}
 <ul></ul>
+</body>
 <script>
 
 
@@ -52,18 +53,15 @@
         });
     });
 
-    var str = $("<a href='http://www.baidu.com'>百度</a>");
-    $("ul").append(str); //将动态创建的str元素追加到ul下面
-
-
     var url = "/static/media/movie" + sessionStorage.getItem('url');
     var sourceDom = "<source src=\"" + url + "\"  type=\"application/x-mpegURL\">";
     {#    document.getElementById("video_control").innerHTML = sourceDom;#}
     {#    $("#video_control source").prop("src", url);#}
-    var video = $("#video_control");
+    {#    var video = $("#video_control");#}
     video.append(sourceDom);
-    video.show();
+    $("#video_control source").prop("src", url);
     {#    document.getElementById("video_source").src = url;#}
+    video.show();
     {#    player.load();#}
     player.play();
 
@@ -73,6 +71,5 @@
 
     {#/static/media/movie/电视剧1/a9203849b98945c5f56ddaad6d85fab9.ym3/out.m3u8#}
 </script>
-</body>
 
 </html>
