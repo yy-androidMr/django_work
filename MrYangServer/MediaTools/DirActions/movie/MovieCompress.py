@@ -85,6 +85,7 @@ def cut_video():
                     cmd = peg + ' -i ' + source_abs_path + ' -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_list ' + to_path + '/' + yutils.M3U8_NAME + ' -segment_time 5 ' + to_path + '/%03d.ts'
                     print(cmd)
                     os.system(cmd)
+                    print('done:' + to_path)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,17 @@
+简单转换
+ffmpeg.exe -i XX.avi XX.mp4
+
+多线程?
+ffmpeg -y -threads 2 -i in.avi out290.mp4
+
+
+视频切片命令
+ffmpeg -i 1.mkv -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_list out.m3u8 -segment_time 30 out%03d.ts
+视频转换格式命令????超级快?????
+ffmpeg.exe -i src.avi -c copy -y output.mp4
+
+
+切片条件:
+h264
+
+考虑场景: 部分电影无法转换成功,是否使用mencoder?

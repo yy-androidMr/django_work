@@ -8,63 +8,22 @@
     <script type="text/javascript" src="/static/projects/gallery/video_player/js/videojs-contrib-hls.min.js"
             charset="UTF-8"></script>
     <link rel="stylesheet" href="/static/projects/gallery/video_player/css/video-js.min.css">
+    <script src="/static/projects/gallery/mid/jquery-1.11.3.min.js"></script>
 
-    <script>
-        {#        window.onload = function () {#}
-        {#            function addSourceToVideo(element, src, type) {#}
-        {#                var source = document.createElement("source");#}
-        {#                source.id = "video_source";#}
-        {#            source.src = src;#}
-        {#                source.type = type;#}
-        {#                element.appendChild(source);#}
-        {#            }#}
-        {##}
-        {#            function insertVideo(src, type, width, height) {#}
-        {#                var vid = document.createElement("video");#}
-        {#                vid.controls = "controls";#}
-        {#                vid.autoplay = "autoplay";#}
-        {#                vid.className = "video-js vjs-default-skin";#}
-        {#        class=""#}
-        {#                vid.width = width;#}
-        {#                vid.height = height;#}
-        {#                vid.id = "video_control";#}
-        {#                vid.muted = false;#}
-        {#                addSourceToVideo(vid, src, type);#}
-        {#                document.getElementById("show").appendChild(vid);#}
-        {#            }#}
-        {##}
-        {#            function playVideo(src) {#}
-        {#                var video = document.getElementById("video_control");#}
-        {#                if (video == undefined) {#}
-        {#                    insertVideo(src, "application/x-mpegURL", 604, 256);#}
-        {#                    video = document.getElementById("video_control");#}
-        {#                }#}
-        {#                video.play();#}
-        {#            }#}
-        {##}
-        {#            var url = "/static/media/movie" + sessionStorage.getItem('url');#}
-        {#            playVideo(url);#}
-        {#            document.getElementById("video_source").src = url;#}
-        {#            var player = videojs('video_control');#}
-        {#            player.play();#}
-        {#            player.requestFullscreen();#}
-        {#        }#}
-
-
-    </script>
 </head>
 <body>
-<video id="video_control" class="video-js vjs-default-skin" webkit-playsinline="false" style="object-fit:fill"
+<video id="video_control" class="video-js vjs-default-skin" style="object-fit:fill"
        autoplay
        controls>
     <source
             id="video_source"
-            src="/static/media/movie/电视剧1/a9203849b98945c5f56ddaad6d85fab9.ym3/out.m3u8"
+            {#            src="/static/media/movie/mp4/82a6af46b166451642dc2b6314407465.ym3/out.m3u8"#}
             type="application/x-mpegURL">
 </video>
 
 <a onclick="requestFullScreen()">sadfsadf</a>
 {#<div id="show"></div>#}
+<ul></ul>
 <script>
 
 
@@ -79,20 +38,33 @@
         }
     }
 
-        var player = videojs('video_control', {}, function () {
-            this.on('ended', function () {
-                console.log('结束播放');
-            });
-            this.on('firstplay', function () {
-                console.log('第一次播放');
-                requestFullScreen();
-                player.requestFullscreen();
-            });
-            this.on('play', function () {
-                console.log('播放');
-            });
+    var player = videojs('video_control', {}, function () {
+        this.on('ended', function () {
+            console.log('结束播放');
         });
-    player.load();
+        this.on('firstplay', function () {
+            console.log('第一次播放');
+            {#            requestFullScreen();#}
+            {#            player.requestFullscreen();#}
+        });
+        this.on('play', function () {
+            console.log('播放');
+        });
+    });
+
+    var str = $("<a href='http://www.baidu.com'>百度</a>");
+    $("ul").append(str); //将动态创建的str元素追加到ul下面
+
+
+    var url = "/static/media/movie" + sessionStorage.getItem('url');
+    var sourceDom = "<source src=\"" + url + "\"  type=\"application/x-mpegURL\">";
+    {#    document.getElementById("video_control").innerHTML = sourceDom;#}
+    {#    $("#video_control source").prop("src", url);#}
+    var video = $("#video_control");
+    video.append(sourceDom);
+    video.show();
+    {#    document.getElementById("video_source").src = url;#}
+    {#    player.load();#}
     player.play();
 
     {#    setTimeout("requestFullScreen()", 5000);#}

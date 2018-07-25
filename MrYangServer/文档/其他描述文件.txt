@@ -4,27 +4,10 @@ http://tool.chinaz.com/dns
 151.101.229.194 github.global.ssl.fastly.net
 151.101.100.133 assets-cdn.github.com
 
-
 2.viewer api
 https://www.cnblogs.com/yi0921/p/7080284.html
 
-3.图片素材
-http://616pic.com/
 
-webp
-http://www.etherdream.com/WebP/
-
-比特率:最好1000
-https://www.cnblogs.com/liusx0303/p/7572050.html
-
-视频切片命令
-ffmpeg -i 1.mkv -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_list out.m3u8 -segment_time 30 out%03d.ts
-
-
-
-https:
-https://blog.csdn.net/huplion/article/details/52892901
-http://www.freehao123.com/gogetssl-comodo-ssl-rapidssl/
 
 
 https://www.jianshu.com/p/d9b64514f8cc
