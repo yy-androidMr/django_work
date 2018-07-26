@@ -6,20 +6,11 @@ import string
 import platform
 
 
-# reload(sys)
-# sys.setdefaultencoding('utf-8')
-
-
 def random_int():
     return random.randint(10000000, 99999999)
 
 
 def random_str():
-    # random_str = []
-    # for i in range(100):
-    #     random_str.append(random.choice(seed))
-    # return ''.join(random_str)
-    # fun2:
     salt = ''.join(random.sample(string.ascii_letters + string.digits, random.randint(8, 20)))
     return salt
 
@@ -167,7 +158,7 @@ def decompose_path(root, file, source_root, target_root, exten=None, rename=None
     # if rename:
 
     # 4.新的绝对路径|替换后缀
-    if  output_neighbor:
+    if output_neighbor:
         target_abs_path = target_root
     else:
         target_abs_path = '/'.join([os.path.abspath(target_root), rela_file_name])
@@ -239,6 +230,7 @@ def is_gif(path):
     return False
 
 
+# 视频的工具----------------------------------------------------
 INFO_FILE = 'info'
 # 如果是切片视频.文件夹是这个后缀.
 M3U8_DIR_EXTEN = '.ym3'
@@ -250,3 +242,28 @@ def is_m3u8_dir(path):
     if M3U8_DIR_EXTEN in path.lower():
         return True
     return False
+
+
+# end----------------------------------------------------------
+
+# cmd命令行回调----------------------------------------------------
+import subprocess
+import codecs
+import locale
+
+
+def process_cmd(cmd, call=None, done_call=None):
+    ps = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
+    while True:
+        data = ps.stdout.readline()
+        if data == b'':
+            if ps.poll() is not None:
+                if done_call != None:
+                    done_call()
+                break
+        else:
+            line = data.decode(codecs.lookup(locale.getpreferredencoding()).name)
+            print(line, end='')
+            if done_call != None:
+                call(line)
+# end----------------------------------------------------------

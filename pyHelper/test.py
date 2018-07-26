@@ -30,3 +30,29 @@
 #     print("段落数:" + str(len(file.paragraphs)))
 #     # a = 1 << 2
 #     # print(36/32)
+
+# def deco2(func):
+#     def wrapper():
+#         start_time = time.time()
+#         func()
+#         print('time2:%d' % start_time)
+#
+#     return wrapper
+#
+#
+# def deco(func):
+#     def wrapper():
+#         start_time = time.time()
+#         func()
+#         print('time1:%d' % start_time)
+#
+#     return wrapper
+#
+#
+# @deco2
+# @deco
+# def fun():
+#     print('hello')
+#
+#
+# fun()

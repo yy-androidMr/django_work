@@ -1,8 +1,7 @@
 import os
 import pickle
 import shutil
-
-from Mryang_App import yutils
+import subprocess
 
 from Mryang_App import yutils
 
@@ -11,6 +10,7 @@ cd_count = '../' * 4
 source_root = ''.join([cd_count, yutils.media_source, '/movie/src'])
 target_root = ''.join([cd_count, yutils.media_source, '/movie/desc'])
 net_static_root = yutils.transform_path(cd_count, yutils.static_media_root, '/movie')
+net_ts_root = yutils.transform_path(cd_count, yutils.static_media_root, '/movie_ts')
 
 
 def create_ffmpeg_bat():
@@ -48,7 +48,8 @@ def create_convert_bats():
     # shutil.del
     index = 0
     for bat_line in bat_list:
-        # name = '%d.sh' % index
+        # mystr = os.popen("bat_line")
+        # break
         file_ = ''.join([dir, str(index), '.sh' if yutils.is_mac() else '.bat'])
         index += 1
         with open(file_, 'w+') as f:
@@ -56,19 +57,37 @@ def create_convert_bats():
 
 
 # 第二需求: 视频切片
+def create_ts(root, file, last_path):
+    (_, _, _, target_rela_path_ts) = yutils.decompose_path(root, file, target_root, net_ts_root)
+    ts_dir = os.path.dirname(target_rela_path_ts) + last_path
+
+    return ts_dir
+
+
+def cut_call(str):
+    pass
+
+
+def cut_end():
+    print('end')
+
+
 def cut_video():
     # 假设已经读取了
     for root, dirs, files in os.walk(target_root):
         for file in files:
             if '.mp4' in file.lower():
-                (rela_file_name, source_abs_path, target_abs_path, target_rela_path) = yutils.decompose_path(root, file,
-                                                                                                             target_root,
-                                                                                                             net_static_root)
+                (_, source_abs_path, target_abs_path, target_rela_path) = yutils.decompose_path(root, file,
+                                                                                                target_root,
+                                                                                                net_static_root)
                 # source_rela_path = os.path.join(root, file)
-                target_dir = os.path.dirname(target_rela_path) + '/' + yutils.md5_of_str(
-                    os.path.basename(target_abs_path)) + yutils.M3U8_DIR_EXTEN
+                last_path = '/' + yutils.md5_of_str(os.path.basename(target_abs_path)) + yutils.M3U8_DIR_EXTEN
+                target_dir = os.path.dirname(target_rela_path) + last_path
+
+                ts_dir = create_ts(root, file, last_path)
                 print(target_dir)
-                if os.path.exists(target_dir):
+                # if os.path.exists(target_dir):
+                if False:
                     # 不做处理.重复切片
                     print('cut exists %s %s' % (source_abs_path, target_dir))
                     pass
@@ -84,16 +103,21 @@ def cut_video():
 
                     cmd = peg + ' -i ' + source_abs_path + ' -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_list ' + to_path + '/' + yutils.M3U8_NAME + ' -segment_time 5 ' + to_path + '/%03d.ts'
                     print(cmd)
-                    os.system(cmd)
-                    print('done:' + to_path)
+                    yutils.process_cmd(cmd, done_call=cut_end)
+                    # os.system(cmd)
+                    # print('done:' + to_path)
 
 
 if __name__ == '__main__':
+    # pass
     cut_video()
     # create_convert_bats()
 
-# import subprocess
-# output = subprocess.Popen("/usr/local/ffmpeg/bin/ffmpeg -i '" + r"G:\pyWorkspace\django_work\MrYangServer\media_source\movie\src\香水BD中字[电影天堂www.dy2018.com].mp4" + "' 2>&1 | grep 'Duration'", shell=True,
-#                           stdout=subprocess.PIPE).stdout.read()
-#
-# print(output)
+    # mystr = os.popen("ping www.baidu.com")  # popen与system可以执行指令,popen可以接受返回对象
+    # mystr = mystr.read()  # 读取输出
+    #
+    # print("hello", mystr)
+
+    # sub = os.popen("ping www.baidu.com", shell=True, stdout=subprocess.PIPE)
+    # sub.wait()
+    # print(sub.read())
