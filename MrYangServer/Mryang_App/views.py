@@ -152,7 +152,7 @@ def ck_player(request):
     #     return render(request, 'player_2/' + param1)
     # else:
 
-    return render(request, 'gallery/ck/index.html')
+    return render(request, 'movie/ck/ck_new.html')
 
 
 #

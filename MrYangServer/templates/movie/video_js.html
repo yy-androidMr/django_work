@@ -15,10 +15,10 @@
 <video id="video_control" class="video-js vjs-default-skin" style="object-fit:fill"
        autoplay
        controls>
-    <source
-            id="video_source"
-            src="/static/media/movie/mp4/82a6af46b166451642dc2b6314407465.ym3/out.m3u8"
-            type="application/x-mpegURL">
+    {#    <source#}
+    {#            id="video_source"#}
+    {#            src="/static/media/movie/mp4/82a6af46b166451642dc2b6314407465.ym3/out.m3u8"#}
+    {#            type="application/x-mpegURL">#}
 </video>
 
 <a onclick="requestFullScreen()">sadfsadf</a>
@@ -27,6 +27,7 @@
 </body>
 <script>
 
+    var url = "/static/media/movie" + sessionStorage.getItem('url');
 
     function requestFullScreen() {
         var de = document.documentElement;
@@ -39,29 +40,33 @@
         }
     }
 
+
+    var source = document.createElement('source');
+    source.setAttribute("type", "application/x-mpegURL");
+    source.setAttribute("src", url);
+    document.getElementById("video_control").appendChild(source);
     var player = videojs('video_control', {}, function () {
         this.on('ended', function () {
             console.log('结束播放');
         });
         this.on('firstplay', function () {
             console.log('第一次播放');
-            {#            requestFullScreen();#}
-            {#            player.requestFullscreen();#}
+            requestFullScreen();
+            player.requestFullscreen();
         });
         this.on('play', function () {
             console.log('播放');
         });
     });
 
-    var url = "/static/media/movie" + sessionStorage.getItem('url');
-    var sourceDom = "<source src=\"" + url + "\"  type=\"application/x-mpegURL\">";
+    {#    var sourceDom = "<source src=\"" + url + "\"  type=\"application/x-mpegURL\">";#}
     {#    document.getElementById("video_control").innerHTML = sourceDom;#}
     {#    $("#video_control source").prop("src", url);#}
     {#    var video = $("#video_control");#}
-    video.append(sourceDom);
-    $("#video_control source").prop("src", url);
+    {#    video.append(sourceDom);#}
+    {#    $("#video_control source").prop("src", url);#}
     {#    document.getElementById("video_source").src = url;#}
-    video.show();
+    {#    video.show();#}
     {#    player.load();#}
     player.play();
 
