@@ -5,6 +5,8 @@ import random
 import string
 import platform
 
+import shutil
+
 
 def random_int():
     return random.randint(10000000, 99999999)
@@ -95,15 +97,19 @@ def time_convert(size):  # 单位换算
         return tim_srt
 
 
-def create_dirs(file_path, is_dir=False):
+def create_dirs(file_path, is_dir=False, delete_exist=False):
     if is_dir:
         target_dir = file_path
     else:
         target_dir = os.path.dirname(file_path)
 
     if target_dir:
-        if not os.path.exists(target_dir):
-            os.makedirs(target_dir)
+        if os.path.exists(target_dir):
+            if delete_exist:
+                shutil.rmtree(target_dir)
+            else:
+                return
+        os.makedirs(target_dir)
 
 
 def delete_null_dir(dirr):
@@ -266,4 +272,5 @@ def process_cmd(cmd, call=None, done_call=None):
             print(line, end='')
             if done_call != None:
                 call(line)
+
 # end----------------------------------------------------------

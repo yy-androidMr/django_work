@@ -29,7 +29,7 @@ class ConvertBase:
         try:
             parent = Dir.objects.get(abs_path=parent_abs_path)
         except Exception as e:
-            print('%s:%s' % (parent_abs_path, e))
+            print('error:%s:is not found :%s' % (parent_abs_path, e))
             pass
 
         self.walk_call(self_abs_path, rel_path, parent, name, is_dir)

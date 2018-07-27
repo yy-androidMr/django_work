@@ -72,17 +72,17 @@
     var url = "/static/media/movie" + sessionStorage.getItem('url');
 
 
-    {#        var flashvars = {#}
-    {#            f: '/static/projects/gallery/ck/ckplayer/m3u8.swf',//插件地址#}
-    {#            a: "/static/media/movie" + url, //文件地址#}
-    {#            s: 4,#}
-    {#            p: 1,#}
-    {#            wh: '16:9'#}
-    {#        };#}
-    {#        var params = {bgcolor: '#FFF', allowFullScreen: true, allowScriptAccess: 'always', wmode: 'transparent'};#}
-    {#        var video = ["/static/media/movie" + url];#}
-    {#    var player = new ckplayer();#}
-    {#        player.embed('/static/projects/gallery/ck/ckplayer/ckplayer.swf', 'video', 'ck-video', '100%', '100%', false, flashvars, video, params);#}
+            var flashvars = {
+                f: '/static/projects/gallery/ck/ckplayer/m3u8.swf',//插件地址
+                a: "/static/media/movie" + url, //文件地址
+                s: 4,
+                p: 1,
+                wh: '16:9'
+            };
+    var params = {bgcolor: '#FFF', allowFullScreen: true, allowScriptAccess: 'always', wmode: 'transparent'};
+    var video = ["/static/media/movie" + url];
+    var player = new ckplayer();
+    player.embed('/static/projects/gallery/ck/ckplayer/ckplayer.swf', 'video', 'ck-video', '100%', '100%', false, flashvars, video, params);
     {##}
     {#    var newVideoObject = {#}
     {#        container: '#video', //容器的ID#}
@@ -94,15 +94,15 @@
     {#    player.embed(newVideoObject);#}
 
 
-        var videoObject = {
-            container: '#video',//“#”代表容器的ID，“.”或“”代表容器的class
-            variable: 'player',//该属性必需设置，值等于下面的new chplayer()的对象
-            autoplay: true,//自动播放
-            live: false,
-            video: "http://localhost:909/static/media/movie/电视剧1/a9203849b98945c5f56ddaad6d85fab9.ym3/out.m3u8",//"/static/media/movie" + url//视频地址
-            html5m3u8: true,
-        };
-    var player = new ckplayer(videoObject);
+{#    var videoObject = {#}
+    {#        container: '#video',//“#”代表容器的ID，“.”或“”代表容器的class#}
+    {#        variable: 'player',//该属性必需设置，值等于下面的new chplayer()的对象#}
+    {#        autoplay: true,//自动播放#}
+    {#        live: false,#}
+    {#        video: url,//"/static/media/movie" + url//视频地址#}
+    {#        html5m3u8: true,#}
+    {#    };#}
+    {#    var player = new ckplayer(videoObject);#}
 
     {#    function showPlayer(src, id) {#}
     {#        //player#}

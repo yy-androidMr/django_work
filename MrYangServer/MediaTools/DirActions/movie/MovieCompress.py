@@ -93,19 +93,18 @@ def cut_video():
                     pass
                 else:
                     yutils.create_dirs(target_dir, True)
+                    yutils.create_dirs(ts_dir, True, True)
                     info = {}  # map形式存储
                     info[yutils.MOVIE_INFO_NAME] = yutils.file_name(os.path.basename(file))
                     with open(''.join([target_dir, '/info']), 'wb') as f:
                         pickle.dump(info, f)  # 只能以二进制写入
 
                     peg = os.path.abspath('output/exe/ffmpeg')
-                    to_path = target_dir
 
-                    cmd = peg + ' -i ' + source_abs_path + ' -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_list ' + to_path + '/' + yutils.M3U8_NAME + ' -segment_time 5 ' + to_path + '/%03d.ts'
+                    cmd = peg + ' -i ' + source_abs_path + ' -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_list ' + target_dir + '/' + yutils.M3U8_NAME + ' -segment_time 5 ' + ts_dir + '/%03d.ts'
                     print(cmd)
                     yutils.process_cmd(cmd, done_call=cut_end)
-                    # os.system(cmd)
-                    # print('done:' + to_path)
+                    print('done:' + target_dir)
 
 
 if __name__ == '__main__':
