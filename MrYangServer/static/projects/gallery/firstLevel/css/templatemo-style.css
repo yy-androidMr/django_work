@@ -542,7 +542,7 @@ textarea {
 /* Gallery */
 .grid-item {
     float: left;
-    width: 100%;
+    width: 50%;
 }
 
 .grid-item:last-child {
