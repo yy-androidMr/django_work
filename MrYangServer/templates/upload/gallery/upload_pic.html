@@ -59,8 +59,10 @@
 
     window.history.pushState(null, null, "#");
     window.addEventListener("popstate", function (e) {
+        {#var pse = PopStateEvent(e);#}
+        console.debug('e:'+e);
         window.history.pushState(null, null, "#");
-        hide_content();
+        {#hide_content();#}
     }, false);
 </script>
 

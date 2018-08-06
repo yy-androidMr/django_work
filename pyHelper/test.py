@@ -56,3 +56,30 @@
 #
 #
 # fun()
+
+
+# import sys
+# print(sys.path)
+
+
+# print("请输入娄敏慧的年龄:")
+# while True:
+#     a = input()
+#     age = int(a)
+#     if age == 18:
+#         print("猜对了")
+#         break
+#     else:
+#         if age > 18:
+#             print("不对,她没那么大")
+#         else:
+#             print("不是的,她没那么小")
+#
+# print("那你说,她漂不漂亮?")
+# while True:
+#     b = input()
+#     content = str(b)
+#     if '不' in content or  '漂亮' not in content:
+#         print('别乱说,小心你的嘴')
+#     else:
+#         print('嗯.小年轻还算识相.')
