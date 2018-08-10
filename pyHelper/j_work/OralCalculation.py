@@ -1,3 +1,5 @@
+import traceback
+
 import docx
 from win32com import client as wc
 
@@ -131,18 +133,16 @@ def doSaveAas(file_name):
     return new_file
 
 
-dir_path = r'G:\cache\audio'
-
-
-def begin():
+def begin(dir_path):
     docx_dict = {}
     for root, dirs, files in os.walk(dir_path):
         for file in files:
             if '.doc' in file and '.docx' not in file:
                 source_path = os.path.join(root, file).replace('\\', '/')
-                docx_dict[source_path] = doSaveAas(source_path)
-                # docx_dict.append(source_path)
-                # print(source_path)
+                docx_dict[source_path] = ''
+
+    for k in docx_dict:
+        docx_dict[k] = doSaveAas(k)
 
     f = open(dir_path + '/out.txt', "w+")
     f.write('口算题')
@@ -159,6 +159,35 @@ def begin():
     f.close()
 
 
-# doSaveAas('【计算专项课程】A3 第3讲（作业版）')
+def begin_single(path):
+    print('正在开始计算...'+path)
+    dir = os.path.dirname(path)
+    docx = doSaveAas(path)
+    f = open(dir + '/out.txt', "w+")
+    f.write('口算题')
+    result = read_oral(docx)
+    f.write('\n')
+    # for docx in docx_list:
+    #     print(docx)
+    f.write(os.path.basename(path) + '\n')
+    for i in result:
+        f.write(str(i) + '\n')  # \r\n为换行符  # doSaveAas('【计算专项课程】A3 第2讲（作业版）')
+    os.remove(docx)
+    f.close()
 
-begin()
+
+# doSaveAas('【计算专项课程】A3 第3讲（作业版）')
+if __name__ == '__main__':
+    print('拖入文件夹路径:(文件夹里是需要计算口算题的doc文件)')
+    dir = input()
+    # dir = r'"G:\cache\audio\【计算专项课程】A3 第1讲（作业版）.doc"'
+    try:
+        if dir.startswith('"'):
+            dir = dir[1:len(dir) - 1]
+        if os.path.isfile(dir):
+            begin_single(dir)
+        else:
+            begin(dir)
+    except:
+        traceback.print_exc()
+        input()
