@@ -25,6 +25,7 @@ def middle_out_path(source_path):
     return (rename_path, desc_path)
 
 
+#  从src目录压缩一下.到desc
 def src2pc(delete_exist):
     ImageFile.LOAD_TRUNCATED_IMAGES = True
     middle_area = 1500 * 1500
@@ -85,7 +86,7 @@ def src2pc(delete_exist):
 
             print(rename_path)
 
-
+# 从middle 到缩略图
 def middle2thum(delete_exist):
     thum_width = 350
     for root, dirs, files in os.walk(middle):
@@ -132,6 +133,7 @@ def middle2thum(delete_exist):
             print(desc_path)
 
 
+# 移动info文件,这个操作要修改掉.之后改成xml
 def move_info():
     for root, dirs, files in os.walk(src):
         for file in files:
