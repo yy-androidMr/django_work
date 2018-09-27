@@ -3,5 +3,8 @@
 -->
 <configs_info>
 	<project_root>G:\pyWorkspace\django_work\MrYangServer</project_root>
-	<config_root>
+	<config_root>\config\</config_root>
+	<list>
+		<gallery_info>gallery_info.xml</gallery_info>
+	</list>
 </configs_info>
