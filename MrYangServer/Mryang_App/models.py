@@ -61,5 +61,20 @@ class Dir(models.Model):
             self.name, self.isdir, parent_dir_name, self.tags, self.rel_path, self.type, self.c_id)
 
 
+class GalleryInfo(models.Model):
+    id = models.AutoField(primary_key=True)
+    # 相册名字
+    name = models.CharField(max_length=100, default='')
+    # 相册简介
+    intro = models.CharField(max_length=100, default='')
+    # 相册时间
+    time = models.CharField(max_length=100, default='')
+    # 相册中的指定缩略图
+    thum = models.CharField(max_length=100, default='')
+    # 其他预留
+    param1 = models.CharField(max_length=100, default='')
+    param2 = models.CharField(max_length=100, default='')
+
+
 class UpLoadDir(models.Model):
     path = models.CharField(max_length=100, default='')

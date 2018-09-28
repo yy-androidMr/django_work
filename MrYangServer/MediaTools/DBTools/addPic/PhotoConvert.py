@@ -67,36 +67,46 @@ class PhotoConvert(ConvertBase):
                 # 删除一级文件夹
                 l1.delete()
             else:
-                # 这里要读取描述文件
-                # 名称1
-                # 描述
-                # 2018
-                # 年2月
-                # 1
-                info_path = l1.abs_path + '/info'
-                tags = ''
-                info_tags_count = 3
-                cur_info_tags = 0
-                if os.path.exists(info_path):
-                    with open(info_path, encoding='utf-8') as file_object:
-                        lines = file_object.readlines()  # 读取全部内容
-                        for line in lines:
-                            tags += line.rstrip('\n') + ' '
-                            cur_info_tags += 1
-                            if cur_info_tags == info_tags_count:
-                                break
-                        if len(lines) >= LEVEL_INDEX:
-                            print(lines[LEVEL_INDEX - 1])
-                            l1.show_level = int(lines[LEVEL_INDEX - 1])
-                        else:
-                            l1.show_level = 0
-                if cur_info_tags < info_tags_count:
-                    tags += ' ' * (info_tags_count - cur_info_tags)
+                if True:
+                    self.old_info_convert(l1, childs, child_count)
+                else:
+                    self.new_info_convert()
+        # 这里要读取描述文件
+        # 名称1
+        # 描述
+        # 2018
+        # 年2月
+        # 1
 
-                tags += childs[random.randrange(0, child_count)].name
-                l1.tags = tags
-                l1.save()
         print('done')
+
+    def old_info_convert(self, l1, childs, child_count):
+        info_path = l1.abs_path + '/info'
+        tags = ''
+        info_tags_count = 3
+        cur_info_tags = 0
+        if os.path.exists(info_path):
+            with open(info_path, encoding='utf-8') as file_object:
+                lines = file_object.readlines()  # 读取全部内容
+                for line in lines:
+                    tags += line.rstrip('\n') + ' '
+                    cur_info_tags += 1
+                    if cur_info_tags == info_tags_count:
+                        break
+                if len(lines) >= LEVEL_INDEX:
+                    print(lines[LEVEL_INDEX - 1])
+                    l1.show_level = int(lines[LEVEL_INDEX - 1])
+                else:
+                    l1.show_level = 0
+        if cur_info_tags < info_tags_count:
+            tags += ' ' * (info_tags_count - cur_info_tags)
+
+        tags += childs[random.randrange(0, child_count)].name
+        l1.tags = tags
+        l1.save()
+
+    def new_info_convert(self):
+        pass
 
 
 if __name__ == '__main__':

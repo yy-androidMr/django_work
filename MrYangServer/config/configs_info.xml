@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+这里面写的是所有配置的 路径,  如果有改动,需要在这调整.
+-->
+<configs_info>
+	<project_root>G:\pyWorkspace\django_work\MrYangServer</project_root>
+	<config_root>\config\</config_root>
+	<list>
+		<gallery_info>gallery_info.xml</gallery_info>
+	</list>
+</configs_info>
