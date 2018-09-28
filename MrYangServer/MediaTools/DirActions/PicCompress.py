@@ -14,7 +14,7 @@ cd_count = '../' * 3
 src = ''.join([cd_count, yutils.media_source, '/pic/src'])
 middle = yutils.transform_path(cd_count, yutils.static_media_root, '/pic/middle')
 thum = yutils.transform_path(cd_count, yutils.static_media_root, '/pic/thum')
-gif_pic = ''.join([cd_count, yutils.static_root, '/pic/gif_bannder.png'])  # media_source +
+gif_pic = ''.join([cd_count, yutils.static_media_root, '/pic/gif_bannder.png'])  # media_source +
 
 
 def middle_out_path(source_path):
@@ -102,6 +102,7 @@ def middle2thum(delete_exist):
             dir = os.path.dirname(desc_path)
             if not os.path.exists(dir):
                 os.makedirs(dir)
+                #gif要走配置
             if yutils.is_gif(file) and os.path.exists(gif_pic):
                 # gif_pic
                 shutil.copy(gif_pic, desc_path)
@@ -189,8 +190,9 @@ def delete_not_exist():
 
 
 if __name__ == '__main__':
-    delete_not_exist()
-    src2pc(False)
-    middle2thum(False)
-    move_info()
+    # delete_not_exist()
+    # src2pc(True)
+    middle2thum(True)
+    # move_info()
+
     # walk_pic2webp()
