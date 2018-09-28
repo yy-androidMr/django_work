@@ -108,10 +108,10 @@ def up_pic_c1(request):
         return to_pic_cmd_login(request)
     if request.POST:
         img_file = request.FILES.get("file")
-        img_name = img_file.name + 'dd.jpg'
+        img_name = img_file.name
         # path = default_storage.save('tmp/somename.mp3', ContentFile(data.read()))
-        yutils.create_dirs(os.path.join('path/', img_name))
-        f = open(os.path.join('path/', img_name), 'wb')
+        yutils.create_dirs(yutils.upload_album)
+        f = open(os.path.join(yutils.upload_album, img_name), 'wb')
         for chunk in img_file.chunks():
             f.write(chunk)
         f.close()
