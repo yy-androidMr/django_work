@@ -3,5 +3,7 @@
 这里是相册的配置
 -->
 <gallery_info>
-	
+	<gallery name="asdfsadf1"></gallery>
+	<gallery name="asdfsadf2"></gallery>
+	<gallery name="asdfsadf3"></gallery>
 </gallery_info>
