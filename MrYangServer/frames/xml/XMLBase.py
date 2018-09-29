@@ -1,5 +1,5 @@
 # -*-coding:utf-8 -*-
-
+from xml.dom import minidom
 from xml.etree import ElementTree as ET
 
 # 总配置路径
@@ -7,6 +7,37 @@ CONFIG_INFO_XML = '../../config/configs_info.xml'
 PT_TAG = 'project_root'
 CONFIG_TAG = 'config_root'
 LIST_TAG = 'list'
+
+
+# 需要尝试使用dom解析,因为Elementtree解析会清除掉注释
+class ElemPxy:
+    def __init__(self, dom):
+        self.root = dom.documentElement
+
+    def xml_nodes(self, tag):
+        return self.root.getElementsByTagName(tag) if self.root else []
+
+    def node_value(self, node, index=0):
+        return node.childNodes[index].nodealue if node else ''
+
+    def attr_vaue(self, node, attr_name):
+        return node.getAttribute(attr_name) if node else ''
+    
+
+class DomPxy:
+    def __init__(self, path):
+        self.path = path
+        self.dom = minidom.parse(path)
+
+    # def find(self):
+
+    def save(self):
+        # print(self.dom)
+        with open(self.path, 'w', encoding='UTF-8') as fh:
+            self.dom.writexml(fh, encoding='UTF-8')
+
+
+DomPxy(CONFIG_INFO_XML).save()
 
 
 # 解析xml
@@ -42,13 +73,15 @@ def parseXML(path):
     # 　　itertext()：遍历所有后代并返回text值。
     # 　　remove(subelement)：删除子元素。
     #
-    root = ET.parse(path).getroot()
-    return root
+    tree = ET.parse(path)
+    root = tree.getroot()
+    return tree, root
 
 
 # 解析configs_info 所有的配置列表
 def get_configs_root():
-    return parseXML(CONFIG_INFO_XML)
+    root, _ = parseXML(CONFIG_INFO_XML)
+    return root
 
 
 # 获取工程路径
@@ -65,7 +98,7 @@ def get_confg_dir(d_root=None):
         d_root = get_configs_root()
     (pt_root, _) = get_pt(d_root)
     c_root = pt_root.text + d_root.find(CONFIG_TAG).text
-    return c_root, d_root
+    return c_root.replace('\\', '/'), d_root
 
 
 # 获取list节点中的某一个配置路径
@@ -74,6 +107,15 @@ def c_path(c_name, d_root=None):
         d_root = get_configs_root()
     (c_root, _) = get_confg_dir(d_root)
     c_p = c_root + d_root.find(LIST_TAG).find(c_name).text
-    return c_p, d_root
+    return c_p.replace('\\', '/'), d_root
 
+
+def add_attr(elem, k, v='', update=False):
+    d_name = elem.attrib.get(k, None)
+    if update or (d_name is None):
+        elem.set(k, v)
+
+
+def dump(root):
+    ET.dump(root)
 # print(c_path('gallery_info'))

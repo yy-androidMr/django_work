@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
-这里是相册的配置
-<gallery dir_name="asdfsadf1" name="相册名称" time="2018年5月" thum="指定缩略图名称" param1="预留参数1" param2="预留参数2">这里是相册简介</gallery>
--->
+<!-- 	<gallery dir_name="iuwheruiwirhwioehirhw" name="" param1="" param2="" thum="" time=""></gallery>
+ -->
 <gallery_info>
 	
-	<gallery dir_name="iuwheruiwirhwioehirhw" name="asdfsadf2"></gallery>
-	<gallery name="asdfsadf3"></gallery>
+	
+	
+	<gallery dir_name="iuwheruiwirhwioehirhw" name="" param1="" param2="" thum="" time=""/>
+	
+	
+	<gallery name="asdfsadf3"/>
+	
+
 </gallery_info>
