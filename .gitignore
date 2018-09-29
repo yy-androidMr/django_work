@@ -24,3 +24,8 @@ MrYangServer/Mryang_App/migrations
 
 !MrYangServer/MediaTools/DirActions/movie/output/exe/1.txt
 MrYangServer/MediaTools/DirActions/movie/output/
+
+
+!MrYangServer/upload/video/1.txt
+!MrYangServer/upload/album/1.txt
+MrYangServer/upload/

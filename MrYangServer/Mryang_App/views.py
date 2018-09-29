@@ -1,6 +1,5 @@
 # -*-coding:utf-8 -*-
-import urllib
-
+import os
 from django.contrib import auth
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -9,10 +8,8 @@ from django.shortcuts import render, redirect
 from django.views.decorators.gzip import gzip_page
 
 from Mryang_App.forms import CreateUserF, LoginUserF, UserAlbumF
-from Mryang_App.models import Dir, UpLoadDir
 from Mryang_App.result.Enums import LOGIN, UPLOAD
 from Mryang_App import yutils, yquery, forms
-from django.views.decorators.csrf import ensure_csrf_cookie
 
 # 显示权限
 COMMON_SHOW = 4
@@ -23,10 +20,6 @@ NOT_SEE = 9
 
 def hello(request):
     return HttpResponse('hello')
-
-
-def login(request):
-    return HttpResponse('hello2')
 
 
 def h5_test(request, param1):
@@ -111,9 +104,19 @@ def to_pic_cmd_login(request):
 
 # 上传的文件处理
 def up_pic_c1(request):
-    if (check_pic_cmd_login(request)):
-        return render(request, 'upload/gallery/child_item/upload.html', )
-    return to_pic_cmd_login(request)
+    if not check_pic_cmd_login(request):
+        return to_pic_cmd_login(request)
+    if request.POST:
+        img_file = request.FILES.get("file")
+        img_name = img_file.name
+        # path = default_storage.save('tmp/somename.mp3', ContentFile(data.read()))
+        yutils.create_dirs(yutils.upload_album)
+        f = open(os.path.join(yutils.upload_album, img_name), 'wb')
+        for chunk in img_file.chunks():
+            f.write(chunk)
+        f.close()
+        print('save suc')
+    return render(request, 'upload/gallery/child_item/upload.html', )
     # def up_pic_c2(request):
 
 

@@ -11,3 +11,12 @@ https://www.cnblogs.com/yi0921/p/7080284.html
 
 
 https://www.jianshu.com/p/d9b64514f8cc
+
+
+3.python无法读取doc,只能先转换成docx
+python -m pip install pypiwin32 安装转化
+然后通过docx读取
+
+
+4.执行exe
+pyinstaller --onefile --nowindowed  OralCalculation.py

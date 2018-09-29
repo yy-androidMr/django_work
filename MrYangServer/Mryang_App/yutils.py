@@ -140,6 +140,9 @@ neighbor_meida_root1 = r'\\Desktop-089j9k4\media'
 media_source = 'MrYangServer/media_source'
 static_root = 'MrYangServer/static'
 static_media_root = neighbor_meida_root1 if output_neighbor else ''.join([static_root, '/media'])
+upload_root = 'upload'
+upload_album = ''.join([upload_root, '/album'])
+upload_video = ''.join([upload_root, '/video'])
 
 
 # 分解路径1.src的相对路径. 2.src的根目录. 3.目标的路径

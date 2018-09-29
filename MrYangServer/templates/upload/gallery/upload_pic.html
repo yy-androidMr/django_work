@@ -33,8 +33,7 @@
     </script>
 </head>
 <body>
-    {% csrf_token %}
-
+{% csrf_token %}
 <div hidden id="page1">
     <p id="back_div"></p>
     {% include  'upload/gallery/child_item/upload.html' %}
@@ -59,8 +58,10 @@
 
     window.history.pushState(null, null, "#");
     window.addEventListener("popstate", function (e) {
+        {#var pse = PopStateEvent(e);#}
+        console.debug('e:' + e);
         window.history.pushState(null, null, "#");
-        hide_content();
+        {#hide_content();#}
     }, false);
 </script>
 
