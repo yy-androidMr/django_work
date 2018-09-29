@@ -53,31 +53,27 @@ def get_configs_root():
 
 # 获取工程路径
 def get_pt(d_root=None):
-    if d_root == None:
+    if d_root is None:
         d_root = get_configs_root()
     pt_text = d_root.find(PT_TAG)
-    return (pt_text, d_root)
+    return pt_text, d_root
 
 
 # 获取整个配置文件夹路径
 def get_confg_dir(d_root=None):
-    if d_root == None:
+    if d_root is None:
         d_root = get_configs_root()
     (pt_root, _) = get_pt(d_root)
     c_root = pt_root.text + d_root.find(CONFIG_TAG).text
-    return (c_root, d_root)
+    return c_root, d_root
 
 
 # 获取list节点中的某一个配置路径
 def c_path(c_name, d_root=None):
-    if d_root == None:
+    if d_root is None:
         d_root = get_configs_root()
     (c_root, _) = get_confg_dir(d_root)
     c_p = c_root + d_root.find(LIST_TAG).find(c_name).text
-    return (c_p, d_root)
+    return c_p, d_root
 
-
-
-
-
-print(c_path('gallery_info'))
+# print(c_path('gallery_info'))
