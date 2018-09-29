@@ -22,14 +22,21 @@ def append_ifnot_exist(dir):
     path, _ = XMLBase.c_path(CONFIG_NAME)
 
     info_root = XMLBase.parseXML(os.path.normpath(path.replace('\\', '/')))
+    exist = False
+    #查找这个标签原先是不是有.
     for elem in info_root.findall(GALLERY_TAG):
         dir_name = elem.attrib.get(TAGS.DIR_NAME, None)
         if dir_name is not None:
             print(dir_name)
+            if dir_name == dir:
+                print('找到了:' + dir)
+                exist = True
+                break
+
+
         # print(elem.attrib)
-        pass
-    # gallerys =
-    # print(gallerys)
+        # gallerys =
+        # print(gallerys)
 
 
-append_ifnot_exist('asdf')
+append_ifnot_exist('iuwheruiwirhwioehirhw')
