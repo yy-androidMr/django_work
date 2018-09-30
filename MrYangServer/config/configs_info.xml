@@ -13,6 +13,6 @@
 			<project_root>F:/django_work/MrYangServer</project_root>
 			<config_root>/config/</config_root>		
 			<list>
-				<gallery_info>gallery_info.xml</gallery_info>				
+				<gallery_info>auto_create/gallery_info.xml</gallery_info>				
 			</list>		
 </configs_info>
