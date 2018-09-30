@@ -9,6 +9,7 @@ import shutil
 from PIL import Image, ImageFile
 
 from Mryang_App import yutils
+from frames.xml import XMLGallery
 
 cd_count = '../' * 3
 src = ''.join([cd_count, yutils.media_source, '/pic/src'])
@@ -20,9 +21,10 @@ gif_pic = ''.join([cd_count, yutils.static_media_root, '/pic/gif_bannder.png']) 
 def middle_out_path(source_path):
     exten = os.path.splitext(source_path)[1]
     simple_path = source_path[len(src):]
-    desc_path = middle + '/' + yutils.md5_of_str(os.path.dirname(simple_path))
+    dir = yutils.md5_of_str(os.path.dirname(simple_path))
+    desc_path = middle + '/' + dir
     rename_path = desc_path + '/' + yutils.get_md5(source_path) + exten
-    return (rename_path, desc_path)
+    return (rename_path, desc_path, dir)
 
 
 #  从src目录压缩一下.到desc
@@ -31,16 +33,23 @@ def src2pc(delete_exist):
     middle_area = 1500 * 1500
     # cmd = 'for i in ' + src + '/*.jpg;do jpegoptim -m50 -d ' + desc + ' -p "$i";done'
     # os.system(cmd)
+    img_link_dic = {}
     for root, dirs, files in os.walk(src):
         for file in files:
+            root = root.replace('\\', '/')
             source_path = os.path.join(root, file).replace('\\', '/')
-            (rename_path, desc_path) = middle_out_path(source_path)
+            (rename_path, desc_path, dir) = middle_out_path(source_path)
             if yutils.is_gif(file):
                 shutil.copy(source_path, rename_path)
+                value = img_link_dic.get(dir, None)
+                if not value:
+                    img_link_dic[dir] = root
                 continue
             if not yutils.is_photo(file):
                 continue
-
+            value = img_link_dic.get(dir, None)
+            if not value:
+                img_link_dic[dir] = root
             # exten = os.path.splitext(source_path)[1]
             # desc_path = middle + '/' + yutils.md5_of_str(os.path.dirname(simple_path))
             # rename_path = desc_path + '/' + yutils.get_md5(source_path) + exten
@@ -85,6 +94,8 @@ def src2pc(delete_exist):
                     img.save(rename_path)
 
             print(rename_path)
+    return img_link_dic
+
 
 # 从middle 到缩略图
 def middle2thum(delete_exist):
@@ -102,7 +113,7 @@ def middle2thum(delete_exist):
             dir = os.path.dirname(desc_path)
             if not os.path.exists(dir):
                 os.makedirs(dir)
-                #gif要走配置
+                # gif要走配置
             if yutils.is_gif(file) and os.path.exists(gif_pic):
                 # gif_pic
                 shutil.copy(gif_pic, desc_path)
@@ -189,10 +200,17 @@ def delete_not_exist():
     delete_thum()
 
 
+def recombination_xml(link_dic):
+    XMLGallery.append_ifnot_exist(link_dic)
+    # for root, dirs, files in os.walk(middle):
+    #     pass
+
+
 if __name__ == '__main__':
     # delete_not_exist()
-    # src2pc(True)
-    middle2thum(True)
+    link_dic = src2pc(False)
+    # middle2thum(False)
     # move_info()
+    recombination_xml(link_dic)
 
-    # walk_pic2webp()
+    pass

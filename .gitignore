@@ -29,3 +29,5 @@ MrYangServer/MediaTools/DirActions/movie/output/
 !MrYangServer/upload/video/1.txt
 !MrYangServer/upload/album/1.txt
 MrYangServer/upload/
+
+MrYangServer/config/gallery_info.xml
