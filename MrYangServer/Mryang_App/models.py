@@ -63,6 +63,8 @@ class Dir(models.Model):
 
 class GalleryInfo(models.Model):
     id = models.AutoField(primary_key=True)
+    # 相册对应的文件夹名称
+    dir_name = models.CharField(max_length=100, default='')
     # 相册名字
     name = models.CharField(max_length=100, default='')
     # 相册简介
@@ -71,6 +73,8 @@ class GalleryInfo(models.Model):
     time = models.CharField(max_length=100, default='')
     # 相册中的指定缩略图
     thum = models.CharField(max_length=100, default='')
+    # 展示等级
+    level = models.CharField(max_length=100, default='')
     # 其他预留
     param1 = models.CharField(max_length=100, default='')
     param2 = models.CharField(max_length=100, default='')

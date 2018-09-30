@@ -1,11 +1,14 @@
 import os
 import random
 
+
 from MediaTools.DBTools.ConvertBase import ConvertBase
 from Mryang_App import yutils
-from Mryang_App.models import Dir
+from Mryang_App.models import Dir, GalleryInfo
 
 # src->middle->thum
+from frames.xml import XMLGallery
+
 THUM_PIC_ID_POW = 100000
 LEVEL_TAG_SPLITE = '%'
 LEVEL_INDEX = 4
@@ -58,7 +61,7 @@ class PhotoConvert(ConvertBase):
         Dir.objects.bulk_create(self.dir_list)
 
         # 结束时,将没有child的dir给删除!!!
-        level1 = Dir.objects.filter(c_id__lt=THUM_PIC_ID_POW)
+        level1 = Dir.objects.filter(isdir=True, type=yutils.M_FTYPE_PIC)
         for l1 in level1:
             childs = Dir.objects.filter(c_id__lt=(l1.c_id + 1) * THUM_PIC_ID_POW,
                                         c_id__gt=l1.c_id * THUM_PIC_ID_POW)  # 查找区间内的id
@@ -71,12 +74,6 @@ class PhotoConvert(ConvertBase):
                     self.old_info_convert(l1, childs, child_count)
                 else:
                     self.new_info_convert()
-        # 这里要读取描述文件
-        # 名称1
-        # 描述
-        # 2018
-        # 年2月
-        # 1
 
         print('done')
 
@@ -109,8 +106,22 @@ class PhotoConvert(ConvertBase):
         pass
 
 
-if __name__ == '__main__':
-    PhotoConvert().go()
+def new_info_convert():
+    level1 = Dir.objects.filter(isdir=True, type=yutils.M_FTYPE_PIC)
+    insert_info = ()
+    for l1 in level1:
+        item = GalleryInfo.objects.get(id=l1.id)
+        if not item:
+            print(l1.name)
 
-    # PhotoConvert().walk_over()
-    # print(Dir.objects.filter(c_id__lt=100))
+        # g_info = GalleryInfo()
+        # nodes = XMLGallery.nodes()
+        # for node in nodes:
+
+
+new_info_convert()
+# if __name__ == '__main__':
+#     PhotoConvert().go()
+
+# PhotoConvert().walk_over()
+# print(Dir.objects.filter(c_id__lt=100))

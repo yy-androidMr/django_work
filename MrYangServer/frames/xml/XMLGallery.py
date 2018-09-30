@@ -15,6 +15,7 @@ COMMENT = '\n<gallery dir_name="a" link="b" name="" param1="" param2="" thum="" 
           '\n\t\t内容txt:副标题' \
           '\n\t\ttime:时间' \
           '\n\t\tthum:指定缩略图' \
+          '\n\t\tlevel:展示等级' \
           '\n\t\tparam1,param2:预留接口\n'
 
 
@@ -25,6 +26,7 @@ class TAGS:
     INTRO = 'intro'
     TIME = 'time'
     THUM = 'thum'
+    LEVEL = 'level'
     P1 = 'param1'
     P2 = 'param2'
 
@@ -35,6 +37,7 @@ def attr_complition(g_item, dir_name='', link=''):
     XMLBase.add_attr(g_item, TAGS.LINK, link)
     XMLBase.add_attr(g_item, TAGS.TIME)
     XMLBase.add_attr(g_item, TAGS.THUM)
+    XMLBase.add_attr(g_item, TAGS.LEVEL, '1')
     XMLBase.add_attr(g_item, TAGS.P1)
     XMLBase.add_attr(g_item, TAGS.P2)
 
@@ -66,3 +69,11 @@ def append_ifnot_exist(link_dic):
 
         attr_complition(digout_item, dir, link_dic[dir])
     domPxy.save()
+
+
+def nodes():
+    path, _ = XMLBase.cfg_list_path(CONFIG_NAME)
+    if os.path.exists(path):
+        domPxy = XMLBase.parse(path)
+        return domPxy.elem.xml_nodes(GALLERY_TAG)
+    return []

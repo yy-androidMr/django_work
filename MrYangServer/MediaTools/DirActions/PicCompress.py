@@ -200,17 +200,9 @@ def delete_not_exist():
     delete_thum()
 
 
-def recombination_xml(link_dic):
-    XMLGallery.append_ifnot_exist(link_dic)
-    # for root, dirs, files in os.walk(middle):
-    #     pass
-
-
 if __name__ == '__main__':
     # delete_not_exist()
     link_dic = src2pc(False)
     # middle2thum(False)
     # move_info()
-    recombination_xml(link_dic)
-
-    pass
+    XMLGallery.append_ifnot_exist(link_dic)
