@@ -9,7 +9,8 @@ from django.views.decorators.gzip import gzip_page
 
 from Mryang_App.forms import CreateUserF, LoginUserF, UserAlbumF
 from Mryang_App.result.Enums import LOGIN, UPLOAD
-from Mryang_App import yutils, yquery, forms
+from Mryang_App import yquery, forms
+from frames import yutils
 
 # 显示权限
 COMMON_SHOW = 4
@@ -231,3 +232,7 @@ def m_second_gallery(request, dir_id):
             return render(request, 'gallery/secondLevel/index.html', {'json': json, 'pre_path': '/pic/middle'})
         except:
             print('没有该id的照片:' + dir_id)
+
+
+
+

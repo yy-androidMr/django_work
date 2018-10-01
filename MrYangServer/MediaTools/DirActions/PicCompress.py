@@ -1,6 +1,4 @@
 # coding=utf-8
-import hashlib
-import platform
 
 import os
 
@@ -8,7 +6,7 @@ import piexif
 import shutil
 from PIL import Image, ImageFile
 
-from Mryang_App import yutils
+from frames import yutils
 from frames.xml import XMLGallery
 
 cd_count = '../' * 3
@@ -179,7 +177,7 @@ def delete_not_exist():
             if not yutils.is_photo(file):
                 continue
             source_path = os.path.join(root, file).replace('\\', '/')
-            (rename_path, _) = middle_out_path(source_path)
+            (rename_path, _, _) = middle_out_path(source_path)
             if (os.path.exists(rename_path)):
                 right_map[rename_path] = source_path
 
@@ -201,8 +199,8 @@ def delete_not_exist():
 
 
 if __name__ == '__main__':
-    # delete_not_exist()
+    delete_not_exist()
     link_dic = src2pc(False)
-    # middle2thum(False)
+    middle2thum(False)
     # move_info()
     XMLGallery.append_ifnot_exist(link_dic)

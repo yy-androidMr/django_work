@@ -1,19 +1,14 @@
 # coding:utf-8
 
 import sys, django, os
-import urllib
-
-from django.core import serializers
 
 proj_abs_path = os.path.abspath(os.path.join(sys.argv[0], '../..'))
 sys.path.append(proj_abs_path)
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MrYangServer.settings')
 django.setup()
 
-from django.test import TestCase
-
 # Create your tests here.
-from Mryang_App.yutils import *
+from frames.yutils import *
 
 user_list = {'tk1': 'yy', 'tk2': 'wwjt', 'tk3': 'dd', 'tk4': '44ss', 'tk5': 'zzz', 'tk6': 'bb'}
 
@@ -48,7 +43,6 @@ class A():
 #     print('done!:')
 
 import base64
-import sys
 
 
 def baseurl(url):

@@ -1,9 +1,5 @@
-import os
-import random
-
-
 from MediaTools.DBTools.ConvertBase import ConvertBase
-from Mryang_App import yutils
+from frames import yutils
 from Mryang_App.models import Dir, GalleryInfo
 
 # src->middle->thum
@@ -70,58 +66,31 @@ class PhotoConvert(ConvertBase):
                 # 删除一级文件夹
                 l1.delete()
             else:
-                if True:
-                    self.old_info_convert(l1, childs, child_count)
-                else:
-                    self.new_info_convert()
-
+                self.new_info_convert()
         print('done')
 
-    def old_info_convert(self, l1, childs, child_count):
-        info_path = l1.abs_path + '/info'
-        tags = ''
-        info_tags_count = 3
-        cur_info_tags = 0
-        if os.path.exists(info_path):
-            with open(info_path, encoding='utf-8') as file_object:
-                lines = file_object.readlines()  # 读取全部内容
-                for line in lines:
-                    tags += line.rstrip('\n') + ' '
-                    cur_info_tags += 1
-                    if cur_info_tags == info_tags_count:
-                        break
-                if len(lines) >= LEVEL_INDEX:
-                    print(lines[LEVEL_INDEX - 1])
-                    l1.show_level = int(lines[LEVEL_INDEX - 1])
-                else:
-                    l1.show_level = 0
-        if cur_info_tags < info_tags_count:
-            tags += ' ' * (info_tags_count - cur_info_tags)
-
-        tags += childs[random.randrange(0, child_count)].name
-        l1.tags = tags
-        l1.save()
-
     def new_info_convert(self):
-        pass
+        level1 = Dir.objects.filter(isdir=True, type=yutils.M_FTYPE_PIC)
+        GalleryInfo.objects.all().delete()
+        xml_infos = XMLGallery.get_infos()
+        for l1 in level1:
+            info = xml_infos[l1.name]
+            if info:
+                g_info = GalleryInfo()
+                g_info.dir_name = l1.name
+                g_info.id = l1.c_id
+                g_info.name = info[0]
+                g_info.intro = info[1]
+                g_info.time = info[2]
+                g_info.thum = info[3]
+                g_info.level = info[4]
+                g_info.param1 = info[5]
+                g_info.param2 = info[6]
+                g_info.save()
+            else:
+                print('无该配置!:' + l1.name)
 
 
-def new_info_convert():
-    level1 = Dir.objects.filter(isdir=True, type=yutils.M_FTYPE_PIC)
-    insert_info = ()
-    for l1 in level1:
-        item = GalleryInfo.objects.get(id=l1.id)
-        if not item:
-            print(l1.name)
+if __name__ == '__main__':
+    PhotoConvert().go()
 
-        # g_info = GalleryInfo()
-        # nodes = XMLGallery.nodes()
-        # for node in nodes:
-
-
-new_info_convert()
-# if __name__ == '__main__':
-#     PhotoConvert().go()
-
-# PhotoConvert().walk_over()
-# print(Dir.objects.filter(c_id__lt=100))

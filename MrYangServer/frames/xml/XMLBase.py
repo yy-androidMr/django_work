@@ -1,11 +1,14 @@
 # -*-coding:utf-8 -*-
 from xml.dom import minidom
+import os
 
 # 总配置路径
-CONFIG_INFO_XML = '../../config/configs_info.xml'
+current_path = os.path.dirname(__file__)
+CONFIG_INFO_XML = '%s/../../config/configs_info.xml' % current_path
 PT_TAG = 'project_root'
 CONFIG_TAG = 'config_root'
 LIST_TAG = 'list'
+# print('current_path:%s,%s' % (current_path, os.getcwd()))
 
 
 # 功能:注解参数:dpins=1  代表args的第二个加上dompxy
@@ -78,9 +81,13 @@ class ElemPxy:
         self.root.appendChild(self.dom.createTextNode('\n'))
 
 
+import os
+
+
 class DomPxy:
     def __init__(self, path):
         self.path = path
+        # print(os.path.abspath('./'))
         self.dom = minidom.parse(path)
         self.elem = ElemPxy(self.dom)
 

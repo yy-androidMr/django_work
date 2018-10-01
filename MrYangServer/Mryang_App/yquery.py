@@ -5,8 +5,8 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import F
 
 from MediaTools.DBTools.addPic import PhotoConvert
-from Mryang_App import yutils
-from Mryang_App.models import Dir, UpLoadDir
+from frames import yutils
+from Mryang_App.models import *
 
 
 def dir_2json(dirtype):
@@ -19,13 +19,19 @@ def dir_2json(dirtype):
 
 def pic_level1_2json(show_level):
     # id  名字, 父亲的id, 是否是文件夹, tag, 相对路径.
-    dirs = Dir.objects.filter(type=yutils.M_FTYPE_PIC, c_id__lt=PhotoConvert.THUM_PIC_ID_POW,
-                              show_level__lt=(show_level + 1)).values('tags',
-                                                                      'c_id', 'rel_path')
-    for item in dirs:
-        item['tags'] = item['tags'].split(' ')  # (item['name'] + ' ' + thum).split()
-    jsonstr = json.dumps(list(dirs))
-    return jsonstr
+    # , type = yutils.M_FTYPE_PIC
+    dirs = Dir.objects.filter(type=yutils.M_FTYPE_PIC, isdir=True,
+                              show_level__lt=(show_level + 1)).values('c_id', 'rel_path')
+    ids = [dir['c_id'] for dir in dirs]
+    print(GalleryInfo.objects.filter(id__in=ids)[0].dict())
+    print(dirs)
+    print(ids)
+    # GalleryInfo.objects.filter()
+    # for item in dirs:
+    #     item['tags'] = item['tags'].split(' ')  # (item['name'] + ' ' + thum).split()
+    # jsonstr = json.dumps(list(dirs))
+
+    return '{}'
 
 
 def dead_2json():
@@ -56,6 +62,10 @@ def pic_level2_2json(c_id, page):
         # contacts = paginator.page(1)
     jsonstr = json.dumps(list(contacts.object_list))
     return jsonstr
+
+
+def to_dict(model):
+    return dict([(attr, getattr(model, attr)) for attr in [f.name for f in model._meta.fields]])
 
 
 def upp_json():

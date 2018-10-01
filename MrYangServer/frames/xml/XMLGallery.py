@@ -3,6 +3,7 @@
 # 每个解析都有个名字.对应configs_info配置中的configs_info->list
 import os
 from xml.dom import minidom
+from frames import yutils
 
 from frames.xml import XMLBase
 
@@ -48,7 +49,7 @@ def create_gallery_xml(path):
     booklist = doc.createElement(CONFIG_NAME)
     doc.appendChild(booklist)
     booklist.appendChild(doc.createTextNode('\n'))
-
+    yutils.create_dirs(path)
     with open(path, 'w', encoding='UTF-8') as fh:
         doc.writexml(fh, indent='', encoding='UTF-8')
 
@@ -72,8 +73,26 @@ def append_ifnot_exist(link_dic):
 
 
 def nodes():
-    path, _ = XMLBase.cfg_list_path(CONFIG_NAME)
+    path, dpins = XMLBase.cfg_list_path(CONFIG_NAME)
     if os.path.exists(path):
         domPxy = XMLBase.parse(path)
-        return domPxy.elem.xml_nodes(GALLERY_TAG)
-    return []
+        return domPxy.elem.xml_nodes(GALLERY_TAG), dpins
+    return [], dpins
+
+
+def get_infos():
+    node_list, dpins = nodes()
+    xml_infos = {}
+    for node in node_list:
+        dir_name = dpins.elem.attr_value(node, TAGS.DIR_NAME)
+        info = (dpins.elem.attr_value(node, TAGS.NAME),
+                dpins.elem.node_value(node),
+                dpins.elem.attr_value(node, TAGS.TIME),
+                dpins.elem.attr_value(node, TAGS.THUM),
+                dpins.elem.attr_value(node, TAGS.LEVEL),
+                dpins.elem.attr_value(node, TAGS.P1),
+                dpins.elem.attr_value(node, TAGS.P2)
+                )
+        xml_infos[dir_name] = info
+
+    return xml_infos

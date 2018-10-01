@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+import json
 
 
 # Create your models here.
@@ -52,16 +53,22 @@ class Dir(models.Model):
     show_level = models.IntegerField(default=0)
 
     def __str__(self):
-        parent_dir_name = ''
-        if (self.parent_dir is None):
+        if self.parent_dir is None:
             parent_dir_name = 'None'
         else:
             parent_dir_name = self.parent_dir.name
-        return 'name:%s,isDir:%r,parent_dir:%s,tags:%s,rel_path:%s,type:%s,c_id:%s' % (
-            self.name, self.isdir, parent_dir_name, self.tags, self.rel_path, self.type, self.c_id)
+        return 'id:%s,name:%s,isDir:%r,parent_dir:%s,tags:%s,rel_path:%s,type:%s,c_id:%s' % (
+            self.id, self.name, self.isdir, parent_dir_name, self.tags, self.rel_path, self.type, self.c_id)
+
+
+    # def to_json(self):
+    #     map = {'c_id': self.c_id, 'rel_path': self.rel_path}
+    #     # print([f.name for f in self._meta.fields])
+    #     return json.dumps(dict([(attr, getattr(self, attr)) for attr in [f.name for f in self._meta.fields]]))
 
 
 class GalleryInfo(models.Model):
+    # 对应Dir的c_id
     id = models.AutoField(primary_key=True)
     # 相册对应的文件夹名称
     dir_name = models.CharField(max_length=100, default='')
@@ -79,6 +86,27 @@ class GalleryInfo(models.Model):
     param1 = models.CharField(max_length=100, default='')
     param2 = models.CharField(max_length=100, default='')
 
+    def __str__(self):
+        return 'id:%s,dir_name:%s,name:%s,intro:%s,time:%s,thum:%s,level:%s,param1:%s,param2:%s' % (
+            self.id, self.dir_name, self.name, self.intro, self.time, self.thum, self.level, self.param1, self.param2)
+
+    def dict(self):
+        dic = dict([(attr, getattr(self,attr)) for attr in [f.name for f in self._meta.fields]])
+        # return dicts
+        # self.param2
+        # getattr
+        return dic
+
 
 class UpLoadDir(models.Model):
     path = models.CharField(max_length=100, default='')
+
+#
+# class test(models.Model):
+#     f1=1
+#
+#     def toJSON(self):
+#         import json
+#         return json.dumps(dict([(attr, getattr(self, attr)) for attr in [f.name for f in self._meta.fields]]))
+#
+# print(test().toJSON())

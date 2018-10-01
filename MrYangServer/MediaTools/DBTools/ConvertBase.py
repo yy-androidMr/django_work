@@ -1,10 +1,9 @@
 # coding=utf-8
 import os
-import traceback
 
 import django
 
-from Mryang_App import yutils
+from frames import yutils
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MrYangServer.settings')
 django.setup()

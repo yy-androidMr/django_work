@@ -1,7 +1,4 @@
-import base64
-import json
 import os
-import urllib
 
 import django
 # import imageio
@@ -11,8 +8,6 @@ import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MrYangServer.settings')
 django.setup()
 # 设置解码环境
-
-from Mryang_App import yutils
 
 MEDIA_TYPE = ['.mp4', '.rmvb', '.mkv']
 
