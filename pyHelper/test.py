@@ -89,10 +89,19 @@ class fieldTest:
     f2 = 'f2222'
     f3 = 'f333'
 
+    def __init__(self):
+        self.a = 1
+
 
 f_ins = fieldTest()
-for i,j in vars(f_ins):
-    print(i)
-f_ins.
+# for i,j in vars(f_ins).items(f_ins):
+#     print(i)
+# print(hasattr(f_ins,'__getattribute__'))
+# print(f_ins.__getattribute__('f2'))
+print(f_ins.__dict__)
+print(fieldTest.__dict__)
+print(f_ins.__dir__())
+print(f_ins.__dir__())
+# print([getattr(f_ins, attr) for attr in dir(f_ins)])
 # print(vars(if_ins))
 # print([f.name for f in f_ins.fields])

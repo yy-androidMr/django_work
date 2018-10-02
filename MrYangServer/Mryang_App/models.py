@@ -60,7 +60,6 @@ class Dir(models.Model):
         return 'id:%s,name:%s,isDir:%r,parent_dir:%s,tags:%s,rel_path:%s,type:%s,c_id:%s' % (
             self.id, self.name, self.isdir, parent_dir_name, self.tags, self.rel_path, self.type, self.c_id)
 
-
     # def to_json(self):
     #     map = {'c_id': self.c_id, 'rel_path': self.rel_path}
     #     # print([f.name for f in self._meta.fields])
@@ -69,9 +68,11 @@ class Dir(models.Model):
 
 class GalleryInfo(models.Model):
     # 对应Dir的c_id
-    id = models.AutoField(primary_key=True)
+    c_id = models.AutoField(primary_key=True)
     # 相册对应的文件夹名称
     dir_name = models.CharField(max_length=100, default='')
+    # 对应Dir的rel_path
+    rel_path = models.CharField(max_length=100, default='')
     # 相册名字
     name = models.CharField(max_length=100, default='')
     # 相册简介
@@ -87,15 +88,9 @@ class GalleryInfo(models.Model):
     param2 = models.CharField(max_length=100, default='')
 
     def __str__(self):
-        return 'id:%s,dir_name:%s,name:%s,intro:%s,time:%s,thum:%s,level:%s,param1:%s,param2:%s' % (
-            self.id, self.dir_name, self.name, self.intro, self.time, self.thum, self.level, self.param1, self.param2)
-
-    def dict(self):
-        dic = dict([(attr, getattr(self,attr)) for attr in [f.name for f in self._meta.fields]])
-        # return dicts
-        # self.param2
-        # getattr
-        return dic
+        return 'id:%s,dir_name:%s,name:%s,rel_path:%s,intro:%s,time:%s,thum:%s,level:%s,param1:%s,param2:%s' % (
+            self.c_id, self.dir_name, self.name, self.rel_path, self.intro, self.time, self.thum, self.level,
+            self.param1, self.param2)
 
 
 class UpLoadDir(models.Model):

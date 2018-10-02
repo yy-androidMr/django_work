@@ -23,15 +23,24 @@ def pic_level1_2json(show_level):
     dirs = Dir.objects.filter(type=yutils.M_FTYPE_PIC, isdir=True,
                               show_level__lt=(show_level + 1)).values('c_id', 'rel_path')
     ids = [dir['c_id'] for dir in dirs]
-    print(GalleryInfo.objects.filter(id__in=ids)[0].dict())
-    print(dirs)
-    print(ids)
-    # GalleryInfo.objects.filter()
-    # for item in dirs:
-    #     item['tags'] = item['tags'].split(' ')  # (item['name'] + ' ' + thum).split()
-    # jsonstr = json.dumps(list(dirs))
+    ginfos = GalleryInfo.objects.filter(id__in=ids).values('id', 'name', 'intro', 'time', 'thum', 'level', 'param1',
+                                                           'param2')
+    ginfo_id_dict = {}
+    for ginfo in ginfos:
+        ginfo_id_dict[ginfo['id']] = ginfo
+        del ginfo['id']
+        yutils.dict_clear_none(ginfo)
 
-    return '{}'
+    return_info = []
+    for dir in dirs:
+        return_info.append(dir)
+        infos = ginfo_id_dict[dir['c_id']]
+        if infos:
+            dir.update(infos)
+
+    jsonstr = json.dumps(return_info)
+    print(jsonstr)
+    return jsonstr
 
 
 def dead_2json():
@@ -62,10 +71,6 @@ def pic_level2_2json(c_id, page):
         # contacts = paginator.page(1)
     jsonstr = json.dumps(list(contacts.object_list))
     return jsonstr
-
-
-def to_dict(model):
-    return dict([(attr, getattr(model, attr)) for attr in [f.name for f in model._meta.fields]])
 
 
 def upp_json():

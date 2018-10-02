@@ -6,6 +6,7 @@ import string
 import platform
 
 import shutil
+from django.db import models
 
 
 def random_int():
@@ -239,6 +240,36 @@ def is_gif(path):
     return False
 
 
+# 字段转换工具.
+def to_dict_no_none(ins):
+    dict = to_dict(ins)
+    dict_clear_none(dict)
+    return dict
+
+
+def dict_clear_none(dict):
+    for key in list(dict.keys()):
+        if not dict.get(key):
+            del dict[key]
+    return dict
+
+
+def to_dict(ins):
+    if isinstance(ins, models.Model):
+        return dict([(attr, getattr(ins, attr)) for attr in [f.name for f in ins._meta.fields]])
+    elif type(ins) is dict:
+        return ins
+    else:
+        return ins.__dict__
+
+
+# class a:
+#     def __init__(self):
+#         self.b = 'a'
+#
+#
+# aa = a()
+# print(to_dict(aa))
 # 视频的工具----------------------------------------------------
 INFO_FILE = 'info'
 # 如果是切片视频.文件夹是这个后缀.
