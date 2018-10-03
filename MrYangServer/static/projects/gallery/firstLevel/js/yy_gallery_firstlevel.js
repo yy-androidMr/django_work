@@ -96,28 +96,32 @@ function convert_pic(dirsJson, path) {
         dirs[i] = {
             rel_path: item.rel_path,
             c_id: item.c_id,
+            name: item.name,
+            intro: item.intro,
+            time: item.time,
+            thum: item.thum,
         }
-        if (item.tags[0].length != 0) {
-            dirs[i].name = item.tags[0];//dir_split[dir_split.length - 1];
-        } else {
-            dirs[i].name = '暂未命名';//dir_split[dir_split.length - 1];
-        }
-        if (item.tags.length > 1) {
-            if (item.tags[1].length != 0) {
-                dirs[i].intro = item.tags[1];//dir_split[dir_split.length - 1];
-            } else {
-                dirs[i].intro = '没有任何描述';
-            }
-        }
-        dirs[i].time = '';
-        if (item.tags.length > 2) {
-            dirs[i].time = item.tags[2];//dir_split[dir_split.length - 1];
-        }
-
-        if (item.tags.length > 3) {
-            dirs[i].thum = item.tags[3];//dir_split[dir_split.length - 1];
-            // 这里没有临时文件
-        }
+        // if (item.tags[0].length != 0) {
+        //     dirs[i].name = item.tags[0];//dir_split[dir_split.length - 1];
+        // } else {
+        //     dirs[i].name = '暂未命名';//dir_split[dir_split.length - 1];
+        // }
+        // if (item.tags.length > 1) {
+        //     if (item.tags[1].length != 0) {
+        //         dirs[i].intro = item.tags[1];//dir_split[dir_split.length - 1];
+        //     } else {
+        //         dirs[i].intro = '没有任何描述';
+        //     }
+        // }
+        // dirs[i].time = '';
+        // if (item.tags.length > 2) {
+        //     dirs[i].time = item.tags[2];//dir_split[dir_split.length - 1];
+        // }
+        //
+        // if (item.tags.length > 3) {
+        //     dirs[i].thum = item.tags[3];//dir_split[dir_split.length - 1];
+        //     // 这里没有临时文件
+        // }
 
     }
     level1_dir = dirs;

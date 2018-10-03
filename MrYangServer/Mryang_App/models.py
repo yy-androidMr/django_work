@@ -36,8 +36,11 @@ class UserAlbum(models.Model):
 
 class Dir(models.Model):
     id = models.AutoField(primary_key=True)
+    #文件名称
     name = models.CharField(max_length=100)
+    #父节点
     parent_dir = models.ForeignKey('self', related_name='parent', on_delete=models.CASCADE, null=True, blank=True)
+    #自己是否是文件夹
     isdir = models.BooleanField(default=True)
     # 一些标记,存储格式自定义.
     tags = models.CharField(max_length=100, default='')
@@ -49,8 +52,9 @@ class Dir(models.Model):
     type = models.IntegerField()
     # 有必要给予一个子id.做复杂的父子关系处理
     c_id = models.IntegerField(default=0)
-    # 这是显示等级, 显示不同内容.
-    show_level = models.IntegerField(default=0)
+
+    # # 这是显示等级, 显示不同内容. 不需要,每个功能,独特的level记忆,并不需要dir来处理
+    # show_level = models.IntegerField(default=0)
 
     def __str__(self):
         if self.parent_dir is None:
@@ -67,12 +71,7 @@ class Dir(models.Model):
 
 
 class GalleryInfo(models.Model):
-    # 对应Dir的c_id
-    c_id = models.AutoField(primary_key=True)
-    # 相册对应的文件夹名称
-    dir_name = models.CharField(max_length=100, default='')
-    # 对应Dir的rel_path
-    rel_path = models.CharField(max_length=100, default='')
+    folder_key = models.ForeignKey(Dir, related_name='dir', on_delete=models.CASCADE)
     # 相册名字
     name = models.CharField(max_length=100, default='')
     # 相册简介
@@ -81,21 +80,22 @@ class GalleryInfo(models.Model):
     time = models.CharField(max_length=100, default='')
     # 相册中的指定缩略图
     thum = models.CharField(max_length=100, default='')
-    # 展示等级
-    level = models.CharField(max_length=100, default='')
+    # 展示等级 不需要,dir有展示等级
+    level = models.IntegerField(default=0)
     # 其他预留
     param1 = models.CharField(max_length=100, default='')
     param2 = models.CharField(max_length=100, default='')
 
     def __str__(self):
-        return 'id:%s,dir_name:%s,name:%s,rel_path:%s,intro:%s,time:%s,thum:%s,level:%s,param1:%s,param2:%s' % (
-            self.c_id, self.dir_name, self.name, self.rel_path, self.intro, self.time, self.thum, self.level,
+        return 'id:%s,name:%s,rel_path:%s,intro:%s,time:%s,thum:%s,level:%s,param1:%s,param2:%s' % (
+            self.folder_key.c_id, self.name, self.folder_key.rel_path, self.intro, self.time, self.thum,
+            self.level,
             self.param1, self.param2)
 
 
 class UpLoadDir(models.Model):
     path = models.CharField(max_length=100, default='')
-
+# models.ImageField
 #
 # class test(models.Model):
 #     f1=1

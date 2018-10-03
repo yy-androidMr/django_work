@@ -241,7 +241,7 @@ def is_gif(path):
 
 
 # 字段转换工具.
-def to_dict_no_none(ins):
+def to_dict_clear_none(ins):
     dict = to_dict(ins)
     dict_clear_none(dict)
     return dict
@@ -256,7 +256,17 @@ def dict_clear_none(dict):
 
 def to_dict(ins):
     if isinstance(ins, models.Model):
-        return dict([(attr, getattr(ins, attr)) for attr in [f.name for f in ins._meta.fields]])
+        field_attr = [f.name for f in ins._meta.fields]
+        temp_dict = {}
+        for attr in field_attr:
+            value = getattr(ins, attr)
+            if isinstance(value, models.Model):
+                key_dict = to_dict(value)
+                temp_dict.update(key_dict)
+            else:
+                temp_dict[attr] = value
+        return temp_dict
+        # return dict([(attr, getattr(ins, attr)) for attr in [f.name for f in ins._meta.fields]])
     elif type(ins) is dict:
         return ins
     else:
