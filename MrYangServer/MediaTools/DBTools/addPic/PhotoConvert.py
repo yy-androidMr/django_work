@@ -93,9 +93,14 @@ class PhotoConvert(ConvertBase):
         g_info.save()
 
 
-if __name__ == '__main__':
-    PhotoConvert().go()
+# if __name__ == '__main__':
+#     PhotoConvert().go()
 
+# for p in GalleryInfo.objects.raw('SELECT id, name FROM Mryang_App_galleryinfo'):
+#     print(p)
+
+
+print(Dir.objects.defer('name'))
 # for p in GalleryInfo.objects.raw(
 #         r'SELECT  FROM "Mryang_App_galleryinfo"'):
 #     print(p)
