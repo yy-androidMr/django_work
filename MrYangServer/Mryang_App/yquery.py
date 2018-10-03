@@ -37,40 +37,21 @@ def pic_level1_2json(show_level):
     # 1.可能用错了annotate
     # 2.优化1对1的效率
     # 3.extra是别名
-    ginfos = GalleryInfo.objects.filter(level__lt=(show_level + 1)).select_related('folder_key').defer(
-        'folder_key__id',
-        'folder_key__name',
-        'folder_key__parent_dir',
-        'folder_key__isdir',
-        'folder_key__tags',
-        'folder_key__abs_path',
-        'folder_key__type')
-    # GalleryInfo.objects.filter(level__lt=(show_level + 1)).aggregate(folder_key__c_id=F('c_id'))
-    return_info = []
-
-    for item in ginfos:
-        dict = yutils.to_dict_clear_none(item)
-        del dict['isdir']
-        print(dict)
-        return_info.append(dict)
-    # print(yutils.to_dict(ginfos[0]))
-    # ginfo_id_dict = {}
-    # for ginfo in ginfos:
-    #     ginfo_id_dict[ginfo['id']] = ginfo
-    #     del ginfo['id']
-    #     yutils.dict_clear_none(ginfo)
-    #
-    # return_info = []
-    # for dir in dirs:
-    #     return_info.append(dir)
-    #     infos = ginfo_id_dict[dir['c_id']]
-    #     if infos:
-    #         dir.update(infos)
-    #
-    # jsonstr = json.dumps(return_info)
-    # print(jsonstr)
-    # return jsonstr
-    return return_info
+    # 不知道为什么,defer造成了select_related失效!!导致每次循环都去查询了一下
+    # ginfos = GalleryInfo.objects.filter(level__lt=(show_level + 1)).select_related('folder_key')
+    # ginfos = GalleryInfo.objects.filter(level__lt=(show_level + 1)).raw(r'select g.id,g.name,g.intro,g.time,g.thum,g.level,g.param1,g.param2,d.c_id,d.rel_path from Mryang_App_galleryinfo g, Mryang_App_dir d where g.folder_key_id == d.id')
+    ginfos = GalleryInfo.objects.filter(level__lt=(show_level + 1)).select_related('folder_key').values('name', 'intro',
+                                                                                                        'time', 'thum',
+                                                                                                        'level',
+                                                                                                        'param1',
+                                                                                                        'param2',
+                                                                                                        'folder_key__c_id',
+                                                                                                        'folder_key__rel_path')
+    #有个设想,使用defer消除字段,然后再配合用values来查询出来
+    print()
+    return_list = list(ginfos)
+    print('一次查询----------')
+    return json.dumps(list(ginfos))
 
 
 def dead_2json():

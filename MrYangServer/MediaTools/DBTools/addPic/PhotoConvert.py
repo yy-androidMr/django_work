@@ -99,8 +99,9 @@ class PhotoConvert(ConvertBase):
 # for p in GalleryInfo.objects.raw('SELECT id, name FROM Mryang_App_galleryinfo'):
 #     print(p)
 
-
-print(Dir.objects.defer('name'))
+# for p in Dir.objects.raw(r'SELECT "Mryang_App_dir"."id", "Mryang_App_dir"."name" FROM "Mryang_App_dir"'):
+#     print(p)
+# print()
 # for p in GalleryInfo.objects.raw(
 #         r'SELECT  FROM "Mryang_App_galleryinfo"'):
 #     print(p)

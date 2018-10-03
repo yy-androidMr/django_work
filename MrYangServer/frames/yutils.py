@@ -265,6 +265,8 @@ def to_dict(ins):
                 temp_dict.update(key_dict)
             else:
                 temp_dict[attr] = value
+
+            # temp_dict[attr] = value
         return temp_dict
         # return dict([(attr, getattr(ins, attr)) for attr in [f.name for f in ins._meta.fields]])
     elif type(ins) is dict:
