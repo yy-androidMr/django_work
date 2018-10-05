@@ -1,6 +1,7 @@
 # -*-coding:utf-8 -*-
 import json
 
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import F
 
 from MediaTools.DBTools.addPic import PhotoConvert
@@ -47,24 +48,27 @@ def pic_level2_2json(c_id, page):
         .select_related('parent_dir').values('tags', 'name', 'c_id').order_by('c_id')
 
     page_item = 12
-    page -= 1
-    bottom = page * page_item
-    top = bottom + page_item
-    # if top > dirs.count():
-    #     top = dirs.count()
-    list_data = list(dirs[bottom:top])
-    print(list_data)
+    # page -= 1
+    # bottom = page * page_item
+    # top = bottom + page_item
+    # dirs_count = dirs.count()
+    # if bottom > dirs_count:
+    #     return ''
+    # elif top > dirs_count:
+    #     top = dirs_count
+    # list_data = list(dirs[bottom:top])
+    # print(list_data)
 
-    # paginator = Paginator(dirs, 12)
-    # try:
-    #     contacts = paginator.page(page)
-    # except PageNotAnInteger:
-    #     print('[pic_level2_2json]:', PageNotAnInteger)
-    #     return ''
-    # except EmptyPage:
-    #     print('[pic_level2_2json]:', EmptyPage)
-    #     return ''
-    jsonstr = json.dumps(list_data)
+    paginator = Paginator(dirs, page_item)
+    try:
+        contacts = paginator.page(page)
+    except PageNotAnInteger:
+        print('[pic_level2_2json]:', PageNotAnInteger)
+        return ''
+    except EmptyPage:
+        print('[pic_level2_2json]:', EmptyPage)
+        return ''
+    jsonstr = json.dumps(list(contacts.object_list))
     # jsonstr = ''
     return jsonstr
 
