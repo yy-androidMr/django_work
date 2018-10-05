@@ -19,7 +19,7 @@ gif_pic = ''.join([cd_count, yutils.static_media_root, '/pic/gif_bannder.png']) 
 def middle_out_path(source_path):
     exten = os.path.splitext(source_path)[1]
     simple_path = source_path[len(src):]
-    dir = yutils.md5_of_str(os.path.dirname(simple_path))
+    dir = yutdjango_content_typeils.md5_of_str(os.path.dirname(simple_path))
     desc_path = middle + '/' + dir
     rename_path = desc_path + '/' + yutils.get_md5(source_path) + exten
     return (rename_path, desc_path, dir)

@@ -218,20 +218,20 @@ def m_second_gallery(request, dir_id):
             page = request.POST.get('page')
             c_id = int(dir_id)
             json = yquery.pic_level2_2json(c_id, page)
-            print(dir_id, page)
+            print('[m_second_gallery]:',dir_id, page)
             # return HttpResponse(json)
             return HttpResponse(json, 'content-type=application/x-www-form-urlencoded')
             # render(request, 'gallery/secondLevel/index.html', {'json': json, 'pre_path': '/pic/middle'})
         except:
             print('非法参数:' + dir_id)
     else:
-        print(dir_id, type(dir_id))
+        print('[m_second_gallery]:',dir_id, type(dir_id))
         try:
             c_id = int(dir_id)
             json = yquery.pic_level2_2json(c_id, 1)
             return render(request, 'gallery/secondLevel/index.html', {'json': json, 'pre_path': '/pic/middle'})
         except:
-            print('没有该id的照片:' + dir_id)
+            print('[m_second_gallery]没有该id的照片:' + dir_id)
 
 
 

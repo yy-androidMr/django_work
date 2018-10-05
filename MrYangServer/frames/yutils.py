@@ -254,6 +254,12 @@ def dict_clear_none(dict):
     return dict
 
 
+def list_clear_none(list_value):
+    for value in list_value:
+        if type(value) == dict:
+            dict_clear_none(value)
+
+
 def to_dict(ins):
     if isinstance(ins, models.Model):
         field_attr = [f.name for f in ins._meta.fields]
