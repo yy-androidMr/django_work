@@ -1,6 +1,8 @@
 # coding:utf-8
 
 import sys, django, os
+import threading
+import time
 
 proj_abs_path = os.path.abspath(os.path.join(sys.argv[0], '../..'))
 sys.path.append(proj_abs_path)
@@ -46,7 +48,6 @@ import base64
 
 
 def baseurl(url):
-
     if url.startswith('thunder://'):
         url = url[10:] + '\n'
         url = base64.decodestring(url)
@@ -72,5 +73,21 @@ def test():
     print(p)
 
 
+def thread_run(arg):
+    print('begin run it :' + str(arg))
+    for i in range(0, 100):
+        time.sleep(1)
+        # print('run it :' + str(arg) + "  wait count:" + str(i) + "\n")
+
+
 if __name__ == '__main__':
-    print(base64.b64encode('红楼梦小戏骨'))
+    # print(threading.currentThread())
+    for i in range(0, 4):
+        t = threading.Thread(target=thread_run, args=(i,))
+        t.name = '重新起县城名:' + str(i)
+        t.start()
+
+    threads = threading.enumerate()
+    for thread in threads:
+        print(thread)
+    # print(base64.b64encode('红楼梦小戏骨'))
