@@ -7,10 +7,10 @@
 家里电脑
 	<project_root>F:/django_work/MrYangServer</project_root>
 家里mac
-
+<project_root>C:/git/django_work/MrYangServer</project_root>
 -->
 <configs_info>	
-			<project_root>/Users/mr.yang/Documents/GitHub/django_work/MrYangServer</project_root>
+			<project_root>C:/git/django_work/MrYangServer</project_root>
 			<config_root>/config/</config_root>		
 			<list>
 				<gallery_info>auto_create/gallery_info.xml</gallery_info>				
