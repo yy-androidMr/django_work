@@ -38,7 +38,7 @@ def attr_complition(g_item, dir_name='', link=''):
     XMLBase.add_attr(g_item, TAGS.LINK, link)
     XMLBase.add_attr(g_item, TAGS.TIME)
     XMLBase.add_attr(g_item, TAGS.THUM)
-    XMLBase.add_attr(g_item, TAGS.LEVEL, '1')
+    XMLBase.add_attr(g_item, TAGS.LEVEL, '0')
     XMLBase.add_attr(g_item, TAGS.P1)
     XMLBase.add_attr(g_item, TAGS.P2)
 

@@ -19,7 +19,7 @@ gif_pic = ''.join([cd_count, yutils.static_media_root, '/pic/gif_bannder.png']) 
 def middle_out_path(source_path):
     exten = os.path.splitext(source_path)[1]
     simple_path = source_path[len(src):]
-    dir = yutdjango_content_typeils.md5_of_str(os.path.dirname(simple_path))
+    dir = yutils.md5_of_str(os.path.dirname(simple_path))
     desc_path = middle + '/' + dir
     rename_path = desc_path + '/' + yutils.get_md5(source_path) + exten
     return (rename_path, desc_path, dir)
@@ -171,6 +171,7 @@ def delete_thum():
 
 # 删除多余的middle 和thum
 def delete_not_exist():
+    print('[delete_not_exist] begin')
     right_map = {}
     for root, dirs, files in os.walk(src):
         for file in files:
@@ -196,6 +197,7 @@ def delete_not_exist():
         os.remove(path)
     yutils.delete_null_dir(middle)
     delete_thum()
+    print('[delete_not_exist] end')
 
 
 if __name__ == '__main__':
