@@ -9,7 +9,8 @@ from django.views.decorators.gzip import gzip_page
 
 from Mryang_App.forms import CreateUserF, LoginUserF, UserAlbumF
 from Mryang_App.result.Enums import LOGIN, UPLOAD
-from Mryang_App import yutils, yquery, forms
+from Mryang_App import yquery, forms
+from frames import yutils
 
 # 显示权限
 COMMON_SHOW = 4
@@ -108,6 +109,8 @@ def up_pic_c1(request):
         return to_pic_cmd_login(request)
     if request.POST:
         img_file = request.FILES.get("file")
+        img_md5 = request.POST['md5']
+        print(img_md5)
         img_name = img_file.name
         # path = default_storage.save('tmp/somename.mp3', ContentFile(data.read()))
         yutils.create_dirs(yutils.upload_album)
@@ -118,6 +121,27 @@ def up_pic_c1(request):
         print('save suc')
     return render(request, 'upload/gallery/child_item/upload.html', )
     # def up_pic_c2(request):
+
+
+def up_pic2(request):
+    if (request.method == "POST"):
+        # 提交了表单
+        uf = forms.upload_f(request.POST, request.FILES)
+        if uf.is_valid():
+            # 获取表单信息
+            pwd = uf.cleaned_data['pwd']
+            print(pwd)
+            if not pwd is 'temp1234':
+                hr = render(request, 'upload/gallery/child_item/upload.html')
+                hr.set_cookie('login', 'true', max_age=7 * 24 * 60 * 60)
+                return hr
+                # 写入数据库
+                # user = User.objects.get(account=utils.get_s_account())
+        return to_pic_cmd_login(request)
+    else:
+        if (check_pic_cmd_login(request)):
+            return render(request, 'upload/gallery/child_item/upload.html')
+        return to_pic_cmd_login(request)
 
 
 def up_pic(request):
@@ -217,17 +241,17 @@ def m_second_gallery(request, dir_id):
             page = request.POST.get('page')
             c_id = int(dir_id)
             json = yquery.pic_level2_2json(c_id, page)
-            print(dir_id, page)
+            print('[m_second_gallery]:', dir_id, page)
             # return HttpResponse(json)
             return HttpResponse(json, 'content-type=application/x-www-form-urlencoded')
             # render(request, 'gallery/secondLevel/index.html', {'json': json, 'pre_path': '/pic/middle'})
         except:
             print('非法参数:' + dir_id)
     else:
-        print(dir_id, type(dir_id))
+        print('[m_second_gallery]:', dir_id, type(dir_id))
         try:
             c_id = int(dir_id)
             json = yquery.pic_level2_2json(c_id, 1)
             return render(request, 'gallery/secondLevel/index.html', {'json': json, 'pre_path': '/pic/middle'})
         except:
-            print('没有该id的照片:' + dir_id)
+            print('[m_second_gallery]没有该id的照片:' + dir_id)

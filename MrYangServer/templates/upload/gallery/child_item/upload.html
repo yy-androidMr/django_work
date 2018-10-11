@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>zyupload全部功能上传实例</title>
+    <title>上传照片到相册</title>
 
     <script src="/static/projects/gallery/mid/jquery-1.11.3.min.js"></script>
 
@@ -10,33 +10,75 @@
 
     <link rel="stylesheet" href="/static/projects/gallery/upload/skins/zyupload-1.0.0.min.css " type="text/css">
     <script type="text/javascript" src="/static/projects/gallery/upload/zyupload-1.0.0.min.js"></script>
+    <script type="text/javascript" src="/static/js/spark-md5.min.js"></script>
 </head>
 <body>
 
-
-<h1 style="text-align:center;">zyupload全部功能上传实例</h1>
+<a id="box">sdfsfsd</a>
+<h1 style="text-align:center;">zyupload上传</h1>
 <div style="position: absolute;top: 100px; left: 20px;">
-    <h3>功能页面向导：</h3>
+    <h3></h3>
 </div>
 <div id="zyupload" class="zyupload"></div>
 
 
 <script type="text/javascript">
+    function calculate(callback, uploadFile) {
+        var fileReader = new FileReader(),
+            box = document.getElementById('box');
+        blobSlice = File.prototype.mozSlice || File.prototype.webkitSlice || File.prototype.slice,
+            file = uploadFile,
+            chunkSize = 2097152,
+            // read in chunks of 2MB
+            chunks = Math.ceil(file.size / chunkSize),
+            currentChunk = 0,
+            spark = new SparkMD5();
+
+        fileReader.onload = function (e) {
+            console.log("read chunk nr", currentChunk + 1, "of", chunks);
+            spark.appendBinary(e.target.result); // append binary string
+            currentChunk++;
+
+            if (currentChunk < chunks) {
+                loadNext();
+            }
+            else {
+                console.log("finished loading");
+                box.innerText = 'MD5 hash:' + spark.end();
+                console.info("computed hash", spark.end()); // compute hash
+                if (callback) {
+                    callback(uploadFile, "" + spark.end());
+                }
+            }
+        };
+
+        function loadNext() {
+            var start = currentChunk * chunkSize,
+                end = start + chunkSize >= file.size ? file.size : start + chunkSize;
+
+            fileReader.readAsBinaryString(blobSlice.call(file, start, end));
+        };
+
+        loadNext();
+    }
+
+
     $(function () {
         // 初始化插件
         $("#zyupload").zyUpload({
-            width: "650px",                 // 宽度
+            width: "680px",                 // 宽度
             height: "400px",                 // 宽度
             itemWidth: "140px",                 // 文件项的宽度
             itemHeight: "115px",                 // 文件项的高度
             url: "/upp/begin_upload",  // 上传文件的路径
-            fileType: ["jpg", "png", "txt", "js", "exe"],// 上传文件的类型
+            fileType: ["jpg", "png", "txt"],// 上传文件的类型
             fileSize: 51200000,                // 上传文件的大小
             multiple: true,                    // 是否可以多个文件上传
             dragDrop: true,                    // 是否可以拖动上传文件
             tailor: true,                    // 是否可以裁剪图片
             del: true,                    // 是否可以删除文件
             finishDel: false,  				  // 是否在上传文件完成后删除预览
+            uploadDelegate: calculate,
             /* 外部获得的回调接口 */
             onSelect: function (selectFiles, allFiles) {    // 选择文件的回调方法  selectFile:当前选中的文件  allFiles:还没上传的全部文件
                 console.info("当前选择了以下文件：");
@@ -49,9 +91,9 @@
             onSuccess: function (file, response) {          // 文件上传成功的回调方法
                 console.info("此文件上传成功：");
                 console.info(file.name);
-                console.info("此文件上传到服务器地址：");
-                console.info(response);
-                $("#uploadInf").append("<p>上传成功，文件地址是：" + response + "</p>");
+                {#console.info("此文件上传到服务器地址：");#}
+                {#console.info(response);#}
+                {#$("#uploadInf").append("<p>上传成功，文件地址是：" + file.name + "</p>");#}
             },
             onFailure: function (file, response) {          // 文件上传失败的回调方法
                 console.info("此文件上传失败：");
@@ -64,6 +106,7 @@
         });
 
     });
+
 
 </script>
 </body>

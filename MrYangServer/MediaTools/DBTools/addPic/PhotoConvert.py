@@ -1,11 +1,12 @@
-import os
 import random
 
 from MediaTools.DBTools.ConvertBase import ConvertBase
-from Mryang_App import yutils
-from Mryang_App.models import Dir
+from frames import yutils
+from Mryang_App.models import Dir, GalleryInfo
 
 # src->middle->thum
+from frames.xml import XMLGallery
+
 THUM_PIC_ID_POW = 100000
 LEVEL_TAG_SPLITE = '%'
 LEVEL_INDEX = 4
@@ -56,9 +57,11 @@ class PhotoConvert(ConvertBase):
     def walk_over(self):
         # if self.dir_list.count() > 0:
         Dir.objects.bulk_create(self.dir_list)
+        GalleryInfo.objects.all().delete()
+        xml_infos = XMLGallery.get_infos()
 
         # 结束时,将没有child的dir给删除!!!
-        level1 = Dir.objects.filter(c_id__lt=THUM_PIC_ID_POW)
+        level1 = Dir.objects.filter(isdir=True, type=yutils.M_FTYPE_PIC)
         for l1 in level1:
             childs = Dir.objects.filter(c_id__lt=(l1.c_id + 1) * THUM_PIC_ID_POW,
                                         c_id__gt=l1.c_id * THUM_PIC_ID_POW)  # 查找区间内的id
@@ -67,50 +70,43 @@ class PhotoConvert(ConvertBase):
                 # 删除一级文件夹
                 l1.delete()
             else:
-                if True:
-                    self.old_info_convert(l1, childs, child_count)
-                else:
-                    self.new_info_convert()
-        # 这里要读取描述文件
-        # 名称1
-        # 描述
-        # 2018
-        # 年2月
-        # 1
-
+                self.new_info_convert(l1, childs[random.randrange(0, child_count)], xml_infos)
         print('done')
 
-    def old_info_convert(self, l1, childs, child_count):
-        info_path = l1.abs_path + '/info'
-        tags = ''
-        info_tags_count = 3
-        cur_info_tags = 0
-        if os.path.exists(info_path):
-            with open(info_path, encoding='utf-8') as file_object:
-                lines = file_object.readlines()  # 读取全部内容
-                for line in lines:
-                    tags += line.rstrip('\n') + ' '
-                    cur_info_tags += 1
-                    if cur_info_tags == info_tags_count:
-                        break
-                if len(lines) >= LEVEL_INDEX:
-                    print(lines[LEVEL_INDEX - 1])
-                    l1.show_level = int(lines[LEVEL_INDEX - 1])
-                else:
-                    l1.show_level = 0
-        if cur_info_tags < info_tags_count:
-            tags += ' ' * (info_tags_count - cur_info_tags)
+    def new_info_convert(self, l1, child_dir, xml_infos):
+        info = xml_infos[l1.name]
+        g_info = GalleryInfo()
+        g_info.folder_key = l1
+        g_info.dir_name = l1.name
+        g_info.id = l1.c_id
+        if info:
+            g_info.name = info[0]
+            g_info.intro = info[1]
+            g_info.time = info[2]
+            g_info.thum = info[3] if info[3] else child_dir.name
+            g_info.level = int(info[4]) if info[4] else 0
 
-        tags += childs[random.randrange(0, child_count)].name
-        l1.tags = tags
-        l1.save()
-
-    def new_info_convert(self):
-        pass
+            g_info.param1 = info[5]
+            g_info.param2 = info[6]
+        else:
+            print('无该配置!:' + l1.name)
+        g_info.save()
 
 
 if __name__ == '__main__':
     PhotoConvert().go()
 
-    # PhotoConvert().walk_over()
-    # print(Dir.objects.filter(c_id__lt=100))
+# for p in GalleryInfo.objects.raw('SELECT id, name FROM Mryang_App_galleryinfo'):
+#     print(p)
+
+# for p in Dir.objects.raw(r'SELECT "Mryang_App_dir"."id", "Mryang_App_dir"."name" FROM "Mryang_App_dir"'):
+#     print(p)
+# print()
+# for p in GalleryInfo.objects.raw(
+#         r'SELECT  FROM "Mryang_App_galleryinfo"'):
+#     print(p)
+#     pass
+# print('done')
+
+
+# print(GalleryInfo.objects.filter(level=0))

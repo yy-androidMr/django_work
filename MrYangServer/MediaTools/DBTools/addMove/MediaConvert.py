@@ -10,7 +10,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MrYangServer.settings')
 django.setup()
 from Mryang_App.models import Dir
 
-from Mryang_App import yutils
+from frames import yutils
 
 
 class MediaConvert(ConvertBase):

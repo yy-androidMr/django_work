@@ -542,7 +542,7 @@ textarea {
 /* Gallery */
 .grid-item {
     float: left;
-    width: 50%;
+    width: 33.3333333%;
 }
 
 .grid-item:last-child {
@@ -772,7 +772,8 @@ figure.effect-sadie:hover p {
     }
 
     .grid-item {
-        width: 50%;
+
+        width: 33.33333%;
     }
 
     .grid-item figure figcaption {

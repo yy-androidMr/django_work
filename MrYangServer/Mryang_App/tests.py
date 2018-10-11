@@ -1,19 +1,16 @@
 # coding:utf-8
 
 import sys, django, os
-import urllib
-
-from django.core import serializers
+import threading
+import time
 
 proj_abs_path = os.path.abspath(os.path.join(sys.argv[0], '../..'))
 sys.path.append(proj_abs_path)
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MrYangServer.settings')
 django.setup()
 
-from django.test import TestCase
-
 # Create your tests here.
-from Mryang_App.yutils import *
+from frames.yutils import *
 
 user_list = {'tk1': 'yy', 'tk2': 'wwjt', 'tk3': 'dd', 'tk4': '44ss', 'tk5': 'zzz', 'tk6': 'bb'}
 
@@ -48,11 +45,9 @@ class A():
 #     print('done!:')
 
 import base64
-import sys
 
 
 def baseurl(url):
-
     if url.startswith('thunder://'):
         url = url[10:] + '\n'
         url = base64.decodestring(url)
@@ -78,5 +73,21 @@ def test():
     print(p)
 
 
+def thread_run(arg):
+    print('begin run it :' + str(arg))
+    for i in range(0, 100):
+        time.sleep(1)
+        # print('run it :' + str(arg) + "  wait count:" + str(i) + "\n")
+
+
 if __name__ == '__main__':
-    print(base64.b64encode('红楼梦小戏骨'))
+    # print(threading.currentThread())
+    for i in range(0, 4):
+        t = threading.Thread(target=thread_run, args=(i,))
+        t.name = '重新起县城名:' + str(i)
+        t.start()
+
+    threads = threading.enumerate()
+    for thread in threads:
+        print(thread)
+    # print(base64.b64encode('红楼梦小戏骨'))

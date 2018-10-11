@@ -5,8 +5,8 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import F
 
 from MediaTools.DBTools.addPic import PhotoConvert
-from Mryang_App import yutils
-from Mryang_App.models import Dir, UpLoadDir
+from frames import yutils
+from Mryang_App.models import *
 
 
 def dir_2json(dirtype):
@@ -19,17 +19,20 @@ def dir_2json(dirtype):
 
 def pic_level1_2json(show_level):
     # id  名字, 父亲的id, 是否是文件夹, tag, 相对路径.
-    dirs = Dir.objects.filter(type=yutils.M_FTYPE_PIC, c_id__lt=PhotoConvert.THUM_PIC_ID_POW,
-                              show_level__lt=(show_level + 1)).values('tags',
-                                                                      'c_id', 'rel_path')
-    for item in dirs:
-        item['tags'] = item['tags'].split(' ')  # (item['name'] + ' ' + thum).split()
-    jsonstr = json.dumps(list(dirs))
-    return jsonstr
+    ginfos = GalleryInfo.objects.filter(level__lt=(show_level + 1)).annotate(
+        c_id=F('folder_key__c_id'), rel_path=F('folder_key__rel_path')) \
+        .select_related('folder_key') \
+        .values('name', 'intro', 'time', 'thum', 'level', 'param1', 'param2', 'c_id', 'rel_path')
+    return_list = list(ginfos)
+    yutils.list_clear_none(return_list)
+    print('一次查询----------')
+
+    json_res = json.dumps(return_list)
+    print('查询结果:%s' % json_res)
+    return json_res
 
 
 def dead_2json():
-    # NOT_SEE
     # id  名字, 父亲的id, 是否是文件夹, tag, 相对路径.
     dirs = Dir.objects.filter(type=yutils.M_FTYPE_PIC, c_id__lt=PhotoConvert.THUM_PIC_ID_POW,
                               show_level=99).values('tags',
@@ -41,20 +44,32 @@ def dead_2json():
 
 
 def pic_level2_2json(c_id, page):
-    dirs = Dir.objects.filter(type=yutils.M_FTYPE_PIC, c_id__lt=(c_id + 1) * PhotoConvert.THUM_PIC_ID_POW,
-                              c_id__gt=c_id * PhotoConvert.THUM_PIC_ID_POW).values(
-        'tags', 'name', 'c_id').order_by(
-        'c_id')
-    paginator = Paginator(dirs, 12)
+    dirs = Dir.objects.filter(type=yutils.M_FTYPE_PIC, isdir=False, parent_dir__c_id=c_id) \
+        .select_related('parent_dir').values('tags', 'name', 'c_id').order_by('c_id')
+
+    page_item = 12
+    # page -= 1
+    # bottom = page * page_item
+    # top = bottom + page_item
+    # dirs_count = dirs.count()
+    # if bottom > dirs_count:
+    #     return ''
+    # elif top > dirs_count:
+    #     top = dirs_count
+    # list_data = list(dirs[bottom:top])
+    # print(list_data)
+
+    paginator = Paginator(dirs, page_item)
     try:
         contacts = paginator.page(page)
     except PageNotAnInteger:
+        print('[pic_level2_2json]:', PageNotAnInteger)
         return ''
-        # contacts = paginator.page(1)
     except EmptyPage:
+        print('[pic_level2_2json]:', EmptyPage)
         return ''
-        # contacts = paginator.page(1)
     jsonstr = json.dumps(list(contacts.object_list))
+    # jsonstr = ''
     return jsonstr
 
 

@@ -1,8 +1,7 @@
 # 文件去重工作.
 import os
-import shutil
 
-from Mryang_App import yutils
+from frames import yutils
 
 
 def delfile(path):

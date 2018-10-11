@@ -1,9 +1,8 @@
 import os
 import pickle
 import shutil
-import subprocess
 
-from Mryang_App import yutils
+from frames import yutils
 
 cd_count = '../' * 4
 
@@ -109,8 +108,8 @@ def cut_video():
 
 if __name__ == '__main__':
     # pass
-    cut_video()
-    # create_convert_bats()
+    # cut_video()
+    create_convert_bats()
 
     # mystr = os.popen("ping www.baidu.com")  # popen与system可以执行指令,popen可以接受返回对象
     # mystr = mystr.read()  # 读取输出

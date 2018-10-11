@@ -1,7 +1,6 @@
 # coding:utf-8
 from django import forms
 
-from Mryang_App import yutils
 from Mryang_App.models import User
 
 
