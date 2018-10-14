@@ -28,7 +28,7 @@ if not python_version:
     sys.setdefaultencoding('utf8')
 
 options = {
-    'clientid':'',
+    'clientid':'1a96acf6b58fc3db',
 }
 
 def usage():
