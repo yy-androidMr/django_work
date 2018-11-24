@@ -58,10 +58,11 @@ for option, value in opts:
         options['clientid'] = value
 
 if options['clientid'] == '':
-    if not python_version:
-        input_clientid = raw_input('请输入clientid：')
-    else:
-        input_clientid = str(input('请输入clientid：'))
+    input_clientid='1a96acf6b58fc3db'
+    # if not python_version:
+    #     input_clientid = raw_input('请输入clientid：')
+    # else:
+    #     input_clientid = str(input('请输入clientid：'))
     if input_clientid != '':
         options['clientid'] = input_clientid
     else:

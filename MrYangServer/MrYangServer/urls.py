@@ -47,5 +47,6 @@ urlpatterns = [
     url(r'^g2/([0-9]+)$', views.m_second_gallery),
 
     url(r'^h5/(.*)/$', views.h5_test),
+    url(r'^download/$', views.download_test),
     # url(r'^any/(.*)/$', views.any_page),
 ]
