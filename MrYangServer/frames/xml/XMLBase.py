@@ -1,11 +1,11 @@
 # -*-coding:utf-8 -*-
 from xml.dom import minidom
-import os
 
 # 总配置路径
-current_path = os.path.dirname(__file__)
-CONFIG_INFO_XML = '%s/../../config/configs_info.xml' % current_path
-PT_TAG = 'project_root'
+import manage
+
+PROJ_ROOT = manage.project_root()
+CONFIG_INFO_XML = '%s/config/configs_info.xml' % PROJ_ROOT
 CONFIG_TAG = 'config_root'
 GIF_BANNER = 'gif_banner'
 LIST_TAG = 'list'
@@ -105,27 +105,17 @@ class DomPxy:
 #     return dpins
 
 
-# 获取工程路径
-@dom_pxy_ins()
-def get_pt(dpins=None):
-    # 如果没有,则实例化
-    proj_root = dpins.elem.value_by_tag(PT_TAG)
-    return proj_root, dpins
-
-
 # 解析configs_info 所有的配置列表
 @dom_pxy_ins()
 def get_cfg_dir(dpins=None):
-    (proj_root, _) = get_pt(dpins)
-    config_root = proj_root + dpins.elem.value_by_tag(CONFIG_TAG)
+    config_root = PROJ_ROOT + dpins.elem.value_by_tag(CONFIG_TAG)
     return config_root.replace('\\', '/'), dpins
 
 
 # 获取gif_banner的图片路径.
 @dom_pxy_ins()
 def get_gif_banner(dpins=None):
-    (proj_root, _) = get_pt(dpins)
-    gif_banner_path = proj_root + dpins.elem.value_by_tag(GIF_BANNER)
+    gif_banner_path = PROJ_ROOT + dpins.elem.value_by_tag(GIF_BANNER)
     return gif_banner_path.replace('\\', '/'), dpins
 
 

@@ -8,12 +8,12 @@
 	<project_root>F:/django_work/MrYangServer</project_root>
 家里mac
 <project_root>C:/git/django_work/MrYangServer</project_root>
+相对路径直接查找.
 -->
 <configs_info>	
 
-			<project_root>C:/git/django_work/MrYangServer</project_root>
-			<config_root>/config/</config_root>
 			<gif_banner>/media_source/pic/gif_bannder.png</gif_banner>
+			<config_root>/config/</config_root>
 			<list>
 				<gallery_info>auto_create/gallery_info.xml</gallery_info>				
 			</list>		

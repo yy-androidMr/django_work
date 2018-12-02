@@ -6,6 +6,7 @@ import time
 
 import manage
 # from Mryang_App.models import User
+from frames.xml import XMLBase
 
 proj_abs_path = os.path.abspath(os.path.join(sys.argv[0], '../..'))
 sys.path.append(proj_abs_path)
@@ -16,8 +17,6 @@ django.setup()
 from frames.yutils import *
 
 user_list = {'tk1': 'yy', 'tk2': 'wwjt', 'tk3': 'dd', 'tk4': '44ss', 'tk5': 'zzz', 'tk6': 'bb'}
-
-
 
 
 class A():
@@ -78,5 +77,7 @@ if __name__ == '__main__':
     #     print(thread)
     # print(base64.b64encode('红楼梦小戏骨'))
     # print(manage.project_root())
+    banner = XMLBase.get_gif_banner()
+    banner = XMLBase.cfg_list_path('gallery_info')
+    print(banner)
     pass
-
