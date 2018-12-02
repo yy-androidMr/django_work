@@ -7,13 +7,13 @@ import shutil
 from PIL import Image, ImageFile
 
 from frames import yutils
-from frames.xml import XMLGallery
+from frames.xml import XMLGallery, XMLBase
 
-cd_count = '../' * 3
-src = ''.join([cd_count, yutils.media_source, '/pic/src'])
-middle = yutils.transform_path(cd_count, yutils.static_media_root, '/pic/middle')
-thum = yutils.transform_path(cd_count, yutils.static_media_root, '/pic/thum')
-gif_pic = ''.join([cd_count, yutils.static_media_root, '/pic/gif_bannder.png'])  # media_source +
+MAX_PIC_SIZE = 3000
+src = ''.join([yutils.media_source, '/pic/src'])
+middle = ''.join([yutils.static_media_root, '/pic/middle'])
+thum = ''.join([yutils.static_media_root, '/pic/thum'])
+gif_pic = XMLBase.get_gif_banner()
 
 
 def middle_out_path(source_path):
@@ -28,7 +28,7 @@ def middle_out_path(source_path):
 #  从src目录压缩一下.到desc
 def src2pc(delete_exist):
     ImageFile.LOAD_TRUNCATED_IMAGES = True
-    middle_area = 1500 * 1500
+    middle_area = MAX_PIC_SIZE * MAX_PIC_SIZE
     # cmd = 'for i in ' + src + '/*.jpg;do jpegoptim -m50 -d ' + desc + ' -p "$i";done'
     # os.system(cmd)
     img_link_dic = {}
@@ -171,6 +171,10 @@ def delete_thum():
 
 # 删除多余的middle 和thum
 def delete_not_exist():
+    if not os.path.exists(middle):
+        print('middle not exist!')
+        return
+
     print('[delete_not_exist] begin')
     right_map = {}
     for root, dirs, files in os.walk(src):
@@ -179,7 +183,7 @@ def delete_not_exist():
                 continue
             source_path = os.path.join(root, file).replace('\\', '/')
             (rename_path, _, _) = middle_out_path(source_path)
-            if (os.path.exists(rename_path)):
+            if os.path.exists(rename_path):
                 right_map[rename_path] = source_path
 
     delete_list = []

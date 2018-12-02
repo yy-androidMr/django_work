@@ -7,7 +7,10 @@ current_path = os.path.dirname(__file__)
 CONFIG_INFO_XML = '%s/../../config/configs_info.xml' % current_path
 PT_TAG = 'project_root'
 CONFIG_TAG = 'config_root'
+GIF_BANNER = 'gif_banner'
 LIST_TAG = 'list'
+
+
 # print('current_path:%s,%s' % (current_path, os.getcwd()))
 
 
@@ -57,9 +60,10 @@ class ElemPxy:
     def node_value(self, node, index=0):
         return node.childNodes[index].nodeValue if node else ''
 
-    # 获取节点的属性
     def attr_value(self, node, attr_name):
         return node.getAttribute(attr_name) if node else ''
+
+    # 获取节点的属性
 
     # 根据节点名,直接获取节点内容
     def value_by_tag(self, tag, node_index=0, index=0):
@@ -79,9 +83,6 @@ class ElemPxy:
         self.root.appendChild(self.dom.createTextNode('\t'))
         self.root.appendChild(node)
         self.root.appendChild(self.dom.createTextNode('\n'))
-
-
-import os
 
 
 class DomPxy:
@@ -118,6 +119,14 @@ def get_cfg_dir(dpins=None):
     (proj_root, _) = get_pt(dpins)
     config_root = proj_root + dpins.elem.value_by_tag(CONFIG_TAG)
     return config_root.replace('\\', '/'), dpins
+
+
+# 获取gif_banner的图片路径.
+@dom_pxy_ins()
+def get_gif_banner(dpins=None):
+    (proj_root, _) = get_pt(dpins)
+    gif_banner_path = proj_root + dpins.elem.value_by_tag(GIF_BANNER)
+    return gif_banner_path.replace('\\', '/'), dpins
 
 
 # 获取list节点中的某一个配置路径

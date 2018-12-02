@@ -4,12 +4,10 @@ import shutil
 
 from frames import yutils
 
-cd_count = '../' * 4
-
-source_root = ''.join([cd_count, yutils.media_source, '/movie/src'])
-target_root = ''.join([cd_count, yutils.media_source, '/movie/desc'])
-net_static_root = yutils.transform_path(cd_count, yutils.static_media_root, '/movie')
-net_ts_root = yutils.transform_path(cd_count, yutils.static_media_root, '/movie_ts')
+source_root = ''.join([yutils.media_source, '/movie/src'])
+target_root = ''.join([yutils.media_source, '/movie/desc'])
+net_static_root = ''.join([yutils.media_source, '/movie'])
+net_ts_root = ''.join([yutils.media_source, '/movie_ts'])
 
 
 def create_ffmpeg_bat():

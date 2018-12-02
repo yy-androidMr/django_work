@@ -15,8 +15,7 @@ from frames import yutils
 
 class MediaConvert(ConvertBase):
     def __init__(self):
-        # ConvertBase.__init__(self)
-        super().__init__(4)
+        super().__init__()
 
     def go(self):
         # pass
