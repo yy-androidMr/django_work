@@ -78,6 +78,6 @@ if __name__ == '__main__':
     # print(base64.b64encode('红楼梦小戏骨'))
     # print(manage.project_root())
     banner = XMLBase.get_gif_banner()
-    banner = XMLBase.cfg_list_path('gallery_info')
+  #  banner = XMLBase.cfg_list_path('gallery_info')
     print(banner)
     pass

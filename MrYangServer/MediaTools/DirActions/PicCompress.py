@@ -13,7 +13,7 @@ MAX_PIC_SIZE = 3000
 src = ''.join([yutils.media_source, '/pic/src'])
 middle = ''.join([yutils.static_media_root, '/pic/middle'])
 thum = ''.join([yutils.static_media_root, '/pic/thum'])
-gif_pic = XMLBase.get_gif_banner()
+(gif_pic,_) = XMLBase.get_gif_banner()
 
 
 def middle_out_path(source_path):
@@ -205,8 +205,8 @@ def delete_not_exist():
 
 
 if __name__ == '__main__':
-    delete_not_exist()
-    link_dic = src2pc(False)
+    #delete_not_exist()
+   # link_dic = src2pc(False)
     middle2thum(False)
     # move_info()
-    XMLGallery.append_ifnot_exist(link_dic)
+    #XMLGallery.append_ifnot_exist(link_dic)
