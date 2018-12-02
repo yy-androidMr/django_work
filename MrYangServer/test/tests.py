@@ -4,6 +4,9 @@ import sys, django, os
 import threading
 import time
 
+import manage
+# from Mryang_App.models import User
+
 proj_abs_path = os.path.abspath(os.path.join(sys.argv[0], '../..'))
 sys.path.append(proj_abs_path)
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MrYangServer.settings')
@@ -15,23 +18,6 @@ from frames.yutils import *
 user_list = {'tk1': 'yy', 'tk2': 'wwjt', 'tk3': 'dd', 'tk4': '44ss', 'tk5': 'zzz', 'tk6': 'bb'}
 
 
-def create_user():
-    for _token in user_list:
-        user, created = User.objects.get_or_create(token=_token)
-        if created:
-            name_value = user_list.get(_token)
-            print('created:%s,value:%s' % (created, name_value))
-            # if created:
-            user.user_name = name_value
-            user.account = random_int()
-            user.pwd = random_str()
-            user.save()
-        else:
-            print('该token已被创建:%s' % _token)
-
-
-def main():
-    create_user()
 
 
 class A():
@@ -82,12 +68,15 @@ def thread_run(arg):
 
 if __name__ == '__main__':
     # print(threading.currentThread())
-    for i in range(0, 4):
-        t = threading.Thread(target=thread_run, args=(i,))
-        t.name = '重新起县城名:' + str(i)
-        t.start()
-
-    threads = threading.enumerate()
-    for thread in threads:
-        print(thread)
+    # for i in range(0, 4):
+    #     t = threading.Thread(target=thread_run, args=(i,))
+    #     t.name = '重新起县城名:' + str(i)
+    #     t.start()
+    #
+    # threads = threading.enumerate()
+    # for thread in threads:
+    #     print(thread)
     # print(base64.b64encode('红楼梦小戏骨'))
+    # print(manage.project_root())
+    pass
+

@@ -20,3 +20,9 @@ if __name__ == "__main__":
             )
         raise
     execute_from_command_line(sys.argv)
+
+
+def project_root():
+    # return os.path.abspath(__file__)
+    return os.path.dirname(os.path.abspath(__file__))
+    # return sys.path[0]
