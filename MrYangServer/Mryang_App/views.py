@@ -1,7 +1,7 @@
 # -*-coding:utf-8 -*-
 import os
 from django.contrib import auth
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
 from django.shortcuts import render, redirect
 
 # Create your views here.
@@ -81,10 +81,6 @@ def upload_file(request):
         # 如果没有登录,返回登录界面.
         return redirect('../login/', {'err': UPLOAD.NO_LOGIN})
 
-
-# def download_test(request):
-#     yutils.download_file()
-#     return render(request, 'login.html')
 
 def any_page(request, str):
     return render(request, str)
@@ -255,3 +251,12 @@ def m_second_gallery(request, dir_id):
             return render(request, 'gallery/secondLevel/index.html', {'json': json, 'pre_path': '/pic/middle'})
         except:
             print('[m_second_gallery]没有该id的照片:' + dir_id)
+
+
+def download_test(request):
+    print(os.path.dirname('.'))
+    file = open('F:\django_work\MrYangServer\static\media/1.mp4', 'rb')
+    response = FileResponse(file)
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = 'attachment;filename="1.mp4"'
+    return response

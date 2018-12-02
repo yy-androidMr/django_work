@@ -11,8 +11,8 @@ from Mryang_App.models import Dir
 
 
 class ConvertBase:
-    def __init__(self, cd_count):
-        self.media_root = ''.join(['../' * cd_count, yutils.static_media_root])
+    def __init__(self):
+        self.media_root = yutils.static_media_root
 
     def walk_call(self, abs_path, rel_path, parent_dir, name, is_dir):
         pass

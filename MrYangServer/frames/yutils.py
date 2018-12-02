@@ -138,16 +138,27 @@ def file_exten(file):
 output_neighbor = False
 neighbor_meida_root1 = r'\\Desktop-089j9k4\media'
 
-media_source = 'MrYangServer/media_source'
-static_root = 'MrYangServer/static'
+media_source = 'E:/media_source'
+static_root = 'F:/django_work/MrYangServer/static'
+
+banner_pic_path = '/pic/gif_bannder.png'
 static_media_root = neighbor_meida_root1 if output_neighbor else ''.join([static_root, '/media'])
 upload_root = 'upload'
 upload_album = ''.join([upload_root, '/album'])
 upload_video = ''.join([upload_root, '/video'])
 
 
+def gif_banner_path():
+    source_abs_path = os.path.abspath('.')
+    print(source_abs_path)
+
+
+if __name__ == '__main__':
+    gif_banner_path()
+
+
 # 分解路径1.src的相对路径. 2.src的根目录. 3.目标的路径
-def decompose_path(root, file, source_root, target_root, exten=None, rename=None):
+def decompose_path(root, file, source_root, target_root, exten=None):
     source_rela_path = os.path.join(root, file)
     if not output_neighbor:
         target_root = target_root.replace('\\', '/').replace('//', '/')
@@ -190,9 +201,9 @@ def transform_path(cd_count, middle, last=''):
         return ''.join([cd_count, middle, last])
 
 
-def media_root(cd_count):
-    rt = transform_path('../' * cd_count, media_source)
-    return rt
+# cd cout 往回倒多少个
+def media_root():
+    return media_source
 
 
 def is_mac():
@@ -272,7 +283,7 @@ def to_dict(ins):
             else:
                 temp_dict[attr] = value
 
-            # temp_dict[attr] = value
+                # temp_dict[attr] = value
         return temp_dict
         # return dict([(attr, getattr(ins, attr)) for attr in [f.name for f in ins._meta.fields]])
     elif type(ins) is dict:
