@@ -8,6 +8,7 @@ PROJ_ROOT = manage.project_root()
 CONFIG_INFO_XML = '%s/config/configs_info.xml' % PROJ_ROOT
 CONFIG_TAG = 'config_root'
 GIF_BANNER = 'gif_banner'
+COS_MEDIA_ROOT = 'cos_media_root'
 LIST_TAG = 'list'
 
 
@@ -116,6 +117,13 @@ def get_cfg_dir(dpins=None):
 @dom_pxy_ins()
 def get_gif_banner(dpins=None):
     gif_banner_path = PROJ_ROOT + dpins.elem.value_by_tag(GIF_BANNER)
+    return gif_banner_path.replace('\\', '/'), dpins
+
+
+# 获取gif_banner的图片路径.
+@dom_pxy_ins()
+def cos_media_root(dpins=None):
+    gif_banner_path = PROJ_ROOT + dpins.elem.value_by_tag(COS_MEDIA_ROOT)
     return gif_banner_path.replace('\\', '/'), dpins
 
 

@@ -13,10 +13,13 @@ from Mryang_App import yquery, forms
 from frames import yutils
 
 # 显示权限
+from frames.xml import XMLBase
+
 COMMON_SHOW = 4
 FAMILY = 5
-
 NOT_SEE = 9
+
+T_COS_MEIDA_ROOT = XMLBase.cos_media_root()
 
 
 def hello(request):
@@ -206,19 +209,22 @@ def m_index(request):
 @gzip_page
 def s_gallery(request):
     json = yquery.pic_level1_2json(COMMON_SHOW)
-    return render(request, 'gallery/firstLevel/index-color.html', {'json': json, 'pre_path': '/pic/thum'})
+    return render(request, 'gallery/firstLevel/index-color.html',
+                  {'json': json, 'pre_path': T_COS_MEIDA_ROOT + '/pic/thum'})
 
 
 @gzip_page
 def m_gallery(request):
     json = yquery.pic_level1_2json(FAMILY)
-    return render(request, 'gallery/firstLevel/index-color.html', {'json': json, 'pre_path': '/pic/thum'})
+    return render(request, 'gallery/firstLevel/index-color.html',
+                  {'json': json, 'pre_path': T_COS_MEIDA_ROOT + '/pic/thum'})
 
 
 @gzip_page
 def spe_gallery(request):
     json = yquery.pic_level1_2json(NOT_SEE)
-    return render(request, 'gallery/firstLevel/index-color.html', {'json': json, 'pre_path': '/pic/thum'})
+    return render(request, 'gallery/firstLevel/index-color.html',
+                  {'json': json, 'pre_path': T_COS_MEIDA_ROOT + '/pic/thum'})
 
 
 @gzip_page
