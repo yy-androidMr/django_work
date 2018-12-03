@@ -123,7 +123,7 @@ def get_gif_banner(dpins=None):
 # 获取gif_banner的图片路径.
 @dom_pxy_ins()
 def cos_media_root(dpins=None):
-    gif_banner_path = PROJ_ROOT + dpins.elem.value_by_tag(COS_MEDIA_ROOT)
+    gif_banner_path = dpins.elem.value_by_tag(COS_MEDIA_ROOT)
     return gif_banner_path.replace('\\', '/'), dpins
 
 

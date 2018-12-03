@@ -63,7 +63,7 @@ function loadPageContent(pageCount) {
             pTag.html(data_item.intro + '<br>' + data_item.time);
             var itemImg = child.find('#pic_thum');
 
-            itemImg.attr('src', media_root + pre_path + data_item.rel_path + '/' + data_item.thum);
+            itemImg.attr('src', pre_path + '/thum' + data_item.rel_path + '/' + data_item.thum);
             var click_bind = child.find('#link_second_gallery');
             click_bind.bind('click', {
                 id: data_item.c_id,

@@ -137,8 +137,8 @@ function insertContent(data_list) {
         item2.removeAttr('hidden');
 
         var thum_pic = item2.find('#pic');
-        var t_p = media_root + thum_path + dir_path + '/' + data_item.name;
-        var m_p = media_root + middle_path + dir_path + '/' + data_item.name;
+        var t_p = thum_path + '/thum' + dir_path + '/' + data_item.name;
+        var m_p = thum_path + '/middle' + dir_path + '/' + data_item.name;
 
         thum_pic.attr('src', t_p);
         thum_pic.attr('data-original', m_p);

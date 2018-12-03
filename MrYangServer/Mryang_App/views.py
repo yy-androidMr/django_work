@@ -19,7 +19,7 @@ COMMON_SHOW = 4
 FAMILY = 5
 NOT_SEE = 9
 
-T_COS_MEIDA_ROOT = XMLBase.cos_media_root()
+(T_COS_MEIDA_ROOT, _) = XMLBase.cos_media_root()
 
 
 def hello(request):
@@ -210,21 +210,21 @@ def m_index(request):
 def s_gallery(request):
     json = yquery.pic_level1_2json(COMMON_SHOW)
     return render(request, 'gallery/firstLevel/index-color.html',
-                  {'json': json, 'pre_path': T_COS_MEIDA_ROOT + '/pic/thum'})
+                  {'json': json, 'pre_path': T_COS_MEIDA_ROOT + '/pic'})
 
 
 @gzip_page
 def m_gallery(request):
     json = yquery.pic_level1_2json(FAMILY)
     return render(request, 'gallery/firstLevel/index-color.html',
-                  {'json': json, 'pre_path': T_COS_MEIDA_ROOT + '/pic/thum'})
+                  {'json': json, 'pre_path': T_COS_MEIDA_ROOT + '/pic'})
 
 
 @gzip_page
 def spe_gallery(request):
     json = yquery.pic_level1_2json(NOT_SEE)
     return render(request, 'gallery/firstLevel/index-color.html',
-                  {'json': json, 'pre_path': T_COS_MEIDA_ROOT + '/pic/thum'})
+                  {'json': json, 'pre_path': T_COS_MEIDA_ROOT + '/pic'})
 
 
 @gzip_page
