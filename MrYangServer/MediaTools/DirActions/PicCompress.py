@@ -205,8 +205,8 @@ def delete_not_exist():
 
 
 if __name__ == '__main__':
-    #delete_not_exist()
-   # link_dic = src2pc(False)
+    delete_not_exist()
+    link_dic = src2pc(False)
     middle2thum(False)
     # move_info()
-    #XMLGallery.append_ifnot_exist(link_dic)
+    XMLGallery.append_ifnot_exist(link_dic)
