@@ -67,27 +67,36 @@ def process_cmd(cmd, call=None, done_call=None):
                 call(line)
 
 
-def list_finish(str):
-    print(str)
+def org_list(list):
+    org = []
+    for i in list:
+        item = '|'.join(i.strip().split())
+        org.append(item)
+    return org
 
 
-def config_coscmd_finish(str):
+def list_finish(list):
+    with open('out.txt', 'w') as f:
+        list = org_list(list)
+        f.write('\n'.join(list))
+        # print(str)
+
+
+def config_coscmd_finish(_):
     process_cmd('coscmd list -ar ' + bucketpath, done_call=list_finish)
 
 
-def sync_lcoal(region, bucket):
-    print('region:' + region, '_bucket:' + bucket)
-    process_cmd(
-        'coscmd config -r ' + region + ' -a AKIDWjwhVnyiSSoAnJo8m9MNYHomrchWLJZM -s RKcdvzKz0iOO167JYiEmRIb80gC6gDzk -b ' + bucket,
-        done_call=config_coscmd_finish)
+def sync_lcoal(bucket_name):
+    print('bucket_name:' + bucket_name)
+    process_cmd(bucket_name, done_call=config_coscmd_finish)
 
 
 # process_cmd('coscmd list -ar', call, done)
 
 
-# sync_lcoal(region, bucket)
-strs='   ttt/1.png                17994      2018-12-05 15:58:50   '
-print('|'.join(strs.strip().split()))
+sync_lcoal('bucket_test_bg.bat')
+# strs = '   ttt/1.png                17994      2018-12-05 15:58:50   '
+# print('|'.join(strs.strip().split()))
 # list_objects()
 # def delete_list(dict):
 #     print(dict)
