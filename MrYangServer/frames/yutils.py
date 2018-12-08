@@ -321,19 +321,23 @@ import codecs
 import locale
 
 
-def process_cmd(cmd, call=None, done_call=None):
+
+def process_cmd(cmd, call=None, done_call=None, param=None):
     ps = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
+    cmd_str = []
     while True:
         data = ps.stdout.readline()
         if data == b'':
             if ps.poll() is not None:
                 if done_call != None:
-                    done_call()
+                    done_call(cmd_str, param)
                 break
         else:
-            line = data.decode(codecs.lookup(locale.getpreferredencoding()).name)
-            print(line, end='')
-            if done_call != None:
-                call(line)
+            line = data.decode('utf-8')
+            # print(line, end='')
+            cmd_str.append(line.replace('\r\n', ''))
+            if call != None:
+                call(line, param)
+
 
 # end----------------------------------------------------------

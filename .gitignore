@@ -5,7 +5,6 @@ MrYangServer/venv/
 .DS_Store
 */.DS_Store
 MrYangServer/db.sqlite3
-MrYangServer/config/auto_create/
 
 !MrYangServer/static/media/pic/thum/1.txt
 !MrYangServer/static/media/pic/middle/1.txt
@@ -26,7 +25,5 @@ MrYangServer/MediaTools/DirActions/movie/output/
 !MrYangServer/upload/album/1.txt
 MrYangServer/upload/
 
-
 pyHelper/OStorage/out
-!pyHelper/OStorage/out/1.txt
 
