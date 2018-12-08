@@ -21,21 +21,10 @@ import os
 from qcloud_cos import CosConfig, CosS3Client
 import sys
 import logging
-
+import re
 import yy_utils
 
 logging.basicConfig(level=logging.INFO, stream=sys.stdout)
-secret_id = 'AKIDWjwhVnyiSSoAnJo8m9MNYHomrchWLJZM'  # 替换为用户的 secretId
-secret_key = 'RKcdvzKz0iOO167JYiEmRIb80gC6gDzk'  # 替换为用户的 secretKey
-region = 'ap-beijing'  # 替换为用户的 Region
-region2 = 'ap-chengdu'  # 替换为用户的 Region
-bucket = 'mryang-bj-1251808344'
-bucke2 = 'mryang-1251808344'
-token = None  # 使用临时密钥需要传入 Token，默认为空，可不填
-scheme = 'https'  # 指定使用 http/https 协议来访问 COS，默认为 https，可不填
-config = CosConfig(Region=region, SecretId=secret_id, SecretKey=secret_key, Token=token, Scheme=scheme)
-config2 = CosConfig(Region=region2, SecretId=secret_id, SecretKey=secret_key, Token=token, Scheme=scheme)
-client = CosS3Client(config2)
 
 upload_list_path = 'out/upload_list.txt'
 delete_list_path = 'out/delete_list.txt'
@@ -56,6 +45,7 @@ bucketpath = 'ttt/'
 # 注意事项:test_bucket_bat  需要一致
 
 
+# ----------------功能1--------------------
 def local_list(pre_path, sync_local_path):
     list = []
     for root, dirs, files in os.walk(pre_path + sync_local_path):
@@ -69,8 +59,11 @@ def local_list(pre_path, sync_local_path):
 def org_os_list(cmd_res):
     org = []
     for i in cmd_res:
-        temp_split = i.strip().split()
-        item = temp_split[0] + '|' + temp_split[1]
+        i = i.strip()
+        span = re.match(r'(.+) +(\d+) +\d{4}-\d{2}-\d{2}', i)
+        key = span.group(1).strip()
+        size = span.group(2).strip()
+        item = key + '|' + size
         org.append(item)
     return org
 
@@ -87,7 +80,7 @@ def list_finish(res, _):
 
     yy_utils.create_dirs(delete_list_path)
     with open(delete_list_path, 'w', encoding='utf-8') as f:
-        f.write('\n'.join(upload_list))
+        f.write('\n'.join(delete_list))
     print(upload_list, delete_list)
     # print(str)
 
@@ -103,40 +96,59 @@ def diff_path(list_left, list_right):
     return left_not_exist, right_not_exist
 
 
-def sync_bucket(bucket_name, done_call):
-    logging.info(str(bucket_name) + ' and call :' + str(done_call))
-    yy_utils.process_cmd(bucket_name, done_call=done_call)
-
-
 # 先调用这个生成比对结果文件
 def create_diff_list(bat):
-    sync_bucket(bat, print_diff_list)
+    yy_utils.process_cmd(bat, done_call=print_diff_list)
 
 
-def sync_to_os():
+# ---------------功能1结束------------------------
+
+# ---------------功能2---------------------------
+def sync_path(_, param):
+    yy_utils.process_cmd('coscmd upload -rs %s %s' % (local_pre_path + localpath, bucketpath))
+    pass
+
+
+# 删除指定文件,并且同步目录即可,并不需要上传什么
+def sync_to_os(bat):
+    with open(bat, 'r') as f:
+        cmd_line = f.readline()
+        cmd_splite = cmd_line.split()
+        region_index = cmd_splite.index('-r') + 1
+        region = cmd_splite[region_index]
+        secret_id_index = cmd_splite.index('-a') + 1
+        secret_id = cmd_splite[secret_id_index]
+        secret_key_index = cmd_splite.index('-s') + 1
+        secret_key = cmd_splite[secret_key_index]
+        bucket_index = cmd_splite.index('-b') + 1
+        bucket = cmd_splite[bucket_index]
+        config2 = CosConfig(Region=region, SecretId=secret_id, SecretKey=secret_key, Token=None, Scheme='https')
+        client = CosS3Client(config2)
     if os.path.exists(upload_list_path):
-        # 执行批量上传
+        yy_utils.process_cmd(bat, done_call=sync_path)
         pass
     if os.path.exists(delete_list_path):
         # 执行批量删除
-        pass
+        delete_list_obj = []
+        with open(delete_list_path, 'r', encoding='utf-8') as f:
+            delete_list = f.readlines()
+            for line in delete_list:
+                delete_list_obj.append({'Key': line.split('|')[0]})
+            print(delete_list_obj)
+        client.delete_objects(
+            Bucket=bucket,
+            Delete={
+                'Object': delete_list_obj
+            }
+        )
 
 
+# ---------------功能2结束------------------------
+
+
+# 这是两步操作,通常需要分开
 create_diff_list(test_bucket_bat)
-
-# process_cmd('coscmd list -ar', call, done)
-
-
-# sync_lcoal('bucket_test_bg.bat')
-# strs = '   ttt/1.png                17994      2018-12-05 15:58:50   '
-# print('|'.join(strs.strip().split()))
-# list_objects()
-# def delete_list(dict):
-#     print(dict)
-#
-# dic = {'k1': 'v1', 'k2': 'v2'}
-# dic['ttt/躲猫猫/1.png']='ttt/'
-# delete_list(dic)
+sync_to_os(test_bucket_bat)
 #
 # tp = ThreadingPool()
 #

@@ -4,7 +4,7 @@ import os
 import random
 import string
 import platform
-
+import subprocess
 import shutil
 from django.db import models
 
@@ -315,13 +315,8 @@ def is_m3u8_dir(path):
 
 # end----------------------------------------------------------
 
+
 # cmd命令行回调----------------------------------------------------
-import subprocess
-import codecs
-import locale
-
-
-
 def process_cmd(cmd, call=None, done_call=None, param=None):
     ps = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
     cmd_str = []
@@ -329,15 +324,14 @@ def process_cmd(cmd, call=None, done_call=None, param=None):
         data = ps.stdout.readline()
         if data == b'':
             if ps.poll() is not None:
-                if done_call != None:
+                if done_call is not None:
                     done_call(cmd_str, param)
                 break
         else:
             line = data.decode('utf-8')
             # print(line, end='')
             cmd_str.append(line.replace('\r\n', ''))
-            if call != None:
-                call(line, param)
-
+            if call is not None:
+                call(line)
 
 # end----------------------------------------------------------
