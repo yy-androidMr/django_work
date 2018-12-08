@@ -51,8 +51,9 @@ bucketpath = 'ttt/'
 #     local_pre_path = 'E:/cache/root/'
 #     localpath = 'ttt/'
 #     bucketpath = 'ttt/'
-# 2.执行diff_path获取两列表之间的差距.并且去当前的out目录确认
-# 3.执行sync
+# 2.执行create_diff_list获取两列表之间的差距.并且去当前的out目录确认
+# 3.确认完毕执行sync_to_os,如果有问题的文件,手动操作
+# 注意事项:test_bucket_bat  需要一致
 
 
 def local_list(pre_path, sync_local_path):
@@ -96,21 +97,32 @@ def print_diff_list(res, param):
     yy_utils.process_cmd('coscmd list -ar ' + bucketpath, done_call=list_finish)
 
 
-def sync_bucket(bucket_name, done_call):
-    logging.info(str(bucket_name) + ' and call :' + str(done_call))
-    yy_utils.process_cmd(bucket_name, done_call=done_call)
-
-
 def diff_path(list_left, list_right):
     right_not_exist = list(set(list_left).difference(set(list_right)))
     left_not_exist = list(set(list_right).difference(set(list_left)))
     return left_not_exist, right_not_exist
 
 
-sync_bucket(test_bucket_bat, print_diff_list)
+def sync_bucket(bucket_name, done_call):
+    logging.info(str(bucket_name) + ' and call :' + str(done_call))
+    yy_utils.process_cmd(bucket_name, done_call=done_call)
 
 
+# 先调用这个生成比对结果文件
+def create_diff_list(bat):
+    sync_bucket(bat, print_diff_list)
 
+
+def sync_to_os():
+    if os.path.exists(upload_list_path):
+        # 执行批量上传
+        pass
+    if os.path.exists(delete_list_path):
+        # 执行批量删除
+        pass
+
+
+create_diff_list(test_bucket_bat)
 
 # process_cmd('coscmd list -ar', call, done)
 
