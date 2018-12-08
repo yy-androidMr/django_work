@@ -26,4 +26,6 @@ MrYangServer/MediaTools/DirActions/movie/output/
 !MrYangServer/upload/album/1.txt
 MrYangServer/upload/
 
+!pyHelper/OStorage/out/1.txt
+pyHelper/OStorage/out
 
