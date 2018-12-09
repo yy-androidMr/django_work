@@ -13,9 +13,6 @@ MrYangServer/static/media/
 pyHelper/Plugins/
 !pyHelper/Plugins/说明.txt
 
-
-MrYangServer/Mryang_App/migrations
-
 !MrYangServer/MediaTools/DirActions/movie/output/exe/1.txt
 MrYangServer/MediaTools/DirActions/movie/output/
 
