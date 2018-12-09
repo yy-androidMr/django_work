@@ -4,7 +4,6 @@ MrYangServer/.idea/
 MrYangServer/venv/
 .DS_Store
 */.DS_Store
-MrYangServer/db.sqlite3
 
 !MrYangServer/static/media/pic/thum/1.txt
 !MrYangServer/static/media/pic/middle/1.txt
