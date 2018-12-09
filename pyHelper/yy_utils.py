@@ -1,4 +1,5 @@
 import os
+import platform
 import subprocess
 
 import shutil
@@ -40,3 +41,10 @@ def process_cmd(cmd, call=None, done_call=None, param=None):
             cmd_str.append(line.replace('\r\n', ''))
             if call is not None:
                 call(line)
+
+
+def is_mac():
+    sys_str = platform.system()
+    if (sys_str == "Windows"):
+        return False
+    return True

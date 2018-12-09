@@ -1,0 +1,6 @@
+#上传文件  加上 -r 代表上传路径
+scp -P 8022 /Users/mr.yang/Documents/APlayerIOSCoreDebug.txt u0_a288@192.168.8.100:/storage/emulated/0/ssh_cache
+#开启连接
+ssh -p 8022 u0_a288@192.168.8.100
+
+#
