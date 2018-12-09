@@ -191,7 +191,7 @@ if __name__ == '__main__':
     os.system('open ' + delete_list_path)
     input = input('去确认上传和下载文件吧!:(y|n)')
     if (input == 'y'):
-        # sync_to_os(test_bucket_bat)
         print('确认')
+        sync_to_os(test_bucket_bat)
     else:
         print('取消')
