@@ -21,110 +21,131 @@ import os
 from qcloud_cos import CosConfig, CosS3Client
 import sys
 import logging
-
-from OStorage.ThreadingPool import ThreadingPool
+import re
+import yy_utils
 
 logging.basicConfig(level=logging.INFO, stream=sys.stdout)
-secret_id = 'AKIDWjwhVnyiSSoAnJo8m9MNYHomrchWLJZM'  # 替换为用户的 secretId
-secret_key = 'RKcdvzKz0iOO167JYiEmRIb80gC6gDzk'  # 替换为用户的 secretKey
-region = 'ap-beijing'  # 替换为用户的 Region
-region2 = 'ap-chengdu'  # 替换为用户的 Region
-bucket = 'mryang-bj-1251808344'
-bucke2 = 'mryang-1251808344'
-token = None  # 使用临时密钥需要传入 Token，默认为空，可不填
-scheme = 'https'  # 指定使用 http/https 协议来访问 COS，默认为 https，可不填
-config = CosConfig(Region=region, SecretId=secret_id, SecretKey=secret_key, Token=token, Scheme=scheme)
-config2 = CosConfig(Region=region2, SecretId=secret_id, SecretKey=secret_key, Token=token, Scheme=scheme)
-# 2. 获取客户端对象
-client = CosS3Client(config2)
 
+upload_list_path = 'out/upload_list.txt'
+delete_list_path = 'out/delete_list.txt'
+test_bucket_bat = 'bucket_test_bg.bat'
+
+local_pre_path = 'E:/cache/root/'
 localpath = 'ttt/'
 bucketpath = 'ttt/'
 
-# 如何设计呢?
-# 1.获取存储桶所有文件列表.组织一下存储文件
-# 2.存储进
+
+# 同步操作.分3个步骤
+# 1.配置本地文件路径
+#     local_pre_path = 'E:/cache/root/'
+#     localpath = 'ttt/'
+#     bucketpath = 'ttt/'
+# 2.执行create_diff_list获取两列表之间的差距.并且去当前的out目录确认
+# 3.确认完毕执行sync_to_os,如果有问题的文件,手动操作
+# 注意事项:test_bucket_bat  需要一致
 
 
-import subprocess
+# ----------------功能1--------------------
+def local_list(pre_path, sync_local_path):
+    list = []
+    for root, dirs, files in os.walk(pre_path + sync_local_path):
+        for file in files:
+            temp = os.path.join(root, file).replace('\\', '/')
+            size = os.path.getsize(temp)
+            list.append('%s|%d' % (temp.replace(pre_path, ''), size))
+    return list
 
 
-def process_cmd(cmd, call=None, done_call=None):
-    ps = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
-    cmd_str = []
-    while True:
-        data = ps.stdout.readline()
-        if data == b'':
-            if ps.poll() is not None:
-                if done_call != None:
-                    done_call(cmd_str)
-                break
-        else:
-            line = data.decode('utf-8')
-            # print(line, end='')
-            cmd_str.append(line.replace('\r\n', ''))
-            if call != None:
-                call(line)
-
-
-def org_list(list):
+def org_os_list(cmd_res):
     org = []
-    for i in list:
-        item = '|'.join(i.strip().split())
+    for i in cmd_res:
+        i = i.strip()
+        span = re.match(r'(.+) +(\d+) +\d{4}-\d{2}-\d{2}', i)
+        key = span.group(1).strip()
+        size = span.group(2).strip()
+        item = key + '|' + size
         org.append(item)
     return org
 
 
-def list_finish(list):
-    with open('out.txt', 'w') as f:
-        list = org_list(list)
-        f.write('\n'.join(list))
-        # print(str)
+def list_finish(res, _):
+    logging.info('list os files suc! do next:save different list to file! out/upload_list.txt & out/delete_list.txt')
+    os_list = org_os_list(res)
+    local_files = local_list(local_pre_path, localpath)
+    upload_list, delete_list = diff_path(os_list, local_files)
+
+    yy_utils.create_dirs(upload_list_path)
+    with open(upload_list_path, 'w', encoding='utf-8') as f:
+        f.write('\n'.join(upload_list))
+
+    yy_utils.create_dirs(delete_list_path)
+    with open(delete_list_path, 'w', encoding='utf-8') as f:
+        f.write('\n'.join(delete_list))
+    print(upload_list, delete_list)
+    # print(str)
 
 
-def config_coscmd_finish(_):
-    process_cmd('coscmd list -ar ' + bucketpath, done_call=list_finish)
+def print_diff_list(res, param):
+    logging.info('bucket suc! do next:list os files')
+    yy_utils.process_cmd('coscmd list -ar ' + bucketpath, done_call=list_finish)
 
 
-def sync_lcoal(bucket_name):
-    print('bucket_name:' + bucket_name)
-    process_cmd(bucket_name, done_call=config_coscmd_finish)
+def diff_path(list_left, list_right):
+    right_not_exist = list(set(list_left).difference(set(list_right)))
+    left_not_exist = list(set(list_right).difference(set(list_left)))
+    return left_not_exist, right_not_exist
 
 
-# process_cmd('coscmd list -ar', call, done)
+# 先调用这个生成比对结果文件
+def create_diff_list(bat):
+    yy_utils.process_cmd(bat, done_call=print_diff_list)
 
 
-sync_lcoal('bucket_test_bg.bat')
-# strs = '   ttt/1.png                17994      2018-12-05 15:58:50   '
-# print('|'.join(strs.strip().split()))
-# list_objects()
-# def delete_list(dict):
-#     print(dict)
-#
-# dic = {'k1': 'v1', 'k2': 'v2'}
-# dic['ttt/躲猫猫/1.png']='ttt/'
-# delete_list(dic)
-#
-# tp = ThreadingPool()
-#
-# for root, dirs, files in os.walk('ttt/'):
-#     for file in files:
-#         source_path = os.path.join(root, file).replace('\\', '/')
-#         tp.append(upload_dir, (source_path, source_path))
-#         print(source_path)
-#
-# tp.start()
+# ---------------功能1结束------------------------
 
-#
-# tp.append(m2)
-# tp.start()
+# ---------------功能2---------------------------
+def sync_path(_, param):
+    yy_utils.process_cmd('coscmd upload -rs %s %s' % (local_pre_path + localpath, bucketpath))
+    pass
 
 
-# Delete = {
-#     'Object': [
-#         {
-#             'Key': 'string',
-#         },
-#     ],
-#     'Quiet': 'true' | 'false'
-# }
+# 删除指定文件,并且同步目录即可,并不需要上传什么
+def sync_to_os(bat):
+    with open(bat, 'r') as f:
+        cmd_line = f.readline()
+        cmd_splite = cmd_line.split()
+        region_index = cmd_splite.index('-r') + 1
+        region = cmd_splite[region_index]
+        secret_id_index = cmd_splite.index('-a') + 1
+        secret_id = cmd_splite[secret_id_index]
+        secret_key_index = cmd_splite.index('-s') + 1
+        secret_key = cmd_splite[secret_key_index]
+        bucket_index = cmd_splite.index('-b') + 1
+        bucket = cmd_splite[bucket_index]
+        config2 = CosConfig(Region=region, SecretId=secret_id, SecretKey=secret_key, Token=None, Scheme='https')
+        client = CosS3Client(config2)
+    if os.path.exists(upload_list_path):
+        yy_utils.process_cmd(bat, done_call=sync_path)
+        pass
+    if os.path.exists(delete_list_path):
+        # 执行批量删除
+        delete_list_obj = []
+        with open(delete_list_path, 'r', encoding='utf-8') as f:
+            delete_list = f.readlines()
+            for line in delete_list:
+                delete_list_obj.append({'Key': line.split('|')[0]})
+            print(delete_list_obj)
+        client.delete_objects(
+            Bucket=bucket,
+            Delete={
+                'Object': delete_list_obj
+            }
+        )
+
+
+# ---------------功能2结束------------------------
+
+
+# 这是两步操作,通常需要分开
+create_diff_list(test_bucket_bat)
+sync_to_os(test_bucket_bat)

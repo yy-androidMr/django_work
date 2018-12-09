@@ -65,7 +65,7 @@ def cut_call(str):
     pass
 
 
-def cut_end():
+def cut_end(_, param):
     print('end')
 
 
