@@ -3,4 +3,5 @@ scp -P 8022 /Users/mr.yang/Documents/APlayerIOSCoreDebug.txt u0_a288@192.168.8.1
 #开启连接
 ssh -p 8022 u0_a288@192.168.8.100
 
-#
+#诺基亚手机ssh
+scp -P 8022 -r /Users/mr.yang/Documents/GitHub/django_work/文档/sunny_ngrok.py u0_a237@192.168.199.167:/storage/emulated/0/ssh_cache/sunny_ngrok.py
