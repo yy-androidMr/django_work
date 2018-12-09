@@ -149,27 +149,3 @@ def sync_to_os(bat):
 # 这是两步操作,通常需要分开
 create_diff_list(test_bucket_bat)
 sync_to_os(test_bucket_bat)
-#
-# tp = ThreadingPool()
-#
-# for root, dirs, files in os.walk('ttt/'):
-#     for file in files:
-#         source_path = os.path.join(root, file).replace('\\', '/')
-#         tp.append(upload_dir, (source_path, source_path))
-#         print(source_path)
-#
-# tp.start()
-
-#
-# tp.append(m2)
-# tp.start()
-
-
-# Delete = {
-#     'Object': [
-#         {
-#             'Key': 'string',
-#         },
-#     ],
-#     'Quiet': 'true' | 'false'
-# }
