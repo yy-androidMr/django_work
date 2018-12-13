@@ -5,3 +5,14 @@ ssh -p 8022 u0_a288@192.168.8.100
 
 #诺基亚手机ssh
 scp -P 8022 -r /Users/mr.yang/Documents/GitHub/django_work/文档/sunny_ngrok.py u0_a237@192.168.199.167:/storage/emulated/0/ssh_cache/sunny_ngrok.py
+
+简单命令:
+音量-键(Ctrl)+L                清除屏幕内容
+音量-键(Ctrl)+C                终止当前操作
+音量-键(Ctrl)D                 退出当前会话session
+音量+键+D                      Tab键（可自动补全命令或文件名）
+音量+键+W                      方向键 上（可显示前一条命令）
+音量+键+S                      方向键 下（可显示后一条命令）
+音量+键+A                      方向键 左（可左移动光标）
+音量+键+D                      方向键 右（可右移动光标）
+音量+键+Q                      显示或关闭扩展键（ESC、插入链接CTR、ALT、TAB、-、/、|以及左滑扩展键一栏可切换到全功能支持手机输入法的输入框）

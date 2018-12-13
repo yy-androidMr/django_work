@@ -6,14 +6,16 @@ import piexif
 import shutil
 from PIL import Image, ImageFile
 
-from frames import yutils
-from frames.xml import XMLGallery, XMLBase
+from frames import yutils, TmpUtil, logger
+from frames.xml import XMLBase
 
 MAX_PIC_SIZE = 3000
+PicCompress_src = 'PicCompress_src'
+PicCompress_desc = 'PicCompress_desc'
 src = ''.join([yutils.media_source, '/pic/src'])
 middle = ''.join([yutils.static_media_root, '/pic/middle'])
 thum = ''.join([yutils.static_media_root, '/pic/thum'])
-(gif_pic,_) = XMLBase.get_gif_banner()
+(gif_pic, _) = XMLBase.get_gif_banner()
 
 
 def middle_out_path(source_path):
@@ -204,9 +206,61 @@ def delete_not_exist():
     print('[delete_not_exist] end')
 
 
+import tempfile
+from tempfile import NamedTemporaryFile, TemporaryDirectory
+
+
+def init_path(key, intro):
+    tmpdict = TmpUtil.read_tmp()
+    path = ''
+    if key in tmpdict:
+        path = tmpdict[key]
+    else:
+        while not os.path.exists(path):
+            path = input(intro)
+        dictarg = {key: path}
+        TmpUtil.write_tmp(**dictarg)
+    return path
+
+
 if __name__ == '__main__':
-    delete_not_exist()
-    link_dic = src2pc(False)
-    middle2thum(False)
-    # move_info()
-    XMLGallery.append_ifnot_exist(link_dic)
+    # f = NamedTemporaryFile(delete=True)
+    # f.write(b'adfasdf')
+    # print(f.name)
+    # with NamedTemporaryFile
+    # with NamedTemporaryFile() as fp:
+    #     print(fp.read(), ' name:', fp.name)
+    # yutils.write_tmp(a='b')
+    # print(tempfile.gettempdir())
+    # tmpdict = TmpUtil.read_tmp()
+    # if PicCompress_src in tmpdict:
+    #     src = tmpdict[PicCompress_src]
+    # else:
+    #     while not os.path.exists(src):
+    #         src = input('请指定照片根目录(例如:E:/media_source/pic/src):\n')
+    #     TmpUtil.write_tmp(PicCompress_src=src)
+    src = init_path(PicCompress_src, '请指定照片根目录(例如:E:/media_source/pic),目录下就是图片文件夹:\n')
+    desc = os.path.join(init_path(PicCompress_desc, '请指定照片根目录(例如:E:/media_desc/pic,目录下会创建middle和thum):\n'))
+    middle = os.path.join(desc, 'middle')
+    thum = os.path.join(desc, 'thum')
+    logger.logging.info('初始化成功src:' + src + ',desc:' + desc)
+    # if PicCompress_middle in tmpdict:
+    #     src = tmpdict[PicCompress_middle]
+    # else:
+    #     while not os.path.exists(src):
+    #         src = input('请指定照片根目录(例如:E:/media_source/pic/src):\n')
+    #     TmpUtil.write_tmp(PicCompress_middle=src)
+    #
+    # if PicCompress_thum in tmpdict:
+    #     src = tmpdict[PicCompress_src]
+    # else:
+    #     while not os.path.exists(src):
+    #         src = input('请指定照片根目录(例如:E:/media_source/pic/src):\n')
+    #     TmpUtil.write_tmp(PicCompress_src=src)
+
+    # delete_not_exist()
+    # src= input('指向照片根目录:')
+    # print(src)
+    # link_dic = src2pc(False)
+    # middle2thum(False)
+    # XMLGallery.append_ifnot_exist(link_dic)

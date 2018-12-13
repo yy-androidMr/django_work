@@ -6,6 +6,8 @@ import string
 import platform
 import subprocess
 import shutil
+import tempfile
+
 from django.db import models
 
 
@@ -28,6 +30,19 @@ S_NAME = 'user_name'
 M_FTYPE_MOIVE = 1
 M_FTYPE_PIC = 2
 M_FTYPE_DOC = 3
+# end
+
+
+# 路径操作
+
+media_source = 'E:/media_source'
+static_root = 'F:/django_work/MrYangServer/static'
+
+banner_pic_path = '/pic/gif_bannder.png'
+static_media_root = ''.join([static_root, '/media'])
+upload_root = 'upload'
+upload_album = ''.join([upload_root, '/album'])
+upload_video = ''.join([upload_root, '/video'])
 
 
 # end
@@ -134,35 +149,9 @@ def file_exten(file):
     return os.path.splitext(file)[1]
 
 
-# 路径操作
-output_neighbor = False
-neighbor_meida_root1 = r'\\Desktop-089j9k4\media'
-
-media_source = 'E:/media_source'
-static_root = 'F:/django_work/MrYangServer/static'
-
-banner_pic_path = '/pic/gif_bannder.png'
-static_media_root = neighbor_meida_root1 if output_neighbor else ''.join([static_root, '/media'])
-upload_root = 'upload'
-upload_album = ''.join([upload_root, '/album'])
-upload_video = ''.join([upload_root, '/video'])
-
-
-def gif_banner_path():
-    source_abs_path = os.path.abspath('.')
-    print(source_abs_path)
-
-
-if __name__ == '__main__':
-    gif_banner_path()
-
-
 # 分解路径1.src的相对路径. 2.src的根目录. 3.目标的路径
 def decompose_path(root, file, source_root, target_root, exten=None):
     source_rela_path = os.path.join(root, file)
-    if not output_neighbor:
-        target_root = target_root.replace('\\', '/').replace('//', '/')
-
     # 需要返回几个值:
     # 1.去掉source_root的相对路径.
     rela_file_name = source_rela_path[len(source_root):].replace('\\', '/').replace('//', '/')
@@ -179,11 +168,8 @@ def decompose_path(root, file, source_root, target_root, exten=None):
     # if rename:
 
     # 4.新的绝对路径|替换后缀
-    if output_neighbor:
-        target_abs_path = target_root
-    else:
-        target_abs_path = '/'.join([os.path.abspath(target_root), rela_file_name])
-        target_abs_path = target_abs_path.replace('\\', '/').replace('//', '/')
+    target_abs_path = '/'.join([os.path.abspath(target_root), rela_file_name])
+    target_abs_path = target_abs_path.replace('\\', '/').replace('//', '/')
 
     # 5.新相对路径|替换后缀
     target_rela_path = ''.join([target_root, rela_file_name])
@@ -191,17 +177,6 @@ def decompose_path(root, file, source_root, target_root, exten=None):
     return (rela_file_name, source_abs_path, target_abs_path, target_rela_path)
 
 
-# 5.所有路径标志符都换成/
-
-
-def transform_path(cd_count, middle, last=''):
-    if output_neighbor:
-        return ''.join([middle, last])
-    else:
-        return ''.join([cd_count, middle, last])
-
-
-# cd cout 往回倒多少个
 def media_root():
     return media_source
 
@@ -292,13 +267,6 @@ def to_dict(ins):
         return ins.__dict__
 
 
-# class a:
-#     def __init__(self):
-#         self.b = 'a'
-#
-#
-# aa = a()
-# print(to_dict(aa))
 # 视频的工具----------------------------------------------------
 INFO_FILE = 'info'
 # 如果是切片视频.文件夹是这个后缀.
