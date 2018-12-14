@@ -13,6 +13,7 @@ from Mryang_App import yquery, forms
 from frames import yutils
 
 # 显示权限
+from frames.logger import logger
 from frames.xml import XMLBase
 
 COMMON_SHOW = 4
@@ -248,15 +249,15 @@ def m_second_gallery(request, dir_id):
             return HttpResponse(json, 'content-type=application/x-www-form-urlencoded')
             # render(request, 'gallery/secondLevel/index.html', {'json': json, 'pre_path': '/pic/middle'})
         except:
-            print('非法参数:' + dir_id)
+            logger.error('非法参数:', dir_id)
     else:
-        print('[m_second_gallery]:', dir_id, type(dir_id))
+        logger.error('[m_second_gallery]:', dir_id)
         try:
             c_id = int(dir_id)
             json = yquery.pic_level2_2json(c_id, 1)
             return render(request, 'gallery/secondLevel/index.html', {'json': json, 'pre_path': '/pic/middle'})
         except:
-            print('[m_second_gallery]没有该id的照片:' + dir_id)
+            logger.error('[m_second_gallery]没有该id的照片:', dir_id)
 
 
 def download_test(request):

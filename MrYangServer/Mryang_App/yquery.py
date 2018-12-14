@@ -7,6 +7,7 @@ from django.db.models import F
 from MediaTools.DBTools.addPic import PhotoConvert
 from frames import yutils
 from Mryang_App.models import *
+from frames.logger import logger
 
 
 def dir_2json(dirtype):
@@ -28,7 +29,7 @@ def pic_level1_2json(show_level):
     print('一次查询----------')
 
     json_res = json.dumps(return_list)
-    print('查询结果:%s' % json_res)
+    logger.debug('查询结果:', json_res)
     return json_res
 
 
