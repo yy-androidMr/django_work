@@ -21,7 +21,8 @@ def log_path(name):
 
 def write_tmp(**kwgs):
     yutils.create_dirs(tmpfile)
-    with open(tmpfile, 'r+') as f:
+    with open(tmpfile, 'a+', encoding=yutils.default_encode) as f:
+        f.seek(0)
         line = f.readline()
         tmpdict = {}
         if line is not '':
@@ -36,7 +37,7 @@ def write_tmp(**kwgs):
 def read_tmp():
     if not os.path.exists(tmpfile):
         return {}
-    with open(tmpfile, 'r') as f:
+    with open(tmpfile, 'r', encoding=yutils.default_encode) as f:
         lines = f.readline()
         if lines is not '':
             return eval(lines)
@@ -50,7 +51,7 @@ def clear_tmp():
 def clear_key(*keys):
     if not os.path.exists(tmpfile):
         return
-    with open(tmpfile, 'r+') as f:
+    with open(tmpfile, 'r+', encoding=yutils.default_encode) as f:
         line = f.readline()
         tmpdict = {}
         if line is not '':
@@ -66,7 +67,13 @@ def clear_key(*keys):
         f.write(line)
 
 
-if __name__ == '__main__':
-    # write_tmp(a='d',c='d',e='f',g='ddd')
-    clear_key('a')
-    # write_tmp(c='d')
+def get(key, default=None):
+    tmpdict = read_tmp()
+    if key in tmpdict:
+        default = tmpdict[key]
+    return default
+
+
+def set(key, value):
+    dictarg = {key: value}
+    write_tmp(**dictarg)

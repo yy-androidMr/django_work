@@ -140,23 +140,6 @@ def middle2thum(delete_exist):
             print(desc_path)
 
 
-# 移动info文件,这个操作要修改掉.之后改成xml
-def move_info():
-    for root, dirs, files in os.walk(src):
-        for file in files:
-            if 'info' in file:
-                src_path = os.path.join(root, file).replace('\\', '/')
-                # if not os.path.exists(src_path):
-                #     continue
-                simple_dir = src_path[len(src):]
-                desc_path = thum + '/' + yutils.md5_of_str(os.path.dirname(simple_dir)) + '/info'
-                print(':'.join([src_path, desc_path, os.path.dirname(simple_dir)]))
-
-                shutil.copy(src_path, desc_path)
-
-                # print(source_path)
-
-
 def delete_thum():
     files = os.listdir(thum)
     for file in files:
@@ -197,25 +180,16 @@ def delete_not_exist():
     print('[delete_not_exist] end')
 
 
-import tempfile
-from tempfile import NamedTemporaryFile, TemporaryDirectory
-
-
 def init_path(key, intro):
-    tmpdict = TmpUtil.read_tmp()
-    path = ''
-    if key in tmpdict:
-        path = tmpdict[key]
-    else:
-        while not os.path.exists(path):
+    path = TmpUtil.get(key)
+    if path is None:
+        while path is None or not os.path.exists(path):
             path = input(intro)
-        dictarg = {key: path}
-        TmpUtil.write_tmp(**dictarg)
+        TmpUtil.set(key, path)
     return path
 
 
 if __name__ == '__main__':
-
     src = init_path(PicCompress_src, '请指定照片根目录(例如:E:/media_source/pic),目录下就是图片文件夹:\n')
     desc = init_path(PicCompress_desc, '请指定照片输出目录(例如:E:/media_desc/pic,目录下会创建middle和thum):\n')
     logger.info('初始化成功src:', src, ',desc:', desc)

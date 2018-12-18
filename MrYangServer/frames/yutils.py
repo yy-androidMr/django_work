@@ -1,5 +1,7 @@
 # coding:utf-8
+import codecs
 import hashlib
+import locale
 import os
 import random
 import string
@@ -9,6 +11,8 @@ import shutil
 import tempfile
 
 from django.db import models
+
+from frames import TmpUtil
 
 
 def random_int():
@@ -303,3 +307,22 @@ def process_cmd(cmd, call=None, done_call=None, param=None):
                 call(line)
 
 # end----------------------------------------------------------
+
+#输入记录缓存
+# def date2tmp(key, intro):
+#     tmpdict = TmpUtil.read_tmp()
+#     path = ''
+#     if key in tmpdict:
+#         path = tmpdict[key]
+#     else:
+#         while not os.path.exists(path):
+#             path = input(intro)
+#         dictarg = {key: path}
+#         TmpUtil.write_tmp(**dictarg)
+#     return path
+
+#end-------------------------------------------
+
+#默认编码
+default_encode = codecs.lookup(locale.getpreferredencoding()).name
+#end-------
