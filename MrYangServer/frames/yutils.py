@@ -39,6 +39,8 @@ M_FTYPE_DOC = 3
 
 # 路径操作
 
+RESOURCE_ROOT_KEY='RESOURCE_ROOT_KEY'
+RESOURCE_DESC_KEY='RESOURCE_DESC_KEY'
 media_source = 'E:/media_source'
 static_root = 'F:/django_work/MrYangServer/static'
 
@@ -309,18 +311,12 @@ def process_cmd(cmd, call=None, done_call=None, param=None):
 # end----------------------------------------------------------
 
 #输入记录缓存
-# def date2tmp(key, intro):
-#     tmpdict = TmpUtil.read_tmp()
-#     path = ''
-#     if key in tmpdict:
-#         path = tmpdict[key]
-#     else:
-#         while not os.path.exists(path):
-#             path = input(intro)
-#         dictarg = {key: path}
-#         TmpUtil.write_tmp(**dictarg)
-#     return path
-
+def input_path(key, intro):
+    path = TmpUtil.get(key)
+    while path is None or not os.path.exists(path):
+        path = input(intro)
+    TmpUtil.set(key, path)
+    return path
 #end-------------------------------------------
 
 #默认编码

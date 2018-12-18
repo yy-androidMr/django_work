@@ -4,6 +4,7 @@
 import os
 from xml.dom import minidom
 from frames import yutils
+from frames.logger import logger
 
 from frames.xml import XMLBase
 
@@ -55,6 +56,9 @@ def create_gallery_xml(path):
 
 
 def append_ifnot_exist(link_dic):
+    if link_dic is None:
+        logger.info('append_ifnot_exist:加入配置失败! link_dic')
+        return
     path, _ = XMLBase.cfg_list_path(CONFIG_NAME)
     # 这里需要判断文件是否存在
     if not os.path.exists(path):

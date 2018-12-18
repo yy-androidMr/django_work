@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?xml version="1.0" encoding="UTF-8"?><!--
 <gallery dir_name="a" link="b" name="" param1="" param2="" thum="" time=""> </gallery>
 		dir_name:加密后的文件夹名
 		link:加密前的文件夹相对路径
@@ -9,8 +8,7 @@
 		thum:指定缩略图
 		level:展示等级
 		param1,param2:预留接口
--->
-<gallery_info>
+--><gallery_info>
 	<gallery dir_name="e746bfbe4bd89c93b3ab124afabf5a51" level="5" link="../../../MrYangServer/media_source/pic/src/7_14长城" name="周佳佳来京" param1="" param2="" thum="" time="2018年7月14日">来京玩4天左右</gallery>
 	<gallery dir_name="47c0acfe173d4e198e568e459cf38b44" level="1" link="../../../MrYangServer/media_source/pic/src/公司聚会" name="在永航" param1="" param2="" thum="" time="">关于公司的一些照片</gallery>
 	<gallery dir_name="fdea5fd475001474af31bc40dfa0bf4f" level="9" link="../../../MrYangServer/media_source/pic/src/她" name="她的历史照" param1="" param2="" thum="" time="">以前综合的照片</gallery>

@@ -1,13 +1,19 @@
 import os
 import pickle
 import shutil
+import sys
+
+sys.path.append('../../..')
 
 from frames import yutils
 
-source_root = ''.join([yutils.media_source, '/movie/src'])
-target_root = ''.join([yutils.media_source, '/movie/desc'])
+# source_root = ''.join([yutils.media_source, '/movie/src'])
+# target_root = ''.join([yutils.media_source, '/movie/desc'])
+FFMPEG_KEY = 'FFMPEG_KEY'
+
 net_static_root = ''.join([yutils.media_source, '/movie'])
 net_ts_root = ''.join([yutils.media_source, '/movie_ts'])
+DIR_ROOT = 'movie'
 
 
 def create_ffmpeg_bat():
@@ -18,7 +24,6 @@ def create_ffmpeg_bat():
                 continue
             (_, source_abs_path, target_abs_path, _) = yutils.decompose_path(
                 root, file, source_root, target_root, exten='.mp4')
-            peg = os.path.abspath('output/exe/ffmpeg')
             if os.path.exists(target_abs_path):
                 continue
             yutils.create_dirs(target_abs_path)
@@ -27,30 +32,9 @@ def create_ffmpeg_bat():
                 continue
             # '%s -i %s -d 900 %s'
 
-            bat_list.append('%s -i %s %s' % (peg, source_abs_path, target_abs_path))
+            bat_list.append('%s -i %s %s' % (ffmpeg_tools, source_abs_path, target_abs_path))
 
     return bat_list
-
-
-# 生成ffmpeg的bat文件,提供批量转换.
-def create_convert_bats():
-    bat_list = create_ffmpeg_bat()
-    dir = "output/"
-    yutils.create_dirs(dir)
-
-    for root, dirs, files in os.walk(source_root):
-        for file in files:
-            if '.bat' in file:
-                os.remove(file)
-    # shutil.del
-    index = 0
-    for bat_line in bat_list:
-        # mystr = os.popen("bat_line")
-        # break
-        file_ = ''.join([dir, str(index), '.sh' if yutils.is_mac() else '.bat'])
-        index += 1
-        with open(file_, 'w+') as f:
-            f.write(bat_line)
 
 
 # 第二需求: 视频切片
@@ -105,15 +89,15 @@ def cut_video():
 
 
 if __name__ == '__main__':
-    # pass
+    # def run():
+    source_root = yutils.input_path(yutils.RESOURCE_ROOT_KEY,
+                                    '请指定资源根目录(例如:E:/resource_root),目录下有个%s文件夹,并且%s下就是图片:\n' % (DIR_ROOT, DIR_ROOT))
+    source_root = os.path.join(source_root, DIR_ROOT)
+    target_root = yutils.input_path(yutils.RESOURCE_DESC_KEY,
+                                    '请指定资源输出目录(例如:E:/resource_desc_root),目录下会创建%s/convert和%s/ts):\n' % (
+                                        DIR_ROOT, DIR_ROOT))
+    target_root = os.path.join(target_root, DIR_ROOT,'convert')
+    ffmpeg_tools = yutils.input_path(FFMPEG_KEY, '输入对应的ffmpeg文件位置(参照link_gitProj_files.txt下载对应的文件):\n')
+
     # cut_video()
-    create_convert_bats()
-
-    # mystr = os.popen("ping www.baidu.com")  # popen与system可以执行指令,popen可以接受返回对象
-    # mystr = mystr.read()  # 读取输出
-    #
-    # print("hello", mystr)
-
-    # sub = os.popen("ping www.baidu.com", shell=True, stdout=subprocess.PIPE)
-    # sub.wait()
-    # print(sub.read())
+    # create_convert_bats()

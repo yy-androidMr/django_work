@@ -12,12 +12,13 @@ from frames.xml import XMLBase, XMLGallery
 MAX_PIC_SIZE = 3000
 PicCompress_src = 'PicCompress_src'
 PicCompress_desc = 'PicCompress_desc'
+DIR_ROOT = 'pic'
 
 (gif_pic, _) = XMLBase.get_gif_banner()
 
 
 def middle_out_path(source_path):
-    exten = os.path.splitext(source_path)[1]
+    exten = yutils.file_exten(source_path)
     simple_path = source_path[len(src):]
     dir = yutils.md5_of_str(os.path.dirname(simple_path))
     desc_path = middle + '/' + dir
@@ -27,6 +28,9 @@ def middle_out_path(source_path):
 
 #  从src目录压缩一下.到desc
 def src2pc(delete_exist):
+    if not os.path.exists(src):
+        logger.info('src2pc:src not exist!')
+        return
     ImageFile.LOAD_TRUNCATED_IMAGES = True
     middle_area = MAX_PIC_SIZE * MAX_PIC_SIZE
     # cmd = 'for i in ' + src + '/*.jpg;do jpegoptim -m50 -d ' + desc + ' -p "$i";done'
@@ -152,7 +156,7 @@ def delete_thum():
 # 删除多余的middle 和thum
 def delete_not_exist():
     if not os.path.exists(middle):
-        print('middle not exist!')
+        logger.info('middle not exist!')
         return
 
     print('[delete_not_exist] begin')
@@ -180,18 +184,13 @@ def delete_not_exist():
     print('[delete_not_exist] end')
 
 
-def init_path(key, intro):
-    path = TmpUtil.get(key)
-    if path is None:
-        while path is None or not os.path.exists(path):
-            path = input(intro)
-        TmpUtil.set(key, path)
-    return path
-
-
 if __name__ == '__main__':
-    src = init_path(PicCompress_src, '请指定照片根目录(例如:E:/media_source/pic),目录下就是图片文件夹:\n')
-    desc = init_path(PicCompress_desc, '请指定照片输出目录(例如:E:/media_desc/pic,目录下会创建middle和thum):\n')
+    src = yutils.input_path(yutils.RESOURCE_ROOT_KEY,
+                            '请指定资源根目录(例如:E:/resource_root),目录下有个%s文件夹,并且%s下就是图片:\n' % (DIR_ROOT, DIR_ROOT))
+    src = os.path.join(src, DIR_ROOT)
+    desc = yutils.input_path(yutils.RESOURCE_DESC_KEY,
+                             '请指定资源输出目录(例如:E:/resource_desc_root),目录下会创建%s/middle和%s/thum):\n' % (DIR_ROOT, DIR_ROOT))
+    desc = os.path.join(desc, DIR_ROOT)
     logger.info('初始化成功src:', src, ',desc:', desc)
     middle = os.path.join(desc, 'middle')
     thum = os.path.join(desc, 'thum')
