@@ -36,8 +36,6 @@ urlpatterns = [
     # ----------end---------------
 
     url(r'^video/$', views.play_video),
-    url(r'^ck/$', views.ck_player),
-
     url(r'^$', views.move_index),
     url(r'^own/$', views.m_index),
     url(r'^sg/$', views.s_gallery),

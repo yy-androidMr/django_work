@@ -175,21 +175,9 @@ def play_video(request):
     return render(request, 'movie/video_js.html')
 
 
-def ck_player(request):
-    # if param1:
-    #     return render(request, 'player_2/' + param1)
-    # else:
-
-    return render(request, 'movie/ck/ck_new.html')
-
-
-#
-# def uploadTest(request):
-#     return render(request, 'player_2/video.html', {'medias': Movie.objects.get(showname='abc')})
-
-
 def move_index(request):
     json = yquery.dir_2json(yutils.M_FTYPE_MOIVE)
+    json = '[{"name":"\u641e\u7b11\u7684\u56fe\u7247","isdir":"False","path":"67f82897c9c163efde673763f4a4befc.ym3/out.m3u8"}]'
     return render(request, 'movie/index.html', {'json': json})
 
 

@@ -3,17 +3,33 @@ import pickle
 import shutil
 import sys
 
+import time
+
 sys.path.append('../../..')
 
-from frames import yutils
+from frames import yutils, logger
 
 # source_root = ''.join([yutils.media_source, '/movie/src'])
 # target_root = ''.join([yutils.media_source, '/movie/desc'])
 FFMPEG_KEY = 'FFMPEG_KEY'
 
-net_static_root = ''.join([yutils.media_source, '/movie'])
-net_ts_root = ''.join([yutils.media_source, '/movie_ts'])
+net_static_root = 'G:\cache\work_cache/resource_desc_root\movie/out'  # '''.join([yutils.media_source, '/movie'])
+net_ts_root = 'G:\cache\work_cache/resource_desc_root\movie/ts'  # .join([yutils.media_source, '/movie_ts'])
 DIR_ROOT = 'movie'
+
+
+def done_call(_, param):
+    for k in param:
+        logger.info('消耗时间:%d,命令:%s' % (param[k], k))
+
+
+def convert_video():
+    bat_list = create_ffmpeg_bat()
+    logger.info('准备转换:%s' % str(bat_list))
+    for bat in bat_list:
+        cur_time = int(time.time())
+        logger.info('开始时间:%d,转换命令:%s' % (cur_time, bat))
+        yutils.process_cmd(bat, done_call=done_call, param={bat: cur_time})
 
 
 def create_ffmpeg_bat():
@@ -80,9 +96,7 @@ def cut_video():
                     with open(''.join([target_dir, '/info']), 'wb') as f:
                         pickle.dump(info, f)  # 只能以二进制写入
 
-                    peg = os.path.abspath('output/exe/ffmpeg')
-
-                    cmd = peg + ' -i ' + source_abs_path + ' -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_list ' + target_dir + '/' + yutils.M3U8_NAME + ' -segment_time 5 ' + ts_dir + '/%03d.ts'
+                    cmd = ffmpeg_tools + ' -i ' + source_abs_path + ' -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_list ' + target_dir + '/' + yutils.M3U8_NAME + ' -segment_time 5 ' + ts_dir + '/%03d.ts'
                     print(cmd)
                     yutils.process_cmd(cmd, done_call=cut_end)
                     print('done:' + target_dir)
@@ -96,8 +110,8 @@ if __name__ == '__main__':
     target_root = yutils.input_path(yutils.RESOURCE_DESC_KEY,
                                     '请指定资源输出目录(例如:E:/resource_desc_root),目录下会创建%s/convert和%s/ts):\n' % (
                                         DIR_ROOT, DIR_ROOT))
-    target_root = os.path.join(target_root, DIR_ROOT,'convert')
+    target_root = os.path.join(target_root, DIR_ROOT, 'convert')
     ffmpeg_tools = yutils.input_path(FFMPEG_KEY, '输入对应的ffmpeg文件位置(参照link_gitProj_files.txt下载对应的文件):\n')
 
-    # cut_video()
+    cut_video()
     # create_convert_bats()

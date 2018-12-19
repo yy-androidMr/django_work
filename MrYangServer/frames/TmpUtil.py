@@ -74,6 +74,8 @@ def get(key, default=None):
     return default
 
 
-def set(key, value):
+def set(key, value, value_is_path=True):
+    if value_is_path:
+        value = value.replace('\\', '/')
     dictarg = {key: value}
     write_tmp(**dictarg)

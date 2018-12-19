@@ -151,6 +151,7 @@ function _showPic() {
 
 
 function convert_dirsjson(dirsJson) {
+
     var rootDir;
     var dirs = new Array();
     for (var i = 0, count = dirsJson.length; i < count; i++) {
@@ -165,6 +166,7 @@ function convert_dirsjson(dirsJson) {
             tags: item.tags,
             name: item.name,
         }
+         SetCookie('url', dirs[0].path);
         var dir_split = item.path.split('/');
         dir_split = dir_split.filter(function (n) {
             return n;
