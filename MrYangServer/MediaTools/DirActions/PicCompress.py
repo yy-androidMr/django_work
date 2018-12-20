@@ -6,7 +6,7 @@ import piexif
 import shutil
 from PIL import Image, ImageFile
 
-from frames import yutils, TmpUtil, logger
+from frames import yutils, logger
 from frames.xml import XMLBase, XMLGallery
 
 MAX_PIC_SIZE = 3000

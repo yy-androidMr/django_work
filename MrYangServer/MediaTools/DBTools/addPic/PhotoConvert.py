@@ -20,7 +20,7 @@ class PhotoConvert(ConvertBase):
         self.dir_list = []
 
     def go(self):
-        self.insert_dirs(yutils.M_FTYPE_PIC, self.media_root + '/pic', 'thum')
+        self.insert_dirs(yutils.M_FTYPE_PIC, self.res_desc_root + '/pic', 'thum')
 
     def walk_call(self, abs_path, rel_path, parent_dir, name, is_dir):
         if not is_dir:
@@ -80,14 +80,14 @@ class PhotoConvert(ConvertBase):
         g_info.dir_name = l1.name
         g_info.id = l1.c_id
         if info:
-            g_info.name = info[0]
-            g_info.intro = info[1]
-            g_info.time = info[2]
-            g_info.thum = info[3] if info[3] else child_dir.name
-            g_info.level = int(info[4]) if info[4] else 0
+            g_info.name = info[XMLGallery.TAGS.NAME]
+            g_info.intro = info[XMLGallery.TAGS.VALUE]
+            g_info.time = info[XMLGallery.TAGS.TIME]
+            g_info.thum = info[XMLGallery.TAGS.THUM] if info[XMLGallery.TAGS.THUM] else child_dir.name
+            g_info.level = int(info[XMLGallery.TAGS.LEVEL]) if info[XMLGallery.TAGS.LEVEL] else 0
 
-            g_info.param1 = info[5]
-            g_info.param2 = info[6]
+            g_info.param1 = info[XMLGallery.TAGS.P1]
+            g_info.param2 = info[XMLGallery.TAGS.P2]
         else:
             print('无该配置!:' + l1.name)
         g_info.save()
@@ -95,18 +95,3 @@ class PhotoConvert(ConvertBase):
 
 if __name__ == '__main__':
     PhotoConvert().go()
-
-# for p in GalleryInfo.objects.raw('SELECT id, name FROM Mryang_App_galleryinfo'):
-#     print(p)
-
-# for p in Dir.objects.raw(r'SELECT "Mryang_App_dir"."id", "Mryang_App_dir"."name" FROM "Mryang_App_dir"'):
-#     print(p)
-# print()
-# for p in GalleryInfo.objects.raw(
-#         r'SELECT  FROM "Mryang_App_galleryinfo"'):
-#     print(p)
-#     pass
-# print('done')
-
-
-# print(GalleryInfo.objects.filter(level=0))
