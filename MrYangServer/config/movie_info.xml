@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+dir_root 是整个电影的根文件夹名(创建在media_root|media_desc_root下,media_root|media_desc_root在第一次使用时需要指定)
+
+m3u8_info 做视频切片时,所用的信息
+	dir_exten 切片时,创建该后缀名的文件夹,里面全是m3u8的切片信息
+	info_file 在dir_exten文件夹下会创建该文件,为:DataBean.MovieInfo(file)
+	name 在dir_exten文件夹下创建m3u8文件,该文件作为播放源
+	convert_dir 视频在media_desc_root/dir_root/convert_dir 下创建转换文件夹,放置转换后的视频文件
+	out_dir 在media_desc_root/dir_root/out_dir 创建输出文件夹,放置切片后的视频文件
+	ts_dir  在media_desc_root/dir_root/out_dir/${XXX.dir_exten}/ts_dir 创建ts的存放目录.
+	item_info 影片的信息配置路径.
+-->
+<movie_info dir_root="movie">
+	<m3u8_info dir_exten=".ym3" info_file="info" name="out.m3u8" convert_dir="convert" out_dir="out" ts_dir="ts" item_info="/auto_create/movie_item_info.xml" />
+</movie_info>

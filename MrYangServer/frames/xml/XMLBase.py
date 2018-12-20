@@ -2,6 +2,8 @@
 from xml.dom import minidom
 
 # 总配置路径
+import os
+
 import manage
 
 PROJ_ROOT = manage.project_root()
@@ -9,6 +11,7 @@ CONFIG_INFO_XML = '%s/config/configs_info.xml' % PROJ_ROOT
 CONFIG_TAG = 'config_root'
 GIF_BANNER = 'gif_banner'
 COS_MEDIA_ROOT = 'cos_media_root'
+RESOURCE_ROOT = 'resource_root'
 LIST_TAG = 'list'
 
 
@@ -120,10 +123,17 @@ def get_gif_banner(dpins=None):
     return gif_banner_path.replace('\\', '/'), dpins
 
 
-# 获取gif_banner的图片路径.
+# 获取腾讯云cos的media根目录.
 @dom_pxy_ins()
 def cos_media_root(dpins=None):
     gif_banner_path = dpins.elem.value_by_tag(COS_MEDIA_ROOT)
+    return gif_banner_path.replace('\\', '/'), dpins
+
+
+# 获取工程内,static下的res目录(原media目录).
+@dom_pxy_ins()
+def resource_root(dpins=None):
+    gif_banner_path = PROJ_ROOT + dpins.elem.value_by_tag(RESOURCE_ROOT)
     return gif_banner_path.replace('\\', '/'), dpins
 
 

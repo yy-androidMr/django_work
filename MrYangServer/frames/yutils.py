@@ -3,12 +3,11 @@ import codecs
 import hashlib
 import locale
 import os
-import random
-import string
 import platform
-import subprocess
+import random
 import shutil
-import tempfile
+import string
+import subprocess
 
 from django.db import models
 
@@ -41,7 +40,6 @@ M_FTYPE_DOC = 3
 
 RESOURCE_ROOT_KEY='RESOURCE_ROOT_KEY'
 RESOURCE_DESC_KEY='RESOURCE_DESC_KEY'
-media_source = 'E:/media_source'
 static_root = 'F:/django_work/MrYangServer/static'
 
 banner_pic_path = '/pic/gif_bannder.png'
@@ -93,7 +91,7 @@ def print_download_prog(downloaded, bytelist, totalbyte):
     print('%.2f%%' % per)
 
 
-def sizeConvert(size):  # 单位换算
+def fileSizeConvert(size):  # 单位换算
     K, M, G = 1024, 1024 ** 2, 1024 ** 3
     if size >= G:
         return str(round(size / G, 1)) + 'GB'
@@ -183,9 +181,6 @@ def decompose_path(root, file, source_root, target_root, exten=None):
     return (rela_file_name, source_abs_path, target_abs_path, target_rela_path)
 
 
-def media_root():
-    return media_source
-
 
 def is_mac():
     sys_str = platform.system()
@@ -274,18 +269,10 @@ def to_dict(ins):
 
 
 # 视频的工具----------------------------------------------------
-INFO_FILE = 'info'
+# INFO_FILE = 'info'
 # 如果是切片视频.文件夹是这个后缀.
-M3U8_DIR_EXTEN = '.ym3'
-M3U8_NAME = 'out.m3u8'
-MOVIE_INFO_NAME = 'name'
-
-
-def is_m3u8_dir(path):
-    if M3U8_DIR_EXTEN in path.lower():
-        return True
-    return False
-
+# M3U8_DIR_EXTEN = '.ym3'
+# M3U8_NAME = 'out.m3u8'
 
 # end----------------------------------------------------------
 
