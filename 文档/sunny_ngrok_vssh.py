@@ -28,7 +28,7 @@ if not python_version:
     sys.setdefaultencoding('utf8')
 
 options = {
-    'clientid':'1a96acf6b58fc3db',
+    'clientid':'',
 }
 
 def usage():
@@ -58,7 +58,7 @@ for option, value in opts:
         options['clientid'] = value
 
 if options['clientid'] == '':
-    input_clientid='1a96acf6b58fc3db'
+    input_clientid='143136167215'
     # if not python_version:
     #     input_clientid = raw_input('请输入clientid：')
     # else:
