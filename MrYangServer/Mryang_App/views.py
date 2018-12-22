@@ -13,6 +13,7 @@ from Mryang_App import yquery, forms
 from frames import yutils
 
 # 显示权限
+from frames.logger import logger
 from frames.xml import XMLBase
 
 COMMON_SHOW = 4
@@ -174,21 +175,9 @@ def play_video(request):
     return render(request, 'movie/video_js.html')
 
 
-def ck_player(request):
-    # if param1:
-    #     return render(request, 'player_2/' + param1)
-    # else:
-
-    return render(request, 'movie/ck/ck_new.html')
-
-
-#
-# def uploadTest(request):
-#     return render(request, 'player_2/video.html', {'medias': Movie.objects.get(showname='abc')})
-
-
 def move_index(request):
     json = yquery.dir_2json(yutils.M_FTYPE_MOIVE)
+    json = '[{"name":"\u641e\u7b11\u7684\u56fe\u7247","isdir":"False","path":"67f82897c9c163efde673763f4a4befc.ym3/out.m3u8"}]'
     return render(request, 'movie/index.html', {'json': json})
 
 
@@ -248,15 +237,15 @@ def m_second_gallery(request, dir_id):
             return HttpResponse(json, 'content-type=application/x-www-form-urlencoded')
             # render(request, 'gallery/secondLevel/index.html', {'json': json, 'pre_path': '/pic/middle'})
         except:
-            print('非法参数:' + dir_id)
+            logger.error('非法参数:', dir_id)
     else:
-        print('[m_second_gallery]:', dir_id, type(dir_id))
+        logger.error('[m_second_gallery]:', dir_id)
         try:
             c_id = int(dir_id)
             json = yquery.pic_level2_2json(c_id, 1)
             return render(request, 'gallery/secondLevel/index.html', {'json': json, 'pre_path': '/pic/middle'})
         except:
-            print('[m_second_gallery]没有该id的照片:' + dir_id)
+            logger.error('[m_second_gallery]没有该id的照片:', dir_id)
 
 
 def download_test(request):

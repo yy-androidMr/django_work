@@ -1,12 +1,17 @@
 # coding:utf-8
+import codecs
 import hashlib
+import locale
 import os
-import random
-import string
 import platform
-import subprocess
+import random
 import shutil
+import string
+import subprocess
+
 from django.db import models
+
+from frames import TmpUtil
 
 
 def random_int():
@@ -28,6 +33,20 @@ S_NAME = 'user_name'
 M_FTYPE_MOIVE = 1
 M_FTYPE_PIC = 2
 M_FTYPE_DOC = 3
+# end
+
+
+# 路径操作
+
+RESOURCE_ROOT_KEY='RESOURCE_ROOT_KEY'
+RESOURCE_DESC_KEY='RESOURCE_DESC_KEY'
+static_root = 'F:/django_work/MrYangServer/static'
+
+banner_pic_path = '/pic/gif_bannder.png'
+static_media_root = ''.join([static_root, '/media'])
+upload_root = 'upload'
+upload_album = ''.join([upload_root, '/album'])
+upload_video = ''.join([upload_root, '/video'])
 
 
 # end
@@ -72,7 +91,7 @@ def print_download_prog(downloaded, bytelist, totalbyte):
     print('%.2f%%' % per)
 
 
-def sizeConvert(size):  # 单位换算
+def fileSizeConvert(size):  # 单位换算
     K, M, G = 1024, 1024 ** 2, 1024 ** 3
     if size >= G:
         return str(round(size / G, 1)) + 'GB'
@@ -134,35 +153,9 @@ def file_exten(file):
     return os.path.splitext(file)[1]
 
 
-# 路径操作
-output_neighbor = False
-neighbor_meida_root1 = r'\\Desktop-089j9k4\media'
-
-media_source = 'E:/media_source'
-static_root = 'F:/django_work/MrYangServer/static'
-
-banner_pic_path = '/pic/gif_bannder.png'
-static_media_root = neighbor_meida_root1 if output_neighbor else ''.join([static_root, '/media'])
-upload_root = 'upload'
-upload_album = ''.join([upload_root, '/album'])
-upload_video = ''.join([upload_root, '/video'])
-
-
-def gif_banner_path():
-    source_abs_path = os.path.abspath('.')
-    print(source_abs_path)
-
-
-if __name__ == '__main__':
-    gif_banner_path()
-
-
 # 分解路径1.src的相对路径. 2.src的根目录. 3.目标的路径
 def decompose_path(root, file, source_root, target_root, exten=None):
     source_rela_path = os.path.join(root, file)
-    if not output_neighbor:
-        target_root = target_root.replace('\\', '/').replace('//', '/')
-
     # 需要返回几个值:
     # 1.去掉source_root的相对路径.
     rela_file_name = source_rela_path[len(source_root):].replace('\\', '/').replace('//', '/')
@@ -179,31 +172,14 @@ def decompose_path(root, file, source_root, target_root, exten=None):
     # if rename:
 
     # 4.新的绝对路径|替换后缀
-    if output_neighbor:
-        target_abs_path = target_root
-    else:
-        target_abs_path = '/'.join([os.path.abspath(target_root), rela_file_name])
-        target_abs_path = target_abs_path.replace('\\', '/').replace('//', '/')
+    target_abs_path = '/'.join([os.path.abspath(target_root), rela_file_name])
+    target_abs_path = target_abs_path.replace('\\', '/').replace('//', '/')
 
     # 5.新相对路径|替换后缀
     target_rela_path = ''.join([target_root, rela_file_name])
 
     return (rela_file_name, source_abs_path, target_abs_path, target_rela_path)
 
-
-# 5.所有路径标志符都换成/
-
-
-def transform_path(cd_count, middle, last=''):
-    if output_neighbor:
-        return ''.join([middle, last])
-    else:
-        return ''.join([cd_count, middle, last])
-
-
-# cd cout 往回倒多少个
-def media_root():
-    return media_source
 
 
 def is_mac():
@@ -292,26 +268,11 @@ def to_dict(ins):
         return ins.__dict__
 
 
-# class a:
-#     def __init__(self):
-#         self.b = 'a'
-#
-#
-# aa = a()
-# print(to_dict(aa))
 # 视频的工具----------------------------------------------------
-INFO_FILE = 'info'
+# INFO_FILE = 'info'
 # 如果是切片视频.文件夹是这个后缀.
-M3U8_DIR_EXTEN = '.ym3'
-M3U8_NAME = 'out.m3u8'
-MOVIE_INFO_NAME = 'name'
-
-
-def is_m3u8_dir(path):
-    if M3U8_DIR_EXTEN in path.lower():
-        return True
-    return False
-
+# M3U8_DIR_EXTEN = '.ym3'
+# M3U8_NAME = 'out.m3u8'
 
 # end----------------------------------------------------------
 
@@ -335,3 +296,16 @@ def process_cmd(cmd, call=None, done_call=None, param=None):
                 call(line)
 
 # end----------------------------------------------------------
+
+#输入记录缓存
+def input_path(key, intro):
+    path = TmpUtil.get(key)
+    while path is None or not os.path.exists(path):
+        path = input(intro)
+    TmpUtil.set(key, path)
+    return path
+#end-------------------------------------------
+
+#默认编码
+default_encode = codecs.lookup(locale.getpreferredencoding()).name
+#end-------

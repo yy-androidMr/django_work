@@ -1,16 +1,43 @@
 import os
 import pickle
 import shutil
+import sys
 
-from frames import yutils
+import time
 
-source_root = ''.join([yutils.media_source, '/movie/src'])
-target_root = ''.join([yutils.media_source, '/movie/desc'])
-net_static_root = ''.join([yutils.media_source, '/movie'])
-net_ts_root = ''.join([yutils.media_source, '/movie_ts'])
+sys.path.append('../../..')
+from frames import yutils, logger, DataBean
+from frames.xml import XMLMovie, XMLBase
+
+FFMPEG_KEY = 'FFMPEG_KEY'
+
+movie_config = XMLMovie.get_infos()
 
 
-def create_ffmpeg_bat():
+def DoneConvertCall(_, param):
+    logger.info('消耗时间:%d,命令:%s' % (param['time'], param['cmd']))
+    if (param['last']):
+        # 最后一个做操作
+        logger.info('执行转换完成!,开始切割视频')
+        CutVideo()
+
+
+def ConvertVideo():
+    bat_list = CreatePegCmd()
+    logger.info('准备转换:%s' % str(bat_list))
+    index = 0
+    if len(bat_list) > 0:
+        for bat in bat_list:
+            cur_time = int(time.time())
+            logger.info('开始时间:%d,转换命令:%s' % (cur_time, bat))
+            yutils.process_cmd(bat, done_call=DoneConvertCall,
+                               param={'cmd': bat, 'time': cur_time, 'last': (index + 1 == len(bat_list))})
+            index += 1
+    else:
+        CutVideo()
+
+
+def CreatePegCmd():
     bat_list = []
     for root, dirs, files in os.walk(source_root):
         for file in files:
@@ -18,7 +45,6 @@ def create_ffmpeg_bat():
                 continue
             (_, source_abs_path, target_abs_path, _) = yutils.decompose_path(
                 root, file, source_root, target_root, exten='.mp4')
-            peg = os.path.abspath('output/exe/ffmpeg')
             if os.path.exists(target_abs_path):
                 continue
             yutils.create_dirs(target_abs_path)
@@ -27,93 +53,64 @@ def create_ffmpeg_bat():
                 continue
             # '%s -i %s -d 900 %s'
 
-            bat_list.append('%s -i %s %s' % (peg, source_abs_path, target_abs_path))
+            bat_list.append('\"%s\" -i \"%s\" \"%s\"' % (ffmpeg_tools, source_abs_path, target_abs_path))
 
     return bat_list
 
 
-# 生成ffmpeg的bat文件,提供批量转换.
-def create_convert_bats():
-    bat_list = create_ffmpeg_bat()
-    dir = "output/"
-    yutils.create_dirs(dir)
-
-    for root, dirs, files in os.walk(source_root):
-        for file in files:
-            if '.bat' in file:
-                os.remove(file)
-    # shutil.del
-    index = 0
-    for bat_line in bat_list:
-        # mystr = os.popen("bat_line")
-        # break
-        file_ = ''.join([dir, str(index), '.sh' if yutils.is_mac() else '.bat'])
-        index += 1
-        with open(file_, 'w+') as f:
-            f.write(bat_line)
+def ItemInfo(file, last_path):
+    info = {}
+    info[XMLMovie.ITEM_TAGS.FILE] = file
+    info[XMLMovie.ITEM_TAGS.NAME] = yutils.file_name(os.path.basename(file))
+    info[XMLMovie.ITEM_TAGS.SIZE] = str(os.path.getsize(file))
+    info[XMLMovie.ITEM_TAGS.SHOW_SIZE] = yutils.fileSizeConvert(int(info[XMLMovie.ITEM_TAGS.SIZE]))
+    from moviepy.editor import VideoFileClip
+    info[XMLMovie.ITEM_TAGS.DURATION] = str(VideoFileClip(file).duration)
+    info[XMLMovie.ITEM_TAGS.SHOW_DURATION] = yutils.time_convert(float(info[XMLMovie.ITEM_TAGS.DURATION]))
+    info[XMLMovie.ITEM_TAGS.OUT_NAME] = last_path
+    return info
 
 
-# 第二需求: 视频切片
-def create_ts(root, file, last_path):
-    (_, _, _, target_rela_path_ts) = yutils.decompose_path(root, file, target_root, net_ts_root)
-    ts_dir = os.path.dirname(target_rela_path_ts) + last_path
-
-    return ts_dir
-
-
-def cut_call(str):
-    pass
-
-
-def cut_end(_, param):
-    print('end')
-
-
-def cut_video():
+def CutVideo():
     # 假设已经读取了
     for root, dirs, files in os.walk(target_root):
         for file in files:
             if '.mp4' in file.lower():
                 (_, source_abs_path, target_abs_path, target_rela_path) = yutils.decompose_path(root, file,
                                                                                                 target_root,
-                                                                                                net_static_root)
-                # source_rela_path = os.path.join(root, file)
-                last_path = '/' + yutils.md5_of_str(os.path.basename(target_abs_path)) + yutils.M3U8_DIR_EXTEN
-                target_dir = os.path.dirname(target_rela_path) + last_path
+                                                                                                out_root)
+                # '48ac8a3d45a37c9f636955187f11e445.ym3'
+                last_path = yutils.md5_of_str(os.path.basename(target_abs_path)) + movie_config[
+                    XMLMovie.TAGS.DIR_EXTEN]
+                # 'G:/cache/work_cache/resource_desc_root\\movie\\out\\48ac8a3d45a37c9f636955187f11e445.ym3'
+                target_dir = os.path.join(os.path.dirname(target_rela_path), last_path)
 
-                ts_dir = create_ts(root, file, last_path)
-                print(target_dir)
-                # if os.path.exists(target_dir):
-                if False:
+                m3u8_file = os.path.join(target_dir, movie_config[XMLMovie.TAGS.NAME])
+                item_info_list.append(ItemInfo(source_abs_path, last_path))
+                if os.path.exists(target_dir):
+                    # if False:
                     # 不做处理.重复切片
-                    print('cut exists %s %s' % (source_abs_path, target_dir))
+                    logger.info('cut exists %s %s' % (source_abs_path, target_dir))
                     pass
                 else:
-                    yutils.create_dirs(target_dir, True)
-                    yutils.create_dirs(ts_dir, True, True)
-                    info = {}  # map形式存储
-                    info[yutils.MOVIE_INFO_NAME] = yutils.file_name(os.path.basename(file))
-                    with open(''.join([target_dir, '/info']), 'wb') as f:
-                        pickle.dump(info, f)  # 只能以二进制写入
-
-                    peg = os.path.abspath('output/exe/ffmpeg')
-
-                    cmd = peg + ' -i ' + source_abs_path + ' -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_list ' + target_dir + '/' + yutils.M3U8_NAME + ' -segment_time 5 ' + ts_dir + '/%03d.ts'
-                    print(cmd)
-                    yutils.process_cmd(cmd, done_call=cut_end)
-                    print('done:' + target_dir)
+                    yutils.create_dirs(m3u8_file)
+                    cmd = '\"' + ffmpeg_tools + '\" -i \"' + source_abs_path + '\" -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_list \"' + m3u8_file + '\" -segment_time 5 \"' + target_dir + '/%04d.ts\"'
+                    yutils.process_cmd(cmd)
+                    logger.info('切割完成:' + target_dir)
 
 
 if __name__ == '__main__':
-    # pass
-    # cut_video()
-    create_convert_bats()
+    dir_root = movie_config[XMLMovie.TAGS.DIR_ROOT]
+    source_root = yutils.input_path(yutils.RESOURCE_ROOT_KEY,
+                                    '请指定资源根目录(例如:E:/resource_root),目录下有个%s文件夹,并且%s下就是图片:\n' % (dir_root, dir_root))
+    source_root = os.path.join(source_root, dir_root)
+    target_root = yutils.input_path(yutils.RESOURCE_DESC_KEY,
+                                    '请指定资源输出目录(例如:E:/resource_desc_root),目录下会创建%s/convert和%s/ts):\n' % (
+                                        dir_root, dir_root))
+    target_root = os.path.join(target_root, dir_root)
+    ffmpeg_tools = yutils.input_path(FFMPEG_KEY, '输入对应的ffmpeg文件位置(参照link_gitProj_files.txt下载对应的文件):\n')
 
-    # mystr = os.popen("ping www.baidu.com")  # popen与system可以执行指令,popen可以接受返回对象
-    # mystr = mystr.read()  # 读取输出
-    #
-    # print("hello", mystr)
-
-    # sub = os.popen("ping www.baidu.com", shell=True, stdout=subprocess.PIPE)
-    # sub.wait()
-    # print(sub.read())
+    out_root = XMLMovie.get_out_root()
+    item_info_list = []
+    ConvertVideo()
+    XMLMovie.create_movie_item_info_xml(item_info_list)

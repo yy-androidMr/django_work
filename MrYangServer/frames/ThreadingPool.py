@@ -13,3 +13,5 @@ class ThreadingPool:
         for t in self.threads:
             t.setDaemon(True)
             t.start()
+        for t in self.threads:
+            t.join()

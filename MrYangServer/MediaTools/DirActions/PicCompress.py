@@ -6,18 +6,19 @@ import piexif
 import shutil
 from PIL import Image, ImageFile
 
-from frames import yutils
-from frames.xml import XMLGallery, XMLBase
+from frames import yutils, logger
+from frames.xml import XMLBase, XMLGallery
 
 MAX_PIC_SIZE = 3000
-src = ''.join([yutils.media_source, '/pic/src'])
-middle = ''.join([yutils.static_media_root, '/pic/middle'])
-thum = ''.join([yutils.static_media_root, '/pic/thum'])
-(gif_pic,_) = XMLBase.get_gif_banner()
+PicCompress_src = 'PicCompress_src'
+PicCompress_desc = 'PicCompress_desc'
+DIR_ROOT = 'pic'
+
+(gif_pic, _) = XMLBase.get_gif_banner()
 
 
 def middle_out_path(source_path):
-    exten = os.path.splitext(source_path)[1]
+    exten = yutils.file_exten(source_path)
     simple_path = source_path[len(src):]
     dir = yutils.md5_of_str(os.path.dirname(simple_path))
     desc_path = middle + '/' + dir
@@ -27,6 +28,9 @@ def middle_out_path(source_path):
 
 #  从src目录压缩一下.到desc
 def src2pc(delete_exist):
+    if not os.path.exists(src):
+        logger.info('src2pc:src not exist!')
+        return
     ImageFile.LOAD_TRUNCATED_IMAGES = True
     middle_area = MAX_PIC_SIZE * MAX_PIC_SIZE
     # cmd = 'for i in ' + src + '/*.jpg;do jpegoptim -m50 -d ' + desc + ' -p "$i";done'
@@ -48,9 +52,6 @@ def src2pc(delete_exist):
             value = img_link_dic.get(dir, None)
             if not value:
                 img_link_dic[dir] = root
-            # exten = os.path.splitext(source_path)[1]
-            # desc_path = middle + '/' + yutils.md5_of_str(os.path.dirname(simple_path))
-            # rename_path = desc_path + '/' + yutils.get_md5(source_path) + exten
             if (not delete_exist) and os.path.exists(rename_path):
                 print('文件已存在!' + rename_path)
                 continue
@@ -143,23 +144,6 @@ def middle2thum(delete_exist):
             print(desc_path)
 
 
-# 移动info文件,这个操作要修改掉.之后改成xml
-def move_info():
-    for root, dirs, files in os.walk(src):
-        for file in files:
-            if 'info' in file:
-                src_path = os.path.join(root, file).replace('\\', '/')
-                # if not os.path.exists(src_path):
-                #     continue
-                simple_dir = src_path[len(src):]
-                desc_path = thum + '/' + yutils.md5_of_str(os.path.dirname(simple_dir)) + '/info'
-                print(':'.join([src_path, desc_path, os.path.dirname(simple_dir)]))
-
-                shutil.copy(src_path, desc_path)
-
-                # print(source_path)
-
-
 def delete_thum():
     files = os.listdir(thum)
     for file in files:
@@ -172,7 +156,7 @@ def delete_thum():
 # 删除多余的middle 和thum
 def delete_not_exist():
     if not os.path.exists(middle):
-        print('middle not exist!')
+        logger.info('middle not exist!')
         return
 
     print('[delete_not_exist] begin')
@@ -197,16 +181,20 @@ def delete_not_exist():
             else:
                 delete_list.append(source_path)
                 # print(source_path)
-    for path in delete_list:
-        os.remove(path)
-    yutils.delete_null_dir(middle)
-    delete_thum()
     print('[delete_not_exist] end')
 
 
 if __name__ == '__main__':
+    src = yutils.input_path(yutils.RESOURCE_ROOT_KEY,
+                            '请指定资源根目录(例如:E:/resource_root),目录下有个%s文件夹,并且%s下就是图片:\n' % (DIR_ROOT, DIR_ROOT))
+    src = os.path.join(src, DIR_ROOT)
+    desc = yutils.input_path(yutils.RESOURCE_DESC_KEY,
+                             '请指定资源输出目录(例如:E:/resource_desc_root),目录下会创建%s/middle和%s/thum):\n' % (DIR_ROOT, DIR_ROOT))
+    desc = os.path.join(desc, DIR_ROOT)
+    logger.info('初始化成功src:', src, ',desc:', desc)
+    middle = os.path.join(desc, 'middle')
+    thum = os.path.join(desc, 'thum')
     delete_not_exist()
     link_dic = src2pc(False)
     middle2thum(False)
-    # move_info()
     XMLGallery.append_ifnot_exist(link_dic)

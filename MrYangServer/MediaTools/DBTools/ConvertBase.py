@@ -3,7 +3,7 @@ import os
 
 import django
 
-from frames import yutils
+from frames import yutils, TmpUtil
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MrYangServer.settings')
 django.setup()
@@ -12,7 +12,7 @@ from Mryang_App.models import Dir
 
 class ConvertBase:
     def __init__(self):
-        self.media_root = yutils.static_media_root
+        self.res_desc_root = TmpUtil.get(yutils.RESOURCE_DESC_KEY)
 
     def walk_call(self, abs_path, rel_path, parent_dir, name, is_dir):
         pass
@@ -28,7 +28,7 @@ class ConvertBase:
         try:
             parent = Dir.objects.get(abs_path=parent_abs_path)
         except Exception as e:
-            print('error:%s:is not found :%s' % (parent_abs_path, e))
+            print('错误:%s:is not found :%s' % (parent_abs_path, e))
             pass
 
         self.walk_call(self_abs_path, rel_path, parent, name, is_dir)

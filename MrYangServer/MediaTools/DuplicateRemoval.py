@@ -24,5 +24,5 @@ def delfile(path):
     print('done')
 
 
-delfile(yutils.media_root())
+# delfile(yutils.media_root())
 # delfile('F:\django_work\MrYangServer\media_source\pic\src\朋友')

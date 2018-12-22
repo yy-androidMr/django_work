@@ -1,80 +1,52 @@
-<!DOCTYPE html>
+{% load staticfiles %}
+<!doctype html>
 <html>
-
 <head>
-    <meta charset="UTF-8">
-    <title>ckplayer</title>
-    <script type="text/javascript" src="/static/projects/gallery/video_player/js/video.js" charset="UTF-8"></script>
-    <script type="text/javascript" src="/static/projects/gallery/video_player/js/videojs-contrib-hls.min.js"
-            charset="UTF-8"></script>
-    <link rel="stylesheet" href="/static/projects/gallery/video_player/css/video-js.min.css">
-    <script src="/static/projects/gallery/mid/jquery-1.11.3.min.js"></script>
-
-</head>
-<body>
-<video id="video_control" class="video-js vjs-default-skin" style="object-fit:fill"
-       autoplay
-       controls>
-    {#    <source#}
-    {#            id="video_source"#}
-    {#            src="/static/media/movie/mp4/82a6af46b166451642dc2b6314407465.ym3/out.m3u8"#}
-    {#            type="application/x-mpegURL">#}
-</video>
-
-<a onclick="requestFullScreen()">sadfsadf</a>
-{#<div id="show"></div>#}
-<ul></ul>
-</body>
-<script>
-
-    var url = "/static/media/movie" + sessionStorage.getItem('url');
-
-    function requestFullScreen() {
-        var de = document.documentElement;
-        if (de.requestFullscreen) {
-            de.requestFullscreen();
-        } else if (de.mozRequestFullScreen) {
-            de.mozRequestFullScreen();
-        } else if (de.webkitRequestFullScreen) {
-            de.webkitRequestFullScreen();
+    <meta charset="utf-8">
+    <title>播放器</title>
+    <link href="/static/css/video-js.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #191919
         }
-    }
 
+        .m {
+            width: 960px;
+            height: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 100px;
+        }
+    </style>
+</head>
 
-    var source = document.createElement('source');
-    source.setAttribute("type", "application/x-mpegURL");
-    source.setAttribute("src", url);
-    document.getElementById("video_control").appendChild(source);
-    var player = videojs('video_control', {}, function () {
-        this.on('ended', function () {
-            console.log('结束播放');
+<body>
+<div class="m">
+    <script src="{% static '/js/video_js/video.min.js' %}"></script>
+    <script src="{% static '/js/video_js/videojs-contrib-hls.js' %}"></script>
+    <video id="my-video" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" width="960"
+           height="400"
+           poster="m.jpg" data-setup="{}">
+        <track kind="subtitles" src="/static/media/movie/3.vtt" srclang="zh-CN" label="简体中文"/>
+        <p class="vjs-no-js"> To view this video please enable JavaScript, and consider upgrading to a web browser that
+            <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+    </video>
+
+    <script src="http://vjs.zencdn.net/5.19/lang/zh-CN.js"></script>
+    <script type="text/javascript">
+        var myPlayer = videojs('my-video');
+        var url = "/static/media/movie" + sessionStorage.getItem('url');
+        var src = '/static/res/movie/sss/37fb865fc3041f2388bd31c8e45c4432.ym3/out.m3u8';
+        videojs("my-video").ready(function () {
+            var myPlayer = this;
+            myPlayer.src({
+                src: src,
+                type: "application/x-mpegURL"
+            });
+            myPlayer.play();
         });
-        this.on('firstplay', function () {
-            console.log('第一次播放');
-            {#            requestFullScreen();#}
-            player.requestFullscreen();
-        });
-        this.on('play', function () {
-            console.log('播放');
-        });
-    });
 
-    {#    var sourceDom = "<source src=\"" + url + "\"  type=\"application/x-mpegURL\">";#}
-    {#    document.getElementById("video_control").innerHTML = sourceDom;#}
-    {#    $("#video_control source").prop("src", url);#}
-    {#    var video = $("#video_control");#}
-    {#    video.append(sourceDom);#}
-    {#    $("#video_control source").prop("src", url);#}
-    {#    document.getElementById("video_source").src = url;#}
-    {#    video.show();#}
-    {#    player.load();#}
-{#    player.play();#}
-
-    {#    setTimeout("requestFullScreen()", 5000);#}
-    {#    setTimeout(requestFullScreen(), 3000);#}
-    {#    player.requestFullscreen();#}
-
-    {#/static/media/movie/电视剧1/a9203849b98945c5f56ddaad6d85fab9.ym3/out.m3u8#}
-</script>
-
+    </script>
+</div>
+</body>
 </html>

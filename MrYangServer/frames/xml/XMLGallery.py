@@ -4,6 +4,7 @@
 import os
 from xml.dom import minidom
 from frames import yutils
+from frames.logger import logger
 
 from frames.xml import XMLBase
 
@@ -30,6 +31,7 @@ class TAGS:
     LEVEL = 'level'
     P1 = 'param1'
     P2 = 'param2'
+    VALUE='value'
 
 
 def attr_complition(g_item, dir_name='', link=''):
@@ -55,6 +57,9 @@ def create_gallery_xml(path):
 
 
 def append_ifnot_exist(link_dic):
+    if link_dic is None:
+        logger.info('append_ifnot_exist:加入配置失败! link_dic')
+        return
     path, _ = XMLBase.cfg_list_path(CONFIG_NAME)
     # 这里需要判断文件是否存在
     if not os.path.exists(path):
@@ -85,14 +90,24 @@ def get_infos():
     xml_infos = {}
     for node in node_list:
         dir_name = dpins.elem.attr_value(node, TAGS.DIR_NAME)
-        info = (dpins.elem.attr_value(node, TAGS.NAME),
-                dpins.elem.node_value(node),
-                dpins.elem.attr_value(node, TAGS.TIME),
-                dpins.elem.attr_value(node, TAGS.THUM),
-                dpins.elem.attr_value(node, TAGS.LEVEL),
-                dpins.elem.attr_value(node, TAGS.P1),
-                dpins.elem.attr_value(node, TAGS.P2)
-                )
+        info = {}
+        info[TAGS.NAME] = dpins.elem.attr_value(node, TAGS.NAME)
+        info[TAGS.VALUE] = dpins.elem.node_value(node)
+        info[TAGS.TIME] = dpins.elem.attr_value(node, TAGS.TIME)
+
+        info[TAGS.THUM] = dpins.elem.attr_value(node, TAGS.THUM)
+        info[TAGS.LEVEL] = dpins.elem.attr_value(node, TAGS.LEVEL)
+        info[TAGS.P1] = dpins.elem.attr_value(node, TAGS.P1)
+        info[TAGS.P2] = dpins.elem.attr_value(node, TAGS.P2)
+
+        # info = (dpins.elem.attr_value(node, TAGS.NAME),
+        #         dpins.elem.node_value(node),
+        #         dpins.elem.attr_value(node, TAGS.TIME),
+        #         dpins.elem.attr_value(node, TAGS.THUM),
+        #         dpins.elem.attr_value(node, TAGS.LEVEL),
+        #         dpins.elem.attr_value(node, TAGS.P1),
+        #         dpins.elem.attr_value(node, TAGS.P2)
+        #         )
         xml_infos[dir_name] = info
 
     return xml_infos
