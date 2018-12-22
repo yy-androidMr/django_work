@@ -220,7 +220,7 @@ def md5_of_str(src):
 
 
 def is_movie(path):
-    if not any(str_ in path.lower() for str_ in ('.mp4', '.mkv', '.rmvb', '.avi')):
+    if not any(str_ in path.lower() for str_ in ('.mp4', '.mkv', '.rmvb', '.avi','.rm','.mov','.wmv','.flv')):
         return False
     return True
 
