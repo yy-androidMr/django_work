@@ -144,6 +144,11 @@ def cfg_list_path(c_name, dpins=None):
     c_p = config_root + dpins.elem.value_by_tag(c_name)
     return c_p.replace('\\', '/'), dpins
 
+#<resource_root>/static/res</resource_root>
+@dom_pxy_ins()
+def resource_abs_root(dpins=None):
+    return dpins.elem.value_by_tag(RESOURCE_ROOT)
+
 
 def add_attr(node, k, v='', update=False):
     attvalue = node.getAttribute(k)

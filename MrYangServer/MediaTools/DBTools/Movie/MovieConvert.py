@@ -1,6 +1,7 @@
 import glob
 import os
 import pickle
+import re
 
 import django
 
@@ -63,13 +64,19 @@ class MovieConvert(ConvertBase):
             pass
         d_model.save()
 
+
 # 插入数据库
 if __name__ == '__main__':
     # info_dict = XMLMovie.item_info_dict()
     # MovieConvert().go()
+    # res_root, _ = XMLBase.resource_root()
+    # listglob = glob.glob(r'G:\pyWorkspace\django_work\MrYangServer\static\res\movie\*\*.ym3')
+
     res_root, _ = XMLBase.resource_root()
-    listglob = glob.glob(r'G:\pyWorkspace\django_work\MrYangServer\static\res\movie\*\*.ym3')
-    print(listglob)
+    import MediaTools
+
+    MediaTools.DBTools.ConvertBase.path_result(yutils.M_FTYPE_MOIVE, res_root, movie_config[XMLMovie.TAGS.DIR_ROOT],
+                                               parse_file=False)
 
 # with open(r'G:\pyWorkspace\django_work\MrYangServer\static\media\movie\d5e3f566488ffd2c59d394808ab9325b\info',
 #           'rb') as f:

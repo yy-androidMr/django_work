@@ -7,7 +7,7 @@ MrYangServer/venv/
 
 !MrYangServer/static/media/pic/thum/1.txt
 !MrYangServer/static/media/pic/middle/1.txt
-MrYangServer/static/media/
+MrYangServer/static/res/
 *.mp4
 
 pyHelper/Plugins/
