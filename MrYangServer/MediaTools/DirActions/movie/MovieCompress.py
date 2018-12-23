@@ -49,6 +49,7 @@ def CreatePegCmd():
                 continue
             yutils.create_dirs(target_abs_path)
             if '.mp4' in file:
+                logger.info('begin copy \"%s\"' % file)
                 shutil.copy(source_abs_path, target_abs_path)
                 continue
             # '%s -i %s -d 900 %s'
