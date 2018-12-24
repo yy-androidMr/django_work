@@ -68,7 +68,6 @@ class Dir(models.Model):
     #     # print([f.name for f in self._meta.fields])
     #     return json.dumps(dict([(attr, getattr(self, attr)) for attr in [f.name for f in self._meta.fields]]))
 
-
 class GalleryInfo(models.Model):
     folder_key = models.ForeignKey(Dir, related_name='dir', on_delete=models.CASCADE)
     # 相册名字
@@ -89,6 +88,30 @@ class GalleryInfo(models.Model):
         return 'id:%s,name:%s,rel_path:%s,intro:%s,time:%s,thum:%s,level:%s,param1:%s,param2:%s' % (
             self.folder_key.c_id, self.name, self.folder_key.rel_path, self.intro, self.time, self.thum,
             self.level,
+            self.param1, self.param2)
+
+
+
+class MovieInfo(models.Model):
+    folder_key = models.ForeignKey(Dir, related_name='dir', on_delete=models.CASCADE)
+    # 影片
+    name = models.CharField(max_length=100, default='')
+    # 影片简介,暂时不需要
+    intro = models.CharField(max_length=100, default='')
+    # 影片时长:秒
+    duration = models.CharField(max_length=100, default='')
+    # 影片大小
+    size = models.CharField(max_length=100, default='')
+    # 影片尺寸
+    source_size = models.IntegerField(default=0)
+    # 其他预留
+    param1 = models.CharField(max_length=100, default='')
+    param2 = models.CharField(max_length=100, default='')
+
+    def __str__(self):
+        return 'id:%s,name:%s,rel_path:%s,intro:%s,duration:%s,size:%s,source_size:%s,param1:%s,param2:%s' % (
+            self.folder_key.c_id, self.name, self.folder_key.rel_path, self.intro, self.duration, self.size,
+            self.source_size,
             self.param1, self.param2)
 
 

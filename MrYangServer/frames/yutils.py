@@ -9,6 +9,7 @@ import shutil
 import string
 import subprocess
 
+import imageio
 from django.db import models
 
 from frames import TmpUtil
@@ -38,8 +39,8 @@ M_FTYPE_DOC = 3
 
 # 路径操作
 
-RESOURCE_ROOT_KEY='RESOURCE_ROOT_KEY'
-RESOURCE_DESC_KEY='RESOURCE_DESC_KEY'
+RESOURCE_ROOT_KEY = 'RESOURCE_ROOT_KEY'
+RESOURCE_DESC_KEY = 'RESOURCE_DESC_KEY'
 static_root = 'F:/django_work/MrYangServer/static'
 
 banner_pic_path = '/pic/gif_bannder.png'
@@ -108,12 +109,12 @@ def time_convert(size):  # 单位换算
     if size < M:
         return str(size) + u'秒'
     if size < H:
-        return u'%s分钟%s秒' % (int(size / M), int(size % M))
+        return u'%s分%s秒' % (int(size / M), int(size % M))
     else:
         hour = int(size / H)
         mine = int(size % H / M)
         second = int(size % H % M)
-        tim_srt = u'%s小时%s分钟%s秒' % (hour, mine, second)
+        tim_srt = u'%s时%s分%s秒' % (hour, mine, second)
         return tim_srt
 
 
@@ -143,45 +144,6 @@ def delete_null_dir(dirr):
         print('移除空目录: ', dirr)
 
 
-# 文件名
-def file_name(file):
-    return os.path.splitext(file)[0]
-
-
-# 拓展名.
-def file_exten(file):
-    return os.path.splitext(file)[1]
-
-
-# 分解路径1.src的相对路径. 2.src的根目录. 3.目标的路径
-def decompose_path(root, file, source_root, target_root, exten=None):
-    source_rela_path = os.path.join(root, file)
-    # 需要返回几个值:
-    # 1.去掉source_root的相对路径.
-    rela_file_name = source_rela_path[len(source_root):].replace('\\', '/').replace('//', '/')
-
-    # 2.老的绝对路径
-    source_abs_path = os.path.abspath(source_rela_path)
-    source_abs_path = source_abs_path.replace('\\', '/').replace('//', '/')
-
-    # 3.替换后缀
-    if exten:
-        rela_file_name = ''.join([os.path.splitext(rela_file_name)[0], exten])
-
-    # 3.5改名 暂时不需要.
-    # if rename:
-
-    # 4.新的绝对路径|替换后缀
-    target_abs_path = '/'.join([os.path.abspath(target_root), rela_file_name])
-    target_abs_path = target_abs_path.replace('\\', '/').replace('//', '/')
-
-    # 5.新相对路径|替换后缀
-    target_rela_path = ''.join([target_root, rela_file_name])
-
-    return (rela_file_name, source_abs_path, target_abs_path, target_rela_path)
-
-
-
 def is_mac():
     sys_str = platform.system()
     if (sys_str == "Windows"):
@@ -196,7 +158,7 @@ def md5_of_str(src):
 
 
 def is_movie(path):
-    if not any(str_ in path.lower() for str_ in ('.mp4', '.mkv', '.rmvb', '.avi','.rm','.mov','.wmv','.flv')):
+    if not any(str_ in path.lower() for str_ in ('.mp4', '.mkv', '.rmvb', '.avi', '.rm', '.mov', '.wmv', '.flv')):
         return False
     return True
 
@@ -273,6 +235,12 @@ def to_dict(ins):
 # 如果是切片视频.文件夹是这个后缀.
 # M3U8_DIR_EXTEN = '.ym3'
 # M3U8_NAME = 'out.m3u8'
+def video_info(src):
+    vid = imageio.get_reader(src)
+    # {'plugin': 'ffmpeg', 'nframes': 3460, 'ffmpeg_version': '3.2.4 built with gcc 6.3.0 (GCC)', 'fps': 15.0,
+    #  'source_size': (1280, 720), 'size': (1280, 720), 'duration': 230.67000000000002}
+    return vid.get_meta_data()
+
 
 # end----------------------------------------------------------
 
@@ -295,17 +263,20 @@ def process_cmd(cmd, call=None, done_call=None, param=None):
             if call is not None:
                 call(line)
 
+
 # end----------------------------------------------------------
 
-#输入记录缓存
+# 输入记录缓存
 def input_path(key, intro):
     path = TmpUtil.get(key)
     while path is None or not os.path.exists(path):
         path = input(intro)
     TmpUtil.set(key, path)
-    return path
-#end-------------------------------------------
+    return path.replace('\\', '/')
 
-#默认编码
+
+# end-------------------------------------------
+
+# 默认编码
 default_encode = codecs.lookup(locale.getpreferredencoding()).name
-#end-------
+# end-------

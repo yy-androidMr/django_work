@@ -6,7 +6,7 @@ import sys
 import time
 
 sys.path.append('../../..')
-from frames import yutils, logger, DataBean
+from frames import yutils, logger, ypath, DataBean
 from frames.xml import XMLMovie, XMLBase
 
 FFMPEG_KEY = 'FFMPEG_KEY'
@@ -43,18 +43,21 @@ def CreatePegCmd():
         for file in files:
             if not yutils.is_movie(file):
                 continue
-            (_, source_abs_path, target_abs_path, _) = yutils.decompose_path(
-                root, file, source_root, target_root, exten='.mp4')
-            if os.path.exists(target_abs_path):
+                # src_path = join(src_file_root, src_file_name)
+            src_path = ypath.join(root, file)
+
+            (_, target) = ypath.decompose_path(
+                src_path, source_root, target_root, exten='.mp4')
+            if os.path.exists(target):
                 continue
-            yutils.create_dirs(target_abs_path)
+            yutils.create_dirs(target)
             if '.mp4' in file:
                 logger.info('begin copy \"%s\"' % file)
-                shutil.copy(source_abs_path, target_abs_path)
+                shutil.copy(src_path, target)
                 continue
             # '%s -i %s -d 900 %s'
 
-            bat_list.append('\"%s\" -i \"%s\" \"%s\"' % (ffmpeg_tools, source_abs_path, target_abs_path))
+            bat_list.append('\"%s\" -i \"%s\" \"%s\"' % (ffmpeg_tools, src_path, target))
 
     return bat_list
 
@@ -62,13 +65,17 @@ def CreatePegCmd():
 def ItemInfo(file, last_path):
     info = {}
     info[XMLMovie.ITEM_TAGS.FILE] = file
-    info[XMLMovie.ITEM_TAGS.NAME] = yutils.file_name(os.path.basename(file))
+    info[XMLMovie.ITEM_TAGS.NAME] = ypath.file_name(file)
     info[XMLMovie.ITEM_TAGS.SIZE] = str(os.path.getsize(file))
     info[XMLMovie.ITEM_TAGS.SHOW_SIZE] = yutils.fileSizeConvert(int(info[XMLMovie.ITEM_TAGS.SIZE]))
-    from moviepy.editor import VideoFileClip
-    info[XMLMovie.ITEM_TAGS.DURATION] = str(VideoFileClip(file).duration)
-    info[XMLMovie.ITEM_TAGS.SHOW_DURATION] = yutils.time_convert(float(info[XMLMovie.ITEM_TAGS.DURATION]))
     info[XMLMovie.ITEM_TAGS.OUT_NAME] = last_path
+
+    # 读取视频信息.
+    video_info = yutils.video_info(file)
+    info[XMLMovie.ITEM_TAGS.PIXEL] = str(video_info[XMLMovie.ITEM_TAGS.PIXEL])
+    info[XMLMovie.ITEM_TAGS.FPS] = str(round(video_info[XMLMovie.ITEM_TAGS.FPS]))
+    info[XMLMovie.ITEM_TAGS.DURATION] = str(int(video_info[XMLMovie.ITEM_TAGS.DURATION]))
+    info[XMLMovie.ITEM_TAGS.SHOW_DURATION] = yutils.time_convert(int(info[XMLMovie.ITEM_TAGS.DURATION]))
     return info
 
 
@@ -77,38 +84,37 @@ def CutVideo():
     for root, dirs, files in os.walk(target_root):
         for file in files:
             if '.mp4' in file.lower():
-                (_, source_abs_path, target_abs_path, target_rela_path) = yutils.decompose_path(root, file,
-                                                                                                target_root,
-                                                                                                out_root)
-                # '48ac8a3d45a37c9f636955187f11e445.ym3'
-                last_path = yutils.md5_of_str(os.path.basename(target_abs_path)) + movie_config[
-                    XMLMovie.TAGS.DIR_EXTEN]
-                # 'G:/cache/work_cache/resource_desc_root\\movie\\out\\48ac8a3d45a37c9f636955187f11e445.ym3'
-                target_dir = os.path.join(os.path.dirname(target_rela_path), last_path)
+                # 获取源文件路径
+                src_path = ypath.join(root, file)
+                # 拼写输出文件名
+                rename = yutils.md5_of_str(os.path.basename(src_path)) + movie_config[XMLMovie.TAGS.DIR_EXTEN]
+                # 获取输出文件路径
+                (rela_file_name, target_path) = ypath.decompose_path(src_path, target_root, out_root, rename=rename)
 
-                m3u8_file = os.path.join(target_dir, movie_config[XMLMovie.TAGS.NAME])
-                item_info_list.append(ItemInfo(source_abs_path, last_path))
-                if os.path.exists(target_dir):
+                # 添加xml信息.
+                item_info_list.append(ItemInfo(src_path, rela_file_name))
+                if os.path.exists(target_path):
                     # if False:
                     # 不做处理.重复切片
-                    logger.info('cut exists %s %s' % (source_abs_path, target_dir))
+                    logger.info('已存在: %s %s' % (src_path, target_path))
                     pass
                 else:
+                    m3u8_file = ypath.join(target_path, movie_config[XMLMovie.TAGS.NAME])
                     yutils.create_dirs(m3u8_file)
-                    cmd = '\"' + ffmpeg_tools + '\" -i \"' + source_abs_path + '\" -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_list \"' + m3u8_file + '\" -segment_time 5 \"' + target_dir + '/%04d.ts\"'
+                    cmd = '\"' + ffmpeg_tools + '\" -i \"' + src_path + '\" -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_list \"' + m3u8_file + '\" -segment_time 5 \"' + target_path + '/%04d.ts\"'
                     yutils.process_cmd(cmd)
-                    logger.info('切割完成:' + target_dir)
+                    logger.info('切割完成:' + target_path)
 
 
 if __name__ == '__main__':
     dir_root = movie_config[XMLMovie.TAGS.DIR_ROOT]
     source_root = yutils.input_path(yutils.RESOURCE_ROOT_KEY,
                                     '请指定资源根目录(例如:E:/resource_root),目录下有个%s文件夹,并且%s下就是图片:\n' % (dir_root, dir_root))
-    source_root = os.path.join(source_root, dir_root)
+    source_root = ypath.join(source_root, dir_root)
     target_root = yutils.input_path(yutils.RESOURCE_DESC_KEY,
                                     '请指定资源输出目录(例如:E:/resource_desc_root),目录下会创建%s/convert和%s/ts):\n' % (
                                         dir_root, dir_root))
-    target_root = os.path.join(target_root, dir_root)
+    target_root = ypath.join(target_root, dir_root)
     ffmpeg_tools = yutils.input_path(FFMPEG_KEY, '输入对应的ffmpeg文件位置(参照link_gitProj_files.txt下载对应的文件):\n')
 
     out_root = XMLMovie.get_out_root()

@@ -6,7 +6,7 @@ import piexif
 import shutil
 from PIL import Image, ImageFile
 
-from frames import yutils, logger
+from frames import yutils, logger, ypath
 from frames.xml import XMLBase, XMLGallery
 
 MAX_PIC_SIZE = 3000
@@ -18,7 +18,7 @@ DIR_ROOT = 'pic'
 
 
 def middle_out_path(source_path):
-    exten = yutils.file_exten(source_path)
+    exten = ypath.file_exten(source_path)
     simple_path = source_path[len(src):]
     dir = yutils.md5_of_str(os.path.dirname(simple_path))
     desc_path = middle + '/' + dir

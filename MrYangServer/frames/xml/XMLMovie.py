@@ -32,6 +32,8 @@ class ITEM_TAGS:
     DURATION = 'duration'
     SHOW_DURATION = 'show_duration'
     OUT_NAME = 'out_name'  # 输出的ym3的文件名
+    PIXEL = 'source_size'
+    FPS='fps'
 
 
 def nodes():
@@ -78,6 +80,8 @@ def create_movie_item_info_xml(item_info_list):
         item.setAttribute(ITEM_TAGS.DURATION, item_info[ITEM_TAGS.DURATION])
         item.setAttribute(ITEM_TAGS.SHOW_DURATION, item_info[ITEM_TAGS.SHOW_DURATION])
         item.setAttribute(ITEM_TAGS.OUT_NAME, item_info[ITEM_TAGS.OUT_NAME])
+        item.setAttribute(ITEM_TAGS.PIXEL, item_info[ITEM_TAGS.PIXEL])
+        item.setAttribute(ITEM_TAGS.FPS, item_info[ITEM_TAGS.FPS])
 
     with open(movie_item_info_path, 'w', encoding='UTF-8') as fh:
         doc.writexml(fh, indent='', encoding='UTF-8', newl='\n')
