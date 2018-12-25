@@ -1,6 +1,6 @@
 import random
 
-from MediaTools.DBTools.ConvertBase import ConvertBase
+from Tools.DBTools.ConvertBase import ConvertBase
 from frames import yutils
 from Mryang_App.models import Dir, GalleryInfo
 

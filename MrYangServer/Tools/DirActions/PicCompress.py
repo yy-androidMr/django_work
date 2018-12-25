@@ -197,4 +197,12 @@ if __name__ == '__main__':
     delete_not_exist()
     link_dic = src2pc(False)
     middle2thum(False)
-    XMLGallery.append_ifnot_exist(link_dic)
+    middle_have, thum_have = ypath.compair_path(middle, thum)
+    if len(middle_have) > 0:
+        str = input('发现有部分文件没有转换完全,是否继续?(y/n):')
+        if 'y' in str or 'Y' in str:
+            XMLGallery.append_ifnot_exist(link_dic)
+        else:
+            print(middle_have, thum_have)
+    else:
+        XMLGallery.append_ifnot_exist(link_dic)

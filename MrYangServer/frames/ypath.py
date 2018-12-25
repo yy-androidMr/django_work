@@ -108,3 +108,32 @@ def file_name(path):
 # 拓展名.
 def file_exten(file):
     return os.path.splitext(file)[1]
+
+
+def compair_path(left, right):
+    left = replace(left)
+    right = replace(right)
+    left_set = set([])
+    for root, dirs, files in os.walk(left):
+        for dir in dirs:
+            left_set.add(join(root, dir).replace(left, ''))
+        for file in files:
+            left_set.add(join(root, file).replace(left, ''))
+
+    right_set = set([])
+    for root, dirs, files in os.walk(right):
+        for dir in dirs:
+            right_set.add(join(root, dir).replace(right, ''))
+        for file in files:
+            right_set.add(join(root, file).replace(right, ''))
+
+    left_have = left_set.difference(right_set)
+    right_have = right_set.difference(left_set)
+    return (left_have, right_have)
+    # ret_list = list( ^ )
+    # ret2_list = list(set(right_files) ^ set(left_files))
+    # print(ret_list)
+    # print(ret2_list)
+
+print(compair_path(r'G:\cache\11\pic\middle', r'G:\cache\11\pic\thum'))
+

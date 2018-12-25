@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Mryang_App.apps.MryangAppConfig',
+    'Mryang_Tdb.apps.MryangTdbConfig',
+
 ]
 MIDDLEWARE_CLASSES = (
     'django.middleware.gzip.GZipMiddleware',
@@ -84,9 +86,23 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    },
+    'tdb': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'ydatabase',
+        'USER': 'yysql',
+        'PASSWORD': 'mysql_yy2134',
+        'HOST': '148.70.103.10',
+        'PORT': '3306',
+    },
 }
-
+DATABASE_ROUTERS = ['MrYangServer.database_router.DatabaseAppsRouter']
+DATABASE_APPS_MAPPING = {
+    # example:
+    #'app_name':'database_name',
+    'Mryang_Tdb': 'tdb',
+    'Mryang_App': 'default',
+}
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
@@ -133,7 +149,6 @@ STATICFILES_DIRS = (
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media/')
 MEDIA_URL = '/static/media/'
-
 
 LOGGING = {
     'version': 1,
