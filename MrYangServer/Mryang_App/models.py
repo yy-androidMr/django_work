@@ -105,7 +105,9 @@ class MovieInfo(models.Model):
     size = models.CharField(max_length=100, default='')
     # 影片尺寸1280x720
     source_size = models.IntegerField(default=0)
-    #字幕文件
+    # 帧率
+    fps = models.IntegerField(default=0)
+    # 字幕文件
     # 其他预留
     param1 = models.CharField(max_length=500, default='')
     param2 = models.CharField(max_length=500, default='')

@@ -104,6 +104,8 @@ def item_info_dict():
         items[ITEM_TAGS.SHOW_SIZE] = node.getAttribute(ITEM_TAGS.SHOW_SIZE)
         items[ITEM_TAGS.DURATION] = node.getAttribute(ITEM_TAGS.DURATION)
         items[ITEM_TAGS.SHOW_DURATION] = node.getAttribute(ITEM_TAGS.SHOW_DURATION)
+        items[ITEM_TAGS.PIXEL] = node.getAttribute(ITEM_TAGS.PIXEL)
+        items[ITEM_TAGS.FPS] = node.getAttribute(ITEM_TAGS.FPS)
     return infos
 
 
