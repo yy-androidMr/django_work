@@ -8,8 +8,26 @@
 		thum:指定缩略图
 		level:展示等级
 		param1,param2:预留接口
---><pic_info>
-	<gallery dir_name="51331a8c3a6a30109f01af32a448143c" level="0" link="G:/cache/work_cache/resource_root/pic/新界面基准图/冰雪节活动" name="" param1="" param2="" thum="" time=""> </gallery>
-	<gallery dir_name="99ab148d7da56347036c2cead9eb84f7" level="0" link="G:/cache/work_cache/resource_root/pic/新界面基准图/躲猫猫" name="" param1="" param2="" thum="" time=""> </gallery>
-	<gallery dir_name="8ad8fec3f5672ed7a6dbe222e490bbf5" level="0" link="G:/cache/work_cache/resource_root/pic/新界面基准图/躲猫猫/躲猫猫宝箱活动" name="" param1="" param2="" thum="" time=""> </gallery>
-</pic_info>
+--><gallery_info>
+	<gallery dir_name="e746bfbe4bd89c93b3ab124afabf5a51" level="5" link="../../../MrYangServer/media_source/pic/src/7_14长城" name="周佳佳来京" param1="" param2="" thum="" time="2018年7月14日">来京玩4天左右</gallery>
+	<gallery dir_name="47c0acfe173d4e198e568e459cf38b44" level="1" link="../../../MrYangServer/media_source/pic/src/公司聚会" name="在永航" param1="" param2="" thum="" time="">关于公司的一些照片</gallery>
+	<gallery dir_name="fdea5fd475001474af31bc40dfa0bf4f" level="9" link="../../../MrYangServer/media_source/pic/src/她" name="她的历史照" param1="" param2="" thum="" time="">以前综合的照片</gallery>
+	<gallery dir_name="6527a954afc7e135e30186bfb8abafa5" level="5" link="../../../MrYangServer/media_source/pic/src/妹妹们" name="妹妹的照片" param1="" param2="" thum="" time="">杨逸闻,杨逸馨等</gallery>
+	<gallery dir_name="c469fdff60fc771b9ad794bc16da7a0f" level="5" link="../../../MrYangServer/media_source/pic/src/家人" name="家里人能看的照片" param1="" param2="" thum="" time="">我们家里人能看的照片</gallery>
+	<gallery dir_name="d339fe3f2d8d74325e9337fbd64f73a5" level="5" link="../../../MrYangServer/media_source/pic/src/家人_WIC" name="第二届互联网大会" param1="" param2="" thum="" time="2018年5月19日">WIC</gallery>
+	<gallery dir_name="da15d69e37600965596c80aacfa125fb" level="5" link="../../../MrYangServer/media_source/pic/src/家人_秦皇岛" name="家里人秦皇岛" param1="" param2="" thum="" time="2017年10月1日">十一去了秦皇岛的照片</gallery>
+	<gallery dir_name="ba780ab3d37868b640d6a92befdd2c7d" level="5" link="../../../MrYangServer/media_source/pic/src/家人_长城" name="爷爷上天津来" param1="" param2="" thum="" time="2015年10月1日">爬长城</gallery>
+	<gallery dir_name="d1ce903180d0fd8d5e625ba703b8be16" level="5" link="../../../MrYangServer/media_source/pic/src/朋友" name="朋友照片" param1="" param2="" thum="" time="">和朋友的图片</gallery>
+	<gallery dir_name="f502d197b5fedbbc75b894f2f54fe2ae" level="9" link="../../../MrYangServer/media_source/pic/src/杂乱" name="其他杂乱的图片" param1="" param2="" thum="" time="">旅游啊,或者好看的风景等照片</gallery>
+	<gallery dir_name="de9a932f47666ac63d0813833ba8b903" level="0" link="../../../MrYangServer/media_source/pic/src/济南旅游" name="济南旅游" param1="" param2="" thum="" time="2018年6月17日">端午节去济南:趵突泉等景点</gallery>
+	<gallery dir_name="38162d331b00577fbcbc0788cb45a01f" level="0" link="../../../MrYangServer/media_source/pic/src/笑一笑" name="搞笑的图片" param1="" param2="" thum="" time="">都是些搞笑图片</gallery>
+	<gallery dir_name="4adf629bb2ea2f6c71fa9e15ec502cf1" level="8" link="../../../MrYangServer/media_source/pic/src/纪念" name="纪念相册" param1="" param2="" thum="" time="没有日期">该相册留作生活记录</gallery>
+	<gallery dir_name="7f7730852d35c79ffe2034220ae8a82f" level="2" link="../../../MrYangServer/media_source/pic/src/美图" name="一些图片" param1="" param2="" thum="" time="">壁纸之类的</gallery>
+	<gallery dir_name="694f5d528119f81d288aa6738f149f0b" level="5" link="../../../MrYangServer/media_source/pic/src/苏州旅游照片" name="苏州旅游" param1="" param2="" thum="" time="2018年5月1日">周庄，常熟等地</gallery>
+	<gallery dir_name="89941a83d736025c7f1fc537cabbf0c9" level="9" link="../../../MrYangServer/media_source/pic/src/证件照" name="证件照" param1="" param2="" thum="" time="">家里人证件照</gallery>
+	<gallery dir_name="9cbc3b2eddba302b30328e3f610cb700" level="5" link="../../../MrYangServer/media_source/pic/src/18年十一" name="18年十一" param1="" param2="" thum="" time="2018年10月1日">杭州肿瘤医院,宁波等</gallery>
+	<gallery dir_name="80d5a3475074937c3cfa7943ccd4d936" level="0" link="../../../MrYangServer/media_source/pic/src/其他" name="其他照片" param1="" param2="" thum="" time="">其他没地方放的照片</gallery>
+	<gallery dir_name="1d03184c16cd1870637934a4f60ff9d9" level="5" link="../../../MrYangServer/media_source/pic/src/北京游玩" name="北京游玩" param1="" param2="" thum="" time="">在北京玩的照片</gallery>
+	<gallery dir_name="ec3e36d8cf46dd16ca117bdd86123542" level="0" link="../../../MrYangServer/media_source/pic/src/天津泰达航母8月5日" name="泰达航母" param1="" param2="" thum="" time="2018年8月5日">泰达航母一日游</gallery>
+	<gallery dir_name="7fe5252d432b4624890857a49d642ca1" level="0" link="../../../MrYangServer/media_source/pic/src/天津游玩" name="北京游玩" param1="" param2="" thum="" time="">在天津游玩的照片</gallery>
+</gallery_info>
