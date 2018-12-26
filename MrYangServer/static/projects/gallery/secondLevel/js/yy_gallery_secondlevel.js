@@ -17,7 +17,6 @@ $(window).scroll(function () {
     var c = $(document).scrollTop();//滚动条距离网页顶部的高度
     var wh = $(window).height(); //页面可视化区域高度
 
-    console.log("wh:" + wh + " c:" + c + "  h:" + h);
     if (pageError) {
         return;
     }
@@ -26,10 +25,15 @@ $(window).scroll(function () {
     }
 });
 
+$(window).unload(function () {
+    $(window).unbind('scroll')
+});
+
 function load_more() {
     if (inload) {
         return;
     }
+    console.log("wh:" + wh + " c:" + c + "  h:" + h + " 到达底部. 加载下一个");
     $('#load_tips').html('正在加载下一页');
     inload = true;
     curPage++;

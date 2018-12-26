@@ -8,6 +8,7 @@ from frames.logger import logger
 
 from frames.xml import XMLBase
 
+
 CONFIG_NAME = 'pic_info'
 GALLERY_TAG = 'gallery'
 COMMENT = '\n<gallery dir_name="a" link="b" name="" param1="" param2="" thum="" time=""> </gallery>' \
@@ -68,13 +69,7 @@ def append_ifnot_exist(link_dic):
     if link_dic is None:
         logger.info('append_ifnot_exist:加入配置失败! link_dic')
         return
-    item_info_path = get_infos()[TAGS.ITEM_INFO]  # XMLBase.cfg_list_path(CONFIG_NAME)
-    path, _ = XMLBase.get_cfg_dir()
-    item_info_path = path + item_info_path
-    # 这里需要判断文件是否存在
-    if not os.path.exists(item_info_path):
-        create_gallery_xml(item_info_path)
-    domPxy = XMLBase.parse(item_info_path)
+    domPxy = item_nodes()
     # 查找这个标签原先是不是有.
     for dir in link_dic:
         digout_item = domPxy.elem.has_attr_value(GALLERY_TAG, ITEM_TAGS.DIR_NAME, dir)
@@ -95,29 +90,33 @@ def nodes():
     return None, dpins
 
 
+def item_nodes():
+    item_info_path = get_infos()[TAGS.ITEM_INFO]  # XMLBase.cfg_list_path(CONFIG_NAME)
+    path, _ = XMLBase.get_cfg_dir()
+    item_info_path = path + item_info_path
+    # 这里需要判断文件是否存在
+    if not os.path.exists(item_info_path):
+        create_gallery_xml(item_info_path)
+    domPxy = XMLBase.parse(item_info_path)
+    return domPxy
+
+
 def get_item_infos():
-    node_list, dpins = nodes()
+    domPxy = item_nodes()
+    node_list = domPxy.elem.xml_nodes(GALLERY_TAG)
     xml_infos = {}
     for node in node_list:
-        dir_name = dpins.elem.attr_value(node, ITEM_TAGS.DIR_NAME)
+        dir_name = domPxy.elem.attr_value(node, ITEM_TAGS.DIR_NAME)
         info = {}
-        info[ITEM_TAGS.NAME] = dpins.elem.attr_value(node, ITEM_TAGS.NAME)
-        info[ITEM_TAGS.VALUE] = dpins.elem.node_value(node)
-        info[ITEM_TAGS.TIME] = dpins.elem.attr_value(node, ITEM_TAGS.TIME)
+        info[ITEM_TAGS.NAME] = domPxy.elem.attr_value(node, ITEM_TAGS.NAME)
+        info[ITEM_TAGS.VALUE] = domPxy.elem.node_value(node)
+        info[ITEM_TAGS.TIME] = domPxy.elem.attr_value(node, ITEM_TAGS.TIME)
 
-        info[ITEM_TAGS.THUM] = dpins.elem.attr_value(node, ITEM_TAGS.THUM)
-        info[ITEM_TAGS.LEVEL] = dpins.elem.attr_value(node, ITEM_TAGS.LEVEL)
-        info[ITEM_TAGS.P1] = dpins.elem.attr_value(node, ITEM_TAGS.P1)
-        info[ITEM_TAGS.P2] = dpins.elem.attr_value(node, ITEM_TAGS.P2)
+        info[ITEM_TAGS.THUM] = domPxy.elem.attr_value(node, ITEM_TAGS.THUM)
+        info[ITEM_TAGS.LEVEL] = domPxy.elem.attr_value(node, ITEM_TAGS.LEVEL)
+        info[ITEM_TAGS.P1] = domPxy.elem.attr_value(node, ITEM_TAGS.P1)
+        info[ITEM_TAGS.P2] = domPxy.elem.attr_value(node, ITEM_TAGS.P2)
 
-        # info = (dpins.elem.attr_value(node, TAGS.NAME),
-        #         dpins.elem.node_value(node),
-        #         dpins.elem.attr_value(node, TAGS.TIME),
-        #         dpins.elem.attr_value(node, TAGS.THUM),
-        #         dpins.elem.attr_value(node, TAGS.LEVEL),
-        #         dpins.elem.attr_value(node, TAGS.P1),
-        #         dpins.elem.attr_value(node, TAGS.P2)
-        #         )
         xml_infos[dir_name] = info
 
     return xml_infos

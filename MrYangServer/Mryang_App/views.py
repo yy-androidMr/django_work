@@ -13,7 +13,7 @@ from Mryang_App import yquery, forms
 from frames import yutils
 
 # 显示权限
-from frames.logger import logger
+from frames import logger
 from frames.xml import XMLBase
 
 COMMON_SHOW = 4
@@ -239,7 +239,7 @@ def m_second_gallery(request, dir_id):
         except:
             logger.error('非法参数:', dir_id)
     else:
-        logger.error('[m_second_gallery]:', dir_id)
+        logger.info('[m_second_gallery]:', dir_id)
         try:
             c_id = int(dir_id)
             json = yquery.pic_level2_2json(c_id, 1)

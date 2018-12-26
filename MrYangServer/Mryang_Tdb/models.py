@@ -3,14 +3,6 @@ from django.db import models
 from Mryang_App.models import Dir as Main_Dir
 from Mryang_App.models import GalleryInfo as Main_GalleryInfo
 
-from frames import yutils
-
-
-# from Mryang_App import models
-#
-# models.dir_foregin_name = MryangAppConfig.name + '.TDir'
-
-
 
 
 class Dir(models.Model):

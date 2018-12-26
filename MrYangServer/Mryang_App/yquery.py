@@ -20,6 +20,7 @@ def dir_2json(dirtype):
 
 def pic_level1_2json(show_level):
     # id  名字, 父亲的id, 是否是文件夹, tag, 相对路径.
+    from Mryang_Tdb.models import GalleryInfo
     ginfos = GalleryInfo.objects.filter(level__lt=(show_level + 1)).annotate(
         c_id=F('folder_key__c_id'), rel_path=F('folder_key__rel_path')) \
         .select_related('folder_key') \
@@ -34,10 +35,11 @@ def pic_level1_2json(show_level):
 
 
 def pic_level2_2json(c_id, page):
+    from Mryang_Tdb.models import Dir
     dirs = Dir.objects.filter(type=yutils.M_FTYPE_PIC, isdir=False, parent_dir__c_id=c_id) \
         .select_related('parent_dir').values('tags', 'name', 'c_id').order_by('c_id')
 
-    page_item = 12
+    page_item = 50
     # page -= 1
     # bottom = page * page_item
     # top = bottom + page_item

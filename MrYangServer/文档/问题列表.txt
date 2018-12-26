@@ -1,3 +1,6 @@
 1.出现错误AttributeError: 'NoneType' object has no attribute 'split'
 https://blog.csdn.net/javali1995/article/details/78486444
 
+2.mysql编码问题:
+使用该sql语句:“SHOW FULL COLUMNS FROM 表名” 来查看当前表格的编码，结果发现编码依旧没有改变，还是之前的默认编码。
+“ALTER TABLE 表格名 CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci”
