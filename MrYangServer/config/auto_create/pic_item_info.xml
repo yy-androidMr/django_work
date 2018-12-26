@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+<gallery dir_name="a" link="b" name="" param1="" param2="" thum="" time=""> </gallery>
+		dir_name:加密后的文件夹名
+		link:加密前的文件夹相对路径
+		name:相册展示的标题
+		内容txt:副标题
+		time:时间
+		thum:指定缩略图
+		level:展示等级
+		param1,param2:预留接口
+--><pic_info>
+	<gallery dir_name="51331a8c3a6a30109f01af32a448143c" level="0" link="G:/cache/work_cache/resource_root/pic/新界面基准图/冰雪节活动" name="" param1="" param2="" thum="" time=""> </gallery>
+	<gallery dir_name="99ab148d7da56347036c2cead9eb84f7" level="0" link="G:/cache/work_cache/resource_root/pic/新界面基准图/躲猫猫" name="" param1="" param2="" thum="" time=""> </gallery>
+	<gallery dir_name="8ad8fec3f5672ed7a6dbe222e490bbf5" level="0" link="G:/cache/work_cache/resource_root/pic/新界面基准图/躲猫猫/躲猫猫宝箱活动" name="" param1="" param2="" thum="" time=""> </gallery>
+</pic_info>

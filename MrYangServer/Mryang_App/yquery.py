@@ -33,17 +33,6 @@ def pic_level1_2json(show_level):
     return json_res
 
 
-def dead_2json():
-    # id  名字, 父亲的id, 是否是文件夹, tag, 相对路径.
-    dirs = Dir.objects.filter(type=yutils.M_FTYPE_PIC, c_id__lt=PhotoConvert.THUM_PIC_ID_POW,
-                              show_level=99).values('tags',
-                                                    'c_id', 'rel_path')
-    for item in dirs:
-        item['tags'] = item['tags'].split(' ')  # (item['name'] + ' ' + thum).split()
-    jsonstr = json.dumps(list(dirs))
-    return jsonstr
-
-
 def pic_level2_2json(c_id, page):
     dirs = Dir.objects.filter(type=yutils.M_FTYPE_PIC, isdir=False, parent_dir__c_id=c_id) \
         .select_related('parent_dir').values('tags', 'name', 'c_id').order_by('c_id')

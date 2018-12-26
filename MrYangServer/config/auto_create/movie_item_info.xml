@@ -2,9 +2,7 @@
 <movie_info>
 
 
-<item duration="7086.54" file="/home/yy/d2/resource/desc_root/movie/蚁人2.BD1280高清特效中英双字版.mp4" name="蚁人2.BD1280高清特效中英双字版" out_name="12541de220dc9c96c651769e540414a8.ym3" show_duration="1小时58分钟6秒" show_size="2.4GB" size="2621345581"/>
-<item duration="10693.43" file="/home/yy/d2/resource/desc_root/movie/阿凡达[英语原声版]_bd.mp4" name="阿凡达[英语原声版]_bd" out_name="2ce68489f41e1080262f8b3927cb8bef.ym3" show_duration="2小时58分钟13秒" show_size="1.4GB" size="1541888827"/>
-<item duration="6444.42" file="/home/yy/d2/resource/desc_root/movie/金刚狼/金刚狼.mp4" name="金刚狼" out_name="c20914c4f57bb9b079c702380aa5c7dd.ym3" show_duration="1小时47分钟24秒" show_size="2.0GB" size="2200071160"/>
-<item duration="8243.37" file="/home/yy/d2/resource/desc_root/movie/金刚狼/金刚狼3.mp4" name="金刚狼3" out_name="de1dd63ee48d663a3644a6ac3a65bdee.ym3" show_duration="2小时17分钟23秒" show_size="1.7GB" size="1783484637"/>
-<item duration="8294.51" file="/home/yy/d2/resource/desc_root/movie/金刚狼/金刚狼2.mp4" name="金刚狼2" out_name="f1cd15bad97ff30ffb1cc4f42d0a64f0.ym3" show_duration="2小时18分钟14秒" show_size="2.6GB" size="2829926208"/>
+<item duration="21" file="G:/cache/work_cache/resource_desc_root/movie/bandicam 2018-11-15 20-37-23-791.mp4" fps="60" name="bandicam 2018-11-15 20-37-23-791" out_name="/48ac8a3d45a37c9f636955187f11e445.ym3" show_duration="21秒" show_size="1.5MB" size="1548635" source_size="(1072, 540)"/>
+<item duration="18" file="G:/cache/work_cache/resource_desc_root/movie/video_20180926_171103.mp4" fps="30" name="video_20180926_171103" out_name="/595788ed9370053547c5010af197b9d9.ym3" show_duration="18秒" show_size="20.0MB" size="21009194" source_size="(1280, 720)"/>
+<item duration="230" file="G:/cache/work_cache/resource_desc_root/movie/金刚狼/英雄时刻_20180717-00点25分39s.mp4" fps="15" name="英雄时刻_20180717-00点25分39s" out_name="/金刚狼/37fb865fc3041f2388bd31c8e45c4432.ym3" show_duration="3分50秒" show_size="64.5MB" size="67582812" source_size="(1280, 720)"/>
 </movie_info>

@@ -8,7 +8,7 @@ from frames.logger import logger
 
 from frames.xml import XMLBase
 
-CONFIG_NAME = 'gallery_info'
+CONFIG_NAME = 'pic_info'
 GALLERY_TAG = 'gallery'
 COMMENT = '\n<gallery dir_name="a" link="b" name="" param1="" param2="" thum="" time=""> </gallery>' \
           '\n\t\tdir_name:加密后的文件夹名' \
@@ -22,6 +22,14 @@ COMMENT = '\n<gallery dir_name="a" link="b" name="" param1="" param2="" thum="" 
 
 
 class TAGS:
+    DIR_ROOT = 'dir_root'
+    THUM = 'thum'
+    MIDDLE = 'middle'
+    ITEM_INFO = 'item_info'
+    GIF_BANNER = 'gif_banner'
+
+
+class ITEM_TAGS:
     DIR_NAME = 'dir_name'
     NAME = 'name'
     LINK = 'link'
@@ -31,18 +39,18 @@ class TAGS:
     LEVEL = 'level'
     P1 = 'param1'
     P2 = 'param2'
-    VALUE='value'
+    VALUE = 'value'
 
 
 def attr_complition(g_item, dir_name='', link=''):
-    XMLBase.add_attr(g_item, TAGS.DIR_NAME, dir_name)
-    XMLBase.add_attr(g_item, TAGS.NAME)
-    XMLBase.add_attr(g_item, TAGS.LINK, link)
-    XMLBase.add_attr(g_item, TAGS.TIME)
-    XMLBase.add_attr(g_item, TAGS.THUM)
-    XMLBase.add_attr(g_item, TAGS.LEVEL, '0')
-    XMLBase.add_attr(g_item, TAGS.P1)
-    XMLBase.add_attr(g_item, TAGS.P2)
+    XMLBase.add_attr(g_item, ITEM_TAGS.DIR_NAME, dir_name)
+    XMLBase.add_attr(g_item, ITEM_TAGS.NAME)
+    XMLBase.add_attr(g_item, ITEM_TAGS.LINK, link)
+    XMLBase.add_attr(g_item, ITEM_TAGS.TIME)
+    XMLBase.add_attr(g_item, ITEM_TAGS.THUM)
+    XMLBase.add_attr(g_item, ITEM_TAGS.LEVEL, '0')
+    XMLBase.add_attr(g_item, ITEM_TAGS.P1)
+    XMLBase.add_attr(g_item, ITEM_TAGS.P2)
 
 
 def create_gallery_xml(path):
@@ -60,14 +68,16 @@ def append_ifnot_exist(link_dic):
     if link_dic is None:
         logger.info('append_ifnot_exist:加入配置失败! link_dic')
         return
-    path, _ = XMLBase.cfg_list_path(CONFIG_NAME)
+    item_info_path = get_infos()[TAGS.ITEM_INFO]  # XMLBase.cfg_list_path(CONFIG_NAME)
+    path, _ = XMLBase.get_cfg_dir()
+    item_info_path = path + item_info_path
     # 这里需要判断文件是否存在
-    if not os.path.exists(path):
-        create_gallery_xml(path)
-    domPxy = XMLBase.parse(path)
+    if not os.path.exists(item_info_path):
+        create_gallery_xml(item_info_path)
+    domPxy = XMLBase.parse(item_info_path)
     # 查找这个标签原先是不是有.
     for dir in link_dic:
-        digout_item = domPxy.elem.has_attr_value(GALLERY_TAG, TAGS.DIR_NAME, dir)
+        digout_item = domPxy.elem.has_attr_value(GALLERY_TAG, ITEM_TAGS.DIR_NAME, dir)
         if not digout_item:
             digout_item = domPxy.dom.createElement(GALLERY_TAG)
             domPxy.elem.append_child(digout_item)
@@ -81,24 +91,24 @@ def nodes():
     path, dpins = XMLBase.cfg_list_path(CONFIG_NAME)
     if os.path.exists(path):
         domPxy = XMLBase.parse(path)
-        return domPxy.elem.xml_nodes(GALLERY_TAG), dpins
-    return [], dpins
+        return domPxy.elem, dpins
+    return None, dpins
 
 
-def get_infos():
+def get_item_infos():
     node_list, dpins = nodes()
     xml_infos = {}
     for node in node_list:
-        dir_name = dpins.elem.attr_value(node, TAGS.DIR_NAME)
+        dir_name = dpins.elem.attr_value(node, ITEM_TAGS.DIR_NAME)
         info = {}
-        info[TAGS.NAME] = dpins.elem.attr_value(node, TAGS.NAME)
-        info[TAGS.VALUE] = dpins.elem.node_value(node)
-        info[TAGS.TIME] = dpins.elem.attr_value(node, TAGS.TIME)
+        info[ITEM_TAGS.NAME] = dpins.elem.attr_value(node, ITEM_TAGS.NAME)
+        info[ITEM_TAGS.VALUE] = dpins.elem.node_value(node)
+        info[ITEM_TAGS.TIME] = dpins.elem.attr_value(node, ITEM_TAGS.TIME)
 
-        info[TAGS.THUM] = dpins.elem.attr_value(node, TAGS.THUM)
-        info[TAGS.LEVEL] = dpins.elem.attr_value(node, TAGS.LEVEL)
-        info[TAGS.P1] = dpins.elem.attr_value(node, TAGS.P1)
-        info[TAGS.P2] = dpins.elem.attr_value(node, TAGS.P2)
+        info[ITEM_TAGS.THUM] = dpins.elem.attr_value(node, ITEM_TAGS.THUM)
+        info[ITEM_TAGS.LEVEL] = dpins.elem.attr_value(node, ITEM_TAGS.LEVEL)
+        info[ITEM_TAGS.P1] = dpins.elem.attr_value(node, ITEM_TAGS.P1)
+        info[ITEM_TAGS.P2] = dpins.elem.attr_value(node, ITEM_TAGS.P2)
 
         # info = (dpins.elem.attr_value(node, TAGS.NAME),
         #         dpins.elem.node_value(node),
@@ -111,3 +121,19 @@ def get_infos():
         xml_infos[dir_name] = info
 
     return xml_infos
+
+
+def get_infos():
+    elem_proxy, dpins = nodes()
+    info = {}
+    info[TAGS.DIR_ROOT] = dpins.elem.attr_value(elem_proxy.root, TAGS.DIR_ROOT)
+    info[TAGS.THUM] = dpins.elem.attr_value(elem_proxy.root, TAGS.THUM)
+    info[TAGS.MIDDLE] = dpins.elem.attr_value(elem_proxy.root, TAGS.MIDDLE)
+    info[TAGS.ITEM_INFO] = dpins.elem.attr_value(elem_proxy.root, TAGS.ITEM_INFO)
+
+    info[TAGS.GIF_BANNER] = elem_proxy.node_value(elem_proxy.xml_nodes(TAGS.GIF_BANNER)[0])
+
+    return info
+
+
+print(get_infos())

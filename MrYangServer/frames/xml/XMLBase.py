@@ -116,13 +116,6 @@ def get_cfg_dir(dpins=None):
     return config_root.replace('\\', '/'), dpins
 
 
-# 获取gif_banner的图片路径.
-@dom_pxy_ins()
-def get_gif_banner(dpins=None):
-    gif_banner_path = PROJ_ROOT + dpins.elem.value_by_tag(GIF_BANNER)
-    return gif_banner_path.replace('\\', '/'), dpins
-
-
 # 获取腾讯云cos的media根目录.
 @dom_pxy_ins()
 def cos_media_root(dpins=None):

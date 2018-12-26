@@ -30,11 +30,13 @@ def parse_path(path, root_path, name, isDir=False):
             KEYS.PARENT: parent_path}
 
 
-def path_result(res_root, depth_name, dir_filter=None, file_filter=None, parse_dir=True, parse_file=True):
+def path_result(res_root, depth_name, dir_filter=None, file_filter=None, parse_dir=True, parse_file=True,
+                add_root=True):
     root_path = join(res_root, depth_name)
     logger.info('ypath:path_result:', res_root, root_path)
     dict = {}
-    dict[root_path] = parse_path(root_path, root_path, depth_name, True)
+    if add_root:
+        dict[root_path] = parse_path(root_path, root_path, depth_name, True)
     for root, dirs, files in os.walk(root_path):
         if parse_dir:
             for dir in dirs:
@@ -135,5 +137,5 @@ def compair_path(left, right):
     # print(ret_list)
     # print(ret2_list)
 
-print(compair_path(r'G:\cache\11\pic\middle', r'G:\cache\11\pic\thum'))
 
+print(compair_path(r'G:\cache\11\pic\middle', r'G:\cache\11\pic\thum'))

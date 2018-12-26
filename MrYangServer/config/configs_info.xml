@@ -17,7 +17,7 @@
 			<cos_media_root>https://mryang-1251808344.cos.ap-chengdu.myqcloud.com/media</cos_media_root>
 			<config_root>/config</config_root>
 			<list>
-				<gallery_info>/auto_create/gallery_info.xml</gallery_info>
+				<pic_info>/pic_info.xml</pic_info>
 				<movie_info>/movie_info.xml</movie_info>				
 			</list>		
 </configs_info>

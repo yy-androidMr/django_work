@@ -7,22 +7,21 @@ import shutil
 from PIL import Image, ImageFile
 
 from frames import yutils, logger, ypath
-from frames.xml import XMLBase, XMLGallery
+from frames.xml import XMLBase, XMLPic
 
 MAX_PIC_SIZE = 3000
 PicCompress_src = 'PicCompress_src'
 PicCompress_desc = 'PicCompress_desc'
-DIR_ROOT = 'pic'
 
-(gif_pic, _) = XMLBase.get_gif_banner()
+pic_cfg = XMLPic.get_infos()
 
 
 def middle_out_path(source_path):
     exten = ypath.file_exten(source_path)
     simple_path = source_path[len(src):]
     dir = yutils.md5_of_str(os.path.dirname(simple_path))
-    desc_path = middle + '/' + dir
-    rename_path = desc_path + '/' + yutils.get_md5(source_path) + exten
+    desc_path = ypath.join(middle, dir)
+    rename_path = ypath.join(desc_path, yutils.get_md5(source_path) + exten)
     return (rename_path, desc_path, dir)
 
 
@@ -37,9 +36,9 @@ def src2pc(delete_exist):
     # os.system(cmd)
     img_link_dic = {}
     for root, dirs, files in os.walk(src):
+        root = ypath.replace(root)
         for file in files:
-            root = root.replace('\\', '/')
-            source_path = os.path.join(root, file).replace('\\', '/')
+            source_path = ypath.join(root, file)
             (rename_path, desc_path, dir) = middle_out_path(source_path)
             if yutils.is_gif(file):
                 shutil.copy(source_path, rename_path)
@@ -102,7 +101,7 @@ def middle2thum(delete_exist):
     for root, dirs, files in os.walk(middle):
         for file in files:
 
-            source_path = os.path.join(root, file).replace('\\', '/')
+            source_path = ypath.join(root, file)
             print(source_path)
 
             desc_path = thum + source_path[len(middle):]
@@ -113,9 +112,9 @@ def middle2thum(delete_exist):
             if not os.path.exists(dir):
                 os.makedirs(dir)
                 # gif要走配置
-            if yutils.is_gif(file) and os.path.exists(gif_pic):
+            if yutils.is_gif(file) and os.path.exists(pic_cfg[XMLPic.TAGS.GIF_BANNER]):
                 # gif_pic
-                shutil.copy(gif_pic, desc_path)
+                shutil.copy(pic_cfg[XMLPic.TAGS.GIF_BANNER], desc_path)
                 pass
             if not yutils.is_photo(file):
                 continue
@@ -165,7 +164,7 @@ def delete_not_exist():
         for file in files:
             if not yutils.is_photo(file):
                 continue
-            source_path = os.path.join(root, file).replace('\\', '/')
+            source_path = ypath.join(root, file)
             (rename_path, _, _) = middle_out_path(source_path)
             if os.path.exists(rename_path):
                 right_map[rename_path] = source_path
@@ -175,7 +174,7 @@ def delete_not_exist():
         for file in files:
             if not yutils.is_photo(file):
                 continue
-            source_path = os.path.join(root, file).replace('\\', '/')
+            source_path = ypath.join(root, file)
             if source_path in right_map:
                 pass  # print('' + source_path + "  src:" + right_map[source_path])
             else:
@@ -186,14 +185,19 @@ def delete_not_exist():
 
 if __name__ == '__main__':
     src = yutils.input_path(yutils.RESOURCE_ROOT_KEY,
-                            '请指定资源根目录(例如:E:/resource_root),目录下有个%s文件夹,并且%s下就是图片:\n' % (DIR_ROOT, DIR_ROOT))
-    src = os.path.join(src, DIR_ROOT)
+                            '请指定资源根目录(例如:E:/resource_root),目录下有个%s文件夹,并且%s下就是图片:\n' % (
+                                pic_cfg[XMLPic.TAGS.DIR_ROOT], pic_cfg[XMLPic.TAGS.DIR_ROOT]))
+    src = ypath.join(src, pic_cfg[XMLPic.TAGS.DIR_ROOT])
     desc = yutils.input_path(yutils.RESOURCE_DESC_KEY,
-                             '请指定资源输出目录(例如:E:/resource_desc_root),目录下会创建%s/middle和%s/thum):\n' % (DIR_ROOT, DIR_ROOT))
-    desc = os.path.join(desc, DIR_ROOT)
+                             '请指定资源输出目录(例如:E:/resource_desc_root),目录下会创建%s/middle和%s/thum):\n' % (
+                                 pic_cfg[XMLPic.TAGS.DIR_ROOT], pic_cfg[XMLPic.TAGS.DIR_ROOT]))
+    desc = ypath.join(desc, pic_cfg[XMLPic.TAGS.DIR_ROOT])
     logger.info('初始化成功src:', src, ',desc:', desc)
-    middle = os.path.join(desc, 'middle')
-    thum = os.path.join(desc, 'thum')
+
+
+
+    middle = ypath.join(desc, pic_cfg[XMLPic.TAGS.MIDDLE])
+    thum = ypath.join(desc, pic_cfg[XMLPic.TAGS.THUM])
     delete_not_exist()
     link_dic = src2pc(False)
     middle2thum(False)
@@ -201,8 +205,8 @@ if __name__ == '__main__':
     if len(middle_have) > 0:
         str = input('发现有部分文件没有转换完全,是否继续?(y/n):')
         if 'y' in str or 'Y' in str:
-            XMLGallery.append_ifnot_exist(link_dic)
+            XMLPic.append_ifnot_exist(link_dic)
         else:
             print(middle_have, thum_have)
     else:
-        XMLGallery.append_ifnot_exist(link_dic)
+        XMLPic.append_ifnot_exist(link_dic)
