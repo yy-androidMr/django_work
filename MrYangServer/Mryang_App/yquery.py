@@ -39,7 +39,7 @@ def pic_level2_2json(c_id, page):
     dirs = Dir.objects.filter(type=yutils.M_FTYPE_PIC, isdir=False, parent_dir__c_id=c_id) \
         .select_related('parent_dir').values('tags', 'name', 'c_id').order_by('c_id')
 
-    page_item = 50
+    page_item = 30
     # page -= 1
     # bottom = page * page_item
     # top = bottom + page_item
