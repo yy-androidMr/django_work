@@ -101,7 +101,7 @@ def CutVideo():
                 else:
                     m3u8_file = ypath.join(target_path, movie_config[XMLMovie.TAGS.NAME])
                     yutils.create_dirs(m3u8_file)
-                    cmd = '\"' + ffmpeg_tools + '\" -i \"' + src_path + '\" -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_list \"' + m3u8_file + '\" -segment_time 5 \"' + target_path + '/%04d.ts\"'
+                    cmd = '\"' + ffmpeg_tools + '\" -i \"' + src_path + '\" -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_list \"' + m3u8_file + '\" -segment_time 10 \"' + target_path + '/%04d.ts\"'
                     yutils.process_cmd(cmd)
                     logger.info('切割完成:' + target_path)
 

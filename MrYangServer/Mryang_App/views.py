@@ -177,7 +177,6 @@ def play_video(request):
 
 def move_index(request):
     json = yquery.dir_2json(yutils.M_FTYPE_MOIVE)
-    json = '[{"name":"\u641e\u7b11\u7684\u56fe\u7247","isdir":"False","path":"67f82897c9c163efde673763f4a4befc.ym3/out.m3u8"}]'
     return render(request, 'movie/index.html', {'json': json})
 
 
