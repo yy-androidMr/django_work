@@ -33,7 +33,7 @@ function load_more() {
     if (inload) {
         return;
     }
-    console.log("wh:" + wh + " c:" + c + "  h:" + h + " 到达底部. 加载下一个");
+    console.log("到达底部. 加载下一个 当前页码::"+curPage);
     $('#load_tips').html('正在加载下一页');
     inload = true;
     curPage++;
