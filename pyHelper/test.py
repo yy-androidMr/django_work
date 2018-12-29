@@ -105,4 +105,8 @@
 # print([getattr(f_ins, attr) for attr in dir(f_ins)])
 # print(vars(if_ins))
 # print([f.name for f in f_ins.fields])
+import platform
 
+sys_str = platform.system()
+
+print(sys_str)

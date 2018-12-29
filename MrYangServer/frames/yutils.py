@@ -36,6 +36,12 @@ M_FTYPE_PIC = 2
 M_FTYPE_DOC = 3
 # end
 
+# 运行平台
+WINDOWS = 'Windows'
+MAC = 'Darwin'
+LINUX = 'Linux'
+#
+
 
 # 路径操作
 
@@ -144,9 +150,9 @@ def delete_null_dir(dirr):
         print('移除空目录: ', dirr)
 
 
-def is_mac():
+def get_platform():
     sys_str = platform.system()
-    if (sys_str == "Windows"):
+    if (sys_str == WINDOWS):
         return False
     return True
 

@@ -18,6 +18,12 @@ def dir_2json(dirtype):
     return jsonstr
 
 
+def movie_infos():
+    infos = MovieInfo.objects.values('name', 'duration', 'size', 'source_size', 'fps')
+    jsonstr = json.dumps(list(infos))
+    return jsonstr
+
+
 def pic_level1_2json(show_level):
     # id  名字, 父亲的id, 是否是文件夹, tag, 相对路径.
     from Mryang_Tdb.models import GalleryInfo

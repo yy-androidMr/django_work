@@ -177,7 +177,8 @@ def play_video(request):
 
 def move_index(request):
     json = yquery.dir_2json(yutils.M_FTYPE_MOIVE)
-    return render(request, 'movie/index.html', {'json': json})
+    info_json = yquery.movie_infos()
+    return render(request, 'movie/index.html', {'json': json, 'info_json': info_json})
 
 
 # def pic(request):

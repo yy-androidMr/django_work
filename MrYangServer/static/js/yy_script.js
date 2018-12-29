@@ -152,7 +152,7 @@ function _showPic() {
 }
 
 
-function convert_dirsjson(dirsJson) {
+function convert_dirsjson(dirsJson,info_json) {
 
     var rootDir;
     var dirs = new Array();
