@@ -35,6 +35,7 @@
     <script src="http://vjs.zencdn.net/5.19/lang/zh-CN.js"></script>
     <script type="text/javascript">
         var url = "/static/res/movie" + sessionStorage.getItem('url') + "/out.m3u8";
+{#        var url = "/static/res/movie" + play_target_url + "/out.m3u8";#}
         videojs("my-video").ready(function () {
             var myPlayer = this;
             myPlayer.src({

@@ -2,6 +2,7 @@ var pageIndex = 0;
 var pageItemCount = 9999;//一页有几个
 //在界面上初始化
 var js_dir;
+var play_target_url;
 
 $(document).ready(function () {
         showDir3();
@@ -108,6 +109,7 @@ function SetCookie(name, value)//两个参数，一个是cookie的名子，一�
 
 function showVideo(videoUrl) {
 
+    play_target_url = videoUrl.data;
     SetCookie('url', videoUrl.data);
     window.open('video');
 }
@@ -166,7 +168,7 @@ function convert_dirsjson(dirsJson) {
             tags: item.tags,
             name: item.name,
         }
-         SetCookie('url', dirs[0].path);
+        SetCookie('url', dirs[0].path);
         var dir_split = item.path.split('/');
         dir_split = dir_split.filter(function (n) {
             return n;
