@@ -87,14 +87,14 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     },
-    'tdb': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ydatabase',
-        'USER': 'yysql',
-        'PASSWORD': 'mysql_yy2134',
-        'HOST': '148.70.103.10',
-        'PORT': '3306',
-    },
+    # 'tdb': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'ydatabase',
+    #     'USER': 'yysql',
+    #     'PASSWORD': 'mysql_yy2134',
+    #     'HOST': '148.70.103.10',
+    #     'PORT': '3306',
+    # },
 }
 DATABASE_ROUTERS = ['MrYangServer.database_router.DatabaseAppsRouter']
 DATABASE_APPS_MAPPING = {

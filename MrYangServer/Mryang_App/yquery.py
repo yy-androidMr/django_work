@@ -19,7 +19,8 @@ def dir_2json(dirtype):
 
 
 def movie_infos():
-    infos = MovieInfo.objects.values('name', 'duration', 'size', 'source_size', 'fps')
+    infos = MovieInfo.objects.annotate(d_id=F('folder_key__id')).values('d_id', 'name', 'duration', 'size',
+                                                                       'source_size', 'fps')
     jsonstr = json.dumps(list(infos))
     return jsonstr
 

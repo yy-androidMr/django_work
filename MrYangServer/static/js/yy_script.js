@@ -152,10 +152,25 @@ function _showPic() {
 }
 
 
-function convert_dirsjson(dirsJson,info_json) {
+function convert_dirsjson(dirsJson, info_json) {
 
     var rootDir;
     var dirs = new Array();
+    var info_map = []
+    for (var i = 0, count = info_json.length; i < count; i++) {
+        var item = info_json[i];
+        var key = item.d_id;
+        data_item = {
+            // 'name', 'duration', 'size', 'source_size', 'fps'
+            name: item.name,
+            duration: item.duration,
+            size: item.size,
+            pix: item.source_size,
+            fps: item.fps,
+
+        }
+        info_map.append({key: data_item})
+    }
     for (var i = 0, count = dirsJson.length; i < count; i++) {
         var item = dirsJson[i];
         dirs[i] = {
