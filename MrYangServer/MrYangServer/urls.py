@@ -37,6 +37,7 @@ urlpatterns = [
 
     url(r'^video/$', views.play_video),
     url(r'^$', views.move_index),
+    url(r'^n$', views.new_move_index),
     url(r'^own/$', views.m_index),
     url(r'^sg/$', views.s_gallery),
     url(r'^mg/$', views.m_gallery),

@@ -3,8 +3,10 @@ var pageItemCount = 9999;//一页有几个
 //在界面上初始化
 var js_dir;
 var play_target_url;
+var video_ready = false;
 
 $(document).ready(function () {
+        init_video();
         showDir3();
     }
 );
@@ -110,8 +112,9 @@ function SetCookie(name, value)//两个参数，一个是cookie的名子，一�
 function showVideo(videoUrl) {
 
     play_target_url = videoUrl.data;
-    SetCookie('url', videoUrl.data);
-    window.open('video');
+    play_video(videoUrl.data)
+    // SetCookie('url', videoUrl.data);
+    // window.open('video');
 }
 
 function applyLayout1() {
@@ -156,21 +159,21 @@ function convert_dirsjson(dirsJson, info_json) {
 
     var rootDir;
     var dirs = new Array();
-    var info_map = []
-    for (var i = 0, count = info_json.length; i < count; i++) {
-        var item = info_json[i];
-        var key = item.d_id;
-        data_item = {
-            // 'name', 'duration', 'size', 'source_size', 'fps'
-            name: item.name,
-            duration: item.duration,
-            size: item.size,
-            pix: item.source_size,
-            fps: item.fps,
-
-        }
-        info_map.append({key: data_item})
-    }
+    // var info_map = []
+    // for (var i = 0, count = info_json.length; i < count; i++) {
+    //     var item = info_json[i];
+    //     var key = item.d_id;
+    //     data_item = {
+    //         // 'name', 'duration', 'size', 'source_size', 'fps'
+    //         name: item.name,
+    //         duration: item.duration,
+    //         size: item.size,
+    //         pix: item.source_size,
+    //         fps: item.fps,
+    //
+    //     }
+    //     info_map.append({key: data_item})
+    // }
     for (var i = 0, count = dirsJson.length; i < count; i++) {
         var item = dirsJson[i];
         dirs[i] = {
@@ -216,5 +219,71 @@ function convert_dirsjson(dirsJson, info_json) {
         }
     }
     return rootDir;//有且仅有一个
+
+}
+
+function init_video() {
+    video_ready = false;
+    videoIns = videojs("my-video");
+
+
+    // videoIns = videojs("my-video");
+    // videoIns.ready(function () {
+    //     var myPlayer = this;
+    //     myPlayer.src({
+    //         type: "application/x-mpegURL"
+    //     });
+    // });
+
+    if (window.addEventListener) {
+        document.addEventListener('fullscreenchange', function () {
+            HideVideo();
+        });
+        document.addEventListener('webkitfullscreenchange', function () {
+            HideVideo();
+
+        });
+        document.addEventListener('mozfullscreenchange', function () {
+            HideVideo();
+
+        });
+        document.addEventListener('MSFullscreenChange', function () {
+            HideVideo();
+
+        });
+    }
+}
+
+function HideVideo() {
+    if (!isFullscreen()) {
+        videoIns.pause();
+        // videoIns.exitFullscreen();
+        // videoIns.exitFullWindow();
+        $('#video-div').attr('hidden', '');
+    }
+}
+
+function isFullscreen() {
+    return document.fullscreenElement ||
+        document.msFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.webkitFullscreenElement || false;
+}
+
+function play_video(v_name) {
+    var url = "/static/res/movie" + v_name + "/out.m3u8";
+    videoIns = videojs("my-video");
+    videoIns.ready(function () {
+        var myPlayer = this;
+        myPlayer.src({
+            src: url,
+            type: "application/x-mpegURL"
+        });
+        myPlayer.play();
+        myPlayer.requestFullscreen();
+
+    });
+
+    $('#video-div').removeAttr('hidden');
 
 }

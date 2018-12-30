@@ -80,5 +80,7 @@ if __name__ == '__main__':
   #   banner = XMLBase.get_gif_banner()
   # #  banner = XMLBase.cfg_list_path('gallery_info')
   #   print(banner)
-
+  #   from frames import TmpUtil
+  #   TmpUtil.clear_key('FFMPEG_KEY')
+    imageio.plugins.ffmpeg.download()
     pass

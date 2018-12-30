@@ -181,6 +181,12 @@ def move_index(request):
     return render(request, 'movie/index.html', {'json': json, 'info_json': info_json})
 
 
+def new_move_index(request):
+    json = yquery.dir_2json(yutils.M_FTYPE_MOIVE)
+    info_json = yquery.movie_infos()
+    return render(request, 'movie/new_index.html', {'json': json, 'info_json': info_json})
+
+
 # def pic(request):
 #     json = yquery.dir_2json(yutils.M_FTYPE_PIC)
 #     return HttpResponse(json, content_type='application/json')

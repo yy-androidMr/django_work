@@ -71,6 +71,9 @@ def ItemInfo(file, last_path):
     info[XMLMovie.ITEM_TAGS.OUT_NAME] = last_path
 
     # 读取视频信息.
+    from frames import TmpUtil
+    path = TmpUtil.get(FFMPEG_KEY)
+
     video_info = yutils.video_info(file)
     info[XMLMovie.ITEM_TAGS.PIXEL] = str(video_info[XMLMovie.ITEM_TAGS.PIXEL])
     info[XMLMovie.ITEM_TAGS.FPS] = str(round(video_info[XMLMovie.ITEM_TAGS.FPS]))

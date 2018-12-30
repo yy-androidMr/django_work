@@ -60,13 +60,13 @@ def insert_db(path, info):
 
 
 if __name__ == '__main__':
-    # res_root, _ = XMLBase.resource_root()
-    #
-    # Dir.objects.filter(type=yutils.M_FTYPE_MOIVE).delete()
-    # dict = ypath.path_result(res_root, movie_config[XMLMovie.TAGS.DIR_ROOT], parse_file=False)
-    #
-    # list = sorted(dict.items(), key=lambda d: d[1][ypath.KEYS.LEVEL])
-    # for item in list:
-    #     insert_db(item[0], item[1])
+    res_root, _ = XMLBase.resource_root()
+
+    Dir.objects.filter(type=yutils.M_FTYPE_MOIVE).delete()
+    dict = ypath.path_result(res_root, movie_config[XMLMovie.TAGS.DIR_ROOT], parse_file=False)
+
+    list = sorted(dict.items(), key=lambda d: d[1][ypath.KEYS.LEVEL])
+    for item in list:
+        insert_db(item[0], item[1])
 
     insert_gallery_info()
