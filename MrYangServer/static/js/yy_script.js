@@ -71,8 +71,14 @@ function moviePage() {
         typeTag.html("影视");
 
         var itemImg = cloneNode.find('#itemImg');//需要改变宽高
-        aTag.html(file_item.name);
+        if (file_item.info) {
+            aTag.html(file_item.info.name);
+
+        } else {
+            aTag.html(file_item.name);
+        }
         if (file_item.isDir) {
+
             cloneNode.removeAttr('href');
             cloneNode.bind('click', file_item, showTargetDir);
             if (file_item.children.length > 0) {
@@ -86,7 +92,6 @@ function moviePage() {
         } else {
             cloneNode.unbind();
             itemImg.attr('src', '/static/images/movie_icon.png');
-
             // cloneNode.attr('href', 'http://192.168.199.124/movie/' + file_item.path);
             var encode = file_item.path;
 
@@ -159,21 +164,22 @@ function convert_dirsjson(dirsJson, info_json) {
 
     var rootDir;
     var dirs = new Array();
-    // var info_map = []
-    // for (var i = 0, count = info_json.length; i < count; i++) {
-    //     var item = info_json[i];
-    //     var key = item.d_id;
-    //     data_item = {
-    //         // 'name', 'duration', 'size', 'source_size', 'fps'
-    //         name: item.name,
-    //         duration: item.duration,
-    //         size: item.size,
-    //         pix: item.source_size,
-    //         fps: item.fps,
-    //
-    //     }
-    //     info_map.append({key: data_item})
-    // }
+    var info_map = new Map();
+    for (var i = 0, count = info_json.length; i < count; i++) {
+        var item = info_json[i];
+        var item_key = item.d_id;
+        data_item = {
+            // 'name', 'duration', 'size', 'source_size', 'fps'
+            name: item.name,
+            duration: item.duration,
+            size: item.size,
+            pix: item.source_size,
+            fps: item.fps,
+
+        }
+        info_map.set(item_key, data_item);
+    }
+	
     for (var i = 0, count = dirsJson.length; i < count; i++) {
         var item = dirsJson[i];
         dirs[i] = {

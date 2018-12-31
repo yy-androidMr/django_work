@@ -61,6 +61,11 @@ def insert_db(path, info):
 
 if __name__ == '__main__':
     res_root, _ = XMLBase.resource_root()
+    from frames import TmpUtil
+
+    desc_root = TmpUtil.get(yutils.RESOURCE_DESC_KEY)
+    # 转码结束后的切片路径
+    m3u8_ts_root = ypath.join(desc_root, movie_config[XMLMovie.TAGS.TS_DIR])
 
     Dir.objects.filter(type=yutils.M_FTYPE_MOIVE).delete()
     dict = ypath.path_result(res_root, movie_config[XMLMovie.TAGS.DIR_ROOT], parse_file=False)

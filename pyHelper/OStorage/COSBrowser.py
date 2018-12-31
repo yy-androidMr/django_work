@@ -34,6 +34,7 @@ logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 upload_list_path = 'out/upload_list.txt'
 delete_list_path = 'out/delete_list.txt'
 test_bucket_bat = 'bucket_test_bg.bat'
+main_bucket_bat = 'bucket_main.bat'
 
 local_pre_path = 'E:/cache/root/'
 sync_local_dir = 'ttt'
@@ -182,16 +183,18 @@ if __name__ == '__main__':
             if a.endswith('/') or a.endswith('\\'):
                 a = a[:-1]
             bucket_dir = a
-
+    bucket_dir = 'media/pic'
+    sync_local_dir = r'pic'
+    local_pre_path = r'E:/resource/desc/'
     print(local_pre_path, sync_local_dir, bucket_dir)
     # 这是两步操作,通常需要分开
-    create_diff_list(test_bucket_bat)
+    create_diff_list(main_bucket_bat)
     # os.system(upload_list_path)
     os.system('open ' + upload_list_path)
     os.system('open ' + delete_list_path)
     input = input('去确认上传和下载文件吧!:(y|n)')
     if (input == 'y'):
         print('确认')
-        sync_to_os(test_bucket_bat)
+        sync_to_os(main_bucket_bat)
     else:
         print('取消')

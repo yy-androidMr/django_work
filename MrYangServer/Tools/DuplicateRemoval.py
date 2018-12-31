@@ -3,6 +3,7 @@ import os
 
 from frames import yutils
 
+
 # 删除所有文件中 有重复的图.
 def delfile(path):
     print(path)
@@ -24,5 +25,5 @@ def delfile(path):
     print('done')
 
 
-# delfile(yutils.media_root())
+delfile(r"E:\resource\src\movie")
 # delfile('F:\django_work\MrYangServer\media_source\pic\src\朋友')

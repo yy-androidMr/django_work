@@ -23,3 +23,6 @@ MrYangServer/upload/
 
 pyHelper/OStorage/out
 
+
+nginx-1.13.8/logs
+nginx 1.7.11.3 Gryphon/logs

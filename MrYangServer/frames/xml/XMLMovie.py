@@ -108,14 +108,3 @@ def item_info_dict():
         items[ITEM_TAGS.FPS] = node.getAttribute(ITEM_TAGS.FPS)
     return infos
 
-
-def get_out_root():
-    res_root, _ = XMLBase.resource_root()
-    out_root = os.path.join(res_root, get_infos()[TAGS.DIR_ROOT])
-    return out_root
-
-
-def out_abs_root():
-    res_root = XMLBase.resource_abs_root()
-    out_root = os.path.join(res_root, get_infos()[TAGS.DIR_ROOT])
-    return out_root
