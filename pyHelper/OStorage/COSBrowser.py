@@ -30,6 +30,7 @@ import yy_utils
 
 logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 
+down_host = 'https://mryang-1251808344.cos.ap-chengdu.myqcloud.com/'
 upload_list_path = 'out/upload_list.txt'
 delete_list_path = 'out/delete_list.txt'
 test_bucket_bat = 'bucket_test_bg.bat'
@@ -169,6 +170,21 @@ def sync_to_os(bat):
 # ---------------功能2结束------------------------
 
 
+# ---------------功能3开始------------------------
+def download(list):
+    print(sync_path)
+
+
+def all_download(res, _):
+    for item in res:
+        sync_path.append(item.strip().split()[0])
+    download(sync_path)
+
+
+def download_oncos():
+    yy_utils.process_cmd('coscmd list -ar ' + bucket_dir, done_call=download)
+
+
 # 示例: python3 COSBrowser.py -l /Users/mr.yang/Documents/cache/ttt -b ttt
 if __name__ == '__main__':
     try:
@@ -186,6 +202,7 @@ if __name__ == '__main__':
             if a.endswith('/') or a.endswith('\\'):
                 a = a[:-1]
             bucket_dir = a
+
     bucket_dir = 'media/pic/thum'
     local_path = r'/Users/mryang/Documents/res/src/pic/thum'
     print(local_path, bucket_dir)
@@ -193,9 +210,20 @@ if __name__ == '__main__':
     create_diff_list(main_bucket_bat)
     os.system('open ' + upload_list_path)
     os.system('open ' + delete_list_path)
-    input = input('去确认上传和下载文件吧!:(y|n)')
+    input = input('去确认上传和下载文件吧!:(s[正常同步]|n[取消操作]|ud[把本地缺失的更新,delete_list.txt的文件会被同步到本地])')
     if input == 'y':
         print('确认')
         sync_to_os(main_bucket_bat)
+    if input == 'ud':
+        print('同步本地缺失')
+        sync_path = []
+        with open(delete_list_path, 'r') as f:
+            lines = f.readlines()
+            for line in lines:
+                sync_path.append(down_host + line.replace('\n', ''))
+        if len(sync_path) > 0:
+            download(sync_path)
+        else:
+            print('没有需要同步的文件')
     else:
         print('取消')
