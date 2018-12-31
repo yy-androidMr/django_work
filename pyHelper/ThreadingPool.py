@@ -1,7 +1,6 @@
 # coding=utf-8
 # import random
 import threading
-
 # import time
 
 
@@ -19,7 +18,7 @@ class ThreadingPool:
         for t in self.threads:
             t.join()
 
-
+#
 # def t(arg):
 #     index = 9
 #     print('t is start:' + arg)
@@ -28,7 +27,7 @@ class ThreadingPool:
 #         time.sleep(random.randint(1, 3))
 #     print('t is down:' + arg)
 #
-#
+
 # tp = ThreadingPool()
 # tp.append(t, args='1')
 # tp.append(t, args='2')
