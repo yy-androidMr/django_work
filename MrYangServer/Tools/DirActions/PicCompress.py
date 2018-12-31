@@ -194,8 +194,6 @@ if __name__ == '__main__':
     desc = ypath.join(desc, pic_cfg[XMLPic.TAGS.DIR_ROOT])
     logger.info('初始化成功src:', src, ',desc:', desc)
 
-
-
     middle = ypath.join(desc, pic_cfg[XMLPic.TAGS.MIDDLE])
     thum = ypath.join(desc, pic_cfg[XMLPic.TAGS.THUM])
     delete_not_exist()
