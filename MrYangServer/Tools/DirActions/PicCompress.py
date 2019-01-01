@@ -4,6 +4,8 @@ import os
 
 import piexif
 import shutil
+
+import sys
 from PIL import Image, ImageFile
 
 from frames import yutils, logger, ypath
@@ -17,6 +19,8 @@ PicCompress_src = 'PicCompress_src'
 PicCompress_desc = 'PicCompress_desc'
 
 pic_cfg = XMLPic.get_infos()
+
+other_file = []
 
 
 def middle_out_path(source_path, desc_dir=None):
@@ -47,6 +51,7 @@ def begin_s2middle_by_threads(src_dir, desc_dir, delete_exist):
                 shutil.copy(source_path, rename_path)
                 continue
             if not yutils.is_photo(source_path):
+                other_file.append(source_path)
                 continue
 
             yutils.create_dirs(rename_path)
@@ -99,8 +104,6 @@ def src2pc(delete_exist):
             out_dir = middle_out_dir(src_dir)
             img_link_dic[out_dir] = src_dir
             tpool.append(begin_s2middle_by_threads, src_dir, out_dir, delete_exist)
-            # begin_s2middle_by_threads(src_dir, out_dir, delete_exist)
-    print('start mulite thread!!!!!!!!!!')
     tpool.start()
     print('end mulite thread!!!!!!!!!!!!!!')
     return img_link_dic
@@ -165,24 +168,28 @@ def delete_not_exist():
     right_map = {}
     for root, dirs, files in os.walk(src):
         for file in files:
-            if not yutils.is_photo(file):
+
+            if not yutils.is_gif(file) and not yutils.is_photo(file):
                 continue
             source_path = ypath.join(root, file)
             (rename_path, _) = middle_out_path(source_path)
             if os.path.exists(rename_path):
                 right_map[rename_path] = source_path
 
-    delete_list = []
     for root, dirs, files in os.walk(middle):
         for file in files:
-            if not yutils.is_photo(file):
+            if not yutils.is_gif(file) and not yutils.is_photo(file):
                 continue
-            source_path = ypath.join(root, file)
-            if source_path in right_map:
+            middle_path = ypath.join(root, file)
+            if middle_path in right_map:
                 pass  # print('' + source_path + "  src:" + right_map[source_path])
             else:
-                delete_list.append(source_path)
-                # print(source_path)
+                thum_path = thum + middle_path[len(middle):]
+                if os.path.exists(middle_path):
+                    os.remove(middle_path)
+                if os.path.exists(thum_path):
+                    os.remove(thum_path)
+                print('删除文件:', middle_path, thum_path)
     print('[delete_not_exist] end')
 
 
@@ -199,17 +206,26 @@ if __name__ == '__main__':
 
     middle = ypath.join(desc, pic_cfg[XMLPic.TAGS.MIDDLE])
     thum = ypath.join(desc, pic_cfg[XMLPic.TAGS.THUM])
+    # 去重
+    other_file.clear()
+    ypath.delfile(src)
+    delete_not_exist()
+    link_dic = src2pc(False)
 
-    # delete_not_exist()
+    if len(other_file) > 0:
+        str = input('警告!发现非图片或gif的文件,请确认:\n').lower()
+        if 'y' != str:
+            sys.exit(0)
+    middle2thum(False)
 
-    # link_dic = src2pc(False)
-    middle2thum(True)
-    # middle_have, thum_have = ypath.compair_path(middle, thum)
-    # if len(middle_have) > 0:
-    #     str = input('发现有部分文件没有转换完全,是否继续?(y/n):')
-    #     if 'y' in str or 'Y' in str:
-    #         XMLPic.append_ifnot_exist(link_dic)
-    #     else:
-    #         print(middle_have, thum_have)
-    # else:
-    #     XMLPic.append_ifnot_exist(link_dic)
+    middle_have, thum_have = ypath.compair_path(middle, thum)
+
+    print(middle_have)
+
+    if len(middle_have) > 0:
+        str = input('发现有部分文件没有转换完全,是否继续?(y/n):').lower()
+        if 'y' != str:
+            print(middle_have, thum_have)
+            sys.exit(0)
+
+    XMLPic.append_ifnot_exist(link_dic)

@@ -11,7 +11,7 @@ import imageio
 # dict = {'/Users/mr.yang/Documents/GitHub/django_work/MrYangServer/static/res/movie/22sd/c213.ym3':
 #         {'name': 'c213.ym3', 'isdir': True,'rel_path':'22sd/c213.ym3'
 #          'parent':'/Users/mr.yang/Documents/GitHub/django_work/MrYangServer/static/res/movie/22sd' }}
-from frames import logger
+from frames import logger, yutils
 
 
 class KEYS:
@@ -131,11 +131,31 @@ def compair_path(left, right):
 
     left_have = left_set.difference(right_set)
     right_have = right_set.difference(left_set)
-    return (left_have, right_have)
+    return left_have, right_have
     # ret_list = list( ^ )
     # ret2_list = list(set(right_files) ^ set(left_files))
     # print(ret_list)
     # print(ret2_list)
 
 
-print(compair_path(r'G:\cache\11\pic\middle', r'G:\cache\11\pic\thum'))
+# 删除所有文件中 有重复的图.
+def delfile(path):
+    print(path)
+    repeat_file = {}
+    for root, dirs, files in os.walk(path):
+        md5_list = {}
+        for file in files:
+            source_rela_path = os.path.join(root, file)
+            file_md5 = yutils.get_md5(source_rela_path)
+            if file_md5 in md5_list:
+                repeat_file[source_rela_path] = md5_list[file_md5]
+            else:
+                md5_list[file_md5] = os.path.abspath(source_rela_path)
+        print('next')
+    print(repeat_file)
+    for file in repeat_file:
+        print(file)
+        os.remove(file)
+    print('done')
+
+# print(compair_path(r'G:\cache\11\pic\middle', r'G:\cache\11\pic\thum'))
