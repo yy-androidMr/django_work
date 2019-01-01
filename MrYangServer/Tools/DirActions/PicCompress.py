@@ -9,14 +9,14 @@ import sys
 from PIL import Image, ImageFile
 
 from frames import yutils, logger, ypath
-from frames.xml import XMLBase, XMLPic
+from frames.xml import XMLPic
 
 MAX_PIC_SIZE = 3000
 thum_width = 350
 middle_area = MAX_PIC_SIZE * MAX_PIC_SIZE
 
-PicCompress_src = 'PicCompress_src'
-PicCompress_desc = 'PicCompress_desc'
+# gif占位图
+GIF_SPACE = 'gif_space'
 
 pic_cfg = XMLPic.get_infos()
 
@@ -127,9 +127,9 @@ def middle2thum(delete_exist):
             dir = os.path.dirname(desc_path)
             yutils.create_dirs(dir, is_dir=True)
             # gif要走配置
-            if yutils.is_gif(file) and os.path.exists(pic_cfg[XMLPic.TAGS.GIF_BANNER]):
+            if yutils.is_gif(file):
                 # gif_pic
-                shutil.copy(pic_cfg[XMLPic.TAGS.GIF_BANNER], desc_path)
+                shutil.copy(gif_space, desc_path)
                 pass
             if not yutils.is_photo(file):
                 continue
@@ -194,23 +194,31 @@ def delete_not_exist():
 
 
 if __name__ == '__main__':
-    src = yutils.input_path(yutils.RESOURCE_ROOT_KEY,
-                            '请指定资源根目录(例如:E:/resource_root),目录下有个%s文件夹,并且%s下就是图片:\n' % (
-                                pic_cfg[XMLPic.TAGS.DIR_ROOT], pic_cfg[XMLPic.TAGS.DIR_ROOT]))
-    src = ypath.join(src, pic_cfg[XMLPic.TAGS.DIR_ROOT])
-    desc = yutils.input_path(yutils.RESOURCE_DESC_KEY,
-                             '请指定资源输出目录(例如:E:/resource_desc_root),目录下会创建%s/middle和%s/thum):\n' % (
+    from frames import TmpUtil
+
+    src = TmpUtil.input_path(yutils.RESOURCE_ROOT_KEY,
+                             '请指定资源根目录(例如:E:/resource_root),目录下有个%s文件夹,并且%s下就是图片:\n' % (
                                  pic_cfg[XMLPic.TAGS.DIR_ROOT], pic_cfg[XMLPic.TAGS.DIR_ROOT]))
+    src = ypath.join(src, pic_cfg[XMLPic.TAGS.DIR_ROOT])
+    desc = TmpUtil.input_path(yutils.RESOURCE_DESC_KEY,
+                              '请指定资源输出目录(例如:E:/resource_desc_root),目录下会创建%s/middle和%s/thum):\n' % (
+                                  pic_cfg[XMLPic.TAGS.DIR_ROOT], pic_cfg[XMLPic.TAGS.DIR_ROOT]))
     desc = ypath.join(desc, pic_cfg[XMLPic.TAGS.DIR_ROOT])
+
+    gif_space = ''
+    while not os.path.exists(gif_space):
+        gif_space = TmpUtil.input_path(GIF_SPACE,
+                                       '请指定gif的占位符的图片位置:\n')
+
     logger.info('初始化成功src:', src, ',desc:', desc)
 
     middle = ypath.join(desc, pic_cfg[XMLPic.TAGS.MIDDLE])
     thum = ypath.join(desc, pic_cfg[XMLPic.TAGS.THUM])
     # 去重
     other_file.clear()
-    ypath.delfile(src)
-    delete_not_exist()
-    link_dic = src2pc(False)
+    # ypath.delfile(src)
+    # delete_not_exist()
+    # link_dic = src2pc(False)
 
     if len(other_file) > 0:
         str = input('警告!发现非图片或gif的文件,请确认:\n').lower()
@@ -218,14 +226,14 @@ if __name__ == '__main__':
             sys.exit(0)
     middle2thum(False)
 
-    middle_have, thum_have = ypath.compair_path(middle, thum)
-
-    print(middle_have)
-
-    if len(middle_have) > 0:
-        str = input('发现有部分文件没有转换完全,是否继续?(y/n):').lower()
-        if 'y' != str:
-            print(middle_have, thum_have)
-            sys.exit(0)
-
-    XMLPic.append_ifnot_exist(link_dic)
+    # middle_have, thum_have = ypath.compair_path(middle, thum)
+    #
+    # print(middle_have)
+    #
+    # if len(middle_have) > 0:
+    #     str = input('发现有部分文件没有转换完全,是否继续?(y/n):').lower()
+    #     if 'y' != str:
+    #         print(middle_have, thum_have)
+    #         sys.exit(0)
+    #
+    # XMLPic.append_ifnot_exist(link_dic)

@@ -8,7 +8,6 @@ from frames.logger import logger
 
 from frames.xml import XMLBase
 
-
 CONFIG_NAME = 'pic_info'
 GALLERY_TAG = 'gallery'
 COMMENT = '\n<gallery dir_name="a" link="b" name="" param1="" param2="" thum="" time=""> </gallery>' \
@@ -27,7 +26,6 @@ class TAGS:
     THUM = 'thum'
     MIDDLE = 'middle'
     ITEM_INFO = 'item_info'
-    GIF_BANNER = 'gif_banner'
 
 
 class ITEM_TAGS:
@@ -129,8 +127,6 @@ def get_infos():
     info[TAGS.THUM] = dpins.elem.attr_value(elem_proxy.root, TAGS.THUM)
     info[TAGS.MIDDLE] = dpins.elem.attr_value(elem_proxy.root, TAGS.MIDDLE)
     info[TAGS.ITEM_INFO] = dpins.elem.attr_value(elem_proxy.root, TAGS.ITEM_INFO)
-
-    info[TAGS.GIF_BANNER] = elem_proxy.node_value(elem_proxy.xml_nodes(TAGS.GIF_BANNER)[0])
 
     return info
 

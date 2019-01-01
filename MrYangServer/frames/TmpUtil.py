@@ -4,11 +4,10 @@
 import os
 
 import shutil
-import tempfile
-
+import manage
 from frames import yutils
 
-tmpdir = os.path.join(tempfile.gettempdir(), 'yang_server')
+tmpdir = os.path.join(manage.project_root(), 'tmp')
 tmpfile = os.path.join(tmpdir, 'tmp_server_cfg')
 logdir = os.path.join(tmpdir, 'log')
 
@@ -79,3 +78,12 @@ def set(key, value, value_is_path=True):
         value = value.replace('\\', '/')
     dictarg = {key: value}
     write_tmp(**dictarg)
+
+
+# 输入记录缓存
+def input_path(key, intro):
+    path = get(key)
+    while path is None or not os.path.exists(path):
+        path = input(intro)
+    set(key, path)
+    return path.replace('\\', '/')

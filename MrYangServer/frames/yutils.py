@@ -12,8 +12,6 @@ import subprocess
 import imageio
 from django.db import models
 
-from frames import TmpUtil
-
 
 def random_int():
     return random.randint(10000000, 99999999)
@@ -268,17 +266,6 @@ def process_cmd(cmd, call=None, done_call=None, param=None):
             cmd_str.append(line.replace('\r\n', ''))
             if call is not None:
                 call(line)
-
-
-# end----------------------------------------------------------
-
-# 输入记录缓存
-def input_path(key, intro):
-    path = TmpUtil.get(key)
-    while path is None or not os.path.exists(path):
-        path = input(intro)
-    TmpUtil.set(key, path)
-    return path.replace('\\', '/')
 
 
 # end-------------------------------------------

@@ -2,7 +2,6 @@
 from xml.dom import minidom
 
 # 总配置路径
-import os
 
 import manage
 
