@@ -83,6 +83,11 @@ if __name__ == '__main__':
     #   from frames import TmpUtil
     #   TmpUtil.clear_key('FFMPEG_KEY')
     #   imgeio.plugins.ffmpeg.download()
-    seed = 'media/pic/thum/1d03184c16cd1870637934a4f60ff9d9/01527dbc9c22b9492553348e72481148.jpg        14529      STANDARD      2018-12-02 23:02:38'
-    print(seed.split())
+
+    # print(os.path.dirname(r'E:\resource\src\pic\18年十一\20181001_090749.jpg'))
+
+    # for root, dirs, files in os.walk('E:/resource/src/pic/18年十一'):
+    #     print(root, files)
+    for root, dirs, files in os.walk('E:/resource/src/pic'):
+        print(root, 'dirs:', dirs)
     pass
