@@ -232,5 +232,5 @@ if __name__ == '__main__':
                 download(lines)
             else:
                 print('没有需要同步的文件')
-    else: n
+    else:
         print('取消')
