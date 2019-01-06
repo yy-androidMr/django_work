@@ -14,7 +14,7 @@
 
 			<gif_banner>/media_source/pic/gif_bannder.png</gif_banner>
 			<resource_root>/static/res</resource_root>
-			<cos_media_root>https://mryang-1251808344.cos.ap-chengdu.myqcloud.com/media</cos_media_root>
+			<cos_media_root>https://mryang-1251808344.cos.ap-chengdu.myqcloud.com/res</cos_media_root>
 			<config_root>/config</config_root>
 			<list>
 				<pic_info>/pic_info.xml</pic_info>
