@@ -17,6 +17,7 @@ from django.conf.urls import url
 from django.contrib import admin
 
 from Mryang_App import views
+from  MrYangServer import settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -48,3 +49,6 @@ urlpatterns = [
     url(r'^download/$', views.download_test),
     # url(r'^any/(.*)/$', views.any_page),
 ]
+from django.conf.urls.static import static
+
+urlpatterns += static('/statics/', document_root='E:/resource/desc/movie_ts')

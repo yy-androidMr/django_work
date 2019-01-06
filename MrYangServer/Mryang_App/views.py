@@ -171,8 +171,8 @@ def play_video(request):
     # if param1:
     #     return render(request, 'player_2/' + param1)
     # else:
-
-    return render(request, 'movie/video_js.html')
+    r = render(request, 'movie/video_js.html')
+    return r
 
 
 def move_index(request):
@@ -184,7 +184,15 @@ def move_index(request):
 def new_move_index(request):
     json = yquery.dir_2json(yutils.M_FTYPE_MOIVE)
     info_json = yquery.movie_infos()
-    return render(request, 'movie/new_index.html', {'json': json, 'info_json': info_json})
+    r = render(request, 'movie/new_index.html', {'json': json, 'info_json': info_json})
+    # r['Access-Control-Allow-Origin'] = "*"
+    #
+    # # 允许你携带Content-Type请求头
+    # r['Access-Control-Allow-Headers'] = "Content-Type"
+    #
+    # # 允许你发送DELETE,PUT
+    # r['Access-Control-Allow-Methods'] = "DELETE,PUT"
+    return r
 
 
 # def pic(request):

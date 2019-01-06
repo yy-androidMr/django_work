@@ -179,7 +179,7 @@ function convert_dirsjson(dirsJson, info_json) {
         }
         info_map.set(item_key, data_item);
     }
-	
+
     for (var i = 0, count = dirsJson.length; i < count; i++) {
         var item = dirsJson[i];
         dirs[i] = {
@@ -191,8 +191,9 @@ function convert_dirsjson(dirsJson, info_json) {
             path: item.path,
             tags: item.tags,
             name: item.name,
+            info: info_map.get(item.id),
         }
-        SetCookie('url', dirs[0].path);
+
         var dir_split = item.path.split('/');
         dir_split = dir_split.filter(function (n) {
             return n;
@@ -205,6 +206,7 @@ function convert_dirsjson(dirsJson, info_json) {
             rootDir = dirs[i];
         }
     }
+    SetCookie('url', dirs[0].path);
 
 
     for (var i = 0; i < dirs.length; i++) {
@@ -277,7 +279,8 @@ function isFullscreen() {
 }
 
 function play_video(v_name) {
-    var url = "/static/res/movie" + v_name + "/out.m3u8";
+    var url = "http://localhost:909/statics" + v_name + "/out.m3u8";
+    // var url = "/电影/0b8d5fd8a64b1de603ed53232d903596.ym3/out.m3u8";
     videoIns = videojs("my-video");
     videoIns.ready(function () {
         var myPlayer = this;
@@ -285,8 +288,8 @@ function play_video(v_name) {
             src: url,
             type: "application/x-mpegURL"
         });
-        myPlayer.play();
         myPlayer.requestFullscreen();
+        myPlayer.play();
 
     });
 

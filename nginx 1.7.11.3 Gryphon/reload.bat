@@ -1,2 +1,0 @@
-nginx -s reload
-pause

@@ -36,7 +36,7 @@ def insert_gallery_info():
 
 
 # 插入数据库
-def insert_db(path, info):
+def create_db(path, info):
     name = info[ypath.KEYS.NAME]
     parent_path = info[ypath.KEYS.PARENT]
     rel_path = info[ypath.KEYS.REL]
@@ -56,7 +56,11 @@ def insert_db(path, info):
     except Exception as e:
         print('错误:%s:is not found :%s' % (parent_path, e))
         pass
-    d_model.save()
+    # 增加效率,把不是文件夹的不保存.统一使用事物处理
+    if is_dir:
+        d_model.save()
+    else:
+        return d_model
 
 
 if __name__ == '__main__':
@@ -68,10 +72,14 @@ if __name__ == '__main__':
     m3u8_ts_root = ypath.join(desc_root, movie_config[XMLMovie.TAGS.TS_DIR])
 
     Dir.objects.filter(type=yutils.M_FTYPE_MOIVE).delete()
-    dict = ypath.path_result(res_root, movie_config[XMLMovie.TAGS.DIR_ROOT], parse_file=False)
+    dict = ypath.path_result(desc_root, movie_config[XMLMovie.TAGS.TS_DIR], parse_file=False)
 
     list = sorted(dict.items(), key=lambda d: d[1][ypath.KEYS.LEVEL])
+    d_model_list = []
     for item in list:
-        insert_db(item[0], item[1])
-
+        d_model = create_db(item[0], item[1])
+        if d_model:
+            d_model_list.append(d_model)
+    if len(d_model_list) > 0:
+        Dir.objects.bulk_create(d_model_list)
     insert_gallery_info()

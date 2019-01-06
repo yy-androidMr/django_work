@@ -45,10 +45,8 @@ LINUX = 'Linux'
 
 RESOURCE_ROOT_KEY = 'RESOURCE_ROOT_KEY'
 RESOURCE_DESC_KEY = 'RESOURCE_DESC_KEY'
-static_root = 'F:/django_work/MrYangServer/static'
 
 banner_pic_path = '/pic/gif_bannder.png'
-static_media_root = ''.join([static_root, '/media'])
 upload_root = 'upload'
 upload_album = ''.join([upload_root, '/album'])
 upload_video = ''.join([upload_root, '/video'])

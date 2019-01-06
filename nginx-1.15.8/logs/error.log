@@ -1,0 +1,15 @@
+2019/01/06 22:24:36 [error] 10200#9508: *3 CreateFile() "F:\django_work\nginx-1.15.8/html/favicon.ico" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "localhost"
+2019/01/06 22:33:02 [error] 10200#9508: *7 CreateFile() "F:\django_work\nginx-1.15.8/html/favicon.ico" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "localhost"
+2019/01/06 22:33:02 [error] 10200#9508: *7 CreateFile() "F:\django_work\nginx-1.15.8/html/favicon.ico" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "localhost"
+2019/01/06 22:33:02 [error] 10200#9508: *7 CreateFile() "F:\django_work\nginx-1.15.8/html/favicon.ico" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "localhost"
+2019/01/06 22:33:03 [error] 10200#9508: *7 CreateFile() "F:\django_work\nginx-1.15.8/html/favicon.ico" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "localhost"
+2019/01/06 22:45:29 [notice] 6820#5408: signal process started
+2019/01/06 22:46:06 [notice] 2112#2108: signal process started
+2019/01/06 22:48:19 [notice] 3160#6600: signal process started
+2019/01/06 22:53:36 [emerg] 5104#5656: unknown directive " " in F:\django_work\nginx-1.15.8/conf/nginx.conf:54
+2019/01/06 22:53:36 [alert] 5588#4796: worker process 5104 exited with code 1
+2019/01/06 22:53:36 [alert] 5588#4796: could not respawn worker
+2019/01/06 22:53:42 [emerg] 4652#4896: unknown directive " " in F:\django_work\nginx-1.15.8/conf/nginx.conf:54
+2019/01/06 22:55:26 [emerg] 208#9048: unknown directive " " in F:\django_work\nginx-1.15.8/conf/nginx.conf:53
+2019/01/06 22:55:40 [emerg] 3108#5404: unknown directive " " in F:\django_work\nginx-1.15.8/conf/nginx.conf:53
+2019/01/06 23:12:15 [error] 3776#4256: *2 CreateFile() "F:\django_work\nginx-1.15.8/html/favicon.ico" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "localhost"

@@ -40,15 +40,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'Mryang_App.apps.MryangAppConfig',
     'Mryang_Tdb.apps.MryangTdbConfig',
-
 ]
 MIDDLEWARE_CLASSES = (
     'django.middleware.gzip.GZipMiddleware',
+    'django.middleware.common.CommonMiddleware',
 )
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -57,6 +59,35 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = (
+    '*'
+)
+
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+    'VIEW',
+)
+
+CORS_ALLOW_HEADERS = (
+    'XMLHttpRequest',
+    'X_FILENAME',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'Pragma',
+)
 
 ROOT_URLCONF = 'MrYangServer.urls'
 
@@ -87,19 +118,19 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     },
-    'tdb': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ydatabase',
-        'USER': 'yysql',
-        'PASSWORD': 'mysql_yy2134',
-        'HOST': '148.70.103.10',
-        'PORT': '3306',
-    },
+    # 'tdb': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'ydatabase',
+    #     'USER': 'yysql',
+    #     'PASSWORD': 'mysql_yy2134',
+    #     'HOST': '148.70.103.10',
+    #     'PORT': '3306',
+    # },
 }
 DATABASE_ROUTERS = ['MrYangServer.database_router.DatabaseAppsRouter']
 DATABASE_APPS_MAPPING = {
     # example:
-    #'app_name':'database_name',
+    # 'app_name':'database_name',
     'Mryang_Tdb': 'tdb',
     'Mryang_App': 'default',
 }
