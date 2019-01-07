@@ -17,11 +17,9 @@ from django.conf.urls import url
 from django.contrib import admin
 
 from Mryang_App import views
-from frames.xml import XMLBase
 
 from django.conf.urls.static import static
 
-res_url, res_root = XMLBase.res_url_info()
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     # 上传照片的控制台
@@ -30,9 +28,7 @@ urlpatterns = [
     url(r'^up/pic', views.up_pic2),
     # ----------end---------------
 
-    url(r'^video/$', views.play_video),
-    url(r'^$', views.move_index),
-    url(r'^n$', views.new_move_index),
+    url(r'^$', views.new_move_index),
     url(r'^own/$', views.m_index),
     url(r'^sg/$', views.s_gallery),
     url(r'^mg/$', views.m_gallery),
@@ -41,9 +37,9 @@ urlpatterns = [
 
     url(r'^h5/(.*)/$', views.h5_test),
     url(r'^download/$', views.download_test),
-    static(res_url, document_root=res_root)
+    # static(res_url, document_root=res_root)
     # url(r'^any/(.*)/$', views.any_page),
 ]
 # from django.conf.urls.static import static
 #
-# urlpatterns += static('/statics/', document_root='E:/resource/desc/movie_ts')
+urlpatterns += static(views.res_url, document_root=views.res_root)

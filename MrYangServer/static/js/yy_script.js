@@ -2,9 +2,8 @@ var pageIndex = 0;
 var pageItemCount = 9999;//一页有几个
 //在界面上初始化
 var js_dir;
-var play_target_url;
-var video_ready = false;
-
+var video_url_partten;
+var out_partten;
 $(document).ready(function () {
         init_video();
         showDir3();
@@ -116,7 +115,6 @@ function SetCookie(name, value)//两个参数，一个是cookie的名子，一�
 
 function showVideo(videoUrl) {
 
-    play_target_url = videoUrl.data;
     play_video(videoUrl.data)
     // SetCookie('url', videoUrl.data);
     // window.open('video');
@@ -161,7 +159,6 @@ function _showPic() {
 
 
 function convert_dirsjson(dirsJson, info_json) {
-
     var rootDir;
     var dirs = new Array();
     var info_map = new Map();
@@ -231,17 +228,8 @@ function convert_dirsjson(dirsJson, info_json) {
 }
 
 function init_video() {
-    video_ready = false;
-    videoIns = videojs("my-video");
-
-
     // videoIns = videojs("my-video");
-    // videoIns.ready(function () {
-    //     var myPlayer = this;
-    //     myPlayer.src({
-    //         type: "application/x-mpegURL"
-    //     });
-    // });
+
 
     if (window.addEventListener) {
         document.addEventListener('fullscreenchange', function () {
@@ -279,8 +267,8 @@ function isFullscreen() {
 }
 
 function play_video(v_name) {
-    var url = "http://localhost:909/statics" + v_name + "/out.m3u8";
-    // var url = "/电影/0b8d5fd8a64b1de603ed53232d903596.ym3/out.m3u8";
+    var url = video_url_partten + "/" + v_name + "/" + out_partten;
+    url = url.replace("\\", "/").replace("//", "/");
     videoIns = videojs("my-video");
     videoIns.ready(function () {
         var myPlayer = this;
