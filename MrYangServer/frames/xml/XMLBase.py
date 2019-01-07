@@ -11,6 +11,7 @@ CONFIG_TAG = 'config_root'
 GIF_BANNER = 'gif_banner'
 COS_MEDIA_ROOT = 'cos_media_root'
 RESOURCE_ROOT = 'resource_root'
+RES_URL = 'res_url'
 LIST_TAG = 'list'
 
 
@@ -122,11 +123,11 @@ def cos_media_root(dpins=None):
     return gif_banner_path.replace('\\', '/'), dpins
 
 
-# 获取工程内,static下的res目录(原media目录).
-@dom_pxy_ins()
-def resource_root(dpins=None):
-    gif_banner_path = PROJ_ROOT + dpins.elem.value_by_tag(RESOURCE_ROOT)
-    return gif_banner_path.replace('\\', '/'), dpins
+# # 获取工程内,static下的res目录(原media目录).
+# @dom_pxy_ins()
+# def resource_root(dpins=None):
+#     gif_banner_path = PROJ_ROOT + dpins.elem.value_by_tag(RESOURCE_ROOT)
+#     return gif_banner_path.replace('\\', '/'), dpins
 
 
 # 获取list节点中的某一个配置路径
@@ -136,10 +137,18 @@ def cfg_list_path(c_name, dpins=None):
     c_p = config_root + dpins.elem.value_by_tag(c_name)
     return c_p.replace('\\', '/'), dpins
 
-#<resource_root>/static/res</resource_root>
+
+# <resource_root>/static/res</resource_root>
 @dom_pxy_ins()
-def resource_abs_root(dpins=None):
+def resource_root(dpins=None):
     return dpins.elem.value_by_tag(RESOURCE_ROOT)
+
+
+@dom_pxy_ins()
+def res_url_info(dpins=None):
+    local_target = resource_root(dpins)
+    url = dpins.elem.value_by_tag(RES_URL)
+    return url, local_target
 
 
 def add_attr(node, k, v='', update=False):

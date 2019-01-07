@@ -64,7 +64,6 @@ def create_db(path, info):
 
 
 if __name__ == '__main__':
-    res_root, _ = XMLBase.resource_root()
     from frames import TmpUtil
 
     desc_root = TmpUtil.get(yutils.RESOURCE_DESC_KEY)

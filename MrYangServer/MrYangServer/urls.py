@@ -17,19 +17,13 @@ from django.conf.urls import url
 from django.contrib import admin
 
 from Mryang_App import views
-from  MrYangServer import settings
+from frames.xml import XMLBase
 
+from django.conf.urls.static import static
+
+res_url, res_root = XMLBase.res_url_info()
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    # url(r'^login/',views.login),
-    # url(r'^h5/(.*)/$', views.h5_test),
-    # url(r'^h5_demo/', views.h5_demo),
-    # url(r'^h5_307/', views.h5_307),
-    # url(r'^h5_23/', views.h5_23),
-    # url(r'^upload/', views.upload_file),
-    # url(r'^regist/', views.regist),
-    # url(r'^login/', views.login),
-    # url(r'^download/', views.download_test),
     # 上传照片的控制台
     url(r'^upp/$', views.up_pic),
     url(r'^upp/begin_upload$', views.up_pic_c1),
@@ -47,8 +41,9 @@ urlpatterns = [
 
     url(r'^h5/(.*)/$', views.h5_test),
     url(r'^download/$', views.download_test),
+    static(res_url, document_root=res_root)
     # url(r'^any/(.*)/$', views.any_page),
 ]
-from django.conf.urls.static import static
-
-urlpatterns += static('/statics/', document_root='E:/resource/desc/movie_ts')
+# from django.conf.urls.static import static
+#
+# urlpatterns += static('/statics/', document_root='E:/resource/desc/movie_ts')
