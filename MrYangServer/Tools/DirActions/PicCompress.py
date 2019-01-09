@@ -214,11 +214,12 @@ if __name__ == '__main__':
 
     middle = ypath.join(desc, pic_cfg[XMLPic.TAGS.MIDDLE])
     thum = ypath.join(desc, pic_cfg[XMLPic.TAGS.THUM])
-    # 去重
     other_file.clear()
-    # ypath.delfile(src)
-    # delete_not_exist()
-    # link_dic = src2pc(False)
+    # 去重
+    ypath.delrepeat_file(src)
+    #去掉middle中的图.
+    delete_not_exist()
+    link_dic = src2pc(False)
 
     if len(other_file) > 0:
         str = input('警告!发现非图片或gif的文件,请确认:\n').lower()
@@ -226,14 +227,14 @@ if __name__ == '__main__':
             sys.exit(0)
     middle2thum(False)
 
-    # middle_have, thum_have = ypath.compair_path(middle, thum)
-    #
-    # print(middle_have)
-    #
-    # if len(middle_have) > 0:
-    #     str = input('发现有部分文件没有转换完全,是否继续?(y/n):').lower()
-    #     if 'y' != str:
-    #         print(middle_have, thum_have)
-    #         sys.exit(0)
-    #
-    # XMLPic.append_ifnot_exist(link_dic)
+    middle_have, thum_have = ypath.compair_path(middle, thum)
+
+    print(middle_have)
+
+    if len(middle_have) > 0:
+        str = input('发现有部分文件没有转换完全,是否继续?(y/n):').lower()
+        if 'y' != str:
+            print(middle_have, thum_have)
+            sys.exit(0)
+
+    XMLPic.append_ifnot_exist(link_dic)

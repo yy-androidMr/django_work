@@ -127,24 +127,26 @@ def up_pic_c1(request):
 
 
 def up_pic2(request):
-    if (request.method == "POST"):
-        # 提交了表单
-        uf = forms.upload_f(request.POST, request.FILES)
-        if uf.is_valid():
-            # 获取表单信息
-            pwd = uf.cleaned_data['pwd']
-            print(pwd)
-            if not pwd is 'temp1234':
-                hr = render(request, 'upload/gallery/child_item/upload.html')
-                hr.set_cookie('login', 'true', max_age=7 * 24 * 60 * 60)
-                return hr
-                # 写入数据库
-                # user = User.objects.get(account=utils.get_s_account())
-        return to_pic_cmd_login(request)
-    else:
-        if (check_pic_cmd_login(request)):
-            return render(request, 'upload/gallery/child_item/upload.html')
-        return to_pic_cmd_login(request)
+    return render(request, 'upload/gallery/child_item/up.html')
+
+    # if (request.method == "POST"):
+    #     # 提交了表单
+    #     uf = forms.upload_f(request.POST, request.FILES)
+    #     if uf.is_valid():
+    #         # 获取表单信息
+    #         pwd = uf.cleaned_data['pwd']
+    #         print(pwd)
+    #         if not pwd is 'temp1234':
+    #             hr = render(request, 'upload/gallery/child_item/upload.html')
+    #             hr.set_cookie('login', 'true', max_age=7 * 24 * 60 * 60)
+    #             return hr
+    #             # 写入数据库
+    #             # user = User.objects.get(account=utils.get_s_account())
+    #     return to_pic_cmd_login(request)
+    # else:
+    #     if (check_pic_cmd_login(request)):
+    #         return render(request, 'upload/gallery/child_item/upload.html')
+    #     return to_pic_cmd_login(request)
 
 
 def up_pic(request):

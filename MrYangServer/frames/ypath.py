@@ -139,7 +139,7 @@ def compair_path(left, right):
 
 
 # 删除所有文件中 有重复的图.
-def delfile(path):
+def delrepeat_file(path):
     print(path)
     repeat_file = {}
     for root, dirs, files in os.walk(path):
