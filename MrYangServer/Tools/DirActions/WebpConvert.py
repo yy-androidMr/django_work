@@ -1,7 +1,7 @@
 import os
 
-D_WEBP_PATH = r'F:\django_work\pyHelper\Plugins\webp\bin\dwebp.exe'
-SRC = r'F:\django_work\MrYangServer\media_source\pic\draft3'
+D_WEBP_PATH = r'G:\github\files\webp\libwebp-1.0.0-windows-x64\bin\dwebp.exe'
+SRC = r'G:\cache\work_cache\draft'
 
 
 def webp2pic():
