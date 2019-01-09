@@ -10,7 +10,7 @@ from django.views.decorators.gzip import gzip_page
 from Mryang_App.forms import CreateUserF, LoginUserF, UserAlbumF
 from Mryang_App.result.Enums import LOGIN, UPLOAD
 from Mryang_App import yquery, forms
-from frames import yutils
+from frames import yutils, ypath
 
 # 显示权限
 from frames import logger
@@ -23,6 +23,7 @@ NOT_SEE = 9
 (T_COS_MEIDA_ROOT, dpins) = XMLBase.cos_media_root()
 res_url, res_root = XMLBase.res_url_info(dpins)
 movie_info_cfg = XMLMovie.get_infos()
+movie_url = ypath.join(res_url, movie_info_cfg[XMLMovie.TAGS.TS_DIR])
 
 
 def hello(request):
@@ -172,7 +173,7 @@ def up_pic(request):
 def new_move_index(request):
     json = yquery.dir_2json(yutils.M_FTYPE_MOIVE)
     info_json = yquery.movie_infos()
-    r = render(request, 'movie/new_index.html', {'json': json, 'info_json': info_json, 'res_url': res_url,
+    r = render(request, 'movie/new_index.html', {'json': json, 'info_json': info_json, 'movie_url': movie_url,
                                                  'out_name': movie_info_cfg[XMLMovie.TAGS.NAME]})
     return r
 

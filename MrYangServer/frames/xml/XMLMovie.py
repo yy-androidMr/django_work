@@ -33,7 +33,7 @@ class ITEM_TAGS:
     SHOW_DURATION = 'show_duration'
     OUT_NAME = 'out_name'  # 输出的ym3的文件名
     PIXEL = 'source_size'
-    FPS='fps'
+    FPS = 'fps'
 
 
 def nodes():
@@ -108,3 +108,6 @@ def item_info_dict():
         items[ITEM_TAGS.FPS] = node.getAttribute(ITEM_TAGS.FPS)
     return infos
 
+
+def movie_url(dpins=None):
+    res_url, res_root = XMLBase.res_url_info(dpins)
