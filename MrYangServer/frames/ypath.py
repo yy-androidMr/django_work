@@ -13,6 +13,9 @@ import imageio
 #          'parent':'/Users/mr.yang/Documents/GitHub/django_work/MrYangServer/static/res/movie/22sd' }}
 from frames import logger, yutils
 
+SRC_ROOT_KEY = 'SRC_ROOT_KEY'
+DESC_ROOT_KEY = 'DESC_ROOT_KEY'
+
 
 class KEYS:
     LEVEL = 'level'
@@ -158,4 +161,19 @@ def delrepeat_file(path):
         os.remove(file)
     print('done')
 
-# print(compair_path(r'G:\cache\11\pic\middle', r'G:\cache\11\pic\thum'))
+
+# 检查一些本地的路径. 比如资源根路径.之类的 如果是函数 使用注解.
+def check_tpath_anno(fn):
+    def ins():
+        return fn()
+
+
+# 检查一些本地的路径. 比如资源根路径.之类的
+def check_tmp_paths():
+    from frames import TmpUtil
+    # from frames.xml import XMLBase
+    tmp_path = ''
+    while not os.path.isdir(tmp_path):
+        tmp_path = TmpUtil.input_path(SRC_ROOT_KEY, '请指定资源原始目录(例如:E:/src_root),目录下有个pic文件夹,movie文件夹:\n')
+    while not os.path.isdir(tmp_path):
+        tmp_path = TmpUtil.input_path(DESC_ROOT_KEY, '请指定资源输出目录(例如:E:/desc_root),目录下有什么都行,是原始目录的输出路径:\n')

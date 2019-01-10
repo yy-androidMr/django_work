@@ -157,7 +157,6 @@ def middle2thum(delete_exist):
                     crop_img.save(desc_path)
             print(desc_path)
 
-
 # 删除多余的middle 和thum
 def delete_not_exist():
     if not os.path.exists(middle):
@@ -191,7 +190,6 @@ def delete_not_exist():
                     os.remove(thum_path)
                 print('删除文件:', middle_path, thum_path)
     print('[delete_not_exist] end')
-
 
 if __name__ == '__main__':
     from frames import TmpUtil

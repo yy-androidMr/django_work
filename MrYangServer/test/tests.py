@@ -66,6 +66,7 @@ def thread_run(arg):
 
 
 if __name__ == '__main__':
+    pass
     # print(threading.currentThread())
     # for i in range(0, 4):
     #     t = threading.Thread(target=thread_run, args=(i,))
@@ -88,6 +89,3 @@ if __name__ == '__main__':
 
     # for root, dirs, files in os.walk('E:/resource/src/pic/18年十一'):
     #     print(root, files)
-    for root, dirs, files in os.walk('E:/resource/src/pic'):
-        print(root, 'dirs:', dirs)
-    pass
