@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from frames import Globals
 
+Globals.run_init()
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -127,6 +129,7 @@ DATABASES = {
     #     'PORT': '3306',
     # },
 }
+
 DATABASE_ROUTERS = ['MrYangServer.database_router.DatabaseAppsRouter']
 DATABASE_APPS_MAPPING = {
     # example:
