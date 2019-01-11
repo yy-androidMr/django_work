@@ -26,7 +26,7 @@ rootPath = os.path.split(curPath)[0]
 sys.path.append(rootPath)
 sys.path.append('../../')
 from qcloud_cos import CosConfig, CosS3Client
-from frames import yutils, ypath,logger
+from frames import yutils, ypath, logger
 
 down_host = 'https://mryang-1251808344.cos.ap-chengdu.myqcloud.com/'
 upload_list_path = 'out/upload_list.txt'
@@ -192,8 +192,12 @@ def download_oncos():
 
 # 示例: python3 COSBrowser.py -l /Users/mr.yang/Documents/cache/ttt -b ttt
 if __name__ == '__main__':
+    from frames.xml import XMLPic
 
-    local_path = r'E:\resource\desc\pic'
+    pic_cfg = XMLPic.get_infos()
+
+    local_path = ypath.src()
+    local_path = ypath.join(local_path, pic_cfg.dir_root)
     bucket_dir = '/res/pic'
 
     try:
@@ -216,8 +220,12 @@ if __name__ == '__main__':
     # 这是两步操作,通常需要分开
     create_diff_list(main_bucket_bat)
     print(local_path, bucket_dir)
-    os.system('open ' + upload_list_path)
-    os.system('open ' + delete_list_path)
+    if yutils.is_win():
+        os.system(upload_list_path)
+        os.system(delete_list_path)
+    else:
+        os.system('open ' + upload_list_path)
+        os.system('open ' + delete_list_path)
     action = input('去确认上传和下载文件吧!:(s[正常同步]|n[取消操作]|ud[把本地缺失的更新,delete_list.txt的文件会被同步到本地]):\n')
     if action == 'y':
         print('确认')

@@ -138,5 +138,3 @@ def get_infos():
     return pbinfo
 
 
-print(dir(PicItemInfo))
-# print(get_infos())
