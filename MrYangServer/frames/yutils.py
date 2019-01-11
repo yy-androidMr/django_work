@@ -143,11 +143,11 @@ def delete_null_dir(dirr):
         print('移除空目录: ', dirr)
 
 
-def get_platform():
+def is_win():
     sys_str = platform.system()
     if (sys_str == WINDOWS):
-        return False
-    return True
+        return True
+    return False
 
 
 def md5_of_str(src):

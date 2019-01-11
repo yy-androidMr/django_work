@@ -98,7 +98,7 @@ def insert_db(dir_list, file_list):
 def read_thum():
     Dir.objects.filter(type=yutils.M_FTYPE_PIC).delete()
     desc = ypath.join(ypath.desc(), pic_cfg[XMLPic.TAGS.DIR_ROOT])
-    
+
     dict = ypath.path_result(desc, pic_cfg[XMLPic.TAGS.THUM], add_root=False)
     dir_dict = {}
     file_dict = {}
@@ -117,4 +117,4 @@ def read_thum():
 
 if __name__ == '__main__':
     read_thum()
-    insert_gallery_info()
+    # insert_gallery_info()

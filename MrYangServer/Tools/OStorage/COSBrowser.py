@@ -20,14 +20,13 @@
 import getopt
 import os
 import sys
-import urllib
 
 curPath = os.path.abspath(os.path.dirname(__file__))
 rootPath = os.path.split(curPath)[0]
 sys.path.append(rootPath)
 from qcloud_cos import CosConfig, CosS3Client
 import logging
-import yy_utils
+from frames import yutils, ypath
 
 logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 
@@ -55,7 +54,7 @@ def local_list(path):
         for file in files:
             if '.DS_Store' in file:
                 continue
-            temp = os.path.join(root, file).replace('\\', '/')
+            temp = ypath.join(root, file)
             size = os.path.getsize(temp)
             list.append('%s|%d' % (temp.replace(path, ''), size))
     return list
@@ -89,11 +88,11 @@ def list_finish(res, _):
         if delete_item.split('|')[0] not in upload_path:
             delete_px_list.append(bucket_dir + delete_item.split('|')[0])
 
-    yy_utils.create_dirs(upload_list_path)
+    yutils.create_dirs(upload_list_path)
     with open(upload_list_path, 'w', encoding='utf-8') as f:
         f.write('\n'.join(upload_path))
 
-    yy_utils.create_dirs(delete_list_path)
+    yutils.create_dirs(delete_list_path)
     with open(delete_list_path, 'w', encoding='utf-8') as f:
         f.write('\n'.join(delete_px_list))
     print(upload_list, delete_px_list)
@@ -102,7 +101,7 @@ def list_finish(res, _):
 
 def print_diff_list(res, param):
     logging.info('bucket suc! do next:list os files')
-    yy_utils.process_cmd('coscmd list -ar ' + bucket_dir, done_call=list_finish)
+    yutils.process_cmd('coscmd list -ar ' + bucket_dir, done_call=list_finish)
 
 
 def diff_path(list_left, list_right):
@@ -113,11 +112,11 @@ def diff_path(list_left, list_right):
 
 # 先调用这个生成比对结果文件
 def create_diff_list(bat):
-    if yy_utils.is_mac():
+    if not yutils.is_win():
         with open(bat, 'r') as f:
-            yy_utils.process_cmd(f.readline(), done_call=print_diff_list)
+            yutils.process_cmd(f.readline(), done_call=print_diff_list)
     else:
-        yy_utils.process_cmd(bat, done_call=print_diff_list)
+        yutils.process_cmd(bat, done_call=print_diff_list)
 
 
 # ---------------功能1结束------------------------
@@ -125,7 +124,7 @@ def create_diff_list(bat):
 # ---------------功能2---------------------------
 def sync_path(_, param):
     # 上传列表需要优化.一两张不需要处理成这样吧? 2000+文件上传需要几分钟 1w? 10分钟?
-    yy_utils.process_cmd('coscmd upload -rs %s %s' % (local_path, bucket_dir))
+    yutils.process_cmd('coscmd upload -rs %s %s' % (local_path, bucket_dir))
     pass
 
 
@@ -147,7 +146,7 @@ def sync_to_os(bat):
     with open(upload_list_path, 'r') as f:
         can_upload = len(f.readlines()) > 0
     if can_upload and os.path.exists(upload_list_path):
-        yy_utils.process_cmd(bat, done_call=sync_path)
+        yutils.process_cmd(bat, done_call=sync_path)
     else:
         print('没有要上传的文件!')
 
@@ -190,7 +189,7 @@ def all_download(res, _):
 
 
 def download_oncos():
-    yy_utils.process_cmd('coscmd list -ar ' + bucket_dir, done_call=download)
+    yutils.process_cmd('coscmd list -ar ' + bucket_dir, done_call=download)
 
 
 # 示例: python3 COSBrowser.py -l /Users/mr.yang/Documents/cache/ttt -b ttt
@@ -211,7 +210,7 @@ if __name__ == '__main__':
                 a = a[:-1]
             bucket_dir = a
     local_path = r'E:\resource\desc\pic'
-    bucket_dir = 'media/pic'
+    bucket_dir = '/res/pic'
     local_path = local_path.replace('\\', '/').replace('//', '/')
     # local_path = r'/Users/mryang/Documents/res/src/pic/thum'
     # 这是两步操作,通常需要分开
