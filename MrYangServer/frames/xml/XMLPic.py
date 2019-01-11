@@ -21,35 +21,43 @@ COMMENT = '\n<gallery dir_name="a" link="b" name="" param1="" param2="" thum="" 
           '\n\t\tparam1,param2:预留接口\n'
 
 
-class TAGS:
-    DIR_ROOT = 'dir_root'
-    THUM = 'thum'
-    MIDDLE = 'middle'
-    ITEM_INFO = 'item_info'
+class PicBaseInfo:
+    def __init__(self):
+        self.dir_root = 'dir_root'
+        self.thum = 'thum'
+        self.middle = 'middle'
+        self.item_info = 'item_info'
+
+    def __str__(self):
+        return 'dir_root:%s,thum:%s,middle:%s,item_info:%s' % (self.dir_root, self.thum, self.middle, self.item_info)
 
 
-class ITEM_TAGS:
+class PicItemInfo:
     DIR_NAME = 'dir_name'
-    NAME = 'name'
-    LINK = 'link'
-    INTRO = 'intro'
-    TIME = 'time'
-    THUM = 'thum'
-    LEVEL = 'level'
-    P1 = 'param1'
-    P2 = 'param2'
-    VALUE = 'value'
+
+    def __init__(self):
+        self.dir_name = 'dir_name'
+        self.name = 'name'
+        self.link = 'link'
+        self.intro = 'intro'
+        self.time = 'time'
+        self.thum = 'thum'
+        self.level = 'level'
+        self.p1 = 'param1'
+        self.p2 = 'param2'
+        self.value = 'value'
 
 
 def attr_complition(g_item, dir_name='', link=''):
-    XMLBase.add_attr(g_item, ITEM_TAGS.DIR_NAME, dir_name)
-    XMLBase.add_attr(g_item, ITEM_TAGS.NAME)
-    XMLBase.add_attr(g_item, ITEM_TAGS.LINK, link)
-    XMLBase.add_attr(g_item, ITEM_TAGS.TIME)
-    XMLBase.add_attr(g_item, ITEM_TAGS.THUM)
-    XMLBase.add_attr(g_item, ITEM_TAGS.LEVEL, '0')
-    XMLBase.add_attr(g_item, ITEM_TAGS.P1)
-    XMLBase.add_attr(g_item, ITEM_TAGS.P2)
+    info_key = PicItemInfo()
+    XMLBase.add_attr(g_item, info_key.dir_name, dir_name)
+    XMLBase.add_attr(g_item, info_key.name)
+    XMLBase.add_attr(g_item, info_key.link, link)
+    XMLBase.add_attr(g_item, info_key.time)
+    XMLBase.add_attr(g_item, info_key.thum)
+    XMLBase.add_attr(g_item, info_key.level, '0')
+    XMLBase.add_attr(g_item, info_key.p1)
+    XMLBase.add_attr(g_item, info_key.p2)
 
 
 def create_gallery_xml(path):
@@ -70,7 +78,7 @@ def append_ifnot_exist(link_dic):
     domPxy = item_nodes()
     # 查找这个标签原先是不是有.
     for dir in link_dic:
-        digout_item = domPxy.elem.has_attr_value(GALLERY_TAG, ITEM_TAGS.DIR_NAME, dir)
+        digout_item = domPxy.elem.has_attr_value(GALLERY_TAG, PicItemInfo.DIR_NAME, dir)
         if not digout_item:
             digout_item = domPxy.dom.createElement(GALLERY_TAG)
             domPxy.elem.append_child(digout_item)
@@ -89,7 +97,7 @@ def nodes():
 
 
 def item_nodes():
-    item_info_path = get_infos()[TAGS.ITEM_INFO]  # XMLBase.cfg_list_path(CONFIG_NAME)
+    item_info_path = get_infos().item_info  # XMLBase.cfg_list_path(CONFIG_NAME)
     path, _ = XMLBase.get_cfg_dir()
     item_info_path = path + item_info_path
     # 这里需要判断文件是否存在
@@ -104,31 +112,31 @@ def get_item_infos():
     node_list = domPxy.elem.xml_nodes(GALLERY_TAG)
     xml_infos = {}
     for node in node_list:
-        dir_name = domPxy.elem.attr_value(node, ITEM_TAGS.DIR_NAME)
-        info = {}
-        info[ITEM_TAGS.NAME] = domPxy.elem.attr_value(node, ITEM_TAGS.NAME)
-        info[ITEM_TAGS.VALUE] = domPxy.elem.node_value(node)
-        info[ITEM_TAGS.TIME] = domPxy.elem.attr_value(node, ITEM_TAGS.TIME)
+        iteminfo = PicItemInfo()
+        iteminfo.dir_name = domPxy.elem.attr_value(node, iteminfo.dir_name)
+        iteminfo.name = domPxy.elem.attr_value(node, iteminfo.name)
+        iteminfo.value = domPxy.elem.node_value(node)
+        iteminfo.time = domPxy.elem.attr_value(node, iteminfo.time)
 
-        info[ITEM_TAGS.THUM] = domPxy.elem.attr_value(node, ITEM_TAGS.THUM)
-        info[ITEM_TAGS.LEVEL] = domPxy.elem.attr_value(node, ITEM_TAGS.LEVEL)
-        info[ITEM_TAGS.P1] = domPxy.elem.attr_value(node, ITEM_TAGS.P1)
-        info[ITEM_TAGS.P2] = domPxy.elem.attr_value(node, ITEM_TAGS.P2)
+        iteminfo.thum = domPxy.elem.attr_value(node, iteminfo.thum)
+        iteminfo.level = domPxy.elem.attr_value(node, iteminfo.level)
+        iteminfo.p1 = domPxy.elem.attr_value(node, iteminfo.p1)
+        iteminfo.p2 = domPxy.elem.attr_value(node, iteminfo.p2)
 
-        xml_infos[dir_name] = info
+        xml_infos[iteminfo.dir_name] = iteminfo
 
     return xml_infos
 
 
 def get_infos():
     elem_proxy, dpins = nodes()
-    info = {}
-    info[TAGS.DIR_ROOT] = dpins.elem.attr_value(elem_proxy.root, TAGS.DIR_ROOT)
-    info[TAGS.THUM] = dpins.elem.attr_value(elem_proxy.root, TAGS.THUM)
-    info[TAGS.MIDDLE] = dpins.elem.attr_value(elem_proxy.root, TAGS.MIDDLE)
-    info[TAGS.ITEM_INFO] = dpins.elem.attr_value(elem_proxy.root, TAGS.ITEM_INFO)
+    pbinfo = PicBaseInfo()
+    pbinfo.dir_root = dpins.elem.attr_value(elem_proxy.root, pbinfo.dir_root)
+    pbinfo.thum = dpins.elem.attr_value(elem_proxy.root, pbinfo.thum)
+    pbinfo.middle = dpins.elem.attr_value(elem_proxy.root, pbinfo.middle)
+    pbinfo.item_info = dpins.elem.attr_value(elem_proxy.root, pbinfo.item_info)
+    return pbinfo
 
-    return info
 
-
-print(get_infos())
+print(dir(PicItemInfo))
+# print(get_infos())

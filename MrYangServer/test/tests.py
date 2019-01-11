@@ -65,17 +65,11 @@ def thread_run(arg):
         # print('run it :' + str(arg) + "  wait count:" + str(i) + "\n")
 
 
-db = {
+class a:
+    abd = ''
 
-    's': {
-        'a': 'b'
-    },
-    't': {
-        'c': 'd'
-    }
-}
+
 if __name__ == '__main__':
-    test2.aa()
     # '\'tdb\': {\'ENGINE\': \'django.db.backends.mysql\',\'NAME\': \'ydatabase\',\'USER\': \'yysql\',
     #     'PASSWORD': 'mysql_yy2134',
     #     'HOST': '148.70.103.10',
@@ -83,7 +77,6 @@ if __name__ == '__main__':
     # }'
     # db2 = {'d': {'e': 'f'}}
     # db.update(db2)
-    print(db)
     pass
     # print(threading.currentThread())
     # for i in range(0, 4):

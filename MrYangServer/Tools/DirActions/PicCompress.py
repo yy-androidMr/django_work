@@ -23,41 +23,41 @@ pic_cfg = XMLPic.get_infos()
 other_file = []
 
 
-def middle_out_path(source_path, desc_dir=None):
+def middle_out_file(source_dir, desc_dir=None):
     if not desc_dir:
-        desc_dir = middle_out_dir(os.path.dirname(source_path))
-    exten = ypath.file_exten(source_path)
-    rename_path = ypath.join(desc_dir, yutils.get_md5(source_path) + exten)
-    return rename_path, dir
+        desc_dir, _ = middle_out_dir(os.path.dirname(source_dir))
+    exten = ypath.file_exten(source_dir)
+    rename_file = ypath.join(desc_dir, yutils.get_md5(source_dir) + exten)
+    return rename_file
 
 
 def middle_out_dir(src_dir):
     simple_path = src_dir[len(src):]
     dir = yutils.md5_of_str(simple_path)
-    return ypath.join(middle, dir)
+    return ypath.join(middle, dir), dir
 
 
 # 传进文件夹名称.做多线程处理.
 def begin_s2middle_by_threads(src_dir, desc_dir, delete_exist):
-    # , source_path, rename_path
+    # , source_file, rename_path
     for root, _, files in os.walk(src_dir):
         for file in files:
-            source_path = ypath.join(root, file)
-            rename_path, _ = middle_out_path(source_path, desc_dir)
-            if (not delete_exist) and os.path.exists(rename_path):
-                print('文件已存在!' + rename_path)
+            source_file = ypath.join(root, file)
+            rename_file = middle_out_file(source_file, desc_dir)
+            if (not delete_exist) and os.path.exists(rename_file):
+                print('文件已存在!' + rename_file)
                 continue
-            if yutils.is_gif(source_path):
-                shutil.copy(source_path, rename_path)
+            if yutils.is_gif(source_file):
+                shutil.copy(source_file, rename_file)
                 continue
-            if not yutils.is_photo(source_path):
-                other_file.append(source_path)
+            if not yutils.is_photo(source_file):
+                other_file.append(source_file)
                 continue
 
-            yutils.create_dirs(rename_path)
-            print('源：' + source_path)
+            yutils.create_dirs(rename_file)
+            print('源：' + source_file)
 
-            img = Image.open(source_path)
+            img = Image.open(source_file)
             # 压缩尺寸
             w, h = img.size
             pic_area = w * h
@@ -78,13 +78,13 @@ def begin_s2middle_by_threads(src_dir, desc_dir, delete_exist):
                     if orientation == 8:
                         img = img.rotate(90, expand=True)
                 exif_bytes = piexif.dump({})
-                img.save(rename_path, 'JPEG', exif=exif_bytes)
+                img.save(rename_file, 'JPEG', exif=exif_bytes)
             else:
                 try:
-                    img.save(rename_path)
+                    img.save(rename_file)
                 except:
                     img = img.convert('RGB')
-                    img.save(rename_path)
+                    img.save(rename_file)
 
 
 # 从src目录压缩一下.到desc
@@ -101,8 +101,8 @@ def src2pc(delete_exist):
     for root, dirs, files in os.walk(src):
         for dir in dirs:
             src_dir = ypath.join(root, dir)
-            out_dir = middle_out_dir(src_dir)
-            img_link_dic[out_dir] = src_dir
+            out_dir, single_dir = middle_out_dir(src_dir)
+            img_link_dic[single_dir] = src_dir
             tpool.append(begin_s2middle_by_threads, src_dir, out_dir, delete_exist)
     tpool.start()
     print('end mulite thread!!!!!!!!!!!!!!')
@@ -171,10 +171,10 @@ def delete_not_exist():
 
             if not yutils.is_gif(file) and not yutils.is_photo(file):
                 continue
-            source_path = ypath.join(root, file)
-            (rename_path, _) = middle_out_path(source_path)
-            if os.path.exists(rename_path):
-                right_map[rename_path] = source_path
+            source_file = ypath.join(root, file)
+            rename_file = middle_out_file(source_file)
+            if os.path.exists(rename_file):
+                right_map[rename_file] = source_file
 
     for root, dirs, files in os.walk(middle):
         for file in files:
@@ -199,17 +199,17 @@ if __name__ == '__main__':
     from frames import TmpUtil
 
     src = ypath.src()
-    src = ypath.join(src, pic_cfg[XMLPic.TAGS.DIR_ROOT])
+    src = ypath.join(src, pic_cfg.dir_root)
     desc = ypath.desc()
 
-    desc = ypath.join(desc, pic_cfg[XMLPic.TAGS.DIR_ROOT])
+    desc = ypath.join(desc, pic_cfg.dir_root)
 
     gif_space = TmpUtil.input_note(GIF_SPACE, '请指定gif的占位符的图片位置:\n')
 
     logger.info('初始化成功src:', src, ',desc:', desc, 'gif_space:', gif_space)
 
-    middle = ypath.join(desc, pic_cfg[XMLPic.TAGS.MIDDLE])
-    thum = ypath.join(desc, pic_cfg[XMLPic.TAGS.THUM])
+    middle = ypath.join(desc, pic_cfg.middle)
+    thum = ypath.join(desc, pic_cfg.thum)
     other_file.clear()
 
     # 去重

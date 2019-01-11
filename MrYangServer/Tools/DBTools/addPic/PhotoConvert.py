@@ -4,8 +4,8 @@ import os, django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "MrYangServer.settings")
 django.setup()
 
-from frames import yutils, ypath, TmpUtil
-from Mryang_Tdb.models import Dir, GalleryInfo
+from frames import yutils, ypath
+from Mryang_App.models import Dir, GalleryInfo
 
 # src->middle->thum
 from frames.xml import XMLPic
@@ -38,14 +38,14 @@ def new_info_convert(l1, child_dir, xml_infos):
     g_info.dir_name = l1.name
     g_info.id = l1.c_id
     if info:
-        g_info.name = info[XMLPic.ITEM_TAGS.NAME]
-        g_info.intro = info[XMLPic.ITEM_TAGS.VALUE]
-        g_info.time = info[XMLPic.ITEM_TAGS.TIME]
-        g_info.thum = info[XMLPic.ITEM_TAGS.THUM] if info[XMLPic.ITEM_TAGS.THUM] else child_dir.name
-        g_info.level = int(info[XMLPic.ITEM_TAGS.LEVEL]) if info[XMLPic.ITEM_TAGS.LEVEL] else 0
+        g_info.name = info.name
+        g_info.intro = info.value
+        g_info.time = info.time
+        g_info.thum = info.thum if info.thum else child_dir.name
+        g_info.level = int(info.level) if info.level else 0
 
-        g_info.param1 = info[XMLPic.ITEM_TAGS.P1]
-        g_info.param2 = info[XMLPic.ITEM_TAGS.P2]
+        g_info.param1 = info.p1
+        g_info.param2 = info.p2
     else:
         print('无该配置!:' + l1.name)
     GalleryInfo.objects.bulk_create(gallery_list)
@@ -97,9 +97,9 @@ def insert_db(dir_list, file_list):
 
 def read_thum():
     Dir.objects.filter(type=yutils.M_FTYPE_PIC).delete()
-    desc = ypath.join(ypath.desc(), pic_cfg[XMLPic.TAGS.DIR_ROOT])
+    desc = ypath.join(ypath.desc(), pic_cfg.dir_root)
 
-    dict = ypath.path_result(desc, pic_cfg[XMLPic.TAGS.THUM], add_root=False)
+    dict = ypath.path_result(desc, pic_cfg.thum, add_root=False)
     dir_dict = {}
     file_dict = {}
     for key in dict:
@@ -117,4 +117,4 @@ def read_thum():
 
 if __name__ == '__main__':
     read_thum()
-    # insert_gallery_info()
+    insert_gallery_info()

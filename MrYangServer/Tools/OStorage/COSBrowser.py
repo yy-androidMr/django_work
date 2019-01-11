@@ -24,11 +24,9 @@ import sys
 curPath = os.path.abspath(os.path.dirname(__file__))
 rootPath = os.path.split(curPath)[0]
 sys.path.append(rootPath)
+sys.path.append('../../')
 from qcloud_cos import CosConfig, CosS3Client
-import logging
-from frames import yutils, ypath
-
-logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+from frames import yutils, ypath,logger
 
 down_host = 'https://mryang-1251808344.cos.ap-chengdu.myqcloud.com/'
 upload_list_path = 'out/upload_list.txt'
@@ -75,7 +73,7 @@ def org_os_list(cmd_res):
 
 
 def list_finish(res, _):
-    logging.info('list os files suc! do next:save different list to file! out/upload_list.txt & out/delete_list.txt')
+    logger.info('list os files suc! do next:save different list to file! out/upload_list.txt & out/delete_list.txt')
     os_list = org_os_list(res)
     local_files = local_list(local_path)
     upload_list, delete_list = diff_path(os_list, local_files)
@@ -100,7 +98,7 @@ def list_finish(res, _):
 
 
 def print_diff_list(res, param):
-    logging.info('bucket suc! do next:list os files')
+    logger.info('bucket suc! do next:list os files')
     yutils.process_cmd('coscmd list -ar ' + bucket_dir, done_call=list_finish)
 
 
@@ -194,6 +192,10 @@ def download_oncos():
 
 # 示例: python3 COSBrowser.py -l /Users/mr.yang/Documents/cache/ttt -b ttt
 if __name__ == '__main__':
+
+    local_path = r'E:\resource\desc\pic'
+    bucket_dir = '/res/pic'
+
     try:
         opts, args = getopt.getopt(sys.argv[1:], 'l:b:c:', ['local=', 'bucket=', 'cmdf='])
     except getopt.GetoptError as e:
@@ -209,9 +211,7 @@ if __name__ == '__main__':
             if a.endswith('/') or a.endswith('\\'):
                 a = a[:-1]
             bucket_dir = a
-    local_path = r'E:\resource\desc\pic'
-    bucket_dir = '/res/pic'
-    local_path = local_path.replace('\\', '/').replace('//', '/')
+
     # local_path = r'/Users/mryang/Documents/res/src/pic/thum'
     # 这是两步操作,通常需要分开
     create_diff_list(main_bucket_bat)
