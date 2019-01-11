@@ -8,7 +8,7 @@ import shutil
 import sys
 from PIL import Image, ImageFile
 
-from frames import yutils, logger, ypath
+from frames import yutils, logger, ypath, Globals
 from frames.xml import XMLPic
 
 MAX_PIC_SIZE = 3000
@@ -190,34 +190,31 @@ def delete_not_exist():
                 if os.path.exists(thum_path):
                     os.remove(thum_path)
                 print('删除文件:', middle_path, thum_path)
+    ypath.del_none_dir(middle)
+    ypath.del_none_dir(thum)
     print('[delete_not_exist] end')
 
 
 if __name__ == '__main__':
     from frames import TmpUtil
 
-    src = TmpUtil.input_path(yutils.RESOURCE_ROOT_KEY,
-                             '请指定资源根目录(例如:E:/resource_root),目录下有个%s文件夹,并且%s下就是图片:\n' % (
-                                 pic_cfg[XMLPic.TAGS.DIR_ROOT], pic_cfg[XMLPic.TAGS.DIR_ROOT]))
+    src = ypath.src()
     src = ypath.join(src, pic_cfg[XMLPic.TAGS.DIR_ROOT])
-    desc = TmpUtil.input_path(yutils.RESOURCE_DESC_KEY,
-                              '请指定资源输出目录(例如:E:/resource_desc_root),目录下会创建%s/middle和%s/thum):\n' % (
-                                  pic_cfg[XMLPic.TAGS.DIR_ROOT], pic_cfg[XMLPic.TAGS.DIR_ROOT]))
+    desc = ypath.desc()
+
     desc = ypath.join(desc, pic_cfg[XMLPic.TAGS.DIR_ROOT])
 
-    gif_space = ''
-    while not os.path.exists(gif_space):
-        gif_space = TmpUtil.input_path(GIF_SPACE,
-                                       '请指定gif的占位符的图片位置:\n')
+    gif_space = TmpUtil.input_note(GIF_SPACE, '请指定gif的占位符的图片位置:\n')
 
-    logger.info('初始化成功src:', src, ',desc:', desc)
+    logger.info('初始化成功src:', src, ',desc:', desc, 'gif_space:', gif_space)
 
     middle = ypath.join(desc, pic_cfg[XMLPic.TAGS.MIDDLE])
     thum = ypath.join(desc, pic_cfg[XMLPic.TAGS.THUM])
     other_file.clear()
+
     # 去重
     ypath.delrepeat_file(src)
-    #去掉middle中的图.
+    # 去掉middle中的图.
     delete_not_exist()
     link_dic = src2pc(False)
 

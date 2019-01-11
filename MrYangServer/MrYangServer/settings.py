@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from frames import Globals, TmpUtil
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 
@@ -127,6 +128,20 @@ DATABASES = {
     #     'PORT': '3306',
     # },
 }
+# 如果是腾讯服,就把这个打开.
+development_space = Globals.dev_space()
+if development_space == Globals.T_SERVER or development_space == Globals.COMPANY_PC:
+    DATABASES.update({
+        'tdb': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'ydatabase',
+            'USER': 'yysql',
+            'PASSWORD': 'mysql_yy2134',
+            'HOST': '148.70.103.10',
+            'PORT': '3306',
+        }
+    })
+
 DATABASE_ROUTERS = ['MrYangServer.database_router.DatabaseAppsRouter']
 DATABASE_APPS_MAPPING = {
     # example:

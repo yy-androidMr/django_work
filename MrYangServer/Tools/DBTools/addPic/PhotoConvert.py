@@ -97,8 +97,8 @@ def insert_db(dir_list, file_list):
 
 def read_thum():
     Dir.objects.filter(type=yutils.M_FTYPE_PIC).delete()
-    desc = TmpUtil.get(yutils.RESOURCE_DESC_KEY)
-    desc = ypath.join(desc, pic_cfg[XMLPic.TAGS.DIR_ROOT])
+    desc = ypath.join(ypath.desc(), pic_cfg[XMLPic.TAGS.DIR_ROOT])
+    
     dict = ypath.path_result(desc, pic_cfg[XMLPic.TAGS.THUM], add_root=False)
     dir_dict = {}
     file_dict = {}

@@ -44,7 +44,7 @@ def info(*args):
 
 
 def log(level, *args):
-    logger.log(level, ''.join(args))
+    logger.log(level, ' '.join(args))
 
 # logging.basicConfig(level=logging.INFO,
 #                     filename=TmpUtil.log_path(logname()),

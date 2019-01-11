@@ -65,7 +65,26 @@ def thread_run(arg):
         # print('run it :' + str(arg) + "  wait count:" + str(i) + "\n")
 
 
+db = {
+
+    's': {
+        'a': 'b'
+    },
+    't': {
+        'c': 'd'
+    }
+}
 if __name__ == '__main__':
+    test2.aa()
+    # '\'tdb\': {\'ENGINE\': \'django.db.backends.mysql\',\'NAME\': \'ydatabase\',\'USER\': \'yysql\',
+    #     'PASSWORD': 'mysql_yy2134',
+    #     'HOST': '148.70.103.10',
+    #     'PORT': '3306',
+    # }'
+    # db2 = {'d': {'e': 'f'}}
+    # db.update(db2)
+    print(db)
+    pass
     # print(threading.currentThread())
     # for i in range(0, 4):
     #     t = threading.Thread(target=thread_run, args=(i,))
@@ -88,6 +107,3 @@ if __name__ == '__main__':
 
     # for root, dirs, files in os.walk('E:/resource/src/pic/18年十一'):
     #     print(root, files)
-    for root, dirs, files in os.walk('E:/resource/src/pic'):
-        print(root, 'dirs:', dirs)
-    pass

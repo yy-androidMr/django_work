@@ -111,21 +111,16 @@ def cut_video():
 
 if __name__ == '__main__':
     from frames import TmpUtil
-    dir_root = movie_config[XMLMovie.TAGS.DIR_ROOT]
-    src_root = TmpUtil.input_path(yutils.RESOURCE_ROOT_KEY,
-                                 '请指定资源根目录(例如:E:/resource_root),目录下有个%s文件夹,并且%s下就是图片:\n' % (dir_root, dir_root))
-    # 视频源路径
-    src_root = ypath.join(src_root, dir_root)
-    desc_root = TmpUtil.input_path(yutils.RESOURCE_DESC_KEY,
-                                  '请指定资源输出目录(例如:E:/resource_desc_root),目录下会创建%s/convert和%s/ts):\n' % (
-                                      dir_root, dir_root))
-    # 视频转码目标路径
-    convert_root = ypath.join(desc_root, dir_root)
-    # 转码结束后的切片路径
-    ts_root = movie_config[XMLMovie.TAGS.TS_DIR]
-    m3u8_ts_root = ypath.join(desc_root, ts_root)
-    ffmpeg_tools = TmpUtil.input_path(FFMPEG_KEY, '输入对应的ffmpeg文件位置(参照link_gitProj_files.txt下载对应的文件):\n')
 
+    # 视频源路径
+    src_root = ypath.join(ypath.src(), movie_config[XMLMovie.TAGS.DIR_ROOT])
+    # 视频转码目标路径
+    convert_root = ypath.join(ypath.desc(), movie_config[XMLMovie.TAGS.DIR_ROOT])
+    # 转码结束后的切片路径
+    m3u8_ts_root = ypath.join(ypath.desc(), movie_config[XMLMovie.TAGS.TS_DIR])
+    ffmpeg_tools = TmpUtil.input_note(FFMPEG_KEY, '输入对应的ffmpeg文件位置(参照link_gitProj_files.txt下载对应的文件):\n')
+
+    logger.info('src_root:', src_root, 'convert_root:', convert_root, 'm3u8_ts_root:', m3u8_ts_root)
     item_info_list = []
     convert_video()
 

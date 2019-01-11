@@ -74,10 +74,21 @@ def get(key, default=None):
 
 
 def set(key, value, value_is_path=True):
-    if value_is_path:
+    if value is str and value_is_path:
         value = value.replace('\\', '/')
     dictarg = {key: value}
     write_tmp(**dictarg)
+
+
+def input_note(key, intro, ispath=True):
+    if ispath:
+        return input_path(key, intro)
+    else:
+        value = get(key)
+        while value is None or value is '':
+            value = input(intro)
+        set(key, value)
+        return value
 
 
 # 输入记录缓存

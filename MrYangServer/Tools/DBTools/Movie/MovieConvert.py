@@ -66,7 +66,7 @@ def create_db(path, info):
 if __name__ == '__main__':
     from frames import TmpUtil
 
-    desc_root = TmpUtil.get(yutils.RESOURCE_DESC_KEY)
+    desc_root = ypath.desc()
     # 转码结束后的切片路径
     m3u8_ts_root = ypath.join(desc_root, movie_config[XMLMovie.TAGS.TS_DIR])
 

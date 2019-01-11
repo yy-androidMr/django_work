@@ -4,14 +4,16 @@
 # 分解路径1.src的相对路径. 2.src的根目录. 3.目标的路径
 import os
 import re
-
-import imageio
+from frames import TmpUtil
 
 # 组织文件夹数据  dir_filter='^.+\\.ym3$'
 # dict = {'/Users/mr.yang/Documents/GitHub/django_work/MrYangServer/static/res/movie/22sd/c213.ym3':
 #         {'name': 'c213.ym3', 'isdir': True,'rel_path':'22sd/c213.ym3'
 #          'parent':'/Users/mr.yang/Documents/GitHub/django_work/MrYangServer/static/res/movie/22sd' }}
 from frames import logger, yutils
+
+SRC_ROOT_KEY = 'SRC_ROOT_KEY'
+DESC_ROOT_KEY = 'DESC_ROOT_KEY'
 
 
 class KEYS:
@@ -30,6 +32,7 @@ def parse_path(path, root_path, name, isDir=False):
             KEYS.PARENT: parent_path}
 
 
+# 获取res_root文件夹下的的所有文件夹和文件名.
 def path_result(res_root, depth_name, dir_filter=None, file_filter=None, parse_dir=True, parse_file=True,
                 add_root=True):
     root_path = join(res_root, depth_name)
@@ -132,10 +135,6 @@ def compair_path(left, right):
     left_have = left_set.difference(right_set)
     right_have = right_set.difference(left_set)
     return left_have, right_have
-    # ret_list = list( ^ )
-    # ret2_list = list(set(right_files) ^ set(left_files))
-    # print(ret_list)
-    # print(ret2_list)
 
 
 # 删除所有文件中 有重复的图.
@@ -158,4 +157,38 @@ def delrepeat_file(path):
         os.remove(file)
     print('done')
 
-# print(compair_path(r'G:\cache\11\pic\middle', r'G:\cache\11\pic\thum'))
+
+# 删除空文件夹
+def del_none_dir(dir):
+    if os.path.isdir(dir):
+        for item in os.listdir(dir):
+            del_none_dir(join(dir, item))
+
+        if not os.listdir(dir):
+            os.rmdir(dir)
+
+
+def src():
+    tmp_path = ''
+    while not os.path.isdir(tmp_path):
+        tmp_path = TmpUtil.input_path(SRC_ROOT_KEY, '请指定资源原始目录(例如:E:/src_root),目录下有个pic文件夹,movie文件夹:\n')
+    return tmp_path
+
+
+def desc():
+    tmp_path = ''
+    while not os.path.isdir(tmp_path):
+        tmp_path = TmpUtil.input_path(DESC_ROOT_KEY, '请指定资源输出目录(例如:E:/desc_root),目录下有什么都行,是原始目录的输出路径:\n')
+    return tmp_path
+
+
+# 检查一些本地的路径. 比如资源根路径.之类的 如果是函数 使用注解.
+def check_tpath_anno(fn):
+    def ins():
+        return fn()
+
+
+# 检查一些本地的路径. 比如资源根路径.之类的
+def check_tmp_paths():
+    src()
+    desc()
