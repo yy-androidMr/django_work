@@ -124,7 +124,7 @@ def update_databases():
     }
     # 如果是腾讯服,就把这个打开.
     development_space = Globals.dev_space()
-    if development_space == Globals.T_SERVER or development_space == Globals.COMPANY_PC:
+    if development_space==Globals.HOME_MINI or  development_space == Globals.T_SERVER or development_space == Globals.COMPANY_PC:
         databases.update({
             'tdb': {
                 'ENGINE': 'django.db.backends.mysql',
@@ -144,14 +144,14 @@ DATABASES = update_databases()
 #         'ENGINE': 'django.db.backends.sqlite3',
 #         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #     },
-#     # 'tdb': {
-#     #     'ENGINE': 'django.db.backends.mysql',
-#     #     'NAME': 'ydatabase',
-#     #     'USER': 'yysql',
-#     #     'PASSWORD': 'mysql_yy2134',
-#     #     'HOST': '148.70.103.10',
-#     #     'PORT': '3306',
-#     # },
+#     'tdb': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'ydatabase',
+#         'USER': 'yysql',
+#         'PASSWORD': 'mysql_yy2134',
+#         'HOST': '148.70.103.10',
+#         'PORT': '3306',
+#     },
 # }
 
 DATABASE_ROUTERS = ['MrYangServer.database_router.DatabaseAppsRouter']
