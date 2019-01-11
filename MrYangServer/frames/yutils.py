@@ -43,9 +43,6 @@ LINUX = 'Linux'
 
 # 路径操作
 
-RESOURCE_ROOT_KEY = 'RESOURCE_ROOT_KEY'
-RESOURCE_DESC_KEY = 'RESOURCE_DESC_KEY'
-
 banner_pic_path = '/pic/gif_bannder.png'
 upload_root = 'upload'
 upload_album = ''.join([upload_root, '/album'])

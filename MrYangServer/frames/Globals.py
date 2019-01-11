@@ -20,6 +20,11 @@ development_type = {
 }
 
 
+def dev_space():
+    development_id = TmpUtil.get(DEVELOPMENT_TYPE_KEY, -1)
+    return development_id
+
+
 def run_init():
     development_id = TmpUtil.get(DEVELOPMENT_TYPE_KEY, -1)
     while development_id not in development_type:
