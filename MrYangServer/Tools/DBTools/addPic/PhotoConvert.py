@@ -5,7 +5,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "MrYangServer.settings")
 django.setup()
 
 from frames import yutils, ypath
-from Mryang_App.models import Dir, GalleryInfo
+from Mryang_Tdb.models import Dir, GalleryInfo
 
 # src->middle->thum
 from frames.xml import XMLPic
