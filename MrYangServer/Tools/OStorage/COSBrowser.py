@@ -196,7 +196,7 @@ if __name__ == '__main__':
 
     pic_cfg = XMLPic.get_infos()
 
-    local_path = ypath.src()
+    local_path = ypath.desc()
     local_path = ypath.join(local_path, pic_cfg.dir_root)
     bucket_dir = '/res/pic'
 
