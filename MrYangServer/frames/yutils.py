@@ -10,7 +10,7 @@ import string
 import subprocess
 
 import imageio
-from django.db import models
+
 
 
 def random_int():
@@ -209,6 +209,7 @@ def list_clear_none(list_value):
 
 
 def to_dict(ins):
+    from django.db import models
     if isinstance(ins, models.Model):
         field_attr = [f.name for f in ins._meta.fields]
         temp_dict = {}

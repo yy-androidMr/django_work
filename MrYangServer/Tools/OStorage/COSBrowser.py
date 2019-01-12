@@ -215,7 +215,7 @@ if __name__ == '__main__':
             if a.endswith('/') or a.endswith('\\'):
                 a = a[:-1]
             bucket_dir = a
-
+    bucket_dir=bucket_dir.lstrip('/')
     # local_path = r'/Users/mryang/Documents/res/src/pic/thum'
     # 这是两步操作,通常需要分开
     create_diff_list(main_bucket_bat)
