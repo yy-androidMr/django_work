@@ -138,12 +138,6 @@ def cfg_list_path(c_name, dpins=None):
     return c_p.replace('\\', '/'), dpins
 
 
-# <resource_root>/static/res</resource_root>
-@dom_pxy_ins()
-def resource_root(dpins=None):
-    return dpins.elem.value_by_tag(RESOURCE_ROOT)
-
-
 @dom_pxy_ins()
 def res_url_info(dpins=None):
     # local_target = resource_root(dpins)
