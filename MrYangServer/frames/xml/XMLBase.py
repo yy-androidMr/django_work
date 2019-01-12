@@ -146,7 +146,9 @@ def resource_root(dpins=None):
 
 @dom_pxy_ins()
 def res_url_info(dpins=None):
-    local_target = resource_root(dpins)
+    # local_target = resource_root(dpins)
+    from frames import ypath
+    local_target = ypath.desc()
     url = dpins.elem.value_by_tag(RES_URL)
     return url, local_target
 
