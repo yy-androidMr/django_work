@@ -86,11 +86,11 @@ def list_finish(res, _):
         if delete_item.split('|')[0] not in upload_path:
             delete_px_list.append(bucket_dir + delete_item.split('|')[0])
 
-    yutils.create_dirs(upload_list_path)
+    ypath.create_dirs(upload_list_path)
     with open(upload_list_path, 'w', encoding='utf-8') as f:
         f.write('\n'.join(upload_path))
 
-    yutils.create_dirs(delete_list_path)
+    ypath.create_dirs(delete_list_path)
     with open(delete_list_path, 'w', encoding='utf-8') as f:
         f.write('\n'.join(delete_px_list))
     print(upload_list, delete_px_list)

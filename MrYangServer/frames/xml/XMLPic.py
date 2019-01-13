@@ -3,7 +3,7 @@
 # 每个解析都有个名字.对应configs_info配置中的configs_info->list
 import os
 from xml.dom import minidom
-from frames import yutils
+from frames import ypath
 from frames.logger import logger
 
 from frames.xml import XMLBase
@@ -66,7 +66,7 @@ def create_gallery_xml(path):
     booklist = doc.createElement(CONFIG_NAME)
     doc.appendChild(booklist)
     booklist.appendChild(doc.createTextNode('\n'))
-    yutils.create_dirs(path)
+    ypath.create_dirs(path)
     with open(path, 'w', encoding='UTF-8') as fh:
         doc.writexml(fh, indent='', encoding='UTF-8')
 

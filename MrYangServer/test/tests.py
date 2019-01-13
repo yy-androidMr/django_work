@@ -69,6 +69,19 @@ class a:
     abd = ''
 
 
+def done(k, c):
+    jsonstr = ''.join(k)
+    import json
+    loadsjson = json.loads(jsonstr)
+    print(loadsjson)
+    # print()
+    # print(''.join(k))
+
+
+def call(k):
+    print(k)
+
+
 if __name__ == '__main__':
     # '\'tdb\': {\'ENGINE\': \'django.db.backends.mysql\',\'NAME\': \'ydatabase\',\'USER\': \'yysql\',
     #     'PASSWORD': 'mysql_yy2134',
@@ -77,6 +90,19 @@ if __name__ == '__main__':
     # }'
     # db2 = {'d': {'e': 'f'}}
     # db.update(db2)
+    # imageio.plugins.ffmpeg.download()
+    # import imageio
+    # ./ffprobe.bin  1.mkv -print_format json -show_streams -select_streams a -hide_banner
+    # imageio.plugins.ffmpeg.download()
+    from frames import yutils
+
+    yutils.process_cmd(
+        # '/Users/mr.yang/Documents/res/src/ffmpeg.bin -i /Users/mr.yang/Documents/res/src/1.mkv -map 0:0 -map 0:2  -vcodec copy -acodec copy /Users/mr.yang/Documents/res/src/out.mkv',
+        '/Users/mr.yang/Documents/res/src/ffprobe.bin /Users/mr.yang/Documents/res/src/1.mkv -print_format json -show_streams',
+        # '/Users/mr.yang/Documents/res/src/ffprobe.bin /Users/mr.yang/Documents/res/src/1.mkv -print_format json -show_streams -select_streams a -hide_banner',
+        done_call=done)
+    # info = yutils.video_info('/Users/mr.yang/Downloads/[阳光电影www.ygdy8.com].逃学威龙.BD.720p.国粤双语中字.mkv')
+    # print(info)
     pass
     # print(threading.currentThread())
     # for i in range(0, 4):

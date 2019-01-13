@@ -9,7 +9,7 @@ import time
 sys.path.append('../../..')
 
 FFMPEG_KEY = 'FFMPEG_KEY'
-
+other_format_dir = 'movie_otherformat'
 movie_config = XMLMovie.get_infos()
 
 
@@ -48,13 +48,13 @@ def create_peg_cmd():
                 src_path, src_root, convert_root, exten='.mp4')
             if os.path.exists(target):
                 continue
-            yutils.create_dirs(target)
+            ypath.create_dirs(target)
             if '.mp4' in file:
                 logger.info('begin copy \"%s\"' % file)
                 shutil.copy(src_path, target)
                 continue
             # threads有效 但是需要在多核中测试
-            bat_list.append('\"%s\" -i \"%s\" \"%s\"' % (ffmpeg_tools, src_path, target))
+            bat_list.append('\"%s\" -i \"%s\"  \"%s\"' % (ffmpeg_tools, src_path, target))
 
     return bat_list
 
@@ -100,7 +100,7 @@ def cut_video():
                     pass
                 else:
                     m3u8_file = ypath.join(target_path, movie_config[XMLMovie.TAGS.NAME])
-                    yutils.create_dirs(m3u8_file)
+                    ypath.create_dirs(m3u8_file)
                     cmd = '\"' + ffmpeg_tools + '\" -i \"' + src_path + \
                           '\" -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_list \"' + \
                           m3u8_file + '\" -segment_time 10 \"' + target_path + '/%05d.ts\"'
@@ -109,11 +109,32 @@ def cut_video():
                     logger.info('切割完成:' + target_path)
 
 
+# 删除多余音轨,移动文件到备用目录
+def del_audio_tags():
+    ypath.create_dirs(movie_otherformat)
+    file_list = []
+    for root, dirs, files in os.walk(src_root):
+        for file in files:
+            if not yutils.is_movie(file):
+                continue
+            src_file = ypath.join(root, file)
+            if '.mp4' not in file:
+                _, desc_file = ypath.decompose_path(src_file, src_root, movie_otherformat)
+                file_list.append(desc_file)
+                shutil.move(src_file, desc_file)
+
+    for file in file_list:
+        print(file)
+    pass
+
+
 if __name__ == '__main__':
     from frames import TmpUtil
 
     # 视频源路径
     src_root = ypath.join(ypath.src(), movie_config[XMLMovie.TAGS.DIR_ROOT])
+    # 非mp4格式视频存放处
+    movie_otherformat = ypath.join(ypath.src(), other_format_dir)
     # 视频转码目标路径
     convert_root = ypath.join(ypath.desc(), movie_config[XMLMovie.TAGS.DIR_ROOT])
     # 转码结束后的切片路径
@@ -122,6 +143,7 @@ if __name__ == '__main__':
 
     logger.info('src_root:', src_root, 'convert_root:', convert_root, 'm3u8_ts_root:', m3u8_ts_root)
     item_info_list = []
-    convert_video()
-
-    XMLMovie.create_movie_item_info_xml(item_info_list)
+    del_audio_tags()
+    # convert_video()
+    #
+    # XMLMovie.create_movie_item_info_xml(item_info_list)

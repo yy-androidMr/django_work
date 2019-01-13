@@ -12,7 +12,6 @@ import subprocess
 import imageio
 
 
-
 def random_int():
     return random.randint(10000000, 99999999)
 
@@ -115,32 +114,6 @@ def time_convert(size):  # 单位换算
         second = int(size % H % M)
         tim_srt = u'%s时%s分%s秒' % (hour, mine, second)
         return tim_srt
-
-
-def create_dirs(file_path, is_dir=False, delete_exist=False):
-    if is_dir:
-        target_dir = file_path
-    else:
-        target_dir = os.path.dirname(file_path)
-
-    if target_dir:
-        if os.path.exists(target_dir):
-            if delete_exist:
-                shutil.rmtree(target_dir)
-            else:
-                return
-        os.makedirs(target_dir)
-
-
-def delete_null_dir(dirr):
-    if os.path.isdir(dirr):
-        for p in os.listdir(dirr):
-            d = os.path.join(dirr, p)
-            if (os.path.isdir(d) == True):
-                delete_null_dir(d)
-    if not os.listdir(dirr):
-        os.rmdir(dirr)
-        print('移除空目录: ', dirr)
 
 
 def is_win():
@@ -246,7 +219,7 @@ def video_info(src):
 
 
 # cmd命令行回调----------------------------------------------------
-def process_cmd(cmd, call=None, done_call=None, param=None):
+def process_cmd(cmd, call=None, done_call=None, param=None, sep='\r\n'):
     ps = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
     cmd_str = []
     while True:
@@ -259,7 +232,7 @@ def process_cmd(cmd, call=None, done_call=None, param=None):
         else:
             line = data.decode('utf-8')
             # print(line, end='')
-            cmd_str.append(line.replace('\r\n', ''))
+            cmd_str.append(line.strip('\r\n'))
             if call is not None:
                 call(line)
 

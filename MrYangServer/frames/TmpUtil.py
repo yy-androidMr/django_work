@@ -5,7 +5,7 @@ import os
 
 import shutil
 import manage
-from frames import yutils
+from frames import yutils, ypath
 
 tmpdir = os.path.join(manage.project_root(), 'tmp')
 tmpfile = os.path.join(tmpdir, 'tmp_server_cfg')
@@ -14,12 +14,12 @@ logdir = os.path.join(tmpdir, 'log')
 
 def log_path(name):
     log_file = os.path.join(logdir, name)
-    yutils.create_dirs(log_file)
+    ypath.create_dirs(log_file)
     return log_file
 
 
 def write_tmp(**kwgs):
-    yutils.create_dirs(tmpfile)
+    ypath.create_dirs(tmpfile)
     with open(tmpfile, 'a+', encoding=yutils.default_encode) as f:
         f.seek(0)
         line = f.readline()

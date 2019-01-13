@@ -4,6 +4,8 @@
 # 分解路径1.src的相对路径. 2.src的根目录. 3.目标的路径
 import os
 import re
+import shutil
+
 from frames import TmpUtil
 
 # 组织文件夹数据  dir_filter='^.+\\.ym3$'
@@ -81,7 +83,7 @@ def decompose_path(src_file, src_root, target_root, exten=None, rename=None):
     # 3.新的目标文件
     target_file = join(target_root, rela_file_name)
 
-    return (rela_file_name, target_file)
+    return rela_file_name, target_file
 
 
 def join(path, *paths):
@@ -156,6 +158,20 @@ def delrepeat_file(path):
         print(file)
         os.remove(file)
     print('done')
+
+def create_dirs(file_path, is_dir=False, delete_exist=False):
+    if is_dir:
+        target_dir = file_path
+    else:
+        target_dir = os.path.dirname(file_path)
+
+    if target_dir:
+        if os.path.exists(target_dir):
+            if delete_exist:
+                shutil.rmtree(target_dir)
+            else:
+                return
+        os.makedirs(target_dir)
 
 
 # 删除空文件夹

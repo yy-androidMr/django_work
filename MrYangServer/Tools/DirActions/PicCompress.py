@@ -54,7 +54,7 @@ def begin_s2middle_by_threads(src_dir, desc_dir, delete_exist):
                 other_file.append(source_file)
                 continue
 
-            yutils.create_dirs(rename_file)
+            ypath.create_dirs(rename_file)
             print('源：' + source_file)
 
             img = Image.open(source_file)
@@ -125,7 +125,7 @@ def middle2thum(delete_exist):
                 print('文件已存在!' + desc_path)
                 continue
             dir = os.path.dirname(desc_path)
-            yutils.create_dirs(dir, is_dir=True)
+            ypath.create_dirs(dir, is_dir=True)
             # gif要走配置
             if yutils.is_gif(file):
                 # gif_pic

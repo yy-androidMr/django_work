@@ -5,7 +5,7 @@ import os
 from xml.dom import minidom
 
 from frames.xml import XMLBase
-from frames import yutils
+from frames import ypath
 
 CONFIG_NAME = 'movie_info'
 ITEM_TAG = 'item'
@@ -68,7 +68,7 @@ def create_movie_item_info_xml(item_info_list):
     booklist.appendChild(doc.createTextNode('\n'))
     path, _ = XMLBase.get_cfg_dir()
     movie_item_info_path = path + movie_item_info_path
-    yutils.create_dirs(movie_item_info_path)
+    ypath.create_dirs(movie_item_info_path)
 
     for item_info in item_info_list:
         item = doc.createElement(ITEM_TAG)

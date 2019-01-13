@@ -116,7 +116,7 @@ def up_pic_c1(request):
         print(img_md5)
         img_name = img_file.name
         # path = default_storage.save('tmp/somename.mp3', ContentFile(data.read()))
-        yutils.create_dirs(yutils.upload_album)
+        ypath.create_dirs(yutils.upload_album)
         f = open(os.path.join(yutils.upload_album, img_name), 'wb')
         for chunk in img_file.chunks():
             f.write(chunk)
