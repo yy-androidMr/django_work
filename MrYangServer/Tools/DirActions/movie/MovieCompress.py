@@ -1,14 +1,15 @@
 import os
-from frames import yutils, logger, ypath
+from frames import yutils, logger, ypath, Globals
 from frames.xml import XMLMovie
 import shutil
 import sys
-
+import json
 import time
 
 sys.path.append('../../..')
 
 FFMPEG_KEY = 'FFMPEG_KEY'
+FFPROBE_KEY = 'FFPROBE_KEY'
 other_format_dir = 'movie_otherformat'
 movie_config = XMLMovie.get_infos()
 
@@ -109,9 +110,62 @@ def cut_video():
                     logger.info('切割完成:' + target_path)
 
 
+def rm_on_audio_copy(_, files):
+    os.remove(files[0])
+    os.rename(files[1], files[0])
+
+
+def movie_info_res(cmdlist, file):
+    if len(cmdlist) <= 0:
+        return
+    jsonbean = json.loads(''.join(cmdlist))
+    streamlist = jsonbean['streams']
+    if len(streamlist) <= 0:
+        return
+    audio_streams = []
+    decode_map = ''
+    for stream_item in streamlist:
+        if stream_item['codec_type'] == 'audio':
+            logger.info(str(stream_item))
+            audio_streams.append(stream_item)
+        else:
+            decode_map += ' -map 0:' + str(stream_item['index'])
+
+    # 有多个语种
+    digout = False
+    if len(audio_streams) > 1:
+        for audio_stream in audio_streams:
+            if 'tags' in audio_stream and 'title' in audio_stream['tags'] and '国语' == audio_stream['tags']['title']:
+                decode_map += ' -map 0:' + str(stream_item['index'])
+                digout = True
+                break
+    else:
+        logger.info('该视频音轨只有一个,不需要转换:' + file)
+        return
+
+    if not digout:
+        out_content = file + '\n没有找到对应音轨,自行选择:\n'
+        index = 0
+        for audio_stream in audio_streams:
+            out_content += str(index) + ':' + str(audio_stream) + '\n'
+            index += 1
+
+        select_audio = int(input(out_content + '选择音轨:'))
+        if len(audio_streams) > select_audio:
+            decode_map += ' -map 0:' + str(audio_streams[select_audio]['index'])
+        else:
+            return
+    desc_file = file + '.chi' + ypath.file_exten(file)
+    if os.path.exists(desc_file):
+        os.remove(desc_file)
+    print(desc_file)
+    # yutils.process_cmd('dir', done_call=rm_on_audio_copy, param=(file, desc_file))
+    copy_cmd = ffmpeg_tools + ' -i ' + file + decode_map + '  -vcodec copy -acodec copy ' + desc_file
+    yutils.process_cmd(copy_cmd, done_call=rm_on_audio_copy, param=(file, desc_file))
+
+
 # 删除多余音轨,移动文件到备用目录
 def del_audio_tags():
-    ypath.create_dirs(movie_otherformat)
     file_list = []
     for root, dirs, files in os.walk(src_root):
         for file in files:
@@ -121,10 +175,29 @@ def del_audio_tags():
             if '.mp4' not in file:
                 _, desc_file = ypath.decompose_path(src_file, src_root, movie_otherformat)
                 file_list.append(desc_file)
+                ypath.create_dirs(desc_file)
                 shutil.move(src_file, desc_file)
 
-    for file in file_list:
-        print(file)
+    for root, dirs, files in os.walk(movie_otherformat):
+        for file in files:
+            if not yutils.is_movie(file):
+                continue
+            src_file = ypath.join(root, file)
+            logger.info('开始转换:' + src_file)
+            yutils.process_cmd(
+                # '/Users/mr.yang/Documents/res/src/ffmpeg.bin -i /Users/mr.yang/Documents/res/src/1.mkv -map 0:0 -map 0:2  -vcodec copy -acodec copy /Users/mr.yang/Documents/res/src/out.mkv',
+                ffprobe_tools + ' ' + src_file + ' -print_format json -show_streams',
+                # '/Users/mr.yang/Documents/res/src/ffprobe.bin /Users/mr.yang/Documents/res/src/1.mkv -print_format json -show_streams -select_streams a -hide_banner',
+                done_call=movie_info_res, param=src_file)
+
+    # for file in file_list:
+    #     yutils.process_cmd(
+    #         # '/Users/mr.yang/Documents/res/src/ffmpeg.bin -i /Users/mr.yang/Documents/res/src/1.mkv -map 0:0 -map 0:2  -vcodec copy -acodec copy /Users/mr.yang/Documents/res/src/out.mkv',
+    #         ffprobe_tools + ' ' + file + ' -print_format json -show_streams',
+    #         # '/Users/mr.yang/Documents/res/src/ffprobe.bin /Users/mr.yang/Documents/res/src/1.mkv -print_format json -show_streams -select_streams a -hide_banner',
+    #         done_call=movie_info_res)
+    #
+    #     print(file)
     pass
 
 
@@ -139,7 +212,10 @@ if __name__ == '__main__':
     convert_root = ypath.join(ypath.desc(), movie_config[XMLMovie.TAGS.DIR_ROOT])
     # 转码结束后的切片路径
     m3u8_ts_root = ypath.join(ypath.desc(), movie_config[XMLMovie.TAGS.TS_DIR])
+    # TmpUtil.clear_key(FFMPEG_KEY)
+    # TmpUtil.clear_key(FFPROBE_KEY)
     ffmpeg_tools = TmpUtil.input_note(FFMPEG_KEY, '输入对应的ffmpeg文件位置(参照link_gitProj_files.txt下载对应的文件):\n')
+    ffprobe_tools = TmpUtil.input_note(FFPROBE_KEY, '输入对应的ffprobe文件位置(参照link_gitProj_files.txt下载对应的文件):\n')
 
     logger.info('src_root:', src_root, 'convert_root:', convert_root, 'm3u8_ts_root:', m3u8_ts_root)
     item_info_list = []
