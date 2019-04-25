@@ -1,7 +1,6 @@
 # -*-coding:utf-8 -*-
 
-print('i am be running !!!!!!!')
 
-
-def aa():
-    print('aa')
+dic = {"a": "b"}
+for (_, v) in dic:
+    print(v)

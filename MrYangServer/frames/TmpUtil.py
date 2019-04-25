@@ -117,6 +117,7 @@ def input_path(key, intro):
 
 SRC_ROOT_KEY = 'SRC_ROOT_KEY'
 DESC_ROOT_KEY = 'DESC_ROOT_KEY'
+DESC_TMP_DIR = 'tmp'
 
 
 def src():
@@ -131,6 +132,13 @@ def desc():
     while not os.path.isdir(tmp_path):
         tmp_path = input_path(DESC_ROOT_KEY, '请指定资源输出目录(例如:E:/desc_root),目录下有什么都行,是原始目录的输出路径:\n')
     return tmp_path
+
+
+# 输出文件的临时目录.做记录
+def desc_tmp():
+    tmp = desc() + '/' + DESC_TMP_DIR
+    create_dirs(tmp, True)
+    return tmp
 
 
 # 检查一些本地的路径. 比如资源根路径.之类的

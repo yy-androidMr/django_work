@@ -60,7 +60,10 @@ def get_infos():
     return info
 
 
+#  其实可以使用更温和的做法,但是电影不同照片.信息不需要修改==>def append_ifnot_exist(link_dic):
 def create_movie_item_info_xml(item_info_list):
+    if len(item_info_list) == 0:
+        return
     movie_item_info_path = get_infos()[TAGS.ITEM_INFO]
     doc = minidom.Document()
     booklist = doc.createElement(CONFIG_NAME)
@@ -107,4 +110,3 @@ def item_info_dict():
         items[ITEM_TAGS.PIXEL] = node.getAttribute(ITEM_TAGS.PIXEL)
         items[ITEM_TAGS.FPS] = node.getAttribute(ITEM_TAGS.FPS)
     return infos
-

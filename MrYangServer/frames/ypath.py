@@ -182,4 +182,22 @@ def del_none_dir(dir):
             os.rmdir(dir)
 
 
+def sync_role(path):
+    return '.'+file_name(path)+'.tmp'
+
+
+# 做文件处理的时候一个无奈锁.   如果有该文件锁,代表这个处理还未完成.
+# def lock_path(path):
+#     create_dirs(sync_role(path))
+#
+#
+# def path_in_lock(path):
+#     return os.path.exists(sync_role(path))
+#
+#
+# def unlock_path(path):
+#     lock_key = sync_role(path)
+#     if os.path.exists(lock_key):
+#         shutil.rmtree(lock_key)
+# ------------------------------------------------------------------------
 
