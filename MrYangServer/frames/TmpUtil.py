@@ -5,21 +5,36 @@ import os
 
 import shutil
 import manage
-from frames import yutils, ypath
+from frames import yutils
 
 tmpdir = os.path.join(manage.project_root(), 'tmp')
 tmpfile = os.path.join(tmpdir, 'tmp_server_cfg')
 logdir = os.path.join(tmpdir, 'log')
 
 
+def create_dirs(file_path, is_dir=False, delete_exist=False):
+    if is_dir:
+        target_dir = file_path
+    else:
+        target_dir = os.path.dirname(file_path)
+
+    if target_dir:
+        if os.path.exists(target_dir):
+            if delete_exist:
+                shutil.rmtree(target_dir)
+            else:
+                return
+        os.makedirs(target_dir)
+
+
 def log_path(name):
     log_file = os.path.join(logdir, name)
-    ypath.create_dirs(log_file)
+    create_dirs(log_file)
     return log_file
 
 
 def write_tmp(**kwgs):
-    ypath.create_dirs(tmpfile)
+    create_dirs(tmpfile)
     with open(tmpfile, 'a+', encoding=yutils.default_encode) as f:
         f.seek(0)
         line = f.readline()
@@ -98,3 +113,27 @@ def input_path(key, intro):
         path = input(intro)
     set(key, path)
     return path.replace('\\', '/')
+
+
+SRC_ROOT_KEY = 'SRC_ROOT_KEY'
+DESC_ROOT_KEY = 'DESC_ROOT_KEY'
+
+
+def src():
+    tmp_path = ''
+    while not os.path.isdir(tmp_path):
+        tmp_path = input_path(SRC_ROOT_KEY, '请指定资源原始目录(例如:E:/src_root),目录下有个pic文件夹,movie文件夹:\n')
+    return tmp_path
+
+
+def desc():
+    tmp_path = ''
+    while not os.path.isdir(tmp_path):
+        tmp_path = input_path(DESC_ROOT_KEY, '请指定资源输出目录(例如:E:/desc_root),目录下有什么都行,是原始目录的输出路径:\n')
+    return tmp_path
+
+
+# 检查一些本地的路径. 比如资源根路径.之类的
+def check_tmp_paths():
+    src()
+    desc()

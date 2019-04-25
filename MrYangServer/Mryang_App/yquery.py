@@ -27,9 +27,9 @@ def movie_infos():
 
 def pic_level1_2json(show_level):
     # id  名字, 父亲的id, 是否是文件夹, tag, 相对路径.
-    from Mryang_Tdb.models import GalleryInfo
+    from Mryang_App.models import GalleryInfo
     ginfos = GalleryInfo.objects.filter(level__lt=(show_level + 1)).annotate(
-        c_id=F('folder_key__c_id'), rel_path=F('folder_key__rel_path')) \
+        c_id=F('folder_key__id'), rel_path=F('folder_key__rel_path')) \
         .select_related('folder_key') \
         .values('name', 'intro', 'time', 'thum', 'level', 'param1', 'param2', 'c_id', 'rel_path')
     return_list = list(ginfos)
@@ -42,8 +42,9 @@ def pic_level1_2json(show_level):
 
 
 def pic_level2_2json(c_id, page):
-    from Mryang_Tdb.models import Dir
-    dirs = Dir.objects.filter(type=yutils.M_FTYPE_PIC, isdir=False, parent_dir__c_id=c_id) \
+    from Mryang_App.models import Dir
+    #好像c_id没吊jb用
+    dirs = Dir.objects.filter(type=yutils.M_FTYPE_PIC, isdir=False, parent_dir__id=c_id) \
         .select_related('parent_dir').values('tags', 'name', 'c_id').order_by('c_id')
 
     page_item = 30

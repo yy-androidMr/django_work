@@ -29,7 +29,7 @@ class UserAlbum(models.Model):
     modify_time = models.DateField(auto_now=True)
 
     def __str__(self):
-        return 'name:%s' % (self.name)
+        return 'name:%s' % self.name
 
 
 class Dir(models.Model):
@@ -39,7 +39,8 @@ class Dir(models.Model):
     # 父节点
     parent_dir = models.ForeignKey('self', related_name='parent', on_delete=models.CASCADE,
                                    null=True,
-                                   blank=True)
+                                   blank=True,
+                                   db_index=True)
     # 自己是否是文件夹
     isdir = models.BooleanField(default=True)
     # 一些标记,存储格式自定义.
@@ -121,14 +122,3 @@ class MovieInfo(models.Model):
 
 class UpLoadDir(models.Model):
     path = models.CharField(max_length=100, default='')
-
-# models.ImageField
-#
-# class test(models.Model):
-#     f1=1
-#
-#     def toJSON(self):
-#         import json
-#         return json.dumps(dict([(attr, getattr(self, attr)) for attr in [f.name for f in self._meta.fields]]))
-#
-# print(test().toJSON())

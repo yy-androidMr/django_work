@@ -123,18 +123,19 @@ def update_databases():
         }
     }
     # 如果是腾讯服,就把这个打开.
-    development_space = Globals.dev_space()
-    if development_space==Globals.HOME_MINI or  development_space == Globals.T_SERVER or development_space == Globals.COMPANY_PC:
-        databases.update({
-            'tdb': {
-                'ENGINE': 'django.db.backends.mysql',
-                'NAME': 'ydatabase',
-                'USER': 'yysql',
-                'PASSWORD': 'mysql_yy2134',
-                'HOST': '148.70.103.10',
-                'PORT': '3306',
-            }
-        })
+    # development_space = Globals.dev_space()
+    # if development_space == Globals.HOME_MINI or development_space == Globals.T_SERVER or \
+    #         development_space == Globals.COMPANY_PC:
+    #     databases.update({
+    #         'tdb': {
+    #             'ENGINE': 'django.db.backends.mysql',
+    #             'NAME': 'ydatabase',
+    #             'USER': 'yysql',
+    #             'PASSWORD': 'mysql_yy2134',
+    #             'HOST': '148.70.103.10',
+    #             'PORT': '3306',
+    #         }
+    #     })
     return databases
 
 
@@ -204,9 +205,6 @@ STATICFILES_DIRS = (
     # os.path.join(BASE_DIR, 'templates/tpmo_506_tinker').replace('\\', '/'),
     # os.path.join(BASE_DIR, 'templates/tpmo_506_tinker').replace('\\', '/'),
 )
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media/')
-MEDIA_URL = '/static/media/'
 
 LOGGING = {
     'version': 1,

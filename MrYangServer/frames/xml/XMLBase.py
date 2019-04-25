@@ -141,8 +141,8 @@ def cfg_list_path(c_name, dpins=None):
 @dom_pxy_ins()
 def res_url_info(dpins=None):
     # local_target = resource_root(dpins)
-    from frames import ypath
-    local_target = ypath.desc()
+    from frames import TmpUtil
+    local_target = TmpUtil.desc()
     url = dpins.elem.value_by_tag(RES_URL)
     return url, local_target
 

@@ -4,8 +4,8 @@ import os, django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "MrYangServer.settings")
 django.setup()
 
-from frames import yutils, ypath
-from Mryang_Tdb.models import Dir, GalleryInfo
+from frames import yutils, ypath,TmpUtil
+from Mryang_App.models import Dir, GalleryInfo
 
 # src->middle->thum
 from frames.xml import XMLPic
@@ -97,13 +97,13 @@ def insert_db(dir_list, file_list):
 
 def read_thum():
     Dir.objects.filter(type=yutils.M_FTYPE_PIC).delete()
-    desc = ypath.join(ypath.desc(), pic_cfg.dir_root)
+    desc = ypath.join(TmpUtil.desc(), pic_cfg.dir_root)
 
     dict = ypath.path_result(desc, pic_cfg.thum, add_root=False)
     dir_dict = {}
     file_dict = {}
     for key in dict:
-        if (dict[key][ypath.KEYS.IS_DIR]):
+        if dict[key][ypath.KEYS.IS_DIR]:
             dir_dict[key] = dict[key]
         else:
             file_dict[key] = dict[key]

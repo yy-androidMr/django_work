@@ -10,7 +10,9 @@ sys.path.append('../../..')
 
 FFMPEG_KEY = 'FFMPEG_KEY'
 FFPROBE_KEY = 'FFPROBE_KEY'
-other_format_dir = 'movie_otherformat'
+
+#这里存放多音轨的视频源文件
+other_format_dir = 'media_mulit_audio'
 movie_config = XMLMovie.get_infos()
 
 
@@ -110,8 +112,13 @@ def cut_video():
                     logger.info('切割完成:' + target_path)
 
 
+# 音轨结束后,保存源文件到movie_otherformat目录,替换原有文件名.
 def rm_on_audio_copy(_, files):
-    os.remove(files[0])
+    _, desc_file = ypath.decompose_path(files[0], src_root, movie_otherformat)
+    # file_list.append(desc_file)
+    ypath.create_dirs(desc_file)
+    shutil.move(files[0], desc_file)
+    # os.remove(files[0])
     os.rename(files[1], files[0])
 
 
@@ -149,12 +156,12 @@ def movie_info_res(cmdlist, file):
         for audio_stream in audio_streams:
             out_content += str(index) + ':' + str(audio_stream) + '\n'
             index += 1
+        select_audio = len(audio_streams)
+        while len(audio_streams) <= select_audio or select_audio < 0:
+            select_audio = int(input(out_content + '选择音轨:'))
 
-        select_audio = int(input(out_content + '选择音轨:'))
-        if len(audio_streams) > select_audio:
-            decode_map += ' -map 0:' + str(audio_streams[select_audio]['index'])
-        else:
-            return
+        decode_map += ' -map 0:' + str(audio_streams[select_audio]['index'])
+
     desc_file = file + '.chi' + ypath.file_exten(file)
     if os.path.exists(desc_file):
         os.remove(desc_file)
@@ -166,19 +173,19 @@ def movie_info_res(cmdlist, file):
 
 # 删除多余音轨,移动文件到备用目录
 def del_audio_tags():
-    file_list = []
-    for root, dirs, files in os.walk(src_root):
-        for file in files:
-            if not yutils.is_movie(file):
-                continue
-            src_file = ypath.join(root, file)
-            if '.mp4' not in file:
-                _, desc_file = ypath.decompose_path(src_file, src_root, movie_otherformat)
-                file_list.append(desc_file)
-                ypath.create_dirs(desc_file)
-                shutil.move(src_file, desc_file)
+    # file_list = []
+    # for root, dirs, files in os.walk(src_root):
+    #     for file in files:
+    #         if not yutils.is_movie(file):
+    #             continue
+    #         src_file = ypath.join(root, file)
+    #         if '.mp4' not in file:
+    #             _, desc_file = ypath.decompose_path(src_file, src_root, movie_otherformat)
+    #             file_list.append(desc_file)
+    #             ypath.create_dirs(desc_file)
+    #             shutil.move(src_file, desc_file)
 
-    for root, dirs, files in os.walk(movie_otherformat):
+    for root, dirs, files in os.walk(src_root):
         for file in files:
             if not yutils.is_movie(file):
                 continue
@@ -205,13 +212,13 @@ if __name__ == '__main__':
     from frames import TmpUtil
 
     # 视频源路径
-    src_root = ypath.join(ypath.src(), movie_config[XMLMovie.TAGS.DIR_ROOT])
+    src_root = ypath.join(TmpUtil.src(), movie_config[XMLMovie.TAGS.DIR_ROOT])
     # 非mp4格式视频存放处
-    movie_otherformat = ypath.join(ypath.src(), other_format_dir)
+    movie_otherformat = ypath.join(TmpUtil.src(), other_format_dir)
     # 视频转码目标路径
-    convert_root = ypath.join(ypath.desc(), movie_config[XMLMovie.TAGS.DIR_ROOT])
+    convert_root = ypath.join(TmpUtil.desc(), movie_config[XMLMovie.TAGS.DIR_ROOT])
     # 转码结束后的切片路径
-    m3u8_ts_root = ypath.join(ypath.desc(), movie_config[XMLMovie.TAGS.TS_DIR])
+    m3u8_ts_root = ypath.join(TmpUtil.desc(), movie_config[XMLMovie.TAGS.TS_DIR])
     # TmpUtil.clear_key(FFMPEG_KEY)
     # TmpUtil.clear_key(FFPROBE_KEY)
     ffmpeg_tools = TmpUtil.input_note(FFMPEG_KEY, '输入对应的ffmpeg文件位置(参照link_gitProj_files.txt下载对应的文件):\n')
@@ -220,6 +227,6 @@ if __name__ == '__main__':
     logger.info('src_root:', src_root, 'convert_root:', convert_root, 'm3u8_ts_root:', m3u8_ts_root)
     item_info_list = []
     del_audio_tags()
-    # convert_video()
+    convert_video()
     #
     # XMLMovie.create_movie_item_info_xml(item_info_list)

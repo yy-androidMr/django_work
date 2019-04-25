@@ -8,10 +8,11 @@ import shutil
 import sys
 from PIL import Image, ImageFile
 
-from frames import yutils, logger, ypath, Globals
+from frames import yutils, logger, ypath
 from frames.xml import XMLPic
+from frames import TmpUtil
 
-MAX_PIC_SIZE = 3000
+MAX_PIC_SIZE = 5000
 thum_width = 350
 middle_area = MAX_PIC_SIZE * MAX_PIC_SIZE
 
@@ -196,11 +197,9 @@ def delete_not_exist():
 
 
 if __name__ == '__main__':
-    from frames import TmpUtil
-
-    src = ypath.src()
+    src = TmpUtil.src()
     src = ypath.join(src, pic_cfg.dir_root)
-    desc = ypath.desc()
+    desc = TmpUtil.desc()
 
     desc = ypath.join(desc, pic_cfg.dir_root)
 
