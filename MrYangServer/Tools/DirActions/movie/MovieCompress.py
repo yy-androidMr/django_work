@@ -27,10 +27,10 @@ movie_config = XMLMovie.get_infos()
 
 def done_convert_call(_, param):
     logger.info('消耗时间:%d,命令:%s' % (param['time'], param['cmd']))
+    cache_tmp_info.write_info(param['src_path'], TMP_CONVERT_KEY, True)
     if param['last']:
         # 最后一个做操作
         logger.info('执行转换完成!,开始切割视频')
-        cache_tmp_info.write_info(param['src_path'], TMP_CONVERT_KEY, True)
         cut_video()
 
 
