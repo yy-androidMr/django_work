@@ -1,3 +1,4 @@
+import json
 import os
 import pickle
 
@@ -15,10 +16,10 @@ class CacheTmpInfo:
         return self.info_dic[path]
 
     def write_info(self, path, k, v):
-        self.init_path(path)
-        with open(self.tmp_file_dict[path], 'wb') as file:
+        # self.init_path(path)
+        with open(self.tmp_file_dict[path], 'w') as file:
             self.info_dic[path][k] = v
-            pickle.dump(self.info_dic[path], file)
+            file.write(json.dumps(self.info_dic[path]))
             file.close()
 
     def init_path(self, path):
@@ -27,7 +28,7 @@ class CacheTmpInfo:
 
         if not self.info_dic.get(path):
             if not os.path.exists(self.tmp_file_dict[path]):
-                self.info_dic[path] = {}
+                self.write_info(path, 'key', path)
             else:
-                file = open(self.tmp_file_dict[path], 'rb')
-                self.info_dic[path] = pickle.load(file)
+                file = open(self.tmp_file_dict[path], 'r')
+                self.info_dic[path] = json.loads(file.readline())  # pickle.load()
