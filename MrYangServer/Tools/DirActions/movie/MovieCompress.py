@@ -133,6 +133,7 @@ def cut_video():
                       m3u8_file + '\" -segment_time 10 \"' + target_path + '/%05d.ts\"'
 
                 yutils.process_cmd(cmd)
+                cache_tmp_info.write_info(src_path, TMP_CUT_KEY, True)
                 logger.info('切割完成:' + target_path)
 
 
