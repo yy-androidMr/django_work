@@ -236,6 +236,8 @@ def m_second_gallery(request, dir_id):
         except:
             logger.error('[m_second_gallery]没有该id的照片:', dir_id)
 
+def test_json(request):
+     return HttpResponse('{"data": [{"name": "asdfsadf"}]}')
 
 def download_test(request):
     print(os.path.dirname('.'))

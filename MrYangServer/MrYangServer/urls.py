@@ -40,6 +40,7 @@ urlpatterns = [
 
     url(r'^h5/(.*)/$', views.h5_test),
     url(r'^download/$', views.download_test),
+    url(r'tttt/',views.test_json),
     # static(res_url, document_root=res_root)
     # url(r'^any/(.*)/$', views.any_page),
 ]
