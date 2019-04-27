@@ -243,5 +243,4 @@ def process_cmd(cmd, call=None, done_call=None, param=None, sep='\r\n'):
 # 默认编码
 default_encode = codecs.lookup(locale.getpreferredencoding()).name
 
-
 # end-------
