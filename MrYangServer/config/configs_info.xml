@@ -19,6 +19,6 @@
 			<config_root>/config</config_root>
 			<list>
 				<pic_info>/pic_info.xml</pic_info>
-				<movie_info>/movie_info.xml</movie_info>				
+				<media_info>/media_info.xml</media_info>				
 			</list>		
 </configs_info>

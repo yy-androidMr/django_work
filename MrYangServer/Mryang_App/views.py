@@ -14,7 +14,7 @@ from frames import yutils, ypath
 
 # 显示权限
 from frames import logger
-from frames.xml import XMLBase, XMLMovie
+from frames.xml import XMLBase, XMLMedia
 
 COMMON_SHOW = 4
 FAMILY = 5
@@ -22,8 +22,8 @@ NOT_SEE = 9
 
 (T_COS_MEIDA_ROOT, dpins) = XMLBase.cos_media_root()
 res_url, res_root = XMLBase.res_url_info(dpins)
-movie_info_cfg = XMLMovie.get_infos()
-movie_url = ypath.join(res_url, movie_info_cfg[XMLMovie.TAGS.TS_DIR])
+movie_info_cfg = XMLMedia.get_infos()
+movie_url = ypath.join(res_url, movie_info_cfg[XMLMedia.TAGS.TS_DIR])
 
 
 def hello(request):
@@ -176,7 +176,7 @@ def new_move_index(request):
     json = yquery.dir_2json(yutils.M_FTYPE_MOIVE)
     info_json = yquery.movie_infos()
     r = render(request, 'movie/new_index.html', {'json': json, 'info_json': info_json, 'movie_url': movie_url,
-                                                 'out_name': movie_info_cfg[XMLMovie.TAGS.NAME]})
+                                                 'out_name': movie_info_cfg[XMLMedia.TAGS.NAME]})
     return r
 
 

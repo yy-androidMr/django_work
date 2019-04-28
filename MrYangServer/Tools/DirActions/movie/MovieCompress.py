@@ -3,7 +3,7 @@ import pickle
 
 from Tools.CacheTmpInfo import CacheTmpInfo
 from frames import yutils, logger, ypath, Globals
-from frames.xml import XMLMovie
+from frames.xml import XMLMedia
 import shutil
 import sys
 import json
@@ -22,7 +22,7 @@ TMP_CUT_KEY = "cut"
 
 # 这里存放多音轨的视频源文件
 other_format_dir = 'media_mulit_audio'
-movie_config = XMLMovie.get_infos()
+movie_config = XMLMedia.get_infos()
 
 
 def done_convert_call(_, param):
@@ -89,16 +89,16 @@ def item_info(file, last_path):
     video_info = yutils.video_info(file)
 
     info = {
-        XMLMovie.ITEM_TAGS.FILE: file,
-        XMLMovie.ITEM_TAGS.NAME: ypath.file_name(file),
-        XMLMovie.ITEM_TAGS.SIZE: str(size),
-        XMLMovie.ITEM_TAGS.SHOW_SIZE: yutils.fileSizeConvert(size),
-        XMLMovie.ITEM_TAGS.OUT_NAME: last_path,
+        XMLMedia.ITEM_TAGS.FILE: file,
+        XMLMedia.ITEM_TAGS.NAME: ypath.file_name(file),
+        XMLMedia.ITEM_TAGS.SIZE: str(size),
+        XMLMedia.ITEM_TAGS.SHOW_SIZE: yutils.fileSizeConvert(size),
+        XMLMedia.ITEM_TAGS.OUT_NAME: last_path,
         # 读取视频信息.
-        XMLMovie.ITEM_TAGS.PIXEL: str(video_info[XMLMovie.ITEM_TAGS.PIXEL]),
-        XMLMovie.ITEM_TAGS.FPS: str(round(video_info[XMLMovie.ITEM_TAGS.FPS])),
-        XMLMovie.ITEM_TAGS.DURATION: str(int(video_info[XMLMovie.ITEM_TAGS.DURATION])),
-        XMLMovie.ITEM_TAGS.SHOW_DURATION: yutils.time_convert(int(video_info[XMLMovie.ITEM_TAGS.DURATION]))
+        XMLMedia.ITEM_TAGS.PIXEL: str(video_info[XMLMedia.ITEM_TAGS.PIXEL]),
+        XMLMedia.ITEM_TAGS.FPS: str(round(video_info[XMLMedia.ITEM_TAGS.FPS])),
+        XMLMedia.ITEM_TAGS.DURATION: str(int(video_info[XMLMedia.ITEM_TAGS.DURATION])),
+        XMLMedia.ITEM_TAGS.SHOW_DURATION: yutils.time_convert(int(video_info[XMLMedia.ITEM_TAGS.DURATION]))
     }
     return info
 
@@ -111,7 +111,7 @@ def cut_video():
                 # 获取源文件路径
                 src_path = ypath.join(root, file)
                 # 拼写输出文件名
-                rename = yutils.md5_of_str(os.path.basename(src_path)) + movie_config[XMLMovie.TAGS.DIR_EXTEN]
+                rename = yutils.md5_of_str(os.path.basename(src_path)) + movie_config[XMLMedia.TAGS.DIR_EXTEN]
                 # 获取输出文件路径
                 (rela_file_name, target_path) = ypath.decompose_path(src_path, convert_root, m3u8_ts_root,
                                                                      rename=rename)
@@ -126,7 +126,7 @@ def cut_video():
                         return
                     else:
                         shutil.rmtree(target_path)
-                m3u8_file = ypath.join(target_path, movie_config[XMLMovie.TAGS.NAME])
+                m3u8_file = ypath.join(target_path, movie_config[XMLMedia.TAGS.NAME])
                 ypath.create_dirs(m3u8_file)
                 cmd = '\"' + ffmpeg_tools + '\" -i \"' + src_path + \
                       '\" -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_list \"' + \
@@ -236,13 +236,13 @@ if __name__ == '__main__':
     from frames import TmpUtil
 
     # 视频源路径
-    src_root = ypath.join(TmpUtil.src(), movie_config[XMLMovie.TAGS.DIR_ROOT])
+    src_root = ypath.join(TmpUtil.src(), movie_config[XMLMedia.TAGS.DIR_ROOT])
     # 非mp4格式视频存放处
     movie_otherformat = ypath.join(TmpUtil.src(), other_format_dir)
     # 视频转码目标路径
-    convert_root = ypath.join(TmpUtil.desc(), movie_config[XMLMovie.TAGS.DIR_ROOT])
+    convert_root = ypath.join(TmpUtil.desc(), movie_config[XMLMedia.TAGS.DIR_ROOT])
     # 转码结束后的切片路径
-    m3u8_ts_root = ypath.join(TmpUtil.desc(), movie_config[XMLMovie.TAGS.TS_DIR])
+    m3u8_ts_root = ypath.join(TmpUtil.desc(), movie_config[XMLMedia.TAGS.TS_DIR])
     # TmpUtil.clear_key(FFMPEG_KEY)
     # TmpUtil.clear_key(FFPROBE_KEY)
     ffmpeg_tools = TmpUtil.input_note(FFMPEG_KEY, '输入对应的ffmpeg文件位置(参照link_gitProj_files.txt下载对应的文件):\n')
@@ -254,4 +254,4 @@ if __name__ == '__main__':
     del_audio_tags()
     convert_video()
     #
-    XMLMovie.create_movie_item_info_xml(item_info_list)
+    XMLMedia.create_media_item_info_xml(item_info_list)

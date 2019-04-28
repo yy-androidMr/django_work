@@ -1,6 +1,5 @@
 import json
 import os
-import pickle
 
 from frames import yutils, ypath, TmpUtil
 

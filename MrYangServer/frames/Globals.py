@@ -30,8 +30,8 @@ def run_init():
     while development_id not in development_type:
         development_id = int(input('请指定开发场景%s:\n' % str(development_type)))
     TmpUtil.set(DEVELOPMENT_TYPE_KEY, development_id, False)
-    if development_id != T_SERVER:
-        TmpUtil.check_tmp_paths()
+    # if development_id != T_SERVER:
+    #     TmpUtil.check_tmp_paths()
 
 
 run_init()

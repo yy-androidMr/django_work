@@ -22,7 +22,7 @@ from django.conf.urls.static import static
 from frames import TmpUtil
 
 # 检查路径.
-TmpUtil.check_tmp_paths()
+# TmpUtil.check_tmp_paths()
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     # 上传照片的控制台

@@ -10,11 +10,11 @@ from frames import TmpUtil
 
 
 def logname():
-    return time.strftime('%Y-%m-%d %H_%M_%S', time.localtime()) + '.log'
+    return time.strftime('%Y-%m-%d %H_%M_%S', time.localtime()) + '_service.log'
 
 
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
+l = logging.getLogger()
+l.setLevel(logging.INFO)
 file_handler = logging.FileHandler(TmpUtil.log_path(logname()))
 console_handler = logging.StreamHandler()
 file_formatter = logging.Formatter(
@@ -23,8 +23,8 @@ file_handler.setFormatter(file_formatter)
 # console_formatter = logging.Formatter(
 #     '[%(asctime)s][%(filename)s:%(lineno)d]%(levelname)s: %(message)s')
 console_handler.setFormatter(file_formatter)
-logger.addHandler(file_handler)
-logger.addHandler(console_handler)
+l.addHandler(file_handler)
+l.addHandler(console_handler)
 
 
 def error(*args):
@@ -45,7 +45,7 @@ def info(*args):
 
 
 def log(level, *args):
-    logger.log(level, ' '.join(args))
+    l.log(level, ' '.join(args))
 
 # logging.basicConfig(level=logging.INFO,
 #                     filename=TmpUtil.log_path(logname()),

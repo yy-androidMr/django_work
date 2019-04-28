@@ -26,6 +26,7 @@ console_handler.setFormatter(file_formatter)
 logger.addHandler(file_handler)
 logger.addHandler(console_handler)
 
+
 def error(*args):
     log(logging.ERROR, *args)
 

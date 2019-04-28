@@ -12,7 +12,7 @@ from frames import TmpUtil
 # dict = {'/Users/mr.yang/Documents/GitHub/django_work/MrYangServer/static/res/movie/22sd/c213.ym3':
 #         {'name': 'c213.ym3', 'isdir': True,'rel_path':'22sd/c213.ym3'
 #          'parent':'/Users/mr.yang/Documents/GitHub/django_work/MrYangServer/static/res/movie/22sd' }}
-from frames import logger, yutils
+from frames import yutils
 
 
 class KEYS:
@@ -35,7 +35,6 @@ def parse_path(path, root_path, name, isDir=False):
 def path_result(res_root, depth_name, dir_filter=None, file_filter=None, parse_dir=True, parse_file=True,
                 add_root=True):
     root_path = join(res_root, depth_name)
-    logger.info('ypath:path_result:', res_root, root_path)
     dict = {}
     if add_root:
         dict[root_path] = parse_path(root_path, root_path, depth_name, True)
@@ -183,8 +182,7 @@ def del_none_dir(dir):
 
 
 def sync_role(path):
-    return '.'+file_name(path)+'.tmp'
-
+    return '.' + file_name(path) + '.tmp'
 
 # 做文件处理的时候一个无奈锁.   如果有该文件锁,代表这个处理还未完成.
 # def lock_path(path):
@@ -200,4 +198,3 @@ def sync_role(path):
 #     if os.path.exists(lock_key):
 #         shutil.rmtree(lock_key)
 # ------------------------------------------------------------------------
-

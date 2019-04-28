@@ -11,6 +11,6 @@ m3u8_info 做视频切片时,所用的信息
 	ts_dir  在media_desc_root/dir_root/out_dir/${XXX.dir_exten}/ts_dir 创建ts的存放目录.
 	item_info 影片的信息配置路径.
 -->
-<movie_info dir_root="movie">
+<movie_info dir_root="media">
 	<m3u8_info dir_exten=".ym3" info_file="info" name="out.m3u8" convert_dir="convert" out_dir="out" ts_dir="movie_ts" item_info="/auto_create/movie_item_info.xml" />
 </movie_info>
