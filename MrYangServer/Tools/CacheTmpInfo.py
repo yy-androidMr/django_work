@@ -15,6 +15,8 @@ class CacheTmpInfo:
         return self.info_dic[path]
 
     def write_info(self, path, k, v):
+        if not self.info_dic.get(path):
+            self.info_dic[path] = {}
         # self.init_path(path)
         with open(self.tmp_file_dict[path], 'w') as file:
             self.info_dic[path][k] = v
@@ -23,7 +25,7 @@ class CacheTmpInfo:
 
     def init_path(self, path):
         if not self.tmp_file_dict.get(path):
-            self.tmp_file_dict[path] = ypath.join(TmpUtil.desc_tmp(), yutils.md5_of_str(path))
+            self.tmp_file_dict[path] = ypath.join(TmpUtil.desc_tmp(), yutils.md5_of_str(path) + '.json')
 
         if not self.info_dic.get(path):
             if not os.path.exists(self.tmp_file_dict[path]):

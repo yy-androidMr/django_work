@@ -1,5 +1,5 @@
 import time
-from MryangService.utils import logger
+from MryangService.utils import logger, EmailUtil
 
 
 def s_loop(call, *args, **kws):
@@ -7,10 +7,13 @@ def s_loop(call, *args, **kws):
     s_name = str(call.__name__)
     logger.info('service启动:' + s_name)
     while True:
-        if call(*args, **kws):
-            time.sleep(2)
-        else:
-            im_out(s_name)
+        try:
+            if call(*args, **kws):
+                time.sleep(2)
+            else:
+                im_out(s_name)
+        except Exception as e:
+            EmailUtil.send_email('服务有报错,请尽快解决!', repr(e))
 
 
 def im_out(s_name, s_time=60):

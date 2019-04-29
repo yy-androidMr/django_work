@@ -1,9 +1,10 @@
 # coding:utf-8
 # 一些常数设定.
 
-from  frames import ypath, TmpUtil, logger
+from frames import TmpUtil
 
 DEVELOPMENT_TYPE_KEY = 'DEVELOPMENT_TYPE_KEY'
+CUT_MEDIA = False
 
 HOME_MINI = 1
 HOME_PC = 2

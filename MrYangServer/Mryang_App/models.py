@@ -94,8 +94,8 @@ class GalleryInfo(models.Model):
             self.param1, self.param2)
 
 
-class MovieInfo(models.Model):
-    folder_key = models.ForeignKey(Dir, related_name='movie_dir', on_delete=models.CASCADE)
+class MediaInfo(models.Model):
+    folder_key = models.ForeignKey(Dir, related_name='media_dir', on_delete=models.CASCADE)
     # 影片
     name = models.CharField(max_length=200, default='')
     # 影片简介,暂时不需要
@@ -122,3 +122,34 @@ class MovieInfo(models.Model):
 
 class UpLoadDir(models.Model):
     path = models.CharField(max_length=100, default='')
+
+
+# 在service做转换的时候的src文件进度
+class Media(models.Model):
+    #   文件绝对路径.
+    abs_path = models.CharField(max_length=500, primary_key=True)
+    #  文件md5
+    md5 = models.CharField(max_length=100)
+    # 时长:秒
+    duration = models.IntegerField(default=0)
+    # 占用大小: bytes
+    size = models.IntegerField(default=0)
+    # 文件名
+    file_name = models.CharField(max_length=100, default='')
+    # 编码格式
+    codec_type = models.CharField(max_length=20, default='')
+    codec_long_name = models.CharField(max_length=200, default='')
+
+    # 画面尺寸
+    width = models.IntegerField(default=0)
+    height = models.IntegerField(default=0)
+
+    # 帧率  四舍五入,
+    r_frame_rate = models.IntegerField(default=0)
+    avg_frame_rate = models.IntegerField(default=0)
+    # 该文件当前状态 存在 MediaService.STATE_INIT中
+    state = models.IntegerField(default=-1)
+    # 字幕文件
+    # 其他预留
+    param1 = models.CharField(max_length=500, default='')
+    param2 = models.CharField(max_length=500, default='')

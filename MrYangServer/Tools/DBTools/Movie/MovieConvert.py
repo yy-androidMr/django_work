@@ -5,7 +5,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MrYangServer.settings')
 django.setup()
 
 # 设置django 环境
-from Mryang_App.models import Dir, MovieInfo
+from Mryang_App.models import Dir, MediaInfo
 from frames.xml import XMLMedia, XMLBase
 from frames import ypath, yutils
 
@@ -14,14 +14,14 @@ movie_item_config = XMLMedia.item_info_dict()
 
 
 def insert_gallery_info():
-    MovieInfo.objects.all().delete()
+    MediaInfo.objects.all().delete()
 
     movie_infos = Dir.objects.filter(isdir=False, type=yutils.M_FTYPE_MOIVE)
     movie_info_data = []
     for movie_info in movie_infos:
         if movie_info.rel_path and movie_info.rel_path in movie_item_config:
             m_cfg = movie_item_config[movie_info.rel_path]
-            data = MovieInfo()
+            data = MediaInfo()
             data.name = m_cfg[XMLMedia.ITEM_TAGS.NAME]
             data.duration = m_cfg[XMLMedia.ITEM_TAGS.DURATION]
             data.size = m_cfg[XMLMedia.ITEM_TAGS.SIZE]
@@ -31,7 +31,7 @@ def insert_gallery_info():
             data.folder_key = movie_info
             movie_info_data.append(data)
             print(m_cfg)
-    MovieInfo.objects.bulk_create(movie_info_data)
+    MediaInfo.objects.bulk_create(movie_info_data)
     print('done')
 
 
@@ -66,7 +66,7 @@ def create_db(path, info):
 if __name__ == '__main__':
     from frames import TmpUtil
 
-    desc_root = ypath.desc()
+    desc_root = TmpUtil.desc()
     # 转码结束后的切片路径
     m3u8_ts_root = ypath.join(desc_root, movie_config[XMLMedia.TAGS.TS_DIR])
 

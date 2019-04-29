@@ -8,7 +8,7 @@ from MryangService import FileObserver
 if __name__ == '__main__':
     FileObserver.call.append(ms)
     tp = tp()
-    tp.append(FileObserver.start)
+    tp.append(FileObserver.start, r'D:\cache\res\src')
     tp.append(ms.start)
     # tp.append(ps().start)
     tp.start()
