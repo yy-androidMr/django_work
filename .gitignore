@@ -27,3 +27,6 @@ MrYangServer/upload/
 pyHelper/OStorage/out
 sh.exe.stackdump
 MryangService/tmp/
+res_link/desc
+res_link/src
+nginx-1.15.8/logs
