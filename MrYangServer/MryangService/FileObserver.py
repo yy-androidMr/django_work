@@ -1,32 +1,27 @@
 import time
 
-from watchdog import events
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
 # from watchdog.events import
+from frames import ypath
 
-call = []
-#  create - modified 这种行为需要等10分钟刷新吧
-ACTION = {
-    # 文件创建
-    events.EVENT_TYPE_CREATED: [events.EVENT_TYPE_CREATED, events.EVENT_TYPE_MODIFIED, events.EVENT_TYPE_MODIFIED],
-    # 文件删除
-    events.EVENT_TYPE_DELETED: [events.EVENT_TYPE_DELETED],
-    # 文件改名
-    events.EVENT_TYPE_MOVED: [events.EVENT_TYPE_MOVED, events.EVENT_TYPE_MODIFIED],
-    # # 文件移动,从这里移动到那边
-    # events.EVENT_TYPE_MODIFIED: [events.EVENT_TYPE_DELETED, events.EVENT_TYPE_CREATED, events.EVENT_TYPE_MODIFIED]
-}
-action_stack = {}
+call = {}
+
+
+def append_call(c, *f):
+    call[c] = f
 
 
 # def flash_action
 
 def call_back(method, event):
-    for i in call:
+    p = ypath.replace(event.src_path)
+    for c in call:
         try:
-            getattr(i, method)(event, event.is_directory)
+            for f in call[c]:
+                if f in p:
+                    getattr(c, method)(event, event.is_directory)
         except AttributeError:
             pass
 

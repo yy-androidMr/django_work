@@ -8,6 +8,7 @@ import manage
 from frames import yutils
 
 tmpdir = os.path.join(manage.project_root(), 'tmp')
+res_linkdir = os.path.abspath(os.path.join(manage.project_root(), '../res_link'))
 tmpfile = os.path.join(tmpdir, 'tmp_server_cfg')
 logdir = os.path.join(tmpdir, 'log')
 
@@ -123,7 +124,11 @@ DESC_TMP_DIR = 'tmp'
 def src():
     tmp_path = ''
     while not os.path.isdir(tmp_path):
-        tmp_path = input_path(SRC_ROOT_KEY, '请指定资源原始目录(例如:E:/src_root),目录下有个pic文件夹,movie文件夹:\n')
+        tmp_path = input_path(SRC_ROOT_KEY, '请指定资源原始目录(例如:E:/src_root),目录下有个pic文件夹,media文件夹:\n')
+        link = os.path.join(res_linkdir, 'src')
+        if os.path.exists(link):
+            os.remove(link)
+        os.symlink(tmp_path, link)
     return tmp_path
 
 
@@ -131,6 +136,10 @@ def desc():
     tmp_path = ''
     while not os.path.isdir(tmp_path):
         tmp_path = input_path(DESC_ROOT_KEY, '请指定资源输出目录(例如:E:/desc_root),目录下有什么都行,是原始目录的输出路径:\n')
+        link = os.path.join(res_linkdir, 'desc')
+        if os.path.exists(link):
+            os.remove(link)
+        os.symlink(tmp_path, link)
     return tmp_path
 
 

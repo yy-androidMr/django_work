@@ -94,32 +94,6 @@ class GalleryInfo(models.Model):
             self.param1, self.param2)
 
 
-class MediaInfo(models.Model):
-    folder_key = models.ForeignKey(Dir, related_name='media_dir', on_delete=models.CASCADE)
-    # 影片
-    name = models.CharField(max_length=200, default='')
-    # 影片简介,暂时不需要
-    intro = models.CharField(max_length=500, default='')
-    # 影片时长:秒
-    duration = models.CharField(max_length=100, default='')
-    # 影片大小byte
-    size = models.CharField(max_length=100, default='')
-    # 影片尺寸1280x720
-    source_size = models.IntegerField(default=0)
-    # 帧率
-    fps = models.IntegerField(default=0)
-    # 字幕文件
-    # 其他预留
-    param1 = models.CharField(max_length=500, default='')
-    param2 = models.CharField(max_length=500, default='')
-
-    def __str__(self):
-        return 'id:%s,name:%s,rel_path:%s,intro:%s,duration:%s,size:%s,source_size:%s,param1:%s,param2:%s' % (
-            self.folder_key.c_id, self.name, self.folder_key.rel_path, self.intro, self.duration, self.size,
-            self.source_size,
-            self.param1, self.param2)
-
-
 class UpLoadDir(models.Model):
     path = models.CharField(max_length=100, default='')
 
@@ -128,8 +102,14 @@ class UpLoadDir(models.Model):
 class Media(models.Model):
     #   文件绝对路径.
     abs_path = models.CharField(max_length=500, primary_key=True)
+    # 输出路径
+    desc_path = models.CharField(max_length=500, default='')
+    # m3u8
+    m3u8_path = models.CharField(max_length=500, default='')
+    #  nginx访问路径
+    nginx_path = models.CharField(max_length=500, default='')
     #  文件md5
-    md5 = models.CharField(max_length=100)
+    md5 = models.CharField(max_length=100, default='')
     # 时长:秒
     duration = models.IntegerField(default=0)
     # 占用大小: bytes
@@ -149,7 +129,12 @@ class Media(models.Model):
     avg_frame_rate = models.IntegerField(default=0)
     # 该文件当前状态 存在 MediaService.STATE_INIT中
     state = models.IntegerField(default=-1)
+    #  父文件夹  理论上不可能是空
+    folder_key = models.ForeignKey(Dir, related_name='p_dir', null=True,
+                                   blank=True, on_delete=models.SET_NULL)
     # 字幕文件
     # 其他预留
     param1 = models.CharField(max_length=500, default='')
     param2 = models.CharField(max_length=500, default='')
+
+

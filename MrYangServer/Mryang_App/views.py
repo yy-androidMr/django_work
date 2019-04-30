@@ -172,12 +172,12 @@ def up_pic(request):
 
 # ----------------end--------------
 
-def new_move_index(request):
-    json = yquery.dir_2json(yutils.M_FTYPE_MOIVE)
-    info_json = yquery.movie_infos()
-    r = render(request, 'movie/new_index.html', {'json': json, 'info_json': info_json, 'movie_url': movie_url,
-                                                 'out_name': movie_info_cfg[XMLMedia.TAGS.NAME]})
-    return r
+# def new_move_index(request):
+#     json = yquery.dir_2json(yutils.M_FTYPE_MOIVE)
+#     info_json = yquery.movie_infos()
+#     r = render(request, 'movie/new_index.html', {'json': json, 'info_json': info_json, 'movie_url': movie_url,
+#                                                  'out_name': movie_info_cfg[XMLMedia.TAGS.NAME]})
+#     return r
 
 
 def m_index(request):
@@ -236,8 +236,20 @@ def m_second_gallery(request, dir_id):
         except:
             logger.error('[m_second_gallery]没有该id的照片:', dir_id)
 
-def test_json(request):
-     return HttpResponse('{"data": [{"name": "asdfsadf"}]}')
+
+def media_moive(request):
+    p_id = request.GET.get('p')
+    if not p_id:
+        json = yquery.meida_root('movie')
+    else:
+        try:
+            id = int(p_id)
+            json = yquery.media_dir('movie', id)
+        except:
+            json = yquery.meida_root('movie')
+
+    return HttpResponse(json)
+
 
 def download_test(request):
     print(os.path.dirname('.'))

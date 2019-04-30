@@ -31,7 +31,7 @@ urlpatterns = [
     url(r'^up/pic', views.up_pic2),
     # ----------end---------------
 
-    url(r'^$', views.new_move_index),
+    # url(r'^$', views.new_move_index),
     url(r'^own/$', views.m_index),
     url(r'^sg/$', views.s_gallery),
     url(r'^mg/$', views.m_gallery),
@@ -40,7 +40,8 @@ urlpatterns = [
 
     url(r'^h5/(.*)/$', views.h5_test),
     url(r'^download/$', views.download_test),
-    url(r'tttt/',views.test_json),
+    # url(r'media/movie/(.*)$', views.media_moive),
+    url(r'media/movie', views.media_moive)
     # static(res_url, document_root=res_root)
     # url(r'^any/(.*)/$', views.any_page),
 ]

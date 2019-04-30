@@ -1,12 +1,8 @@
-# coding:utf-8
 import codecs
 import hashlib
 import locale
-import os
-import pickle
 import platform
 import random
-import shutil
 import string
 import subprocess
 
