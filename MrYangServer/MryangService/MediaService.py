@@ -13,6 +13,7 @@ from Mryang_App.DBHelper import MediaHelp
 from frames import ypath, TmpUtil, yutils
 from frames.xml import XMLMedia
 from MryangService.utils import logger
+from django.db import transaction
 
 #  进度校验的key 三个环节.
 # STATE_CREATE = -1
@@ -129,8 +130,11 @@ def start():
             src_dbs.append(media_db)
 
     # 批量插入
-    if len(create_db_list) > 0:
-        Media.objects.bulk_create(create_db_list)
+    with transaction.atomic():
+        for db in create_db_list:
+            db.save()
+    # if len(create_db_list) > 0:
+    #     Media.objects.bulk_create(create_db_list)
     s_loop(loop)
 
 

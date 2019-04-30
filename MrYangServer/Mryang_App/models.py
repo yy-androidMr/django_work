@@ -100,8 +100,9 @@ class UpLoadDir(models.Model):
 
 # 在service做转换的时候的src文件进度
 class Media(models.Model):
+    id = models.AutoField(primary_key=True)
     #   文件绝对路径.
-    abs_path = models.CharField(max_length=500, primary_key=True)
+    abs_path = models.CharField(max_length=500, default='')
     # 输出路径
     desc_path = models.CharField(max_length=500, default='')
     # m3u8
@@ -136,5 +137,3 @@ class Media(models.Model):
     # 其他预留
     param1 = models.CharField(max_length=500, default='')
     param2 = models.CharField(max_length=500, default='')
-
-

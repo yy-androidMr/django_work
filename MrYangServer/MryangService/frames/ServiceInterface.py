@@ -9,7 +9,7 @@ def s_loop(call, *args, **kws):
     while True:
         # try:
         if call(*args, **kws):
-            time.sleep(2)
+            time.sleep(0.1)
         else:
             im_out(s_name)
     # except Exception as e:
