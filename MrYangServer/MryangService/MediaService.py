@@ -115,6 +115,8 @@ def start():
         for file in files:
             if not yutils.is_movie(file):
                 continue
+            if not yutils.is_movie(file):
+                continue
             src = ypath.join(root, file)
             try:
                 media_db = Media.objects.get(abs_path=src)
