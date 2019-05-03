@@ -42,7 +42,7 @@ urlpatterns = [
     url(r'^download/$', views.download_test),
     # url(r'media/movie/(.*)$', views.media_moive),
     url(r'media/movie', views.media_moive),
-    url(r'media/tv', views.media_moive),
+    url(r'media/tv', views.media_tv),
     # static(res_url, document_root=res_root)
     # url(r'^any/(.*)/$', views.any_page),
 ]
