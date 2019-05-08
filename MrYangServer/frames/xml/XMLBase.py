@@ -2,20 +2,16 @@
 from xml.dom import minidom
 
 # 总配置路径
+from xml.dom.minidom import Element, Text
 
 import manage
 
 PROJ_ROOT = manage.project_root()
 CONFIG_INFO_XML = '%s/config/configs_info.xml' % PROJ_ROOT
-CONFIG_TAG = 'config_root'
 GIF_BANNER = 'gif_banner'
 COS_MEDIA_ROOT = 'cos_media_root'
-RESOURCE_ROOT = 'resource_root'
 RES_URL = 'res_url'
 LIST_TAG = 'list'
-
-
-# print('current_path:%s,%s' % (current_path, os.getcwd()))
 
 
 # 功能:注解参数:dpins=1  代表args的第二个加上dompxy
@@ -44,13 +40,11 @@ def dom_pxy_ins(*annokwds):
             return f(*args, **kwargs)
 
         return new_f
-        # arg_list[0] = arg_list[0] if arg_list[0] else DomPxy(CONFIG_INFO_XML)
-        # return fn(arg_list[0])
 
     return ins
 
 
-# 需要尝试使用dom解析,因为Elementtree解析会清除掉注释
+# 需要尝试使用dom解析,因为Elementtree解析会清除掉注释  #  调整完XMLPic  要删除!!
 class ElemPxy:
     def __init__(self, dom):
         self.dom = dom
@@ -95,58 +89,67 @@ class DomPxy:
         # print(os.path.abspath('./'))
         self.dom = minidom.parse(path)
         self.elem = ElemPxy(self.dom)
+        self.instance = None
 
-    # def find(self):
-
+    #  调整完XMLPic  要删除!!
     def save(self):
         with open(self.path, 'w', encoding='UTF-8') as fh:
             self.dom.writexml(fh, indent='', encoding='UTF-8')
             # fh.write(self.dom.toprettyxml(encoding='UTF-8'))
 
+    def ins(self):
+        if self.instance:
+            return self.instance
+        # 获取实例
+        self.instance = XmlBean()
+        self.insert_child_attr(self.dom.documentElement, self.instance)
+        return self.instance
 
-# def ins_cfgs_info(dpins=None):
-#     dpins = dpins if dpins else DomPxy(CONFIG_INFO_XML)
-#     return dpins
+    def insert_child_attr(self, node, parent):
+        ats = node.attributes
+        if ats._attrs is not None:
+            for k in ats._attrs:
+                setattr(parent, k, node.getAttribute(k))
+        child_dict = {}
+        for child in node.childNodes:
+            if type(child) == Element:
+                if not child_dict.get(child.tagName):
+                    child_dict[child.tagName] = []
+                child_dict[child.tagName].append(child)
+
+        if len(node.childNodes) == 1 and type(node.childNodes[0]) == Text:
+            setattr(parent, "innerText", node.childNodes[0].nodeValue)
+
+        for c_name in child_dict:
+            c_nodes = child_dict[c_name]
+            if len(c_nodes) == 1:
+                c_ins = XmlBean()
+                setattr(parent, c_name, c_ins)
+                self.insert_child_attr(c_nodes[0], c_ins)
+            else:
+                ins_list = [XmlBean() for _ in range(len(c_nodes))]
+                setattr(parent, c_name, ins_list)
+                index = 0
+                for item in c_nodes:
+                    self.insert_child_attr(item, ins_list[index])
+                    index += 1
 
 
 # 解析configs_info 所有的配置列表
 @dom_pxy_ins()
+def get_base_cfg(dpins=None):
+    return dpins
+
+
+#  调整完XMLPic  要删除!!
+@dom_pxy_ins()
 def get_cfg_dir(dpins=None):
-    config_root = PROJ_ROOT + dpins.elem.value_by_tag(CONFIG_TAG)
+    ins = dpins.ins()
+    config_root = PROJ_ROOT + ins.config_root.innerText
     return config_root.replace('\\', '/'), dpins
 
 
-# 获取腾讯云cos的media根目录.
-@dom_pxy_ins()
-def cos_media_root(dpins=None):
-    gif_banner_path = dpins.elem.value_by_tag(COS_MEDIA_ROOT)
-    return gif_banner_path.replace('\\', '/'), dpins
-
-
-# # 获取工程内,static下的res目录(原media目录).
-# @dom_pxy_ins()
-# def resource_root(dpins=None):
-#     gif_banner_path = PROJ_ROOT + dpins.elem.value_by_tag(RESOURCE_ROOT)
-#     return gif_banner_path.replace('\\', '/'), dpins
-
-
-# 获取list节点中的某一个配置路径
-@dom_pxy_ins()
-def cfg_list_path(c_name, dpins=None):
-    (config_root, _) = get_cfg_dir(dpins)
-    c_p = config_root + dpins.elem.value_by_tag(c_name)
-    return c_p.replace('\\', '/'), dpins
-
-
-@dom_pxy_ins()
-def res_url_info(dpins=None):
-    # local_target = resource_root(dpins)
-    from frames import TmpUtil
-    local_target = TmpUtil.desc()
-    url = dpins.elem.value_by_tag(RES_URL)
-    return url, local_target
-
-
+#  调整完XMLPic  要删除!!
 def add_attr(node, k, v='', update=False):
     attvalue = node.getAttribute(k)
     if update or not attvalue:
@@ -156,10 +159,7 @@ def add_attr(node, k, v='', update=False):
 def parse(path):
     return DomPxy(path)
 
-#
-# path, _ = cfg_list_path('gallery_info')
-# dp = DomPxy(path)
-# nodelist = dp.elem.xml_nodes('gallery')
-# print(dp.elem.attr_value(nodelist[0], 'dir_name'))
 
-# print(c_path('gallery_info'))
+# 序列化的实例,每个配置自己用反射添加内容
+class XmlBean(object):
+    pass

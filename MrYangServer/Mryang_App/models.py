@@ -135,5 +135,5 @@ class Media(models.Model):
                                    blank=True, on_delete=models.SET_NULL)
     # 字幕文件
     # 其他预留
-    param1 = models.CharField(max_length=500, default='')
-    param2 = models.CharField(max_length=500, default='')
+    param1 = models.CharField(max_length=500, default='')  # 这里存储m3u8路径
+    param2 = models.CharField(max_length=500, default='')  # 这里存储缩略图路径

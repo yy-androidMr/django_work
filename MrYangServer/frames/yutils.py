@@ -239,4 +239,16 @@ def process_cmd(cmd, call=None, done_call=None, param=None, sep='\r\n'):
 # 默认编码
 default_encode = codecs.lookup(locale.getpreferredencoding()).name
 
+
 # end-------
+
+
+# 裁切图片 传入宽高. 然后返回对应的坐标裁切.proportion=w/h  1代表裁切正方形
+def crop_size(w, h, proportion=1):
+    crop_w = (w - proportion * h) / 2
+    crop_h = 0
+    if crop_w < 0:
+        crop_h = (h - w / proportion) / 2
+        crop_w = 0
+    region = (crop_w, crop_h, w - crop_w, h - crop_h)
+    return region

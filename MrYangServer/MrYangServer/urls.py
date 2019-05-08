@@ -47,4 +47,4 @@ urlpatterns = [
 ]
 # from django.conf.urls.static import static
 #
-urlpatterns += static(views.res_url, document_root=views.res_root)
+# urlpatterns += static(views.res_url, document_root=views.res_root)

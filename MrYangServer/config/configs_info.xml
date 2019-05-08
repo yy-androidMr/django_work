@@ -13,7 +13,6 @@
 <configs_info>	
 
 			<gif_banner>/media_source/pic/gif_bannder.png</gif_banner>
-			<resource_root>G:\pyWorkspace\django_work\MrYangServer\static\res</resource_root>
             <res_url>/res/</res_url>
 			<cos_media_root>https://mryang-1251808344.cos.ap-chengdu.myqcloud.com/res</cos_media_root>
 			<config_root>/config</config_root>

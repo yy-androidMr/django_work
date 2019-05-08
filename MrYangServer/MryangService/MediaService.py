@@ -1,8 +1,10 @@
 import json
 import os
+import random
 import shutil
 
 import django
+from PIL import Image
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "MrYangServer.settings")
 django.setup()
@@ -15,33 +17,31 @@ from frames.xml import XMLMedia
 from MryangService.utils import logger
 from django.db import transaction
 
-#  进度校验的key 三个环节.
-# STATE_CREATE = -1
-# STATE_INIT = 0
-# STATE_AUDIO_FINISH = 1  # 音频状态检查完毕
-# STATE_VIDOE_COMPRESS_FINISH = 2  # 视频转码完毕.
-# --------------------
-
 FFMPEG_KEY = 'FFMPEG_KEY'
 FFPROBE_KEY = 'FFPROBE_KEY'
-mulit_audio_dir = 'media_mulit_audio'
 
 movie_config = XMLMedia.get_infos()
 
 ffmpeg_tools = TmpUtil.input_note(FFMPEG_KEY, '输入对应的ffmpeg文件位置(参照link_gitProj_files.txt下载对应的文件):\n')
 ffprobe_tools = TmpUtil.input_note(FFPROBE_KEY, '输入对应的ffprobe文件位置(参照link_gitProj_files.txt下载对应的文件):\n')
 # 视频源路径
-media_src_root = ypath.join(TmpUtil.src(), movie_config[XMLMedia.TAGS.DIR_ROOT])
+media_src_root = ypath.join(TmpUtil.src(), movie_config.dir_root)
 # 其他音轨存放处
-mulit_audio_path = ypath.join(TmpUtil.src(), mulit_audio_dir)
+mulit_audio_path = ypath.join(TmpUtil.src(), movie_config.base_info.mulit_audio_dir)
 # 视频转码目标路径
-convert_root = ypath.join(TmpUtil.desc(), movie_config[XMLMedia.TAGS.DIR_ROOT])
+convert_root = ypath.join(TmpUtil.desc(), movie_config.dir_root)
 # 转码结束后的切片路径
-m3u8_ts_root = ypath.join(TmpUtil.desc(), movie_config[XMLMedia.TAGS.TS_DIR])
+m3u8_ts_root = ypath.join(TmpUtil.desc(), movie_config.m3u8_info.ts_dir)
+
+#  裁切缩略图的比例
+thum_percent = int(movie_config.base_info.thum_w) / int(movie_config.base_info.thum_h)
+
+max_thum_time = int(movie_config.base_info.max_thum_time)
+min_thum_time = int(movie_config.base_info.min_thum_time)
+
 # TmpUtil.clear_key(FFMPEG_KEY)
 # TmpUtil.clear_key(FFPROBE_KEY)
 
-# logger.info('src_root:', src_root, 'convert_root:', convert_root, 'm3u8_ts_root:', m3u8_ts_root)
 
 src_dbs = []
 
@@ -66,7 +66,7 @@ def modify_state(media_db, state):
 def check_file(path):
     if os.path.isdir(path):
         return False
-    if mulit_audio_dir in path:
+    if movie_config.base_info.mulit_audio_dir in path:
         return False
     # 如果这里没有该路径. 是不是应该删除?
     if cur_db() and os.path.exists(cur_db().abs_path) and os.path.samefile(
@@ -133,8 +133,6 @@ def start():
     with transaction.atomic():
         for db in create_db_list:
             db.save()
-    # if len(create_db_list) > 0:
-    #     Media.objects.bulk_create(create_db_list)
     s_loop(loop)
 
 
@@ -154,10 +152,10 @@ def compress(media_db):
     cur_file_info['db'] = media_db
     analysis_audio_info(media_db)
     compress_media(media_db)
-    # Media.objects.get()
-    # if len(query_set) == 0:
+    create_thum(media_db)
 
 
+# 转码音频
 def analysis_audio_info(media_db):
     def movie_info_res(cmdlist, _):
         if len(cmdlist) <= 0:
@@ -244,23 +242,18 @@ def analysis_audio_info(media_db):
         done_call=movie_info_res)
 
 
+# 转码视频
 def compress_media(media_db):
-    # def update_db(_, desc):
-    #     if os.path.exists(media_db.abs_path):
-    #         os.remove(media_db.abs_path)
-    #     media_db.abs_path = desc
-    #     media_db.file_name = os.path.basename(desc)
-    #     modify_state(media_db, STATE_VIDOE_COMPRESS_FINISH)
-
     if media_db.state >= MediaHelp.STATE_VIDOE_COMPRESS_FINISH:
         logger.info('该文件已经转码过了:' + media_db.abs_path)
         return
 
     (_, target) = ypath.decompose_path(
         media_db.abs_path, media_src_root, convert_root, exten='.mp4')
-    ypath.create_dirs(target)
     if os.path.exists(target):
         os.remove(target)
+    ypath.create_dirs(target)
+
     media_db.desc_path = target
     media_db.nginx_path = target.replace(convert_root, '')
     # media_db.nginx_path = target
@@ -288,6 +281,27 @@ def compress_media(media_db):
         print('这个视频不是:' + media_db.abs_path)
         yutils.process_cmd('\"%s\" -i \"%s\"  \"%s\"' % (ffmpeg_tools, media_db.abs_path, target))
         modify_state(media_db, MediaHelp.STATE_VIDOE_COMPRESS_FINISH)
+
+
+# 生成缩略图
+def create_thum(media_db):
+    if media_db.state >= MediaHelp.STATE_VIDEO_THUM:
+        logger.info('该文件已经转缩略图过了:' + media_db.abs_path)
+        return
+    desc = ypath.join(ypath.del_exten(media_db.desc_path), movie_config.base_info.img)
+    desc_thum = ypath.join(ypath.del_exten(media_db.desc_path), movie_config.base_info.thum)
+    ypath.create_dirs(desc)
+
+    r_time = random.randint(min_thum_time if media_db.duration > min_thum_time else 0,
+                            max_thum_time if media_db.duration > max_thum_time else media_db.duration)
+    cmd = ffmpeg_tools + ' -i \"' + media_db.desc_path + '\" -y  -vframes 1 -ss  00:00:' + str(
+        r_time) + ' -f image2  \"' + desc + '\"'
+    yutils.process_cmd(cmd)
+    img = Image.open(desc)
+    w, h = img.size
+    crop_img = img.crop(yutils.crop_size(w, h, thum_percent))
+    crop_img.save(desc_thum)
+    pass
 
 
 # def cut_video():
@@ -323,7 +337,7 @@ def compress_media(media_db):
 #                 cache_tmp_info.write_info(src_path, TMP_CUT_KEY, True)
 #                 logger.info('切割完成:' + target_path)
 
-
+# 生成数据库字段Dir
 def gen_dir():
     def create_dir(path, info, tags):
         name = info[ypath.KEYS.NAME]

@@ -10,7 +10,7 @@ from django.views.decorators.gzip import gzip_page
 from Mryang_App.forms import CreateUserF, LoginUserF, UserAlbumF
 from Mryang_App.result.Enums import LOGIN, UPLOAD
 from Mryang_App import yquery, forms
-from frames import yutils, ypath
+from frames import yutils, ypath, TmpUtil
 
 # 显示权限
 from frames import logger
@@ -20,10 +20,14 @@ COMMON_SHOW = 4
 FAMILY = 5
 NOT_SEE = 9
 
-(T_COS_MEIDA_ROOT, dpins) = XMLBase.cos_media_root()
-res_url, res_root = XMLBase.res_url_info(dpins)
-movie_info_cfg = XMLMedia.get_infos()
-movie_url = ypath.join(res_url, movie_info_cfg[XMLMedia.TAGS.TS_DIR])
+dpins = XMLBase.get_base_cfg()
+T_COS_MEIDA_ROOT = dpins.ins().cos_media_root.innerText
+
+
+# res_root = TmpUtil.desc()
+# res_url = dpins.res_url.innerText
+# movie_info_cfg = XMLMedia.get_infos()
+# movie_url = ypath.join(res_url, movie_info_cfg.m3u8_info.ts_dir)
 
 
 def hello(request):

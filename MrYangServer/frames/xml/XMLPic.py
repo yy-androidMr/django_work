@@ -89,7 +89,8 @@ def append_ifnot_exist(link_dic):
 
 
 def nodes():
-    path, dpins = XMLBase.cfg_list_path(CONFIG_NAME)
+    config_root, dpins = XMLBase.get_cfg_dir()
+    path = ypath.join(config_root, dpins.ins().list.pic_info.innerText)
     if os.path.exists(path):
         domPxy = XMLBase.parse(path)
         return domPxy.elem, dpins

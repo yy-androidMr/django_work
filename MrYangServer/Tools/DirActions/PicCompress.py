@@ -136,14 +136,8 @@ def middle2thum(delete_exist):
                 continue
             img = Image.open(source_path)
             w, h = img.size
-            if w > h:
-                xoff = int((w - h) / 2)
-                region = (xoff, 0, h + xoff, h)
-            else:
-                yoff = int((h - w) / 2)
-                region = (0, yoff, w, w + yoff)
 
-            crop_img = img.crop(region)  # 保存裁切后的图片
+            crop_img = img.crop(yutils.crop_size(w, h))  # 保存裁切后的图片
             crop_img.thumbnail((thum_width, thum_width), Image.ANTIALIAS)
             if 'exif' in img.info:
                 exif_dict = piexif.load(crop_img.info["exif"])
