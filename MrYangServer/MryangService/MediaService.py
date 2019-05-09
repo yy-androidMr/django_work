@@ -115,6 +115,8 @@ def start():
         for file in files:
             if not yutils.is_movie(file):
                 continue
+            if not yutils.is_movie(file):
+                continue
             src = ypath.join(root, file)
             try:
                 media_db = Media.objects.get(abs_path=src)
@@ -220,6 +222,7 @@ def analysis_audio_info(media_db):
         # desc_file = file +
         _, desc_mulit_path = ypath.decompose_path(media_db.abs_path, media_src_root, mulit_audio_path)
         out_file = desc_mulit_path + '.chi' + ypath.file_exten(media_db.abs_path)
+        ypath.create_dirs(desc_mulit_path)
         if os.path.exists(out_file):
             os.remove(out_file)
         logger.info(out_file)

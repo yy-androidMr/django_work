@@ -1,5 +1,5 @@
-import os
-
+import os,sys
+sys.path.append('./../..')
 from frames import TmpUtil
 from frames.ThreadingPool import ThreadingPool as tp
 from MryangService import MediaService as ms

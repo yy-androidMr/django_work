@@ -242,18 +242,24 @@ def m_second_gallery(request, dir_id):
 
 
 def media_moive(request):
+    return media_json(request, 'movie')
+
+def media_tv(request):
+    return media_json(request,'tv')
+
+
+def media_json(request,type):
     p_id = request.GET.get('p')
     if not p_id:
-        json = yquery.meida_root('movie')
+        json = yquery.meida_root(type)
     else:
         try:
             id = int(p_id)
-            json = yquery.media_dir('movie', id)
+            json = yquery.media_dir(type, id)
         except:
-            json = yquery.meida_root('movie')
+            json = yquery.meida_root(type)
 
     return HttpResponse(json)
-
 
 def download_test(request):
     print(os.path.dirname('.'))
