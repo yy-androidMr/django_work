@@ -3,6 +3,12 @@ import platform
 import subprocess
 
 import shutil
+import urllib
+from contextlib import closing
+
+import requests
+import urllib3
+from tomorrow import threads
 
 
 def re_exten(path, exten):
@@ -48,3 +54,17 @@ def is_mac():
     if (sys_str == "Windows"):
         return False
     return True
+
+
+@threads(5)
+def async_download(url, target):
+    download(url, target)
+    print('finish ' + url)
+
+
+def download(url, target):
+    create_dirs(target)
+    print(url)
+    hex_content = requests.get(url).content
+    with open(target, 'wb') as f:
+        f.write(hex_content)

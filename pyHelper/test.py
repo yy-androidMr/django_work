@@ -111,5 +111,10 @@
 #
 # print(sys_str)
 
-for i in ["1","2"]:
-    print(i)
+
+for i in range(1, 10):
+    print('------------------')
+    line = ''
+    for j in range(1, i+1):
+        line += str(j) + "x" + str(i) + "=" + str(i * j)+'   '
+    print(line)
