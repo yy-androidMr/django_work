@@ -65,12 +65,13 @@ class FileEventHandler(FileSystemEventHandler):
 
 
 def start(path):
-    observer = Observer()
-    observer.schedule(FileEventHandler(), path, True)
-    observer.start()
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        observer.stop()
-    observer.join()
+    pass
+    # observer = Observer()
+    # observer.schedule(FileEventHandler(), path, True)
+    # observer.start()
+    # try:
+    #     while True:
+    #         time.sleep(1)
+    # except KeyboardInterrupt:
+    #     observer.stop()
+    # observer.join()

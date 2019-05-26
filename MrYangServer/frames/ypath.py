@@ -5,6 +5,7 @@
 import os
 import re
 import shutil
+from pathlib import PurePath
 
 from frames import TmpUtil
 
@@ -29,6 +30,33 @@ def parse_path(path, root_path, name, isDir=False):
 
     return {KEYS.LEVEL: rel_path.count('/'), KEYS.NAME: name, KEYS.IS_DIR: isDir, KEYS.REL: rel_path,
             KEYS.PARENT: parent_path}
+
+
+
+# def path_res(root, dir_filter=None, file_filter=None, parse_dir=True, parse_file=True, add_root=True):
+#     dict = {}
+#     if add_root:
+#         dict[root] = parse_path(root, root, root.name, True)
+#     for root, dirs, files in os.walk(root):
+#         if parse_dir:
+#             for dir in dirs:
+#                 source_path = join(root, dir)
+#                 if dir_filter:
+#                     if re.match(dir_filter, source_path):
+#                         dict[source_path] = parse_path(source_path, root_path, dir, True)
+#                 else:
+#                     dict[source_path] = parse_path(source_path, root_path, dir, True)
+#         if parse_file:
+#             for file in files:
+#                 if '.DS_Store' in file:
+#                     continue
+#                 source_path = join(root, file)
+#                 if file_filter:
+#                     if re.match(file_filter, source_path):
+#                         dict[source_path] = parse_path(source_path, root_path, file)
+#                 else:
+#                     dict[source_path] = parse_path(source_path, root_path, file)
+#     return dict
 
 
 # 获取res_root文件夹下的的所有文件夹和文件名.
@@ -80,6 +108,11 @@ def decompose_path(src_file, src_root, target_root, exten=None, rename=None):
     target_file = join(target_root, rela_file_name)
 
     return rela_file_name, target_file
+
+
+# 返回不带io操作的path
+def pp_ins(base_path):
+    return PurePath(base_path)
 
 
 def join(path, *paths):

@@ -2,6 +2,7 @@ import json
 import os
 import random
 import shutil
+import sys
 
 import django
 from PIL import Image
@@ -25,13 +26,13 @@ movie_config = XMLMedia.get_infos()
 ffmpeg_tools = TmpUtil.input_note(FFMPEG_KEY, '输入对应的ffmpeg文件位置(参照link_gitProj_files.txt下载对应的文件):\n')
 ffprobe_tools = TmpUtil.input_note(FFPROBE_KEY, '输入对应的ffprobe文件位置(参照link_gitProj_files.txt下载对应的文件):\n')
 # 视频源路径
-media_src_root = ypath.join(TmpUtil.src(), movie_config.dir_root)
+media_src_root = TmpUtil.src() / movie_config.dir_root  # ypath.join(TmpUtil.src(), movie_config.dir_root)
 # 其他音轨存放处
-mulit_audio_path = ypath.join(TmpUtil.src(), movie_config.base_info.mulit_audio_dir)
+mulit_audio_path = TmpUtil.src() / movie_config.base_info.mulit_audio_dir  # ypath.join(TmpUtil.src(), movie_config.base_info.mulit_audio_dir)
 # 视频转码目标路径
-convert_root = ypath.join(TmpUtil.desc(), movie_config.dir_root)
+convert_root = TmpUtil.desc() / movie_config.dir_root  # ypath.join(TmpUtil.desc(), movie_config.dir_root)
 # 转码结束后的切片路径
-m3u8_ts_root = ypath.join(TmpUtil.desc(), movie_config.m3u8_info.ts_dir)
+m3u8_ts_root = TmpUtil.desc() / movie_config.m3u8_info.ts_dir  # ypath.join(TmpUtil.desc(), movie_config.m3u8_info.ts_dir)
 
 #  裁切缩略图的比例
 thum_percent = int(movie_config.base_info.thum_w) / int(movie_config.base_info.thum_h)
@@ -111,31 +112,57 @@ def flush_cache_file():
 def start():
     dm_dict = gen_dir()
     create_db_list = []
-    for root, dirs, files in os.walk(media_src_root):
-        for file in files:
-            if not yutils.is_movie(file):
-                continue
-            if not yutils.is_movie(file):
-                continue
-            src = ypath.join(root, file)
-            try:
-                media_db = Media.objects.get(abs_path=src)
-                media_db.folder_key = dm_dict[os.path.dirname(src)]
-                media_db.save()
-            except:
-                media_db = Media()
-                media_db.abs_path = src
-                media_db.state = MediaHelp.STATE_INIT
-                media_db.file_name = os.path.basename(src)
-                create_db_list.append(media_db)
-                media_db.folder_key = dm_dict[os.path.dirname(src)]
-            src_dbs.append(media_db)
-
+    files = media_src_root.rglob('*')
+    for file in files:
+        if file.is_dir():
+            continue
+        if not yutils.is_movie(file):
+            continue
+        posix_file = file.as_posix()
+        parent_posix_file = file.parent.as_posix()
+        try:
+            media_db = Media.objects.get(abs_path=posix_file)
+            media_db.folder_key = dm_dict[parent_posix_file]
+            media_db.save()
+        except:
+            media_db = Media()
+            media_db.abs_path = posix_file
+            media_db.state = MediaHelp.STATE_INIT
+            media_db.file_name = posix_file
+            create_db_list.append(media_db)
+            media_db.folder_key = dm_dict[parent_posix_file]
+        src_dbs.append(media_db)
     # 批量插入
     with transaction.atomic():
         for db in create_db_list:
             db.save()
-    s_loop(loop)
+    # s_loop(loop)
+
+    # create_db_list = []
+    # for root, dirs, files in os.walk(media_src_root):
+    #     for file in files:
+
+    #         if not yutils.is_movie(file):
+    #             continue
+    #         src = ypath.join(root, file)
+    #         try:
+    #             media_db = Media.objects.get(abs_path=src)
+    #             media_db.folder_key = dm_dict[os.path.dirname(src)]
+    #             media_db.save()
+    #         except:
+    #             media_db = Media()
+    #             media_db.abs_path = src
+    #             media_db.state = MediaHelp.STATE_INIT
+    #             media_db.file_name = os.path.basename(src)
+    #             create_db_list.append(media_db)
+    #             media_db.folder_key = dm_dict[os.path.dirname(src)]
+    #         src_dbs.append(media_db)
+    #
+    # # 批量插入
+    # with transaction.atomic():
+    #     for db in create_db_list:
+    #         db.save()
+    # s_loop(loop)
 
 
 def loop():
@@ -341,7 +368,7 @@ def create_thum(media_db):
 #                 logger.info('切割完成:' + target_path)
 
 # 生成数据库字段Dir
-def gen_dir():
+def gen_dir(): 
     def create_dir(path, info, tags):
         name = info[ypath.KEYS.NAME]
         parent_path = info[ypath.KEYS.PARENT]
@@ -363,10 +390,12 @@ def gen_dir():
         return d_model
 
     Dir.objects.filter(type=yutils.M_FTYPE_MOIVE).delete()
-    dirs = os.listdir(media_src_root)
+    dirs = media_src_root.iterdir()
     dm_list = {}
     for dir in dirs:
-        dict = ypath.path_result(media_src_root, dir, parse_file=False)
+        if not dir.is_dir():
+            continue
+        dict = ypath.path_result(str(media_src_root), str(dir.name), parse_file=False)
         list = sorted(dict.items(), key=lambda d: d[1][ypath.KEYS.LEVEL])
 
         for item in list:

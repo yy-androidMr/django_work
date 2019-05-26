@@ -111,10 +111,21 @@
 #
 # print(sys_str)
 
+#
+# for i in range(1, 10):
+#     print('------------------')
+#     line = ''
+#     for j in range(1, i+1):
+#         line += str(j) + "x" + str(i) + "=" + str(i * j)+'   '
+#     print(line)
+import sys
+from pathlib import PurePath, Path
 
-for i in range(1, 10):
-    print('------------------')
-    line = ''
-    for j in range(1, i+1):
-        line += str(j) + "x" + str(i) + "=" + str(i * j)+'   '
-    print(line)
+pp = Path('.')
+pp2 = PurePath('.')
+p3 = pp2 / 't' / 'c'
+print(sys.getsizeof(pp))
+print(sys.getsizeof(pp2))
+p4 = pp2 / 'd'
+print(p4)
+print(p3)

@@ -6,8 +6,8 @@ from xml.dom.minidom import Element, Text
 
 import manage
 
-PROJ_ROOT = manage.project_root()
-CONFIG_INFO_XML = '%s/config/configs_info.xml' % PROJ_ROOT
+PROJ_ROOT = manage.root()
+CONFIG_INFO_XML = PROJ_ROOT / 'config/configs_info.xml'
 GIF_BANNER = 'gif_banner'
 COS_MEDIA_ROOT = 'cos_media_root'
 RES_URL = 'res_url'
@@ -87,13 +87,14 @@ class DomPxy:
     def __init__(self, path):
         self.path = path
         # print(os.path.abspath('./'))
-        self.dom = minidom.parse(path)
+        self.dom = minidom.parse(str(path))
         self.elem = ElemPxy(self.dom)
         self.instance = None
 
     #  调整完XMLPic  要删除!!
     def save(self):
-        with open(self.path, 'w', encoding='UTF-8') as fh:
+
+        with self.path.open('w', encoding='UTF-8') as fh:
             self.dom.writexml(fh, indent='', encoding='UTF-8')
             # fh.write(self.dom.toprettyxml(encoding='UTF-8'))
 
@@ -145,7 +146,7 @@ def get_base_cfg(dpins=None):
 @dom_pxy_ins()
 def get_cfg_dir(dpins=None):
     ins = dpins.ins()
-    config_root = PROJ_ROOT + ins.config_root.innerText
+    config_root = PROJ_ROOT / ins.config_root.innerText
     return config_root.replace('\\', '/'), dpins
 
 

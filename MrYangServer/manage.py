@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 import sys
+from pathlib import Path
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "MrYangServer.settings")
@@ -20,6 +21,14 @@ if __name__ == "__main__":
             )
         raise
     execute_from_command_line(sys.argv)
+
+p_root = Path(os.path.dirname(os.path.abspath(__file__)))
+
+
+def root():
+    # return os.path.abspath(__file__)
+    return p_root
+    # return sys.path[0]
 
 
 def project_root():

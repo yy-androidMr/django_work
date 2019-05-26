@@ -4,13 +4,15 @@
 import os
 
 import shutil
+from pathlib import Path, PurePath
+
 import manage
 from frames import yutils
 
-tmpdir = os.path.join(manage.project_root(), 'tmp')
-res_linkdir = os.path.abspath(os.path.join(manage.project_root(), '../res_link'))
-tmpfile = os.path.join(tmpdir, 'tmp_server_cfg')
-logdir = os.path.join(tmpdir, 'log')
+tmpdir = manage.root() / 'tmp'  # os.path.join(manage.project_root(), 'tmp')
+res_linkdir = (manage.root() / '../res_link').resolve()
+tmpfile = tmpdir / 'tmp_server_cfg'
+logdir = tmpdir / 'log'
 
 
 def create_dirs(file_path, is_dir=False, delete_exist=False):
@@ -104,16 +106,16 @@ def input_note(key, intro, ispath=True):
         while value is None or value is '':
             value = input(intro)
         set(key, value)
-        return value
+        return Path(value)
 
 
 # 输入记录缓存
 def input_path(key, intro):
-    path = get(key)
-    while path is None or not os.path.exists(path):
-        path = input(intro)
-    set(key, path)
-    return path.replace('\\', '/')
+    path_str = get(key)
+    while path_str is None or not os.path.exists(path_str):
+        path_str = input(intro)
+        set(key, path_str)
+    return Path(path_str)  # .replace('\\', '/')
 
 
 SRC_ROOT_KEY = 'SRC_ROOT_KEY'
@@ -122,19 +124,19 @@ DESC_TMP_DIR = 'tmp'
 
 
 def src():
-    tmp_path = ''
-    while not os.path.isdir(tmp_path):
+    tmp_path = None
+    while tmp_path is None or not tmp_path.exists():
         tmp_path = input_path(SRC_ROOT_KEY, '请指定资源原始目录(例如:E:/src_root),目录下有个pic文件夹,media文件夹:\n')
-        link = os.path.join(res_linkdir, 'src')
-        if os.path.exists(link):
+        link = res_linkdir / 'src'
+        if link.exists():
             os.remove(link)
         os.symlink(tmp_path, link)
     return tmp_path
 
 
 def desc():
-    tmp_path = ''
-    while not os.path.isdir(tmp_path):
+    tmp_path = None
+    while tmp_path is None or not tmp_path.exists():
         tmp_path = input_path(DESC_ROOT_KEY, '请指定资源输出目录(例如:E:/desc_root),目录下有什么都行,是原始目录的输出路径:\n')
         link = os.path.join(res_linkdir, 'desc')
         if os.path.exists(link):
@@ -145,7 +147,7 @@ def desc():
 
 # 输出文件的临时目录.做记录
 def desc_tmp():
-    tmp = desc() + '/' + DESC_TMP_DIR
+    tmp = desc() / DESC_TMP_DIR
     create_dirs(tmp, True)
     return tmp
 
