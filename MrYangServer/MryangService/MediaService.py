@@ -112,6 +112,7 @@ def flush_cache_file():
 def start():
     dm_dict = gen_dir()
     create_db_list = []
+    media_src_root.is_file()
     files = media_src_root.rglob('*')
     for file in files:
         if file.is_dir():
@@ -247,7 +248,7 @@ def analysis_audio_info(media_db):
             #     select_audio = int(input(out_content + '选择音轨:'))
 
         # desc_file = file +
-        _, desc_mulit_path = ypath.decompose_path(media_db.abs_path, media_src_root, mulit_audio_path)
+        _, desc_mulit_path = ypath.decompose_path(media_db.abs_path, str(media_src_root), str(mulit_audio_path))
         out_file = desc_mulit_path + '.chi' + ypath.file_exten(media_db.abs_path)
         ypath.create_dirs(desc_mulit_path)
         if os.path.exists(out_file):
@@ -376,6 +377,8 @@ def create_thum(media_db):
 
 # 生成数据库字段Dir
 def gen_dir():
+    def leee(d):
+        return d
     def create_dir(path, info, tags):
         name = info[ypath.KEYS.NAME]
         parent_path = info[ypath.KEYS.PARENT]
@@ -397,11 +400,12 @@ def gen_dir():
         return d_model
 
     Dir.objects.filter(type=yutils.M_FTYPE_MOIVE).delete()
-    dict = ypath.path_result(str(TmpUtil.src()), movie_config.dir_root, parse_file=False)
+    dict = ypath.path_res(media_src_root, parse_file=False)
+    # dict = ypath.path_result(str(TmpUtil.src()), movie_config.dir_root, parse_file=False)
     list = sorted(dict.items(), key=lambda d: d[1][ypath.KEYS.LEVEL])
     dm_list = {}
     for item in list:
-        dm_list[item[0]] = create_dir(item[0], item[1], dir)
+        dm_list[item[0]] = create_dir(item[0], item[1], movie_config.dir_root)
     # dirs = media_src_root.iterdir()
     # dm_list = {}
     # for dir in dirs:
@@ -413,3 +417,8 @@ def gen_dir():
     #     for item in list:
     #         dm_list[item[0]] = create_dir(item[0], item[1], dir)
     return dm_list
+
+
+# dict = ypath.path_res(media_src_root,parse_file=False)
+# print(dict)
+# print(media_src_root.relative_to(media_src_root))

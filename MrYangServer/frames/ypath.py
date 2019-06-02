@@ -32,7 +32,6 @@ def parse_path(path, root_path, name, isDir=False):
             KEYS.PARENT: parent_path}
 
 
-
 # def path_res(root, dir_filter=None, file_filter=None, parse_dir=True, parse_file=True, add_root=True):
 #     dict = {}
 #     if add_root:
@@ -57,6 +56,32 @@ def parse_path(path, root_path, name, isDir=False):
 #                 else:
 #                     dict[source_path] = parse_path(source_path, root_path, file)
 #     return dict
+
+def path_res(path, parse_dir=True, parse_file=True):
+    class TmpClass:
+        pass
+
+    root_cls = TmpClass()
+    root_cls.is_dir = path.is_dir()
+    root_cls.name = path.name
+    root_cls.relative = '.'
+    root_cls.level = 0
+    m_dict = {path.as_posix(): root_cls}
+    files = path.rglob('*')
+    for file in files:
+        cache_it = False
+        if parse_dir and file.is_dir():
+            cache_it = True
+        elif parse_file and file.is_file():
+            cache_it = True
+        if cache_it:
+            res = TmpClass()
+            res.is_dir = file.is_dir()
+            res.name = file.name
+            res.relative = file.relative_to(path)
+            res.level = len(res.relative.parents)
+            m_dict[file.as_posix()] = res
+    return m_dict
 
 
 # 获取res_root文件夹下的的所有文件夹和文件名.
