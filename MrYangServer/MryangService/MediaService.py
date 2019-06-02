@@ -23,8 +23,8 @@ FFPROBE_KEY = 'FFPROBE_KEY'
 
 movie_config = XMLMedia.get_infos()
 
-ffmpeg_tools = TmpUtil.input_note(FFMPEG_KEY, '输入对应的ffmpeg文件位置(参照link_gitProj_files.txt下载对应的文件):\n')
-ffprobe_tools = TmpUtil.input_note(FFPROBE_KEY, '输入对应的ffprobe文件位置(参照link_gitProj_files.txt下载对应的文件):\n')
+ffmpeg_tools = str(TmpUtil.input_note(FFMPEG_KEY, '输入对应的ffmpeg文件位置(参照link_gitProj_files.txt下载对应的文件):\n'))
+ffprobe_tools = str(TmpUtil.input_note(FFPROBE_KEY, '输入对应的ffprobe文件位置(参照link_gitProj_files.txt下载对应的文件):\n'))
 # 视频源路径
 media_src_root = TmpUtil.src() / movie_config.dir_root  # ypath.join(TmpUtil.src(), movie_config.dir_root)
 # 其他音轨存放处
@@ -136,7 +136,7 @@ def start():
     with transaction.atomic():
         for db in create_db_list:
             db.save()
-    # s_loop(loop)
+    s_loop(loop)
 
     # create_db_list = []
     # for root, dirs, files in os.walk(media_src_root):
@@ -181,7 +181,7 @@ def compress(media_db):
     cur_file_info['db'] = media_db
     analysis_audio_info(media_db)
     compress_media(media_db)
-    create_thum(media_db)
+    # create_thum(media_db)
 
 
 # 转码音频
@@ -274,18 +274,25 @@ def analysis_audio_info(media_db):
 
 # 转码视频
 def compress_media(media_db):
+    (_, target) = ypath.decompose_path(
+        media_db.abs_path, str(media_src_root), str(convert_root), exten='.mp4')
+
+    media_db.desc_path = target
+    media_db.nginx_path = target.replace(str(convert_root), '')
+    if os.path.exists(target):
+        print('target exists   所以直接修改目录')
+        modify_state(media_db, MediaHelp.STATE_VIDOE_COMPRESS_FINISH)
+
     if media_db.state >= MediaHelp.STATE_VIDOE_COMPRESS_FINISH:
         logger.info('该文件已经转码过了:' + media_db.abs_path)
         return
-
-    (_, target) = ypath.decompose_path(
-        media_db.abs_path, media_src_root, convert_root, exten='.mp4')
     if os.path.exists(target):
         os.remove(target)
+
     ypath.create_dirs(target)
 
     media_db.desc_path = target
-    media_db.nginx_path = target.replace(convert_root, '')
+    media_db.nginx_path = target.replace(str(convert_root), '')
     # media_db.nginx_path = target
     if media_db.codec_type == 'h264':
         logger.info('这个视频是 h264流视频, 可以直接复制' + media_db.abs_path)
@@ -368,7 +375,7 @@ def create_thum(media_db):
 #                 logger.info('切割完成:' + target_path)
 
 # 生成数据库字段Dir
-def gen_dir(): 
+def gen_dir():
     def create_dir(path, info, tags):
         name = info[ypath.KEYS.NAME]
         parent_path = info[ypath.KEYS.PARENT]
@@ -390,14 +397,19 @@ def gen_dir():
         return d_model
 
     Dir.objects.filter(type=yutils.M_FTYPE_MOIVE).delete()
-    dirs = media_src_root.iterdir()
+    dict = ypath.path_result(str(TmpUtil.src()), movie_config.dir_root, parse_file=False)
+    list = sorted(dict.items(), key=lambda d: d[1][ypath.KEYS.LEVEL])
     dm_list = {}
-    for dir in dirs:
-        if not dir.is_dir():
-            continue
-        dict = ypath.path_result(str(media_src_root), str(dir.name), parse_file=False)
-        list = sorted(dict.items(), key=lambda d: d[1][ypath.KEYS.LEVEL])
-
-        for item in list:
-            dm_list[item[0]] = create_dir(item[0], item[1], dir)
+    for item in list:
+        dm_list[item[0]] = create_dir(item[0], item[1], dir)
+    # dirs = media_src_root.iterdir()
+    # dm_list = {}
+    # for dir in dirs:
+    #     if not dir.is_dir():
+    #         continue
+    #     dict = ypath.path_result(str(media_src_root), str(dir.name), parse_file=False)
+    #     list = sorted(dict.items(), key=lambda d: d[1][ypath.KEYS.LEVEL])
+    #
+    #     for item in list:
+    #         dm_list[item[0]] = create_dir(item[0], item[1], dir)
     return dm_list
