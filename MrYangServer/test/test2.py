@@ -1,29 +1,15 @@
-# -*-coding:utf-8 -*-
-import os
+from pathlib import Path, PurePath, PureWindowsPath, PosixPath, PurePosixPath
 
-from frames.xml import XMLBase
+# p = Path('.')
+# print([x for x in p.iterdir()])
 
+pp = PurePath('c:/a//b') / '2'
+ppa = Path('c:/a/b')
 
-# os.symlink(r'D:/cache/res/src/media/movie/我是文件夹/QQX5M.mp4', r'D:/cache/res/desc/media/movie/我是文件夹/QQX5M111.mp4')
-# from frames import yutils
-#
-# res = yutils.crop_size(1920, 1080, 1)
-# print(res)
-from MryangService import MediaService
+ppa.exists()
+print([x for x in pp.parents])
+print(Path('c:/a//b') / 'c')
+print(PureWindowsPath('c:/a/b') / 'd')
 
-
-# from frames import ypath
-#
-# print(ypath.del_exten("d://asdf/asdfasewr/c.exe"))
-
-# src = "/asdf/media/1.mkv"
-# filter = ['/media']
-#
-# value = {True for i in filter if i in src}
-# print(value)
-# fl = '0/0'
-# print(round(eval(fl)))
-#
-# dic = {"a": "b"}
-# for (_, v) in dic:
-#     print(v)
+print(PurePath('/abc\\2.txt').as_posix())
+print(PurePath('a/b/c').with_name('d.txt'))
