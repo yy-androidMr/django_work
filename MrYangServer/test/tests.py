@@ -83,6 +83,32 @@ def call(k):
 
 
 if __name__ == '__main__':
+
+    from socket import *
+    from time import ctime
+
+    host = '127.0.0.1'
+    port = 12345
+    buffsize = 2048
+    ADDR = (host, port)
+
+    tctime = socket(AF_INET, SOCK_STREAM)
+    tctime.bind(ADDR)
+    tctime.listen(3)
+
+    while True:
+        print('Wait for connection ...')
+        tctimeClient, addr = tctime.accept()
+        print("Connection from :", addr)
+
+        while True:
+            # data = tctimeClient.recv(buffsize).decode()
+            # if not data:
+            #     break
+            tctimeClient.send(('[%s] %s' % (ctime(), "asdfsdf")).encode())
+            # time.sleep(1)
+        tctimeClient.close()
+
     # '\'tdb\': {\'ENGINE\': \'django.db.backends.mysql\',\'NAME\': \'ydatabase\',\'USER\': \'yysql\',
     #     'PASSWORD': 'mysql_yy2134',
     #     'HOST': '148.70.103.10',
@@ -94,16 +120,16 @@ if __name__ == '__main__':
     # import imageio
     # ./ffprobe.bin  1.mkv -print_format json -show_streams -select_streams a -hide_banner
     # imageio.plugins.ffmpeg.download()
-    from frames import yutils
-
-    yutils.process_cmd(
-        # '/Users/mr.yang/Documents/res/src/ffmpeg.bin -i /Users/mr.yang/Documents/res/src/1.mkv -map 0:0 -map 0:2  -vcodec copy -acodec copy /Users/mr.yang/Documents/res/src/out.mkv',
-        '/Users/mr.yang/Documents/res/src/ffprobe.bin /Users/mr.yang/Documents/res/src/1.mkv -print_format json -show_streams',
-        # '/Users/mr.yang/Documents/res/src/ffprobe.bin /Users/mr.yang/Documents/res/src/1.mkv -print_format json -show_streams -select_streams a -hide_banner',
-        done_call=done)
-    # info = yutils.video_info('/Users/mr.yang/Downloads/[阳光电影www.ygdy8.com].逃学威龙.BD.720p.国粤双语中字.mkv')
-    # print(info)
-    pass
+    # from frames import yutils
+    #
+    # yutils.process_cmd(
+    #     # '/Users/mr.yang/Documents/res/src/ffmpeg.bin -i /Users/mr.yang/Documents/res/src/1.mkv -map 0:0 -map 0:2  -vcodec copy -acodec copy /Users/mr.yang/Documents/res/src/out.mkv',
+    #     '/Users/mr.yang/Documents/res/src/ffprobe.bin /Users/mr.yang/Documents/res/src/1.mkv -print_format json -show_streams',
+    #     # '/Users/mr.yang/Documents/res/src/ffprobe.bin /Users/mr.yang/Documents/res/src/1.mkv -print_format json -show_streams -select_streams a -hide_banner',
+    #     done_call=done)
+    # # info = yutils.video_info('/Users/mr.yang/Downloads/[阳光电影www.ygdy8.com].逃学威龙.BD.720p.国粤双语中字.mkv')
+    # # print(info)
+    # pass
     # print(threading.currentThread())
     # for i in range(0, 4):
     #     t = threading.Thread(target=thread_run, args=(i,))

@@ -4,7 +4,7 @@ from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
 # from watchdog.events import
-from frames import ypath
+from frames import ypath, TmpUtil
 
 call = {}
 
@@ -65,13 +65,12 @@ class FileEventHandler(FileSystemEventHandler):
 
 
 def start(path):
-    pass
-    # observer = Observer()
-    # observer.schedule(FileEventHandler(), path, True)
-    # observer.start()
-    # try:
-    #     while True:
-    #         time.sleep(1)
-    # except KeyboardInterrupt:
-    #     observer.stop()
-    # observer.join()
+    observer = Observer()
+    observer.schedule(FileEventHandler(), str(path), True)
+    observer.start()
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        observer.stop()
+    observer.join()

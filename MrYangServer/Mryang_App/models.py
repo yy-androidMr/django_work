@@ -132,7 +132,7 @@ class Media(models.Model):
     state = models.IntegerField(default=-1)
     #  父文件夹  理论上不可能是空
     folder_key = models.ForeignKey(Dir, related_name='p_dir', null=True,
-                                   blank=True, on_delete=models.SET_NULL)
+                                   blank=True, on_delete=models.CASCADE)
     # 字幕文件
     # 其他预留
     param1 = models.CharField(max_length=500, default='')  # 这里存储m3u8路径

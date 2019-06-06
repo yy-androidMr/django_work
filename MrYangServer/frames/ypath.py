@@ -66,6 +66,7 @@ def path_res(path, parse_dir=True, parse_file=True):
     root_cls.name = path.name
     root_cls.relative = '.'
     root_cls.level = 0
+    root_cls.parent = str(path.parent.as_posix())
     m_dict = {path.as_posix(): root_cls}
     files = path.rglob('*')
     for file in files:
@@ -80,6 +81,7 @@ def path_res(path, parse_dir=True, parse_file=True):
             res.name = file.name
             res.relative = file.relative_to(path)
             res.level = len(res.relative.parents)
+            res.parent = str(file.parent.as_posix())
             m_dict[file.as_posix()] = res
     return m_dict
 

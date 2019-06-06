@@ -2,7 +2,7 @@ import json
 import os
 import random
 import shutil
-import sys
+import threading
 
 import django
 from PIL import Image
@@ -10,7 +10,7 @@ from PIL import Image
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "MrYangServer.settings")
 django.setup()
 
-from MryangService.frames.ServiceInterface import s_loop
+from MryangService.frames import ServiceInterface
 from Mryang_App.models import Media, Dir
 from Mryang_App.DBHelper import MediaHelp
 from frames import ypath, TmpUtil, yutils
@@ -26,13 +26,13 @@ movie_config = XMLMedia.get_infos()
 ffmpeg_tools = str(TmpUtil.input_note(FFMPEG_KEY, '输入对应的ffmpeg文件位置(参照link_gitProj_files.txt下载对应的文件):\n'))
 ffprobe_tools = str(TmpUtil.input_note(FFPROBE_KEY, '输入对应的ffprobe文件位置(参照link_gitProj_files.txt下载对应的文件):\n'))
 # 视频源路径
-media_src_root = TmpUtil.src() / movie_config.dir_root  # ypath.join(TmpUtil.src(), movie_config.dir_root)
+media_src_root = TmpUtil.src() / movie_config.dir_root
 # 其他音轨存放处
-mulit_audio_path = TmpUtil.src() / movie_config.base_info.mulit_audio_dir  # ypath.join(TmpUtil.src(), movie_config.base_info.mulit_audio_dir)
+mulit_audio_path = TmpUtil.src() / movie_config.base_info.mulit_audio_dir
 # 视频转码目标路径
-convert_root = TmpUtil.desc() / movie_config.dir_root  # ypath.join(TmpUtil.desc(), movie_config.dir_root)
+convert_root = TmpUtil.desc() / movie_config.dir_root
 # 转码结束后的切片路径
-m3u8_ts_root = TmpUtil.desc() / movie_config.m3u8_info.ts_dir  # ypath.join(TmpUtil.desc(), movie_config.m3u8_info.ts_dir)
+m3u8_ts_root = TmpUtil.desc() / movie_config.m3u8_info.ts_dir
 
 #  裁切缩略图的比例
 thum_percent = int(movie_config.base_info.thum_w) / int(movie_config.base_info.thum_h)
@@ -40,23 +40,32 @@ thum_percent = int(movie_config.base_info.thum_w) / int(movie_config.base_info.t
 max_thum_time = int(movie_config.base_info.max_thum_time)
 min_thum_time = int(movie_config.base_info.min_thum_time)
 
-# TmpUtil.clear_key(FFMPEG_KEY)
-# TmpUtil.clear_key(FFPROBE_KEY)
-
-
 src_dbs = []
 
-# create - modified(创建操作over)
-# deleted(删除操作over)
-# moved - modified(改名字over)
-# deleted - created - modifed(文件移动)
-# , 'modify_name': [], 'move': []
-cache_modify_file = {'create': [], 'delete': []}
 cur_file_info = {}
 
 
-def cur_db():
-    return cur_file_info.get('db')
+def cur_state():
+    db = cur_file_info.get('db')
+    cur_state_info = {}
+
+    # content = '当前媒体服务的状态:\n'
+    if db:
+        cur_state_info['abs_path'] = db.abs_path
+        cur_state_info['state'] = MediaHelp.convert(db.state)
+        cur_state_info['more_src'] = {'count': len(src_dbs)}
+        # cur_state_info['more_src']['count'] = len(src_dbs)
+        items = []
+        for src_db in src_dbs:
+            item_db_info = {'abs_path': src_db.abs_path, 'state': MediaHelp.convert(src_db.state)}
+            items.append(item_db_info)
+        cur_state_info['more_src']['items'] = items
+        # return json.dumps(cur_state_info)
+    # if len(cache_modify_file) > 0:
+    #     cur_state_info['modify_file'] = cache_modify_file
+    cur_state_info['res'] = 0
+
+    return cur_state_info
 
 
 def modify_state(media_db, state):
@@ -64,56 +73,9 @@ def modify_state(media_db, state):
     media_db.save()
 
 
-def check_file(path):
-    if os.path.isdir(path):
-        return False
-    if movie_config.base_info.mulit_audio_dir in path:
-        return False
-    # 如果这里没有该路径. 是不是应该删除?
-    if cur_db() and os.path.exists(cur_db().abs_path) and os.path.samefile(
-            cur_db().abs_path, path):
-        return False
-    return True
-
-
-def move(event, is_directory):
-    if is_directory:
-        return
-    cache_modify_file['delete'].append(event.src_path)
-    cache_modify_file['create'].append(event.dest_path)
-
-
-def delete(event, is_directory):
-    if is_directory:
-        return
-    cache_modify_file['delete'].append(event.src_path)
-    # print(event.src_path, directory, 'delete')
-
-
-def create(event, is_directory):
-    if is_directory:
-        return
-    cache_modify_file['create'].append(event.src_path)
-
-
-# 讲缓存刷新进去 就是重新组织一下src_dbs列表 :
-'''
-1.判断文件是否被删除
-2.判断文件是否被移动
-3.判断文件是否与数据库的一致
-4.同步数据库
-'''
-
-
-def flush_cache_file():
-    print(cache_modify_file)
-
-
-def start():
-    dm_dict = gen_dir()
+def get_media_dbs(files, dm_dict):
     create_db_list = []
-    media_src_root.is_file()
-    files = media_src_root.rglob('*')
+    db_list = []
     for file in files:
         if file.is_dir():
             continue
@@ -123,8 +85,8 @@ def start():
         parent_posix_file = file.parent.as_posix()
         try:
             media_db = Media.objects.get(abs_path=posix_file)
-            media_db.folder_key = dm_dict[parent_posix_file]
-            media_db.save()
+            # media_db.folder_key = dm_dict[parent_posix_file]
+            # media_db.save()
         except:
             media_db = Media()
             media_db.abs_path = posix_file
@@ -132,41 +94,32 @@ def start():
             media_db.file_name = posix_file
             create_db_list.append(media_db)
             media_db.folder_key = dm_dict[parent_posix_file]
-        src_dbs.append(media_db)
+        db_list.append(media_db)
+    return create_db_list, db_list
+
+
+def start():
+    dbs = gen_media_dbs()
+    src_dbs.extend(dbs)
+    ServiceInterface.s_loop(loop)
+
+
+def gen_media_dbs():
+    global sync_control
+    sync_control = True
+    dm_dict = gen_dir()
+    files = media_src_root.rglob('*')
+    create_db_list, dbs = get_media_dbs(files, dm_dict)
     # 批量插入
     with transaction.atomic():
         for db in create_db_list:
             db.save()
-    s_loop(loop)
-
-    # create_db_list = []
-    # for root, dirs, files in os.walk(media_src_root):
-    #     for file in files:
-
-    #         if not yutils.is_movie(file):
-    #             continue
-    #         src = ypath.join(root, file)
-    #         try:
-    #             media_db = Media.objects.get(abs_path=src)
-    #             media_db.folder_key = dm_dict[os.path.dirname(src)]
-    #             media_db.save()
-    #         except:
-    #             media_db = Media()
-    #             media_db.abs_path = src
-    #             media_db.state = MediaHelp.STATE_INIT
-    #             media_db.file_name = os.path.basename(src)
-    #             create_db_list.append(media_db)
-    #             media_db.folder_key = dm_dict[os.path.dirname(src)]
-    #         src_dbs.append(media_db)
-    #
-    # # 批量插入
-    # with transaction.atomic():
-    #     for db in create_db_list:
-    #         db.save()
-    # s_loop(loop)
+    sync_control = False
+    return dbs
 
 
 def loop():
+    cur_file_info.clear()
     if len(src_dbs) == 0:
         return False
     logger.info("MediaService一个流程:" + str(len(src_dbs)) + '   ' + src_dbs[0].abs_path)
@@ -281,8 +234,11 @@ def compress_media(media_db):
     media_db.desc_path = target
     media_db.nginx_path = target.replace(str(convert_root), '')
     if os.path.exists(target):
-        print('target exists   所以直接修改目录')
-        modify_state(media_db, MediaHelp.STATE_VIDOE_COMPRESS_FINISH)
+        if media_db.state < MediaHelp.STATE_VIDOE_COMPRESS_FINISH:
+            print('target exists   所以直接修改数据')
+            modify_state(media_db, MediaHelp.STATE_VIDOE_COMPRESS_FINISH)
+    else:
+        modify_state(media_db, MediaHelp.STATE_AUDIO_FINISH)
 
     if media_db.state >= MediaHelp.STATE_VIDOE_COMPRESS_FINISH:
         logger.info('该文件已经转码过了:' + media_db.abs_path)
@@ -375,14 +331,17 @@ def create_thum(media_db):
 #                 cache_tmp_info.write_info(src_path, TMP_CUT_KEY, True)
 #                 logger.info('切割完成:' + target_path)
 
-# 生成数据库字段Dir
+
+# 获取同步状态
+sync_control = False
+
+
+# 生成文件夹数据库.
 def gen_dir():
-    def leee(d):
-        return d
     def create_dir(path, info, tags):
-        name = info[ypath.KEYS.NAME]
-        parent_path = info[ypath.KEYS.PARENT]
-        rel_path = info[ypath.KEYS.REL]
+        name = info.name
+        parent_path = info.parent  # info[ypath.KEYS.PARENT]
+        rel_path = info.relative
         d_model = Dir()
         d_model.name = name
         d_model.isdir = True
@@ -399,26 +358,44 @@ def gen_dir():
         d_model.save()
         return d_model
 
-    Dir.objects.filter(type=yutils.M_FTYPE_MOIVE).delete()
-    dict = ypath.path_res(media_src_root, parse_file=False)
-    # dict = ypath.path_result(str(TmpUtil.src()), movie_config.dir_root, parse_file=False)
-    list = sorted(dict.items(), key=lambda d: d[1][ypath.KEYS.LEVEL])
-    dm_list = {}
-    for item in list:
-        dm_list[item[0]] = create_dir(item[0], item[1], movie_config.dir_root)
-    # dirs = media_src_root.iterdir()
-    # dm_list = {}
-    # for dir in dirs:
-    #     if not dir.is_dir():
-    #         continue
-    #     dict = ypath.path_result(str(media_src_root), str(dir.name), parse_file=False)
-    #     list = sorted(dict.items(), key=lambda d: d[1][ypath.KEYS.LEVEL])
-    #
-    #     for item in list:
-    #         dm_list[item[0]] = create_dir(item[0], item[1], dir)
-    return dm_list
+    dicts = ypath.path_res(media_src_root, parse_file=False)
+    sortedDict = sorted(dicts, key=lambda d: dicts[d].level)
+    dir_db_paths = {}
+    all_media_dirs = Dir.objects.filter(tags=movie_config.dir_root)
+    for dir_db in all_media_dirs:
+        if dir_db.abs_path not in sortedDict:
+            print('被删除的路径:' + dir_db.abs_path)
+            dir_db.delete()
+        else:
+            dir_db_paths[dir_db.abs_path] = dir_db
+
+    for local_dir in sortedDict:
+        if local_dir not in dir_db_paths:
+            dir_db_paths[local_dir] = create_dir(local_dir, dicts[local_dir], movie_config.dir_root)
+            print('创建该文件夹:' + local_dir)
+
+    return dir_db_paths
 
 
-# dict = ypath.path_res(media_src_root,parse_file=False)
-# print(dict)
-# print(media_src_root.relative_to(media_src_root))
+def _sync():
+    print('开始同步')
+    # gen_dir()
+    dbs = gen_media_dbs()
+    src_dbs.extend(dbs)
+    print('同步成功')
+    global sync_control
+    sync_control = False
+
+
+def sync_on_back():
+    global sync_control
+    if not sync_control:
+        sync_control = True
+        threading.Thread(target=_sync).start()
+    return {'res': 0}
+
+
+def get_state():
+    if sync_control:
+        return {'res': 1, 'res_str': '正在同步...'}
+    return {'res': 1, 'res_str': '没有在同步'}

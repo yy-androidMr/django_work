@@ -9,3 +9,15 @@ class MediaHelp:
     STATE_VIDOE_COMPRESS_FINISH = 2  # 视频转码完毕.
     STATE_VIDEO_THUM = 3  # 裁切略缩图
 
+    @staticmethod
+    def convert(num):
+        if num == MediaHelp.STATE_CREATE:
+            return '刚创建'
+        if num == MediaHelp.STATE_INIT:
+            return '刚初始化完成'
+        if num == MediaHelp.STATE_AUDIO_FINISH:
+            return '多音轨处理完成'
+        if num == MediaHelp.STATE_VIDOE_COMPRESS_FINISH:
+            return '视频转码完毕'
+        if num == MediaHelp.STATE_VIDEO_THUM:
+            return '视频缩略图裁切完毕'

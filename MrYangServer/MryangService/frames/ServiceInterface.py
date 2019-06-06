@@ -1,5 +1,5 @@
 import time
-from MryangService.utils import logger, EmailUtil
+from MryangService.utils import logger
 
 
 def s_loop(call, *args, **kws):
