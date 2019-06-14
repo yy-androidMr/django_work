@@ -277,16 +277,18 @@ def analysis_audio_info(media_db):
 # 转码视频
 def compress_media(media_db):
     # 如果开关开着. 则不管desc是否已有.,根据数据库去覆盖.
-    if Globals.MEDIA_SERVICE_COVER_DESC:
-        modify_state(media_db, MediaHelp.STATE_AUDIO_FINISH)
-    else:
+
+    if media_db.state < MediaHelp.STATE_VIDOE_COMPRESS_FINISH:
+        # 标记为 未转码完毕
         if os.path.exists(media_db.desc_path):
-            if media_db.state < MediaHelp.STATE_VIDOE_COMPRESS_FINISH:
+            if Globals.MEDIA_SERVICE_COVER_DESC:
+                os.remove(media_db.desc_path)
+            else:
                 print('target exists   所以直接修改数据')
                 modify_state(media_db, MediaHelp.STATE_VIDOE_COMPRESS_FINISH)
-        else:
+    else:
+        if not os.path.exists(media_db.desc_path):  # 状态是转码完毕后. 但是desc文件不存在. 则需要重新转码
             modify_state(media_db, MediaHelp.STATE_AUDIO_FINISH)
-
     if media_db.state >= MediaHelp.STATE_VIDOE_COMPRESS_FINISH:
         logger.info('该文件已经转码过了:' + media_db.abs_path)
         return
