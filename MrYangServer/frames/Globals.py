@@ -12,6 +12,9 @@ MAC = 3
 COMPANY_PC = 4
 T_SERVER = 5
 
+# mediaservice 转码时,是否判断desc中文件存在要不要覆盖.  True为覆盖.
+MEDIA_SERVICE_COVER_DESC = True
+
 development_type = {
     HOME_MINI: '家里mini机',
     HOME_PC: '家里pc机',

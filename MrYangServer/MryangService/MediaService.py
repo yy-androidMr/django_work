@@ -2,6 +2,7 @@ import json
 import os
 import random
 import shutil
+import sys
 import threading
 
 import django
@@ -13,7 +14,7 @@ django.setup()
 from MryangService.frames import ServiceInterface
 from Mryang_App.models import Media, Dir
 from Mryang_App.DBHelper import MediaHelp
-from frames import ypath, TmpUtil, yutils
+from frames import ypath, TmpUtil, yutils, Globals
 from frames.xml import XMLMedia
 from MryangService.utils import logger
 from django.db import transaction
@@ -44,6 +45,9 @@ src_dbs = []
 
 cur_file_info = {}
 
+# 获取同步状态
+sync_control = False
+
 
 def cur_state():
     db = cur_file_info.get('db')
@@ -73,6 +77,43 @@ def modify_state(media_db, state):
     media_db.save()
 
 
+# 这里需要制作一下 删除src没有的所有文件文件夹. 是否需要抽出成一个公共函数?
+def new_media_dbs(files, dm_dict):
+    create_db_list = []
+    db_list = []
+    all_media_set = Media.objects.all()
+    posix_file_list = [file.as_posix() for file in files]
+    posix_db_exist_list = []  # 数据库内存在的列表
+    for media_db in all_media_set:
+        if media_db.abs_path in posix_file_list:
+            db_list.append(media_db)
+            posix_db_exist_list.append(media_db.abs_path)
+        else:
+            media_db.delete()
+    create_db_file_list = list(set(posix_file_list).difference(set(posix_db_exist_list)))  # 求出本地有,而数据库没有的差集
+    for file in create_db_file_list:
+        if os.path.isdir(file):
+            continue
+        if not yutils.is_movie(file):
+            continue
+        (_, target) = ypath.decompose_path(
+            file, str(media_src_root), str(convert_root), exten='.mp4')
+        media_db = Media()
+        media_db.abs_path = file
+        media_db.state = MediaHelp.STATE_INIT
+        media_db.file_name = os.path.basename(target)
+        media_db.desc_path = target
+        media_db.nginx_path = target.replace(str(convert_root), '')
+        create_db_list.append(media_db)
+        media_db.folder_key = dm_dict[os.path.dirname(file)]
+        db_list.append(media_db)
+
+    with transaction.atomic():
+        for db in create_db_list:
+            db.save()
+    return db_list
+
+
 def get_media_dbs(files, dm_dict):
     create_db_list = []
     db_list = []
@@ -85,8 +126,6 @@ def get_media_dbs(files, dm_dict):
         parent_posix_file = file.parent.as_posix()
         try:
             media_db = Media.objects.get(abs_path=posix_file)
-            # media_db.folder_key = dm_dict[parent_posix_file]
-            # media_db.save()
         except:
             media_db = Media()
             media_db.abs_path = posix_file
@@ -95,37 +134,42 @@ def get_media_dbs(files, dm_dict):
             create_db_list.append(media_db)
             media_db.folder_key = dm_dict[parent_posix_file]
         db_list.append(media_db)
-    return create_db_list, db_list
+
+    with transaction.atomic():
+        for db in create_db_list:
+            db.save()
+    return db_list
 
 
 def start():
+    global sync_control
+    sync_control = True
     dbs = gen_media_dbs()
     src_dbs.extend(dbs)
     ServiceInterface.s_loop(loop)
 
 
 def gen_media_dbs():
-    global sync_control
-    sync_control = True
+    # dm_dict = gen_dir()
+    # files = media_src_root.rglob('*')
+    # dbs = get_media_dbs(files, dm_dict)
     dm_dict = gen_dir()
     files = media_src_root.rglob('*')
-    create_db_list, dbs = get_media_dbs(files, dm_dict)
-    # 批量插入
-    with transaction.atomic():
-        for db in create_db_list:
-            db.save()
-    sync_control = False
+    dbs = new_media_dbs(files, dm_dict)
     return dbs
 
 
 def loop():
+    global sync_control
     cur_file_info.clear()
     if len(src_dbs) == 0:
+        sync_control = False
         return False
     logger.info("MediaService一个流程:" + str(len(src_dbs)) + '   ' + src_dbs[0].abs_path)
     compress(src_dbs[0])
     del src_dbs[0]
     if len(src_dbs) == 0:
+        sync_control = False
         return False
     return True
 
@@ -135,6 +179,8 @@ def compress(media_db):
     cur_file_info['db'] = media_db
     analysis_audio_info(media_db)
     compress_media(media_db)
+    cur_file_info['db'] = None
+
     # create_thum(media_db)
 
 
@@ -145,7 +191,9 @@ def analysis_audio_info(media_db):
             modify_state(media_db, MediaHelp.STATE_AUDIO_FINISH)
             return
         jsonbean = json.loads(''.join(cmdlist))
-
+        if 'streams' not in jsonbean.keys():
+            modify_state(media_db, MediaHelp.STATE_ERROR)
+            return
         streamlist = jsonbean['streams']
         format = jsonbean['format']
         media_db.md5 = yutils.get_md5(media_db.abs_path)
@@ -228,53 +276,40 @@ def analysis_audio_info(media_db):
 
 # 转码视频
 def compress_media(media_db):
-    (_, target) = ypath.decompose_path(
-        media_db.abs_path, str(media_src_root), str(convert_root), exten='.mp4')
-
-    media_db.desc_path = target
-    media_db.nginx_path = target.replace(str(convert_root), '')
-    if os.path.exists(target):
-        if media_db.state < MediaHelp.STATE_VIDOE_COMPRESS_FINISH:
-            print('target exists   所以直接修改数据')
-            modify_state(media_db, MediaHelp.STATE_VIDOE_COMPRESS_FINISH)
-    else:
+    # 如果开关开着. 则不管desc是否已有.,根据数据库去覆盖.
+    if Globals.MEDIA_SERVICE_COVER_DESC:
         modify_state(media_db, MediaHelp.STATE_AUDIO_FINISH)
+    else:
+        if os.path.exists(media_db.desc_path):
+            if media_db.state < MediaHelp.STATE_VIDOE_COMPRESS_FINISH:
+                print('target exists   所以直接修改数据')
+                modify_state(media_db, MediaHelp.STATE_VIDOE_COMPRESS_FINISH)
+        else:
+            modify_state(media_db, MediaHelp.STATE_AUDIO_FINISH)
 
     if media_db.state >= MediaHelp.STATE_VIDOE_COMPRESS_FINISH:
         logger.info('该文件已经转码过了:' + media_db.abs_path)
         return
-    if os.path.exists(target):
-        os.remove(target)
+    if os.path.exists(media_db.desc_path):
+        os.remove(media_db.desc_path)
 
-    ypath.create_dirs(target)
+    ypath.create_dirs(media_db.desc_path)
 
-    media_db.desc_path = target
-    media_db.nginx_path = target.replace(str(convert_root), '')
     # media_db.nginx_path = target
     if media_db.codec_type == 'h264':
         logger.info('这个视频是 h264流视频, 可以直接复制' + media_db.abs_path)
         if media_db.abs_path.endswith('.mp4'):
-            os.symlink(media_db.abs_path, target)
-            modify_state(media_db, MediaHelp.STATE_VIDOE_COMPRESS_FINISH)
+            os.symlink(media_db.abs_path, media_db.desc_path)
         else:
             # 这里进行复制内容
-            desc = ypath.del_exten(media_db.abs_path) + '.mp4'
-            if os.path.exists(desc):
-                os.remove(desc)
             yutils.process_cmd(
-                ffmpeg_tools + ' -i \"' + media_db.abs_path + '\" -vcodec copy -acodec copy \"' + desc + '\"')
-            if os.path.exists(media_db.abs_path):
-                os.remove(media_db.abs_path)
-            media_db.abs_path = desc
-            media_db.file_name = os.path.basename(desc)
-            os.symlink(media_db.abs_path, target)
-            modify_state(media_db, MediaHelp.STATE_VIDOE_COMPRESS_FINISH)
+                ffmpeg_tools + ' -i \"' + media_db.abs_path + '\" -vcodec copy -acodec copy \"' + media_db.desc_path + '\"')
 
     else:
         # '\"%s\" -i \"%s\"  \"%s\"' % (ffmpeg_tools, src_path, target)
         print('这个视频不是:' + media_db.abs_path)
-        yutils.process_cmd('\"%s\" -i \"%s\"  \"%s\"' % (ffmpeg_tools, media_db.abs_path, target))
-        modify_state(media_db, MediaHelp.STATE_VIDOE_COMPRESS_FINISH)
+        yutils.process_cmd('\"%s\" -i \"%s\"  \"%s\"' % (ffmpeg_tools, media_db.abs_path, media_db.desc_path))
+    modify_state(media_db, MediaHelp.STATE_VIDOE_COMPRESS_FINISH)
 
 
 # 生成缩略图
@@ -332,10 +367,6 @@ def create_thum(media_db):
 #                 logger.info('切割完成:' + target_path)
 
 
-# 获取同步状态
-sync_control = False
-
-
 # 生成文件夹数据库.
 def gen_dir():
     def create_dir(path, info, tags):
@@ -382,9 +413,7 @@ def _sync():
     # gen_dir()
     dbs = gen_media_dbs()
     src_dbs.extend(dbs)
-    print('同步成功')
-    global sync_control
-    sync_control = False
+    print('同步成功,正在执行转换程式')
 
 
 def sync_on_back():
@@ -392,7 +421,9 @@ def sync_on_back():
     if not sync_control:
         sync_control = True
         threading.Thread(target=_sync).start()
-    return {'res': 0}
+        return {'res': 0, 'res_str': '执行同步程序成功'}
+    else:
+        return cur_state()  # {'res': 0, 'res_str': '正在同步,无法再次同步'}
 
 
 def get_state():

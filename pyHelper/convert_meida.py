@@ -42,11 +42,11 @@ for root, dirs, files in os.walk(convert_dir):
         if convert_middle.exists():
             if desc.exists():
                 os.remove(str(desc))
+        if desc.exists():
+            continue
         else:
             with open(str(convert_middle), 'w'):
                 pass
-        if desc.exists():
-            continue
         cmd_str = ffmpeg + ' -i \"' + src + '\" \"' + str(desc) + '\"'
         print(cmd_str)
         process_cmd(cmd_str)
