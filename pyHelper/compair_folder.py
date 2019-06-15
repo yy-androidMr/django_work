@@ -45,4 +45,5 @@ def compair(folder1, folder2):
 
 
 # compair('Z:\src\media', 'Z:\desc\media')
-compair(r'Z:\desc\media', r'Z:\src\media')
+# compair(r'Z:\desc\media', r'Z:\src\media')
+compair(r'/Users/mr.yang/Documents/res/src/media', r'/Users/mr.yang/Documents/res/desc/media')

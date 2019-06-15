@@ -1,18 +1,11 @@
 # coding:utf-8
 
 
-# 分解路径1.src的相对路径. 2.src的根目录. 3.目标的路径
 import os
 import re
 import shutil
 from pathlib import PurePath
 
-from frames import TmpUtil
-
-# 组织文件夹数据  dir_filter='^.+\\.ym3$'
-# dict = {'/Users/mr.yang/Documents/GitHub/django_work/MrYangServer/static/res/movie/22sd/c213.ym3':
-#         {'name': 'c213.ym3', 'isdir': True,'rel_path':'22sd/c213.ym3'
-#          'parent':'/Users/mr.yang/Documents/GitHub/django_work/MrYangServer/static/res/movie/22sd' }}
 from frames import yutils
 
 
@@ -57,10 +50,34 @@ def parse_path(path, root_path, name, isDir=False):
 #                     dict[source_path] = parse_path(source_path, root_path, file)
 #     return dict
 
-def path_res(path, parse_dir=True, parse_file=True):
-    class TmpClass:
-        pass
+# 获取所有文件和文件夹
+def list_folder(path):
+    path = replace(path)
+    res = []
+    for root, dirs, files in os.walk(path):
+        res.extend([join(root, file) for file in files])
+    return res
 
+
+# 获取所有文件的相对路径
+def releative_list(path):
+    path = replace(path)
+    res = []
+    for root, dirs, files in os.walk(path):
+        res.extend([join(root, file).replace(path, '') for file in files])
+    return res
+
+
+class TmpClass:
+    pass
+
+
+def is_dir(path):
+    if type(path) == str:
+        print(path)
+
+
+def path_res(path, parse_dir=True, parse_file=True):
     root_cls = TmpClass()
     root_cls.is_dir = path.is_dir()
     root_cls.name = path.name

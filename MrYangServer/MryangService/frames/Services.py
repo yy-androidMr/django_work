@@ -6,10 +6,10 @@ sys.path.append('./../..')
 from frames import TmpUtil
 from frames.ThreadingPool import ThreadingPool as tp
 from MryangService import MediaService as ms
-from MryangService import FileObserver
+# from MryangService import FileObserver
 
 if __name__ == '__main__':
-    FileObserver.append_call(ms, '/media/')
+    # FileObserver.append_call(ms, '/media/')
     tp = tp()
 
     # tp.append(FileObserver.start, TmpUtil.src())
