@@ -1,6 +1,20 @@
 from frames import ypath
 
 
+def compair_db(dbs, desc_path):
+    # abs_path
+    # desc_path
+    file_list = ypath.list_folder(desc_path, include_dir=False)
+    db_desc_list = [db.desc_path for db in dbs]
+    diff = set(file_list).difference(set(db_desc_list))
+    with open('diff.txt', 'w+', encoding='utf-8') as f:
+        for item in diff:
+            f.write(item + '\n')
+    # for desc_file in file_list:
+    #     if desc_file not in db_desc_list:
+    #         print('需要删除的:' + desc_file)
+
+
 def compair(left_path, right_path):
     left_list = ypath.releative_list(left_path)
     right_list = ypath.releative_list(right_path)

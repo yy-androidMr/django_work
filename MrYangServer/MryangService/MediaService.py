@@ -81,8 +81,8 @@ def modify_state(media_db, state):
 
 
 # 删除src没有的文件, 先不删除. 把他们放到一个目录下
-def print_not_exist():
-    dif_file_list = ServiceHelper.compair(convert_root, media_src_root)
+def print_not_exist(dbs):
+    dif_file_list = ServiceHelper.compair_db(dbs, convert_root)
     if len(dif_file_list) > 0:
         print(dif_file_list)
         input('处理一下:')
@@ -129,7 +129,7 @@ def start():
     global sync_control
     sync_control = True
     dbs = gen_media_dbs()
-    print_not_exist()
+    print_not_exist(dbs)
     src_dbs.extend(dbs)
     ServiceInterface.s_loop(loop, 'MediaService.loop')
 
@@ -421,4 +421,4 @@ def get_state():
     return {'res': 1, 'res_str': '没有在同步'}
 
 
-print(ServiceHelper.compair(convert_root, media_src_root))
+ServiceHelper.compair_db(Media.objects.all(), convert_root)
