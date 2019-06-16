@@ -1,12 +1,11 @@
 import sys
 
+sys.path.append('./../..')
+
 from MryangService.watchdog import statewatch
 
-sys.path.append('./../..')
-from frames import TmpUtil
 from frames.ThreadingPool import ThreadingPool as tp
 from MryangService import MediaService as ms
-# from MryangService import FileObserver
 
 if __name__ == '__main__':
     # FileObserver.append_call(ms, '/media/')
