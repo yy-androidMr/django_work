@@ -51,56 +51,62 @@ def parse_path(path, root_path, name, isDir=False):
 #     return dict
 
 # 获取所有文件和文件夹
-def list_folder(path):
-    path = replace(path)
+def list_folder(path, include_file=True, include_dir=True):
+    path = replace(str(path))
     res = []
+    if include_dir:
+        res.append(path)
     for root, dirs, files in os.walk(path):
-        res.extend([join(root, file) for file in files])
+        if include_file:
+            res.extend([join(root, file) for file in files])
+        if include_dir:
+            res.extend([join(root, dir) for dir in dirs])
     return res
 
 
 # 获取所有文件的相对路径
 def releative_list(path):
-    path = replace(path)
+    m_path = replace(str(path))
     res = []
-    for root, dirs, files in os.walk(path):
-        res.extend([join(root, file).replace(path, '') for file in files])
+    for root, dirs, files in os.walk(m_path):
+        res.extend([join(root, file).replace(m_path, '') for file in files])
+        res.extend([join(root, dir).replace(m_path, '') for dir in dirs])
     return res
 
 
-class TmpClass:
-    pass
+class PathClass:
+    def __init__(self, path, root):
+        s_root = replace(str(root))
+        self.path = replace(str(path))
+        if self.path.endswith('/'):
+            self.path = self.path[:-1]
+        self.is_dir = os.path.isdir(self.path)  # path.is_dir()
+        self.name = os.path.basename(self.path)  # path.name
+        self.relative = '.' if s_root == self.path else self.path[len(s_root):]
+        self.level = self.relative.count('/')
+        self.parent = os.path.dirname(self.path)  # str(path.parent.as_posix())
 
+    def __eq__(self, other):
+        return other == self.path
 
-def is_dir(path):
-    if type(path) == str:
-        print(path)
+    def __str__(self):
+        return '%s,is_dir:%s,name:%s,relative:%s,level:%s,parent:%s' % (
+            self.path, self.is_dir, self.name, self.relative, self.level, self.parent)
 
 
 def path_res(path, parse_dir=True, parse_file=True):
-    root_cls = TmpClass()
-    root_cls.is_dir = path.is_dir()
-    root_cls.name = path.name
-    root_cls.relative = '.'
-    root_cls.level = 0
-    root_cls.parent = str(path.parent.as_posix())
-    m_dict = {path.as_posix(): root_cls}
-    files = path.rglob('*')
+    m_file_list = []
+    files = list_folder(path)  # path.rglob('*')
     for file in files:
         cache_it = False
-        if parse_dir and file.is_dir():
+        if parse_dir and os.path.isdir(file):  # .is_dir():
             cache_it = True
-        elif parse_file and file.is_file():
+        elif parse_file and os.path.isfile(file):  # is_file():
             cache_it = True
         if cache_it:
-            res = TmpClass()
-            res.is_dir = file.is_dir()
-            res.name = file.name
-            res.relative = file.relative_to(path)
-            res.level = len(res.relative.parents)
-            res.parent = str(file.parent.as_posix())
-            m_dict[file.as_posix()] = res
-    return m_dict
+            res = PathClass(file, path)
+            m_file_list.append(res)
+    return m_file_list
 
 
 # 获取res_root文件夹下的的所有文件夹和文件名.
@@ -188,6 +194,13 @@ def file_name(path):
 # 拓展名.
 def file_exten(file):
     return os.path.splitext(file)[1]
+
+
+# 移动文件
+def move_file(file, desc):
+    if os.path.isfile(file):
+        create_dirs(file, delete_exist=True)
+        shutil.move(file, desc)
 
 
 def compair_path(left, right):

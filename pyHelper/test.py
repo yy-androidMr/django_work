@@ -129,7 +129,23 @@
 # p4 = pp2 / 'd'
 # print(p4)
 # print(p3)
+# import os
+#
+# print(os.path.dirname("c:/a/c/b/"))
+import os
+from pathlib import Path
+#
+# p = Path(r'F:\cache\res\src')
+# fff = p.rglob('*')
+# for f in fff:
+#     print(f)
+# s_root = 'F:\cache'
+# path = 'F:/cache/aaa/cccc/bbbb/dddd'
+# sss = '.' if s_root == path else path[len(s_root):]
+# print(sss)
+# print(sss.count('/'))
 
+# print(str(Path('F:\cache\\'))[:-1])
 
-aa = {}
-aa.dff = "sdf"
+print(os.path.isfile(r'F:\cache\res\src\media\01-课程介绍.mp4'))
+

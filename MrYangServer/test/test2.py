@@ -15,5 +15,5 @@ from pathlib import Path, PurePath, PureWindowsPath, PosixPath, PurePosixPath
 # print(PurePath('/abc\\2.txt').as_posix())
 # print(PurePath('a/b/c').with_name('d.txt'))
 
-
-print(os.path.dirname(r'D:\cache\res\src\media\tv\新创建'))
+#
+# print('F:/cache/res/src/media/01-课程介绍.mp4'[len('F:/cache/res/src/media'):])

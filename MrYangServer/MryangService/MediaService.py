@@ -2,11 +2,12 @@ import json
 import os
 import random
 import shutil
-import sys
 import threading
 
 import django
 from PIL import Image
+
+from MryangService import ServiceHelper
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "MrYangServer.settings")
 django.setup()
@@ -77,6 +78,14 @@ def modify_state(media_db, state):
     media_db.save()
 
 
+# 删除src没有的文件, 先不删除. 把他们放到一个目录下
+def print_not_exist():
+    dif_file_list = ServiceHelper.compair(convert_root, media_src_root)
+    if len(dif_file_list) > 0:
+        print(dif_file_list)
+        input('处理一下:')
+
+
 # 这里需要制作一下 删除src没有的所有文件文件夹. 是否需要抽出成一个公共函数?
 def new_media_dbs(files, dm_dict):
     create_db_list = []
@@ -114,39 +123,13 @@ def new_media_dbs(files, dm_dict):
     return db_list
 
 
-def get_media_dbs(files, dm_dict):
-    create_db_list = []
-    db_list = []
-    for file in files:
-        if file.is_dir():
-            continue
-        if not yutils.is_movie(file):
-            continue
-        posix_file = file.as_posix()
-        parent_posix_file = file.parent.as_posix()
-        try:
-            media_db = Media.objects.get(abs_path=posix_file)
-        except:
-            media_db = Media()
-            media_db.abs_path = posix_file
-            media_db.state = MediaHelp.STATE_INIT
-            media_db.file_name = posix_file
-            create_db_list.append(media_db)
-            media_db.folder_key = dm_dict[parent_posix_file]
-        db_list.append(media_db)
-
-    with transaction.atomic():
-        for db in create_db_list:
-            db.save()
-    return db_list
-
-
 def start():
     global sync_control
     sync_control = True
     dbs = gen_media_dbs()
+    print_not_exist()
     src_dbs.extend(dbs)
-    ServiceInterface.s_loop(loop)
+    ServiceInterface.s_loop(loop, 'MediaService.loop')
 
 
 def gen_media_dbs():
@@ -284,7 +267,7 @@ def compress_media(media_db):
             if Globals.MEDIA_SERVICE_COVER_DESC:
                 os.remove(media_db.desc_path)
             else:
-                print('target exists   所以直接修改数据')
+                logger.info('MediaService.target exists   所以直接修改数据')
                 modify_state(media_db, MediaHelp.STATE_VIDOE_COMPRESS_FINISH)
     else:
         if not os.path.exists(media_db.desc_path):  # 状态是转码完毕后. 但是desc文件不存在. 则需要重新转码
@@ -309,7 +292,7 @@ def compress_media(media_db):
 
     else:
         # '\"%s\" -i \"%s\"  \"%s\"' % (ffmpeg_tools, src_path, target)
-        print('这个视频不是:' + media_db.abs_path)
+        logger.info('这个视频不是:' + media_db.abs_path)
         yutils.process_cmd('\"%s\" -i \"%s\"  \"%s\"' % (ffmpeg_tools, media_db.abs_path, media_db.desc_path))
     modify_state(media_db, MediaHelp.STATE_VIDOE_COMPRESS_FINISH)
 
@@ -371,14 +354,14 @@ def create_thum(media_db):
 
 # 生成文件夹数据库.
 def gen_dir():
-    def create_dir(path, info, tags):
+    def create_dir(info, tags):
         name = info.name
         parent_path = info.parent  # info[ypath.KEYS.PARENT]
         rel_path = info.relative
         d_model = Dir()
         d_model.name = name
         d_model.isdir = True
-        d_model.abs_path = path
+        d_model.abs_path = info.path
         d_model.rel_path = rel_path
         d_model.type = yutils.M_FTYPE_MOIVE
         d_model.tags = tags  # if info[ypath.KEYS.LEVEL] == 0 else ''
@@ -386,36 +369,38 @@ def gen_dir():
             parent = Dir.objects.get(abs_path=parent_path)
             d_model.parent_dir = parent
         except Exception as e:
-            print('错误,这货没有爸爸的,忽视这个问题:%s:is not found :%s' % (parent_path, e))
+            logger.info('错误,这货没有爸爸的,忽视这个问题:%s:is not found :%s' % (parent_path, e))
             pass
         d_model.save()
         return d_model
 
-    dicts = ypath.path_res(media_src_root, parse_file=False)
-    sortedDict = sorted(dicts, key=lambda d: dicts[d].level)
+    # m_file_list.sort(key=lambda d: d.level)
+
+    m_file_list = ypath.path_res(media_src_root, parse_file=False)
+    m_file_list.sort(key=lambda d: d.level)
     dir_db_paths = {}
     all_media_dirs = Dir.objects.filter(tags=movie_config.dir_root)
     for dir_db in all_media_dirs:
-        if dir_db.abs_path not in sortedDict:
-            print('被删除的路径:' + dir_db.abs_path)
+        if dir_db.abs_path not in m_file_list:
+            logger.info('被删除的路径:' + dir_db.abs_path)
             dir_db.delete()
         else:
             dir_db_paths[dir_db.abs_path] = dir_db
 
-    for local_dir in sortedDict:
-        if local_dir not in dir_db_paths:
-            dir_db_paths[local_dir] = create_dir(local_dir, dicts[local_dir], movie_config.dir_root)
-            print('创建该文件夹:' + local_dir)
+    for local_dir in m_file_list:
+        if local_dir.path not in dir_db_paths:
+            dir_db_paths[local_dir.path] = create_dir(local_dir, movie_config.dir_root)
+            logger.info('创建该文件夹:' + str(local_dir))
 
     return dir_db_paths
 
 
 def _sync():
-    print('开始同步')
+    logger.info('MediaService.开始同步')
     # gen_dir()
     dbs = gen_media_dbs()
     src_dbs.extend(dbs)
-    print('同步成功,正在执行转换程式')
+    logger.info('同步成功,正在执行转换程式')
 
 
 def sync_on_back():
@@ -432,3 +417,6 @@ def get_state():
     if sync_control:
         return {'res': 1, 'res_str': '正在同步...'}
     return {'res': 1, 'res_str': '没有在同步'}
+
+
+ServiceHelper.compair(convert_root, media_src_root)
