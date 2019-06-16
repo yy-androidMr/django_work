@@ -420,5 +420,3 @@ def get_state():
         return {'res': 1, 'res_str': '正在同步...'}
     return {'res': 1, 'res_str': '没有在同步'}
 
-
-ServiceHelper.compair_db(Media.objects.all(), convert_root)
