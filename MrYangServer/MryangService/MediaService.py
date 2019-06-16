@@ -421,4 +421,4 @@ def get_state():
     return {'res': 1, 'res_str': '没有在同步'}
 
 
-ServiceHelper.compair(convert_root, media_src_root)
+print(ServiceHelper.compair(convert_root, media_src_root))
