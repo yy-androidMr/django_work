@@ -8,7 +8,7 @@ import threading
 import django
 from PIL import Image
 
-sys.path.append('.')
+sys.path.append('./../')
 from MryangService import ServiceHelper
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "MrYangServer.settings")
