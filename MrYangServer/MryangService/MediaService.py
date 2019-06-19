@@ -64,6 +64,7 @@ def cur_state():
     # if len(cache_modify_file) > 0:
     #     cur_state_info['modify_file'] = cache_modify_file
     cur_state_info['res'] = 0
+    cur_state_info['res_str'] = '当前服务器正在同步数据.请等待' if sync_control else '当前服务器没有同步数据.'
 
     return cur_state_info
 
