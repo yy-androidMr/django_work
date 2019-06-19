@@ -84,30 +84,9 @@ def call(k):
 
 if __name__ == '__main__':
 
-    from socket import *
-    from time import ctime
-
-    host = '127.0.0.1'
-    port = 12345
-    buffsize = 2048
-    ADDR = (host, port)
-
-    tctime = socket(AF_INET, SOCK_STREAM)
-    tctime.bind(ADDR)
-    tctime.listen(3)
-
     while True:
-        print('Wait for connection ...')
-        tctimeClient, addr = tctime.accept()
-        print("Connection from :", addr)
-
-        while True:
-            # data = tctimeClient.recv(buffsize).decode()
-            # if not data:
-            #     break
-            tctimeClient.send(('[%s] %s' % (ctime(), "asdfsdf")).encode())
-            # time.sleep(1)
-        tctimeClient.close()
+        time.sleep(2)
+        print('我这个是测试进程.睡眠用的.:' + str(os.getpid()))
 
     # '\'tdb\': {\'ENGINE\': \'django.db.backends.mysql\',\'NAME\': \'ydatabase\',\'USER\': \'yysql\',
     #     'PASSWORD': 'mysql_yy2134',
