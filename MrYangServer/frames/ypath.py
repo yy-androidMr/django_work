@@ -96,16 +96,16 @@ class PathClass:
 
 def path_res(path, parse_dir=True, parse_file=True):
     m_file_list = []
-    files = list_folder(path)  # path.rglob('*')
+    files = list_folder(path, parse_file, parse_dir)  # path.rglob('*')
     for file in files:
-        cache_it = False
-        if parse_dir and os.path.isdir(file):  # .is_dir():
-            cache_it = True
-        elif parse_file and os.path.isfile(file):  # is_file():
-            cache_it = True
-        if cache_it:
-            res = PathClass(file, path)
-            m_file_list.append(res)
+        # cache_it = False
+        # if parse_dir and os.path.isdir(file):  # .is_dir():
+        #     cache_it = True
+        # elif parse_file and os.path.isfile(file):  # is_file():
+        #     cache_it = True
+        # if cache_it:
+        res = PathClass(file, path)
+        m_file_list.append(res)
     return m_file_list
 
 

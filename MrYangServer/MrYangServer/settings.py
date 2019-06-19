@@ -119,7 +119,7 @@ def update_databases():
     databases = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            'NAME': os.path.join(BASE_DIR, 'db_local.sqlite3' if Globals.USE_LOCAL_DB else 'db.sqlite3'),
         }
     }
     # 如果是腾讯服,就把这个打开.

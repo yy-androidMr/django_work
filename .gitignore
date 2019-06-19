@@ -30,3 +30,7 @@ MryangService/tmp/
 res_link/desc
 res_link/src
 nginx-1.15.8/logs/
+MrYangServer/MryangService/frames/right.txt
+MrYangServer/MryangService/frames/diff.txt
+MrYangServer/MryangService/frames/left.txt
+MrYangServer/db_local.sqlite3

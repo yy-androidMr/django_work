@@ -8,10 +8,10 @@ def compair_db(dbs, desc_path):
     db_desc_list = [db.desc_path for db in dbs]
     diff = set(file_list).difference(set(db_desc_list))
     with open('left.txt', 'w+', encoding='utf-8') as f:
-        for item in file_list:
+        for item in db_desc_list:
             f.write(item + '\n')
     with open('right.txt', 'w+', encoding='utf-8') as f:
-        for item in db_desc_list:
+        for item in file_list:
             f.write(item + '\n')
 
     with open('diff.txt', 'w+', encoding='utf-8') as f:

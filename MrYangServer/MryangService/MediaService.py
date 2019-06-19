@@ -80,14 +80,6 @@ def modify_state(media_db, state):
     media_db.save()
 
 
-# 删除src没有的文件, 先不删除. 把他们放到一个目录下
-def print_not_exist(dbs):
-    dif_file_list = ServiceHelper.compair_db(dbs, convert_root)
-    if len(dif_file_list) > 0:
-        print(dif_file_list)
-        input('处理一下:')
-
-
 # 这里需要制作一下 删除src没有的所有文件文件夹. 是否需要抽出成一个公共函数?
 def new_media_dbs(files, dm_dict):
     create_db_list = []
@@ -114,7 +106,7 @@ def new_media_dbs(files, dm_dict):
         media_db.state = MediaHelp.STATE_INIT
         media_db.file_name = os.path.basename(target)
         media_db.desc_path = target
-        media_db.nginx_path = target.replace(str(convert_root), '')
+        media_db.nginx_path = target.replace(str(convert_root.as_posix()), '')
         create_db_list.append(media_db)
         media_db.folder_key = dm_dict[os.path.dirname(file)]
         db_list.append(media_db)
@@ -129,7 +121,17 @@ def start():
     global sync_control
     sync_control = True
     dbs = gen_media_dbs()
-    print_not_exist(dbs)
+    dif_file_list = ServiceHelper.compair_db(dbs, convert_root)
+
+    # 前期开发不稳定.需要自己手动操作,等稳定了.这里需要做自动删除
+    while len(dif_file_list) > 0:
+        print('有文件不同于本地.请自己查看')
+        recheck = input('输入Y重新检查:\n')
+        if recheck is 'Y':
+            dif_file_list = ServiceHelper.compair_db(dbs, convert_root)
+        else:
+            print('输入错误')
+
     src_dbs.extend(dbs)
     ServiceInterface.s_loop(loop, 'MediaService.loop')
 
@@ -161,9 +163,15 @@ def loop():
 
 def compress(media_db):
     # 这里要做三步骤调用  1.音轨检查 2.格式转换(或者复制) 3.切片
+    if MediaHelp.is_err(media_db.state):
+        return
     cur_file_info['db'] = media_db
     analysis_audio_info(media_db)
+    if MediaHelp.is_err(media_db.state):
+        return
     compress_media(media_db)
+    if MediaHelp.is_err(media_db.state):
+        return
     cur_file_info['db'] = None
 
     # create_thum(media_db)
@@ -177,7 +185,7 @@ def analysis_audio_info(media_db):
             return
         jsonbean = json.loads(''.join(cmdlist))
         if 'streams' not in jsonbean.keys():
-            modify_state(media_db, MediaHelp.STATE_ERROR)
+            modify_state(media_db, MediaHelp.STATE_SRC_ERROR)
             return
         streamlist = jsonbean['streams']
         format = jsonbean['format']
@@ -279,9 +287,7 @@ def compress_media(media_db):
         return
     if os.path.exists(media_db.desc_path):
         os.remove(media_db.desc_path)
-
     ypath.create_dirs(media_db.desc_path)
-
     # media_db.nginx_path = target
     if media_db.codec_type == 'h264':
         logger.info('这个视频是 h264流视频, 可以直接复制' + media_db.abs_path)
@@ -296,7 +302,11 @@ def compress_media(media_db):
         # '\"%s\" -i \"%s\"  \"%s\"' % (ffmpeg_tools, src_path, target)
         logger.info('这个视频不是:' + media_db.abs_path)
         yutils.process_cmd('\"%s\" -i \"%s\"  \"%s\"' % (ffmpeg_tools, media_db.abs_path, media_db.desc_path))
-    modify_state(media_db, MediaHelp.STATE_VIDOE_COMPRESS_FINISH)
+    if not os.path.exists(media_db.desc_path):
+        logger.error('源文件错误:%s' % media_db.desc_path)
+        modify_state(media_db, MediaHelp.STATE_SRC_ERROR)
+    else:
+        modify_state(media_db, MediaHelp.STATE_VIDOE_COMPRESS_FINISH)
 
 
 # 生成缩略图
@@ -356,7 +366,7 @@ def create_thum(media_db):
 
 # 生成文件夹数据库.
 def gen_dir():
-    def create_dir(info, tags):
+    def create_dir(cur_dir_dbs, info, tags):
         name = info.name
         parent_path = info.parent  # info[ypath.KEYS.PARENT]
         rel_path = info.relative
@@ -368,7 +378,7 @@ def gen_dir():
         d_model.type = yutils.M_FTYPE_MOIVE
         d_model.tags = tags  # if info[ypath.KEYS.LEVEL] == 0 else ''
         try:
-            parent = Dir.objects.get(abs_path=parent_path)
+            parent = cur_dir_dbs[parent_path]  # Dir.objects.get(abs_path=parent_path)
             d_model.parent_dir = parent
         except Exception as e:
             logger.info('错误,这货没有爸爸的,忽视这个问题:%s:is not found :%s' % (parent_path, e))
@@ -376,24 +386,23 @@ def gen_dir():
         d_model.save()
         return d_model
 
-    # m_file_list.sort(key=lambda d: d.level)
-
-    m_file_list = ypath.path_res(media_src_root, parse_file=False)
-    m_file_list.sort(key=lambda d: d.level)
+    str_media_src = str(media_src_root.as_posix())
     dir_db_paths = {}
-    all_media_dirs = Dir.objects.filter(tags=movie_config.dir_root)
-    for dir_db in all_media_dirs:
-        if dir_db.abs_path not in m_file_list:
-            logger.info('被删除的路径:' + dir_db.abs_path)
-            dir_db.delete()
-        else:
-            dir_db_paths[dir_db.abs_path] = dir_db
+    for dir in os.listdir(str_media_src):
+        m_file_list = ypath.path_res(ypath.join(str_media_src, dir), parse_file=False)
+        m_file_list.sort(key=lambda d: d.level)
+        all_media_dirs = Dir.objects.filter(tags=dir)
+        for dir_db in all_media_dirs:
+            if dir_db.abs_path not in m_file_list:
+                logger.info('被删除的路径:' + dir_db.abs_path)
+                dir_db.delete()
+            else:
+                dir_db_paths[dir_db.abs_path] = dir_db
 
-    for local_dir in m_file_list:
-        if local_dir.path not in dir_db_paths:
-            dir_db_paths[local_dir.path] = create_dir(local_dir, movie_config.dir_root)
-            logger.info('创建该文件夹:' + str(local_dir))
-
+        for local_dir in m_file_list:
+            if local_dir.path not in dir_db_paths:
+                dir_db_paths[local_dir.path] = create_dir(dir_db_paths, local_dir, dir)
+                logger.info('创建该文件夹:' + str(local_dir))
     return dir_db_paths
 
 
@@ -419,4 +428,3 @@ def get_state():
     if sync_control:
         return {'res': 1, 'res_str': '正在同步...'}
     return {'res': 1, 'res_str': '没有在同步'}
-
