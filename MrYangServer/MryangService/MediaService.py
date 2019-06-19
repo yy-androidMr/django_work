@@ -137,9 +137,6 @@ def start():
 
 
 def gen_media_dbs():
-    # dm_dict = gen_dir()
-    # files = media_src_root.rglob('*')
-    # dbs = get_media_dbs(files, dm_dict)
     dm_dict = gen_dir()
     files = media_src_root.rglob('*')
     dbs = new_media_dbs(files, dm_dict)
