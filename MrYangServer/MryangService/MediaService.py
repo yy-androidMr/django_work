@@ -31,18 +31,11 @@ ffmpeg_tools = str(TmpUtil.input_note(FFMPEG_KEY, '输入对应的ffmpeg文件�
 ffprobe_tools = str(TmpUtil.input_note(FFPROBE_KEY, '输入对应的ffprobe文件位置(参照link_gitProj_files.txt下载对应的文件):\n'))
 # 视频源路径
 media_src_root = TmpUtil.src() / movie_config.dir_root
-# 其他音轨存放处
-mulit_audio_path = TmpUtil.src() / movie_config.base_info.mulit_audio_dir
+
 # 视频转码目标路径
 convert_root = TmpUtil.desc() / movie_config.dir_root
 # 转码结束后的切片路径
 m3u8_ts_root = TmpUtil.desc() / movie_config.m3u8_info.ts_dir
-
-#  裁切缩略图的比例
-thum_percent = int(movie_config.base_info.thum_w) / int(movie_config.base_info.thum_h)
-
-max_thum_time = int(movie_config.base_info.max_thum_time)
-min_thum_time = int(movie_config.base_info.min_thum_time)
 
 src_dbs = []
 
@@ -164,14 +157,10 @@ def compress(media_db):
         return
     cur_file_info['db'] = media_db
     analysis_audio_info(media_db)
-    if MediaHelp.is_err(media_db.state):
-        return
-    compress_media(media_db)
-    if MediaHelp.is_err(media_db.state):
-        return
-    cur_file_info['db'] = None
 
-    # create_thum(media_db)
+    compress_media(media_db)
+    create_thum(media_db)
+    cur_file_info['db'] = None
 
 
 # 转码音频
@@ -239,6 +228,7 @@ def analysis_audio_info(media_db):
             #     select_audio = int(input(out_content + '选择音轨:'))
 
         # desc_file = file +
+        mulit_audio_path = TmpUtil.src() / movie_config.base_info.mulit_audio_dir
         _, desc_mulit_path = ypath.decompose_path(media_db.abs_path, str(media_src_root), str(mulit_audio_path))
         out_file = desc_mulit_path + '.chi' + ypath.file_exten(media_db.abs_path)
         ypath.create_dirs(desc_mulit_path)
@@ -248,6 +238,9 @@ def analysis_audio_info(media_db):
 
         copy_cmd = ffmpeg_tools + ' -i \"' + media_db.abs_path + '\"' + decode_map + '  -vcodec copy -acodec copy \"' + out_file + '\"'
         yutils.process_cmd(copy_cmd, done_call=rm_on_audio_copy, param=(media_db.abs_path, out_file, desc_mulit_path))
+
+    if MediaHelp.is_err(media_db.state):
+        return
 
     # 音轨结束后,保存源文件到movie_otherformat目录,替换原有文件名.
     def rm_on_audio_copy(_, files):
@@ -266,6 +259,8 @@ def analysis_audio_info(media_db):
 
 # 转码视频
 def compress_media(media_db):
+    if MediaHelp.is_err(media_db.state):
+        return
     # 如果开关开着. 则不管desc是否已有.,根据数据库去覆盖.
 
     if media_db.state < MediaHelp.STATE_VIDOE_COMPRESS_FINISH:
@@ -308,11 +303,27 @@ def compress_media(media_db):
 
 # 生成缩略图
 def create_thum(media_db):
-    if media_db.state >= MediaHelp.STATE_VIDEO_THUM:
-        logger.info('该文件已经转缩略图过了:' + media_db.abs_path)
+    if MediaHelp.is_err(media_db.state):
         return
-    desc = ypath.join(ypath.del_exten(media_db.desc_path), movie_config.base_info.img)
-    desc_thum = ypath.join(ypath.del_exten(media_db.desc_path), movie_config.base_info.thum)
+    media_tum_root = TmpUtil.desc() / movie_config.img_info.img_root
+    # convert_root
+    # if media_db.state >= MediaHelp.STATE_VIDEO_THUM:
+    #     logger.info('该文件已经转缩略图过了:' + media_db.abs_path)
+    #     return
+    _, target_img_dir = ypath.decompose_path(media_db.desc_path, str(convert_root), media_tum_root)
+    target_img_dir = ypath.del_exten(target_img_dir)
+    ypath.create_dirs(target_img_dir)
+    desc = ypath.join(target_img_dir, movie_config.img_info.img)
+    desc_thum = ypath.join(target_img_dir, movie_config.img_info.thum)
+    if os.path.exists(desc) and os.path.exists(desc_thum):
+        logger.info('该视频不需要做缩略图裁切,因为已有:%s' % desc)
+        return
+    # 裁切缩略图的比例
+    thum_percent = int(movie_config.base_info.thum_w) / int(movie_config.base_info.thum_h)
+
+    max_thum_time = int(movie_config.base_info.max_thum_time)
+    min_thum_time = int(movie_config.base_info.min_thum_time)
+
     ypath.create_dirs(desc)
 
     r_time = random.randint(min_thum_time if media_db.duration > min_thum_time else 0,
@@ -320,6 +331,8 @@ def create_thum(media_db):
     cmd = ffmpeg_tools + ' -i \"' + media_db.desc_path + '\" -y  -vframes 1 -ss  00:00:' + str(
         r_time) + ' -f image2  \"' + desc + '\"'
     yutils.process_cmd(cmd)
+    if not os.path.exists(desc):
+        return
     img = Image.open(desc)
     w, h = img.size
     crop_img = img.crop(yutils.crop_size(w, h, thum_percent))
@@ -418,7 +431,7 @@ def sync_on_back():
         threading.Thread(target=_sync).start()
         return {'res': 0, 'res_str': '执行同步程序成功'}
     else:
-        return cur_state()  # {'res': 0, 'res_str': '正在同步,无法再次同步'}
+        return {'res': 0, 'res_str': '正在同步,无法再次同步'}
 
 
 def get_state():

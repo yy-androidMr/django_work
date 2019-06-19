@@ -13,8 +13,12 @@ m3u8_info 做视频切片时,所用的信息
 	thum 影片的截屏的截屏
 	thum_w, thum_h  影片截屏的截屏的尺寸
 	
+	
+	一帧截图     		  缩略图		 与media平级.根文件夹的名称.
+	img="corp_frame.jpg" thum="thum.jpg" img_root="media_thum"
 -->
 <movie_info dir_root="media">
 	<m3u8_info dir_exten=".ym3" name="out.m3u8" ts_dir="movie_ts"  />
-	<base_info mulit_audio_dir="media_mulit_audio" img="img.jpg" thum="thum.jpg" thum_w="400" thum_h="320" max_thum_time="30" min_thum_time="5"/>
+	<base_info mulit_audio_dir="media_mulit_audio" thum_w="400" thum_h="320" max_thum_time="30" min_thum_time="5"/>
+	<img_info img="crop_frame.jpg" thum="thum.jpg" img_root="media_thum" />
 </movie_info>
