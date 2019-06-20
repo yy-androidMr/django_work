@@ -131,3 +131,4 @@ if __name__ == '__main__':
 
     # for root, dirs, files in os.walk('E:/resource/src/pic/18年十一'):
     #     print(root, files)
+

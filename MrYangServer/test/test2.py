@@ -1,6 +1,5 @@
 import datetime
 import os
-from pathlib import Path, PurePath, PureWindowsPath, PosixPath, PurePosixPath
 
 # p = Path('.')
 # print([x for x in p.iterdir()])
@@ -19,6 +18,8 @@ from pathlib import Path, PurePath, PureWindowsPath, PosixPath, PurePosixPath
 #
 # print('F:/cache/res/src/media/01-课程介绍.mp4'[len('F:/cache/res/src/media'):])
 import psutil
+
+from MryangService.Pic import PicService
 
 print('cpu数量:' + str(psutil.cpu_count()))
 print('cpu 时钟:' + str(psutil.cpu_times()))
@@ -44,3 +45,5 @@ print(pmem)
 print('所有线程信息:' + str(p.threads()))
 print('我自己的线程信息:' + str(psutil.Process(os.getpid()).threads()))
 print('------------结束------------')
+
+print(PicService.__class__.__name__)
