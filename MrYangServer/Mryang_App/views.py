@@ -10,24 +10,18 @@ from django.views.decorators.gzip import gzip_page
 from Mryang_App.forms import CreateUserF, LoginUserF, UserAlbumF
 from Mryang_App.result.Enums import LOGIN, UPLOAD
 from Mryang_App import yquery, forms
-from frames import yutils, ypath, TmpUtil
+from frames import yutils, ypath
 
 # 显示权限
 from frames import logger
-from frames.xml import XMLBase, XMLMedia
+from frames.xml import XMLBase
 
 COMMON_SHOW = 4
 FAMILY = 5
 NOT_SEE = 9
 
 dpins = XMLBase.get_base_cfg()
-T_COS_MEIDA_ROOT = dpins.ins().cos_media_root.innerText
-
-
-# res_root = TmpUtil.desc()
-# res_url = dpins.res_url.innerText
-# movie_info_cfg = XMLMedia.get_infos()
-# movie_url = ypath.join(res_url, movie_info_cfg.m3u8_info.ts_dir)
+T_COS_MEIDA_ROOT = dpins.cos_media_root.innerText
 
 
 def hello(request):
@@ -188,28 +182,24 @@ def m_index(request):
     return render(request, 'own_index/index.html')
 
 
-@gzip_page
 def s_gallery(request):
     json = yquery.pic_level1_2json(COMMON_SHOW)
     return render(request, 'gallery/firstLevel/index-color.html',
-                  {'json': json, 'pre_path': T_COS_MEIDA_ROOT + '/pic'})
+                  {'json': json})
 
 
-@gzip_page
 def m_gallery(request):
     json = yquery.pic_level1_2json(FAMILY)
     return render(request, 'gallery/firstLevel/index-color.html',
-                  {'json': json, 'pre_path': T_COS_MEIDA_ROOT + '/pic'})
+                  {'json': json})
 
 
-@gzip_page
 def spe_gallery(request):
     json = yquery.pic_level1_2json(NOT_SEE)
     return render(request, 'gallery/firstLevel/index-color.html',
-                  {'json': json, 'pre_path': T_COS_MEIDA_ROOT + '/pic'})
+                  {'json': json})
 
 
-@gzip_page
 def dead_gallery(request):
     return HttpResponse(
         r"<!DOCTYPE HTML><html><head><meta charset=\"utf-8\"/></head><title>希望,亦如黎明中的花朵</title><body><table width=100% height=100%><tr> <td><center><font face=\"times\"><span style=\"font-size:100px;color:green;font-family:century\"><a style=\"text-decoration:none;\">我有温暖,亦系极寒孤煞<br>我有梦想,亦似落空黄粱<br>我有痴心,亦如梦醒南柯<br>我有悲伤,亦可传播四方</a></span></font></center></td></tr></table>")
@@ -217,7 +207,6 @@ def dead_gallery(request):
     # return render(request, 'gallery/firstLevel/index-color.html', {'json': json, 'pre_path': '/pic/thum'})
 
 
-@gzip_page
 # @ensure_csrf_cookie
 def m_second_gallery(request, dir_id):
     if request.method == "POST":

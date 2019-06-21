@@ -13,35 +13,38 @@ COS_MEDIA_ROOT = 'cos_media_root'
 RES_URL = 'res_url'
 LIST_TAG = 'list'
 
+base_info = None
 
-# 功能:注解参数:dpins=1  代表args的第二个加上dompxy
-def dom_pxy_ins(*annokwds):
-    def ins(f):
-        def new_f(*args, **kwargs):
-            tag_cfg_name = None
-            for arg in args:
-                if type(arg) == DomPxy:
-                    tag_cfg_name = arg.path
 
-            for k in kwargs:
-                if type(kwargs[k]) == DomPxy:
-                    tag_cfg_name = arg.path
-            print('fun:%s, has pxy:%s' % (str(f), tag_cfg_name))
-            if tag_cfg_name:
-                return f(*args, **kwargs)
-
-            if len(annokwds) > 0:
-                kwargs[annokwds[0]] = DomPxy(CONFIG_INFO_XML)
-            else:
-                # 这里对参数第一个添加上DomPxy
-                arg_list = list(args)
-                arg_list.append(DomPxy(CONFIG_INFO_XML))
-                args = tuple(arg_list)
-            return f(*args, **kwargs)
-
-        return new_f
-
-    return ins
+#
+# # 功能:注解参数:dpins=1  代表args的第二个加上dompxy
+# def dom_pxy_ins(*annokwds):
+#     def ins(f):
+#         def new_f(*args, **kwargs):
+#             tag_cfg_name = None
+#             for arg in args:
+#                 if type(arg) == DomPxy:
+#                     tag_cfg_name = arg.path
+#
+#             for k in kwargs:
+#                 if type(kwargs[k]) == DomPxy:
+#                     tag_cfg_name = arg.path
+#             print('fun:%s, has pxy:%s' % (str(f), tag_cfg_name))
+#             if tag_cfg_name:
+#                 return f(*args, **kwargs)
+#
+#             if len(annokwds) > 0:
+#                 kwargs[annokwds[0]] = DomPxy(CONFIG_INFO_XML)
+#             else:
+#                 # 这里对参数第一个添加上DomPxy
+#                 arg_list = list(args)
+#                 arg_list.append(DomPxy(CONFIG_INFO_XML))
+#                 args = tuple(arg_list)
+#             return f(*args, **kwargs)
+#
+#         return new_f
+#
+#     return ins
 
 
 # 需要尝试使用dom解析,因为Elementtree解析会清除掉注释  #  调整完XMLPic  要删除!!
@@ -89,7 +92,7 @@ class DomPxy:
         # print(os.path.abspath('./'))
         self.dom = minidom.parse(str(path))
         self.elem = ElemPxy(self.dom)
-        self.instance = None
+        self.instance = self.ins()
 
     #  调整完XMLPic  要删除!!
     def save(self):
@@ -99,8 +102,6 @@ class DomPxy:
             # fh.write(self.dom.toprettyxml(encoding='UTF-8'))
 
     def ins(self):
-        if self.instance:
-            return self.instance
         # 获取实例
         self.instance = XmlBean()
         self.insert_child_attr(self.dom.documentElement, self.instance)
@@ -137,24 +138,12 @@ class DomPxy:
 
 
 # 解析configs_info 所有的配置列表
-@dom_pxy_ins()
-def get_base_cfg(dpins=None):
-    return dpins
-
-
-#  调整完XMLPic  要删除!!
-@dom_pxy_ins()
-def get_cfg_dir(dpins=None):
-    ins = dpins.ins()
-    config_root = PROJ_ROOT / ins.config_root.innerText
-    return config_root.replace('\\', '/'), dpins
-
-
-#  调整完XMLPic  要删除!!
-def add_attr(node, k, v='', update=False):
-    attvalue = node.getAttribute(k)
-    if update or not attvalue:
-        node.setAttribute(k, v)
+def get_base_cfg():
+    global base_info
+    if not base_info:
+        print('XMLBaseInfo创建了一个DomPxy!!!!!!!!!!!!!!!!!!!!!!!!!')
+        base_info = DomPxy(CONFIG_INFO_XML)
+    return base_info.instance
 
 
 def parse(path):
@@ -164,3 +153,12 @@ def parse(path):
 # 序列化的实例,每个配置自己用反射添加内容
 class XmlBean(object):
     pass
+
+
+def list_cfg_infos(cfg_key):
+    dpins = get_base_cfg()
+    # dpins.list.media_info.innerText
+    path = PROJ_ROOT / dpins.config_root.innerText / getattr(dpins.list, cfg_key).innerText
+    if path.exists():
+        domPxy = parse(path)
+        return domPxy.instance

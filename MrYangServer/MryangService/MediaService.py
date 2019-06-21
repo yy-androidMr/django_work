@@ -18,14 +18,14 @@ from MryangService.frames import ServiceInterface
 from Mryang_App.models import Media, Dir
 from Mryang_App.DBHelper import MediaHelp
 from frames import ypath, TmpUtil, yutils, Globals
-from frames.xml import XMLMedia
+from frames.xml import XMLBase
 from MryangService.utils import logger
 from django.db import transaction
 
 FFMPEG_KEY = 'FFMPEG_KEY'
 FFPROBE_KEY = 'FFPROBE_KEY'
 
-movie_config = XMLMedia.get_infos()
+movie_config = XMLBase.list_cfg_infos('media_info')  # XMLMedia.get_infos()
 
 ffmpeg_tools = str(TmpUtil.input_note(FFMPEG_KEY, '输入对应的ffmpeg文件位置(参照link_gitProj_files.txt下载对应的文件):\n'))
 ffprobe_tools = str(TmpUtil.input_note(FFPROBE_KEY, '输入对应的ffprobe文件位置(参照link_gitProj_files.txt下载对应的文件):\n'))

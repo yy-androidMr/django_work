@@ -73,7 +73,13 @@ class Dir(models.Model):
 
 class GalleryInfo(models.Model):
     folder_key = models.ForeignKey(Dir, related_name='dir', on_delete=models.CASCADE)
-    # 相册名字
+    # 原始路径 绝对路径
+    abs_path = models.CharField(max_length=500, default='')
+    # 输出路径
+    desc_path = models.CharField(max_length=500, default='')
+    # 输出相对路径,做显示用.一张图片PicInfo.需要和这个拼接.
+    desc_real_path = models.CharField(max_length=500, default='')
+    # 相册名称
     name = models.CharField(max_length=100, default='')
     # 相册简介
     intro = models.CharField(max_length=100, default='')
@@ -94,8 +100,17 @@ class GalleryInfo(models.Model):
             self.param1, self.param2)
 
 
-class UpLoadDir(models.Model):
-    path = models.CharField(max_length=100, default='')
+class PicInfo(models.Model):
+    gallery_key = models.ForeignKey(GalleryInfo, related_name='gallery', on_delete=models.CASCADE)
+    # 都是相对路径. 相对于GalleryInfo
+    res = models.CharField(max_length=500, default='')
+    # 图片名称, 需要和GalleryInfo.desc_real_path 拼接.做显示用, middle和thum都用这个
+    name = models.CharField(max_length=200)
+    # 原图片大小.
+    size = models.IntegerField(default=0)
+    # 原图片尺寸
+    width = models.IntegerField(default=0)
+    height = models.IntegerField(default=0)
 
 
 # 在service做转换的时候的src文件进度

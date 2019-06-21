@@ -7,7 +7,7 @@ import sys
 import time
 
 from frames import TmpUtil
-
+# 强大debug:pysnooper
 
 def logname():
     return time.strftime('%Y-%m-%d %H_%M_%S', time.localtime()) + '.log'
