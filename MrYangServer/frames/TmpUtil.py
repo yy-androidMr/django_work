@@ -121,28 +121,30 @@ def input_path(key, intro):
 SRC_ROOT_KEY = 'SRC_ROOT_KEY'
 DESC_ROOT_KEY = 'DESC_ROOT_KEY'
 DESC_TMP_DIR = 'tmp'
+src_root = None
+desc_root = None
 
 
 def src():
-    tmp_path = None
-    while tmp_path is None or not tmp_path.exists():
-        tmp_path = input_path(SRC_ROOT_KEY, '请指定资源原始目录(例如:E:/src_root),目录下有个pic文件夹,media文件夹:\n')
+    global src_root
+    while src_root is None or not src_root.exists():
+        src_root = input_path(SRC_ROOT_KEY, '请指定资源原始目录(例如:E:/src_root),目录下有个pic文件夹,media文件夹:\n')
         link = res_linkdir / 'src'
         if link.exists():
             os.remove(link)
-        os.symlink(tmp_path, link)
-    return tmp_path
+        os.symlink(src_root, link)
+    return src_root
 
 
 def desc():
-    tmp_path = None
-    while tmp_path is None or not tmp_path.exists():
-        tmp_path = input_path(DESC_ROOT_KEY, '请指定资源输出目录(例如:E:/desc_root),目录下有什么都行,是原始目录的输出路径:\n')
+    global desc_root
+    while desc_root is None or not desc_root.exists():
+        desc_root = input_path(DESC_ROOT_KEY, '请指定资源输出目录(例如:E:/desc_root),目录下有什么都行,是原始目录的输出路径:\n')
         link = os.path.join(res_linkdir, 'desc')
         if os.path.exists(link):
             os.remove(link)
-        os.symlink(tmp_path, link)
-    return tmp_path
+        os.symlink(desc_root, link)
+    return desc_root
 
 
 # 输出文件的临时目录.做记录

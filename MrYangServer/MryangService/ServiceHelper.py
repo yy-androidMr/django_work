@@ -1,4 +1,26 @@
-from frames import ypath
+from Mryang_App.models import Dir
+from frames import ypath, logger
+
+
+def create_dir(cur_dir_dbs, info, type, tags):
+    name = info.name
+    parent_path = info.parent  # info[ypath.KEYS.PARENT]
+    rel_path = info.relative
+    d_model = Dir()
+    d_model.name = name
+    d_model.isdir = True
+    d_model.abs_path = info.path
+    d_model.rel_path = rel_path
+    d_model.type = type
+    d_model.tags = tags  # if info[ypath.KEYS.LEVEL] == 0 else ''
+    try:
+        parent = cur_dir_dbs[parent_path]  # Dir.objects.get(abs_path=parent_path)
+        d_model.parent_dir = parent
+    except Exception as e:
+        logger.info('错误,这货没有爸爸的,忽视这个问题:%s:is not found :%s' % (parent_path, e))
+        pass
+    d_model.save()
+    return d_model
 
 
 def compair_db(dbs, desc_path):

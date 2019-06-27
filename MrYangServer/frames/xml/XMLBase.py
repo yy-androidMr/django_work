@@ -157,7 +157,6 @@ class XmlBean(object):
 
 def list_cfg_infos(cfg_key):
     dpins = get_base_cfg()
-    # dpins.list.media_info.innerText
     path = PROJ_ROOT / dpins.config_root.innerText / getattr(dpins.list, cfg_key).innerText
     if path.exists():
         domPxy = parse(path)

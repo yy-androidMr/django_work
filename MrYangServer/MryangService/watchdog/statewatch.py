@@ -2,6 +2,7 @@ import json
 import os
 from socket import *
 from MryangService import MediaService as ms
+from frames import logger
 
 host = '127.0.0.1'
 port = 12345
@@ -24,7 +25,6 @@ def find_path(str):
 
 def parse_path(path):
     if path is None:
-        print('无效')
         return '{\"res\":404}'
     # 解析各种路径.
     if 'mediaState' == path:  # 当前的mediaService处理进度
@@ -44,13 +44,15 @@ def start():
     tctime.listen(3)
 
     while True:
-        print(os.getpid())
-        print('Wait for connection ...')
+        logger.info('Wait for connection ...')
         tctimeClient, addr = tctime.accept()
-        print("Connection from :", addr)
+        logger.info("Connection from :", addr)
 
         # while True:
-        data = tctimeClient.recv(buffsize).decode()
+        try:
+            data = tctimeClient.recv(buffsize).decode()
+        except Exception:
+            pass
         # if not data:
         #     print('break!!!!!')
         #     break

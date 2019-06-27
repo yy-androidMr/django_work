@@ -4,6 +4,8 @@ import sys, django, os
 import threading
 import time
 
+from PIL import Image
+
 import manage
 # from Mryang_App.models import User
 from frames.xml import XMLBase
@@ -83,11 +85,16 @@ def call(k):
 
 
 if __name__ == '__main__':
+    t1 = '.gif'
+    print('.gif' in t1.lower())
+    print('.gif' == t1.lower())
+    print(sys.getsizeof(1))
+    # im = Image.open(r'D:\python\django_work\res_link\src\pic\webp_test.webp')
+    # im.save(r'D:\python\django_work\res_link\src\pic\webp_test.png')
 
-    while True:
-        time.sleep(2)
-        print('我这个是测试进程.睡眠用的.:' + str(os.getpid()))
-
+    # im = Image.open(r'D:\python\django_work\res_link\src\pic\test_gif.gif')
+    # im.save('picframe{:02d}.png'.format(im.tell()))
+    # print(im.tell())
     # '\'tdb\': {\'ENGINE\': \'django.db.backends.mysql\',\'NAME\': \'ydatabase\',\'USER\': \'yysql\',
     #     'PASSWORD': 'mysql_yy2134',
     #     'HOST': '148.70.103.10',
@@ -131,4 +138,3 @@ if __name__ == '__main__':
 
     # for root, dirs, files in os.walk('E:/resource/src/pic/18年十一'):
     #     print(root, files)
-

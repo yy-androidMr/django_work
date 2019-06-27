@@ -102,8 +102,8 @@ class GalleryInfo(models.Model):
 
 class PicInfo(models.Model):
     gallery_key = models.ForeignKey(GalleryInfo, related_name='gallery', on_delete=models.CASCADE)
-    # 都是相对路径. 相对于GalleryInfo
-    res = models.CharField(max_length=500, default='')
+    # src文件夹中的名字. 相对于GalleryInfo.abs_path 拼接
+    src_name = models.CharField(max_length=500, default='')
     # 图片名称, 需要和GalleryInfo.desc_real_path 拼接.做显示用, middle和thum都用这个
     name = models.CharField(max_length=200)
     # 原图片大小.
@@ -111,6 +111,10 @@ class PicInfo(models.Model):
     # 原图片尺寸
     width = models.IntegerField(default=0)
     height = models.IntegerField(default=0)
+    # 该文件当前状态 存在 MediaHelp.STATE_INIT中
+    state = models.IntegerField(default=-1)
+    # 是否是gif
+    is_gif = models.BooleanField(default=False)
 
 
 # 在service做转换的时候的src文件进度

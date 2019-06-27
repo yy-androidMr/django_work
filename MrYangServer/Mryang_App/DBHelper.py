@@ -28,3 +28,21 @@ class MediaHelp:
             return '视频转码完毕'
         if num == MediaHelp.STATE_VIDEO_THUM:
             return '视频缩略图裁切完毕'
+
+
+class PicHelp:
+    STATE_CREATE = -1
+    STATE_INIT = 0
+    STATE_FINISH = 1  # 从middle 到thum 创建完毕,被视为finish
+    STATE_ERROR = 999
+
+    @staticmethod
+    def convert(num):
+        if num == PicHelp.STATE_CREATE:
+            return '刚创建'
+        if num == PicHelp.STATE_INIT:
+            return '刚初始化完成'
+        if num == PicHelp.STATE_FINISH:
+            return '本张图处理完毕'
+        if num == PicHelp.STATE_ERROR:
+            return '本张图处理有误,请尽快处理.'

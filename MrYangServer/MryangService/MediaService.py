@@ -2,24 +2,13 @@ import json
 import os
 import random
 import shutil
-import sys
 import threading
-
-import django
 from PIL import Image
-
-sys.path.append('./../')
 from MryangService import ServiceHelper
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "MrYangServer.settings")
-django.setup()
-
-from MryangService.frames import ServiceInterface
 from Mryang_App.models import Media, Dir
 from Mryang_App.DBHelper import MediaHelp
-from frames import ypath, TmpUtil, yutils, Globals
+from frames import ypath, TmpUtil, yutils, Globals, logger
 from frames.xml import XMLBase
-from MryangService.utils import logger
 from django.db import transaction
 
 FFMPEG_KEY = 'FFMPEG_KEY'
@@ -93,7 +82,7 @@ def new_media_dbs(files, dm_dict):
             continue
         if not yutils.is_movie(file):
             continue
-        (_, target) = ypath.decompose_path(
+        target = ypath.decompose_path(
             file, str(media_src_root), str(convert_root), exten='.mp4')
         media_db = Media()
         media_db.abs_path = file
@@ -127,7 +116,7 @@ def start():
             print('输入错误')
 
     src_dbs.extend(dbs)
-    ServiceInterface.s_loop(loop, 'MediaService.loop')
+    # ServiceInterface.s_loop(loop, 'MediaService.loop')
 
 
 def gen_media_dbs():
@@ -230,7 +219,7 @@ def analysis_audio_info(media_db):
 
         # desc_file = file +
         mulit_audio_path = TmpUtil.src() / movie_config.base_info.mulit_audio_dir
-        _, desc_mulit_path = ypath.decompose_path(media_db.abs_path, str(media_src_root), str(mulit_audio_path))
+        desc_mulit_path = ypath.decompose_path(media_db.abs_path, str(media_src_root), str(mulit_audio_path))
         out_file = desc_mulit_path + '.chi' + ypath.file_exten(media_db.abs_path)
         ypath.create_dirs(desc_mulit_path)
         if os.path.exists(out_file):
@@ -311,7 +300,7 @@ def create_thum(media_db):
     # if media_db.state >= MediaHelp.STATE_VIDEO_THUM:
     #     logger.info('该文件已经转缩略图过了:' + media_db.abs_path)
     #     return
-    _, target_img_dir = ypath.decompose_path(media_db.desc_path, str(convert_root), media_tum_root)
+    target_img_dir = ypath.decompose_path(media_db.desc_path, str(convert_root), media_tum_root)
     target_img_dir = ypath.del_exten(target_img_dir)
     ypath.create_dirs(target_img_dir)
     desc = ypath.join(target_img_dir, movie_config.img_info.img)
@@ -377,31 +366,10 @@ def create_thum(media_db):
 
 # 生成文件夹数据库.
 def gen_dir():
-    def create_dir(cur_dir_dbs, info, tags):
-        name = info.name
-        parent_path = info.parent  # info[ypath.KEYS.PARENT]
-        rel_path = info.relative
-        d_model = Dir()
-        d_model.name = name
-        d_model.isdir = True
-        d_model.abs_path = info.path
-        d_model.rel_path = rel_path
-        d_model.type = yutils.M_FTYPE_MOIVE
-        d_model.tags = tags  # if info[ypath.KEYS.LEVEL] == 0 else ''
-        try:
-            parent = cur_dir_dbs[parent_path]  # Dir.objects.get(abs_path=parent_path)
-            d_model.parent_dir = parent
-        except Exception as e:
-            logger.info('错误,这货没有爸爸的,忽视这个问题:%s:is not found :%s' % (parent_path, e))
-            pass
-        d_model.save()
-        return d_model
-
     str_media_src = str(media_src_root.as_posix())
     dir_db_paths = {}
     for dir in os.listdir(str_media_src):
         m_file_list = ypath.path_res(ypath.join(str_media_src, dir), parse_file=False)
-        m_file_list.sort(key=lambda d: d.level)
         all_media_dirs = Dir.objects.filter(tags=dir)
         for dir_db in all_media_dirs:
             if dir_db.abs_path not in m_file_list:
@@ -412,7 +380,8 @@ def gen_dir():
 
         for local_dir in m_file_list:
             if local_dir.path not in dir_db_paths:
-                dir_db_paths[local_dir.path] = create_dir(dir_db_paths, local_dir, dir)
+                dir_db_paths[local_dir.path] = ServiceHelper.create_dir(dir_db_paths, local_dir, yutils.M_FTYPE_MOIVE,
+                                                                        dir)  # create_dir(dir_db_paths, local_dir, dir)
                 logger.info('创建该文件夹:' + str(local_dir))
     return dir_db_paths
 

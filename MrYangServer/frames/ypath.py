@@ -85,6 +85,8 @@ class PathClass:
         self.relative = '.' if s_root == self.path else self.path[len(s_root):]
         self.level = self.relative.count('/')
         self.parent = os.path.dirname(self.path)  # str(path.parent.as_posix())
+        self.ext = file_exten(self.path)
+        self.simple_name = file_name(self.path)
 
     def __eq__(self, other):
         return other == self.path
@@ -106,6 +108,7 @@ def path_res(path, parse_dir=True, parse_file=True):
         # if cache_it:
         res = PathClass(file, path)
         m_file_list.append(res)
+    m_file_list.sort(key=lambda d: d.level)
     return m_file_list
 
 
@@ -157,7 +160,7 @@ def decompose_path(src_file, src_root, target_root, exten=None, rename=None):
     # 3.新的目标文件
     target_file = join(target_root, rela_file_name)
 
-    return rela_file_name, target_file
+    return target_file
 
 
 # 返回不带io操作的path
@@ -227,7 +230,6 @@ def compair_path(left, right):
 
 # 删除所有文件中 有重复的图.
 def delrepeat_file(path):
-    print(path)
     repeat_file = {}
     for root, dirs, files in os.walk(path):
         md5_list = {}
@@ -238,12 +240,11 @@ def delrepeat_file(path):
                 repeat_file[source_rela_path] = md5_list[file_md5]
             else:
                 md5_list[file_md5] = os.path.abspath(source_rela_path)
-        print('next')
     print(repeat_file)
     for file in repeat_file:
         print(file)
         os.remove(file)
-    print('done')
+    print('ypath.delrepeat_file done')
 
 
 def create_dirs(file_path, is_dir=False, delete_exist=False):
