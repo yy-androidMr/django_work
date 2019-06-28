@@ -106,6 +106,8 @@ class PicInfo(models.Model):
     src_name = models.CharField(max_length=500, default='')
     # 图片名称, 需要和GalleryInfo.desc_real_path 拼接.做显示用, middle和thum都用这个
     name = models.CharField(max_length=200)
+    # 图片后缀. 如果是gif. thum后缀是jpg, middle后缀是gif. webp没有后缀.
+    ext = models.CharField(max_length=20)
     # 原图片大小.
     size = models.IntegerField(default=0)
     # 原图片尺寸

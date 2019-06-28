@@ -85,10 +85,14 @@ def call(k):
 
 
 if __name__ == '__main__':
-    t1 = '.gif'
-    print('.gif' in t1.lower())
-    print('.gif' == t1.lower())
-    print(sys.getsizeof(1))
+    m1 = {'1': ('a', 'b'), '2': ('c', 'd'), '3': ('e', 'f'), '4': ('e', 'f'), '5': ('e', 'f')}
+    for index, m in enumerate(m1):
+        print(index % 3)
+    # t1 = '.gif'
+    # print('.gif' in t1.lower())
+    # print('.gif' == t1.lower())
+    # print(sys.getsizeof(1))
+
     # im = Image.open(r'D:\python\django_work\res_link\src\pic\webp_test.webp')
     # im.save(r'D:\python\django_work\res_link\src\pic\webp_test.png')
 

@@ -2,6 +2,7 @@ import json
 import os
 from socket import *
 from MryangService import MediaService as ms
+from MryangService.Pic import PicService as ps
 from frames import logger
 
 host = '127.0.0.1'
@@ -27,12 +28,14 @@ def parse_path(path):
     if path is None:
         return '{\"res\":404}'
     # 解析各种路径.
-    if 'mediaState' == path:  # 当前的mediaService处理进度
+    if 'MediaState' == path:  # 当前的mediaService处理进度
         return json.dumps(ms.cur_state())
-    if 'mediaSyncDb' == path:  # 同步media数据库
+    if 'MediaSyncDb' == path:  # 同步media数据库
         return json.dumps(ms.sync_on_back())
-    if 'mediaSyncState' == path:  # 查询media数据库同步状态
+    if 'MediaSyncState' == path:  # 查询media数据库同步状态
         return json.dumps(ms.get_state())
+    if 'PicSyncDb' == path:  # 同步Pic数据库
+        return json.dumps(ps.sync_on_back())
         # MediaServiceSync.sync_on_back()
 
     return '{\"res\":404}'
@@ -46,7 +49,7 @@ def start():
     while True:
         logger.info('Wait for connection ...')
         tctimeClient, addr = tctime.accept()
-        logger.info("Connection from :", addr)
+        logger.info("Connection from :", str(addr))
 
         # while True:
         try:

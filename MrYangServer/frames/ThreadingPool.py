@@ -17,7 +17,7 @@ class ThreadingPool:
 
     def start(self):
         for t in self.threads:
-            t.setDaemon(True)
+            # t.setDaemon(True)
             t.start()
         for t in self.threads:
             t.join()
@@ -25,7 +25,7 @@ class ThreadingPool:
 
 # def t(args=None):
 #     index = 9
-#     print('t is start:' + args)
+#     print('t is start:' + args)/
 #     while index > 0:
 #         index = random.randint(0, 2)
 #         time.sleep(random.randint(1, 3))
