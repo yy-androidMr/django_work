@@ -336,4 +336,5 @@ def loop():
     # 最后校验middle和thum,要不要校验src?
     # ypath.del_none_dir(desc_root)
     logger.info('PicService.一个loop走完了.不知道有没有同步完 false 代表同步完了:' + str(in_sync))
+    in_sync = False
     return False

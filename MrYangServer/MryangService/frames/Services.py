@@ -3,7 +3,6 @@ import sys
 import time
 
 import django
-
 from frames import logger
 
 sys.path.append('./../../')
