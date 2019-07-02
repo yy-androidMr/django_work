@@ -7,17 +7,20 @@ from PIL import Image, ImageDraw, ImageFont
 # im2 = Image.open(r'D:\python\django_work\res_link\src\pic\map234.jpg')
 # print(im2.tell())
 # print(im2.format)
-im = Image.open(r'D:\python\django_work\res_link\src\pic\test_gif.gif')
-im.save(r'D:\python\django_work\res_link\src\pic\test_gif222.png')
-im = Image.open(r'D:\python\django_work\res_link\src\pic\test_gif222.png')
-im = im.convert("RGB")
-draw = ImageDraw.Draw(im)
-ttfront = ImageFont.truetype('simsunb.ttf', size=50)  # 字体大小
-draw.text((0, 0), "GIF", "red", font=ttfront)  # 文字位置，内容，字体
-# draw.ink = 0 + 0 * 256 + 255 * 256 * 256
-# draw.text([0, 0], "评论“666”可显示")  # 文字位置，内容，字体
+# im = Image.open(r'D:\python\django_work\res_link\src\pic\test_gif.gif')
+# im = im.convert("RGB")
+# draw = ImageDraw.Draw(im)
+# font = ImageFont.truetype("arial.ttf", 40, encoding="unic")  # 设置字体
+# draw.text((0, 0), u'GIF', font=font)
+#
+# im.save(r'D:\python\django_work\res_link\src\pic\test_gif222.jpg')
 
-im.save(r'D:\python\django_work\res_link\src\pic\test_gif222.png')
+
+# im = Image.open(r'D:\python\django_work\res_link\src\pic\test_gif.gif')
+# im.save(r'D:\python\django_work\res_link\src\pic\test_gif222.webp')
+
+Image.open(r'D:\cache\4\1.png').save(r'D:\cache\4\1.webp','webp')
+
 # im = Image.open(r'D:\python\django_work\res_link\src\pic\test_gif222.webp')
 # im.save(r'D:\python\django_work\res_link\src\pic\test_gif222.jpg')
 #

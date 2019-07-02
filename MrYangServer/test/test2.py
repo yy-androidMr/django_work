@@ -19,8 +19,6 @@ import os
 # print('F:/cache/res/src/media/01-课程介绍.mp4'[len('F:/cache/res/src/media'):])
 import psutil
 
-from MryangService.Pic import PicService
-
 print('cpu数量:' + str(psutil.cpu_count()))
 print('cpu 时钟:' + str(psutil.cpu_times()))
 print('系统启动时间:' + datetime.datetime.fromtimestamp(psutil.boot_time()).strftime("%Y-%m-%d %H:%M:%S"))
@@ -38,12 +36,12 @@ print('磁盘使用情况:' + str(psutil.disk_usage('C:\\')))
 print('所有进程:' + str(psutil.pids()))
 # print('当前进程id:' + str(os.getpid()))
 
-p = psutil.Process(36556)
-print(p.name())
-pmem = p.memory_info()
-print(pmem)
-print('所有线程信息:' + str(p.threads()))
+# p = psutil.Process(36556)
+# print(p.name())
+# pmem = p.memory_info()
+# print(pmem)
+# print('所有线程信息:' + str(p.threads()))
 print('我自己的线程信息:' + str(psutil.Process(os.getpid()).threads()))
 print('------------结束------------')
 
-print(PicService.__class__.__name__)
+print(datetime.datetime.now())

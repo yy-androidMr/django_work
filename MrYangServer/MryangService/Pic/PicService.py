@@ -1,15 +1,12 @@
 import datetime
 import os
 import shutil
-import sys
 import time
 
-import math
 import piexif
-import psutil
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 
-from Mryang_App.models import Dir, PicInfo, GalleryInfo
+from MryangService.ServiceHelper import TimeWatch
 from frames import TmpUtil, ypath, yutils, logger, ThreadingPool
 from frames.xml import XMLBase
 
@@ -22,6 +19,7 @@ desc_middle_root = desc_root / pic_config.middle  # 放置放大图的地方
 desc_thum_root = desc_root / pic_config.thum  # 放置缩略图的地方
 desc_webp_root = desc_root / pic_config.webp  # 放置webp的地方
 middle_area = int(pic_config.max_pic_size) ** 2
+thum_size = int(pic_config.thum_size)
 
 in_sync = False
 next_loop_sync = False  # 标记. 下次loop要不要执行syn
@@ -113,7 +111,10 @@ def create_link_dict():
         if src_file.path not in dir_md5:
             # ypath.join(str(desc_middle_root), desc_md5), ypath.join(str(desc_thum_root), desc_md5)
             dir_md5[src_file.path] = out_dir(src_file.relative)
-
+            # 需要在这里把所有文件夹给创建出来.不然在多线程创建会造成抢占创建.会崩
+            ypath.create_dirs(ypath.join(desc_middle_root, dir_md5[src_file.path]), is_dir=True)
+            ypath.create_dirs(ypath.join(desc_thum_root, dir_md5[src_file.path]), is_dir=True)
+            ypath.create_dirs(ypath.join(desc_webp_root, dir_md5[src_file.path]), is_dir=True)
     for src_file in src_file_list:
         if src_file.is_dir:
             continue
@@ -144,52 +145,87 @@ def del_not_exist():
                     thum_path = ypath.join(str(desc_thum_root), desc_middle_file[desc_middle_str_len:])
                     if os.path.exists(thum_path):
                         os.remove(thum_path)
-    ypath.del_none_dir(desc_root)
 
 
 # 开启转换.
 def begin_convert():
     # 传进切割后的map.进行文件转换.
     def begin_threads(mulit_file_list):
+        def cut_middle2thum(m_img, thum):
+            if os.path.exists(thum):
+                return
+            w, h = m_img.size
+            crop_img = m_img.crop(yutils.crop_size(w, h))  # 保存裁切后的图片
+            crop_img.thumbnail((thum_size, thum_size), Image.ANTIALIAS)
+            if yutils.is_gif(thum):
+                crop_img = crop_img.convert("RGB")
+                draw = ImageDraw.Draw(crop_img)
+                font = ImageFont.truetype("arial.ttf", 40, encoding="unic")  # 设置字体
+                draw.text((0, 0), u'GIF', font=font)
+            try:
+                crop_img.save(thum)
+            except:
+                crop_img = crop_img.convert('RGB')
+                crop_img.save(thum)
+
+        # 转webp
+        def convert_webp(m_img, webp, middle_file):
+            if os.path.exists(webp):
+                return
+            if yutils.is_gif(middle_file):
+                return
+            m_img.save(webp)
+
         # 转middle
-        def comvert_middle(s_img, file):
-            if not os.path.exists(file):
-                ypath.create_dirs(file)
-                # 压缩尺寸
-                w, h = src_img.size
-                pic_area = w * h
-                if pic_area > middle_area:
-                    proportion = (middle_area / pic_area) ** 0.5
-                    w = int(w * proportion)
-                    h = int(h * proportion)
-                s_img.thumbnail((w, h), Image.ANTIALIAS)
-                # 处理旋转信息.
-                has_exif = 'exif' in s_img.info
-                old_exif = None
-                if has_exif:
-                    try:
-                        old_exif = piexif.load(s_img.info["exif"])
-                        has_exif = True
-                    except:
-                        has_exif = False
-                if has_exif:
-                    print('处理这张图:' + s_img.filename)
-                    if '0th' in old_exif and piexif.ImageIFD.Orientation in old_exif['0th']:
-                        orientation = old_exif['0th'][piexif.ImageIFD.Orientation]
-                        if orientation == 6:
-                            s_img = s_img.rotate(-90, expand=True)
-                        if orientation == 3:
-                            s_img = s_img.rotate(180)
-                        if orientation == 8:
-                            s_img = s_img.rotate(90, expand=True)
-                    exif_bytes = piexif.dump({})
-                    s_img.save(file, exif=exif_bytes)
-                else:
-                    try:
-                        s_img.save(file)
-                    except:
-                        s_img = s_img.convert('RGB')
-                        s_img.save(file)
+        def convert_middle(s_img, file):
+            if os.path.exists(file):
+                try:
+                    exist_img = Image.open(file)
+                    return exist_img
+                except:
+                    os.remove(file)
+                    pass
+            # gif link上
+            if yutils.is_gif(file):
+                # gif特殊操作.
+                os.symlink(src_file, middle_file)
+                return s_img
+            # 压缩尺寸
+            w, h = src_img.size
+            pic_area = w * h
+            if pic_area > middle_area:
+                proportion = (middle_area / pic_area) ** 0.5
+                w = int(w * proportion)
+                h = int(h * proportion)
+            s_img.thumbnail((w, h), Image.ANTIALIAS)
+            # 处理旋转信息.
+            has_exif = 'exif' in s_img.info
+            old_exif = None
+            if has_exif:
+                try:
+                    old_exif = piexif.load(s_img.info["exif"])
+                    has_exif = True
+                except:
+                    has_exif = False
+            if has_exif:
+                print('处理这张图:' + s_img.filename)
+                if '0th' in old_exif and piexif.ImageIFD.Orientation in old_exif['0th']:
+                    orientation = old_exif['0th'][piexif.ImageIFD.Orientation]
+                    if orientation == 6:
+                        s_img = s_img.rotate(-90, expand=True)
+                    if orientation == 3:
+                        s_img = s_img.rotate(180)
+                    if orientation == 8:
+                        s_img = s_img.rotate(90, expand=True)
+                exif_bytes = piexif.dump({})
+                s_img.save(file, exif=exif_bytes)
+            else:
+                try:
+                    s_img.save(file)
+                except:
+                    s_img = s_img.convert('RGB')
+                    s_img.save(file)
+            return s_img
 
         for middle_file in mulit_file_list:
             ext = mulit_file_list[middle_file][2]
@@ -200,18 +236,12 @@ def begin_convert():
                 err_pic.append(src_file)
                 logger.info('这张图有错误!!!!!!!!!!!!!!!!!!!!!!!:' + src_file)
                 continue
-            if yutils.is_gif(ext):
-                # gif特殊操作.
-                continue
-            comvert_middle(src_img, middle_file)
 
+            m_img = convert_middle(src_img, middle_file)
+            # webp_file = ypath.join(desc_webp_root, mulit_file_list[middle_file][0] + '.webp')
+            # convert_webp(m_img, webp_file, middle_file)
             thum_file = ypath.join(desc_thum_root, mulit_file_list[middle_file][0] + ext)
-            if not os.path.exists(thum_file):
-                pass  # 转thum
-            webp_file = ypath.join(desc_webp_root, mulit_file_list[middle_file][0] + '.webp')
-            if not os.path.exists(webp_file):  # 只有gif没有webp格式.做一个映射.
-                # if im2.mode == 'RGBA':
-                pass  # 转webp
+            cut_middle2thum(m_img, thum_file)
 
         pass
 
@@ -268,35 +298,42 @@ def loop():
     global in_sync, next_loop_sync
     # 第二道. 是否做操作强制刷新?
     if not next_loop_sync:
-        print('本次不进行同步1')
         return False
     next_loop_sync = False
     # 双重锁, 正在同步则取消.
     if in_sync:
-        print('本次也不进行同步2')
         return False
     in_sync = True
     logger.info('PicService.开始执行同步!!!!')
     err_pic.clear()
+    watch = TimeWatch('PicService')
+    watch.print_now_time('开始图片转换服务. 开启时间:')
+    watch.tag_now(print_it=False)
     # 先去重
     ypath.delrepeat_file(src_root)
+    watch.tag_now('去重操作占用时长:')
     # 生成middle->(thum,src) 路径映射
     logger.info('PicService.create_link_dict begin!')
     create_link_dict()
     logger.info('PicService.create_link_dict end!')
+    watch.tag_now('生成src-middle的link_dict 时长:')
+
     # 删除src中没有.middle中有的图.
     logger.info('PicService.del_not_exist begin!')
     del_not_exist()
     logger.info('PicService.del_not_exist end!')
+    watch.tag_now('同步src-middle-thum时长:')
 
-    # 正式转换. file_link 结构: [middle文件名]=(thum文件名,src文件名)
+    # 正式转换.
     logger.info('PicService.begin_convert begin!')
     begin_convert()
     logger.info('PicService.begin_convert end!')
+    watch.tag_now('转换时长:')
     # 再产生desc中的middle,thum,webp,需要有个bool删除原有数据
     # 再产生 middle 2  thum ? 这个不能再一个操作里吗?
     # 再做数据库同步
     handle_db()
     # 最后校验middle和thum,要不要校验src?
+    # ypath.del_none_dir(desc_root)
     logger.info('PicService.一个loop走完了.不知道有没有同步完 false 代表同步完了:' + str(in_sync))
     return False

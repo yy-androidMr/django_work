@@ -1,5 +1,25 @@
+import datetime
+import time
+
 from Mryang_App.models import Dir
 from frames import ypath, logger
+
+
+class TimeWatch:
+
+    def __init__(self, pre):
+        self._pre = pre
+        self._nowTime = lambda: int(round(time.time() * 1000))
+        self._last_tag_time = self._nowTime()
+
+    def print_now_time(self, intro):
+        logger.info(self._pre + intro + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+
+    def tag_now(self, intro='', print_it=True):
+        now_t = self._nowTime()
+        if print_it:
+            logger.info(self._pre + intro + str(now_t - self._last_tag_time) + '毫秒')
+        self._last_tag_time = now_t
 
 
 def create_dir(cur_dir_dbs, info, type, tags):

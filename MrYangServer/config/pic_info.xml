@@ -13,5 +13,5 @@ m3u8_info 做视频切片时,所用的信息
 	webp_cache 这是对src下的图片有webp格式做转换的一个缓存目录.
 	webp   还需要生成webp文件夹.转换成webp
 -->
-<pic_info dir_root="pic" thum="thum" middle="middle" webp="webp"  webp_cache="pic_webp_cache" max_pic_size="5000" thum_size="3500" >
+<pic_info dir_root="pic" thum="thum" middle="middle" webp="webp"  webp_cache="pic_webp_cache" max_pic_size="3000" thum_size="350" >
 </pic_info>
