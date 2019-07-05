@@ -206,8 +206,8 @@ def compair_path(left, right):
 # 删除所有文件中 有重复的图.
 def delrepeat_file(path):
     repeat_file = {}
+    md5_list = {}
     for root, dirs, files in os.walk(path):
-        md5_list = {}
         for file in files:
             source_rela_path = os.path.join(root, file)
             file_md5 = yutils.get_md5(source_rela_path)

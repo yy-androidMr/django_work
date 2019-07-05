@@ -1,3 +1,9 @@
+import os
+import random
+import sys
+import time
+import tracemalloc
+
 from PIL import Image, ImageDraw, ImageFont
 
 #
@@ -19,7 +25,7 @@ from PIL import Image, ImageDraw, ImageFont
 # im = Image.open(r'D:\python\django_work\res_link\src\pic\test_gif.gif')
 # im.save(r'D:\python\django_work\res_link\src\pic\test_gif222.webp')
 
-Image.open(r'D:\cache\4\1.png').save(r'D:\cache\4\1.webp','webp')
+# Image.open(r'D:\cache\4\1.png').save(r'D:\cache\4\1.webp','webp')
 
 # im = Image.open(r'D:\python\django_work\res_link\src\pic\test_gif222.webp')
 # im.save(r'D:\python\django_work\res_link\src\pic\test_gif222.jpg')
@@ -40,3 +46,18 @@ Image.open(r'D:\cache\4\1.png').save(r'D:\cache\4\1.webp','webp')
 #
 # else:
 #     im.save(r'D:\python\django_work\res_link\src\pic\test_gif2.jpg')
+
+# print(hex(0x153b2f3518469ddac257eeef9feb1f55))
+#
+# print('D:/cache/res/src/pic/Group/Image1/)588Q%6H%R8S8XC$$)5IR}9.jpg'> 'D:/cache/res/src/pic/Group/)588Q%6H%R8S8XC$$)5IR}9.jpg')
+# pi = PicInfo()
+# pi.size = (0x153b2f3518469ddac257eeef9feb1f55)
+# pi.gallery_key_id = 5
+# pi.save()
+
+# print(0x153b2f3518469ddac257eeef9feb1f55)
+from frames import yutils
+
+file_md5 = yutils.get_md5(r'D:\cache\res\src\pic\Group\)588Q%6H%R8S8XC$$)5IR}9.jpg')
+file_md52 = yutils.get_md5(r'D:\cache\res\src\pic\Group\Image1\)588Q%6H%R8S8XC$$)5IR}9.jpg')
+print(file_md5)

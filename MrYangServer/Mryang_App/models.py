@@ -102,21 +102,37 @@ class GalleryInfo(models.Model):
 
 class PicInfo(models.Model):
     gallery_key = models.ForeignKey(GalleryInfo, related_name='gallery', on_delete=models.CASCADE)
-    # src文件夹中的名字. 相对于GalleryInfo.abs_path 拼接
-    src_name = models.CharField(max_length=500, default='')
-    # 图片名称, 需要和GalleryInfo.desc_real_path 拼接.做显示用, middle和thum都用这个
-    name = models.CharField(max_length=200)
+    # src中的文件绝对路径.
+    src_abs_path = models.CharField(max_length=500, default='')
+    # src_md5
+    src_md5 = models.CharField(max_length=50, default='')
+    # 图片名称, 需要和GalleryInfo.desc_real_path 拼接.做显示用, middle和thum都用这个,没有后缀.要加
+    desc_name = models.CharField(max_length=200)
     # 图片后缀. 如果是gif. thum后缀是jpg, middle后缀是gif. webp没有后缀.
-    ext = models.CharField(max_length=20)
+    ext = models.CharField(max_length=20, default='')
     # 原图片大小.
     size = models.IntegerField(default=0)
+    # 缩放后大小
+    m_size = models.IntegerField(default=0)
     # 原图片尺寸
     width = models.IntegerField(default=0)
     height = models.IntegerField(default=0)
-    # 该文件当前状态 存在 MediaHelp.STATE_INIT中
+    # 缩放后的图片尺寸
+    m_width = models.IntegerField(default=0)
+    m_height = models.IntegerField(default=0)
+    # 该文件当前状态 存在 PicHelp.STATE_INIT中
     state = models.IntegerField(default=-1)
     # 是否是gif
     is_gif = models.BooleanField(default=False)
+
+    def __eq__(self, other):
+        if other.src_file_md5 and other.src_path:
+            eq_bool = other.src_file_md5 == self.src_md5 and other.src_path == self.src_abs_path
+            return eq_bool
+        return super().__eq__(other)
+
+    def __hash__(self):
+        return super().__hash__()
 
 
 # 在service做转换的时候的src文件进度

@@ -2,13 +2,16 @@ import json
 import os
 from socket import *
 from MryangService import MediaService as ms
-from MryangService.Pic import PicService as ps
+from MryangService.ServiceHelper import TimeWatch
+from MryangService.pic import PicService as ps
 from frames import logger
 
 host = '127.0.0.1'
 port = 12345
 buffsize = 2048
 ADDR = (host, port)
+
+watch = TimeWatch('statewatch')
 
 
 def find_path(str):
@@ -36,12 +39,14 @@ def parse_path(path):
         return json.dumps(ms.get_state())
     if 'PicSyncDb' == path:  # 同步Pic数据库
         return json.dumps(ps.sync_on_back())
-        # MediaServiceSync.sync_on_back()
+    if 'mem' == path:
+        return json.dumps({'当前占用内存(Mb):': watch.cur_mem})
 
     return '{\"res\":404}'
 
 
 def start():
+    watch.tag_now('开始启动服务器')
     tctime = socket(AF_INET, SOCK_STREAM)
     tctime.bind(ADDR)
     tctime.listen(3)

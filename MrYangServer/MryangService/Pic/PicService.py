@@ -6,7 +6,10 @@ import time
 import piexif
 from PIL import Image, ImageDraw, ImageFont
 
+from MryangService import ServiceHelper
 from MryangService.ServiceHelper import TimeWatch
+from Mryang_App.DBHelper import PicHelp
+from Mryang_App.models import Dir, GalleryInfo, PicInfo
 from frames import TmpUtil, ypath, yutils, logger, ThreadingPool
 from frames.xml import XMLBase
 
@@ -24,10 +27,30 @@ thum_size = int(pic_config.thum_size)
 in_sync = False
 next_loop_sync = False  # 标记. 下次loop要不要执行syn
 
-desc_file_dict = {}
-file_link = {}
+file_link_list = []
 MULIT_THREAD_COUNT = 5  # 多线程转换尺寸.
 err_pic = []
+
+
+class PicLinkCls:
+    def __init__(self, g_info, src, dir_md5, out_file_name):
+        self.src_path = src.path  # src的绝对路径.
+        self.dir_md5 = dir_md5
+        self.out_file_name = out_file_name  # 只是输出的名字. 是一个md5不带后缀
+        self.ext = src.ext
+        self.g_info = g_info
+        self.src_base_name = src.name
+        self.src_file_md5 = yutils.get_md5(src.path)
+        self.desc_rel_path = ypath.join(dir_md5, out_file_name + src.ext)
+        self.desc_abs_path = ypath.join(desc_middle_root, self.desc_rel_path)
+
+    def __eq__(self, other):
+        if type(other) == str:
+            return other == self.desc_abs_path
+        else:
+            return other.src_md5 == self.src_file_md5 and other.src_abs_path == self.src_path
+
+    pass
 
 
 # 输出文件名.而不是路径
@@ -66,29 +89,6 @@ def convert_webp(path_class):
     return False
 
 
-# 生成文件夹数据库.
-def gen_dir():
-    str_src = str(src_root.as_posix())
-    dir_db_paths = {}
-    src_dir_list = ypath.path_res(str_src, parse_file=False)
-    # for dir in os.listdir(str_src):
-    #     m_file_list = ypath.path_res(ypath.join(str_src, dir), parse_file=False)
-    #     m_file_list.sort(key=lambda d: d.level)
-    #     all_media_dirs = Dir.objects.filter(tags=dir)
-    #     for dir_db in all_media_dirs:
-    #         if dir_db.abs_path not in m_file_list:
-    #             logger.info('被删除的路径:' + dir_db.abs_path)
-    #             dir_db.delete()
-    #         else:
-    #             dir_db_paths[dir_db.abs_path] = dir_db
-    #
-    #     for local_dir in m_file_list:
-    #         if local_dir.path not in dir_db_paths:
-    #             dir_db_paths[local_dir.path] = create_dir(dir_db_paths, local_dir, dir)
-    #             logger.info('创建该文件夹:' + str(local_dir))
-    return dir_db_paths
-
-
 # 处理数据库里面不相符的图.
 def handle_db():
     with open('err.txt', 'w+', encoding='utf-8') as f:
@@ -97,14 +97,33 @@ def handle_db():
     pass
 
 
+def release():
+    file_link_list.clear()
+    err_pic.clear()
+
+
 # 生成middle->(0为不带后缀的相对路径.2为后缀. 1为src) 路径映射
 def create_link_dict():
-    file_link.clear()
+    file_link_list.clear()
     ypath.del_none_dir(src_root)
     logger.info('[create_link_dict] begin')
     src_file_list = ypath.path_res(src_root)
     dir_md5 = {}  # 文件夹的md5列表. 避免反复获取md5
     # 这里先组织一下md5文件
+    exist_pic_dirs = {}
+    all_pic_dirs = Dir.objects.filter(type=yutils.M_FTYPE_PIC)
+    for pic_db in all_pic_dirs:
+        if pic_db.abs_path not in src_file_list:
+            logger.info('该文件夹不存在.删除:' + pic_db.abs_path)
+            pic_db.delete()
+        else:
+            exist_pic_dirs[pic_db.abs_path] = pic_db
+
+    gly_infos = GalleryInfo.objects.all()
+    exit_gly_info_list = {}
+    for gly_info in gly_infos:
+        exit_gly_info_list[gly_info.abs_path] = gly_info
+    # 先组织文件夹. 同步文件夹数据库
     for src_file in src_file_list:
         if not src_file.is_dir:
             continue
@@ -115,6 +134,19 @@ def create_link_dict():
             ypath.create_dirs(ypath.join(desc_middle_root, dir_md5[src_file.path]), is_dir=True)
             ypath.create_dirs(ypath.join(desc_thum_root, dir_md5[src_file.path]), is_dir=True)
             ypath.create_dirs(ypath.join(desc_webp_root, dir_md5[src_file.path]), is_dir=True)
+        # 插入dir数据
+        if src_file.path not in exist_pic_dirs:
+            exist_pic_dirs[src_file.path] = ServiceHelper.create_dir(exist_pic_dirs, src_file, yutils.M_FTYPE_PIC)
+        # 插入GralleryInfo数据.
+        if src_file.path not in exit_gly_info_list:
+            g_info = GalleryInfo()
+            g_info.folder_key = exist_pic_dirs[src_file.path]
+            g_info.abs_path = exist_pic_dirs[src_file.path].abs_path
+            g_info.desc_path = ypath.join(desc_middle_root, dir_md5[src_file.path])
+            g_info.desc_real_path = dir_md5[src_file.path]
+            g_info.save()
+            exit_gly_info_list[src_file.path] = g_info
+    # 后组织文件
     for src_file in src_file_list:
         if src_file.is_dir:
             continue
@@ -123,14 +155,28 @@ def create_link_dict():
                 logger.info('PicService.del_not_exist:这文件既不是图片,又不是webp:' + src_file.path)
             continue
         out_file_name = out_file(src_file.relative)
-        file_link[ypath.join(desc_middle_root, dir_md5[src_file.parent], out_file_name + src_file.ext)] = (
-            ypath.join(dir_md5[src_file.parent], out_file_name),
-            src_file.path, src_file.ext)
+        file_link_list.append(
+            PicLinkCls(exit_gly_info_list[src_file.parent], src_file, dir_md5[src_file.parent], out_file_name))
+    # 删除文件数据库中没有的数据.
+    # delete_pic_info_db()
     logger.info('[create_link_dict] end')
 
 
 # 删除middle和thum中与src不相同的图.
 def del_not_exist():
+    # 等有数据了.再测
+    p_infos = PicInfo.objects.all()
+    delete_desc_path_list = []
+    for p_info in p_infos:
+        try:
+            cur_index = file_link_list.index(p_info)
+            del file_link_list[cur_index]
+            # file_link_list.remove()
+        except:
+            # if p_info not in file_link_list:
+            print('找到了没有用的db数据,应该删除:' + str(p_info.id))
+            delete_desc_path_list.append(ypath.join(p_info.gallery_key.desc_path, p_info.desc_name + p_info.ext))
+            p_info.delete()
     if desc_middle_root.exists():
         desc_middle_str = str(desc_middle_root)
         desc_middle_str_len = len(desc_middle_str)
@@ -139,8 +185,10 @@ def del_not_exist():
                 if not yutils.is_gif(file) and not yutils.is_photo(file):
                     continue
                 desc_middle_file = ypath.join(root, file)
-                if desc_middle_file not in file_link:
-                    if os.path.exists(desc_middle_file):
+                if desc_middle_file not in file_link_list or desc_middle_file in delete_desc_path_list:
+                    if os.path.islink(desc_middle_file):
+                        os.remove(desc_middle_file)
+                    elif os.path.exists(desc_middle_file):
                         os.remove(desc_middle_file)
                     thum_path = ypath.join(str(desc_thum_root), desc_middle_file[desc_middle_str_len:])
                     if os.path.exists(thum_path):
@@ -149,8 +197,12 @@ def del_not_exist():
 
 # 开启转换.
 def begin_convert():
+    # max_db_set_bulk = 10000
+    create_db_list = []
+
     # 传进切割后的map.进行文件转换.
     def begin_threads(mulit_file_list):
+
         def cut_middle2thum(m_img, thum):
             if os.path.exists(thum):
                 return
@@ -177,21 +229,22 @@ def begin_convert():
             m_img.save(webp)
 
         # 转middle
-        def convert_middle(s_img, file):
-            if os.path.exists(file):
+        def convert_middle(s_img, link_cls_item):
+            desc_abs_path = link_cls_item.desc_abs_path
+            if os.path.exists(desc_abs_path):
                 try:
-                    exist_img = Image.open(file)
+                    exist_img = Image.open(desc_abs_path)
                     return exist_img
                 except:
-                    os.remove(file)
+                    os.remove(desc_abs_path)
                     pass
             # gif link上
-            if yutils.is_gif(file):
+            if yutils.is_gif(desc_abs_path):
                 # gif特殊操作.
-                os.symlink(src_file, middle_file)
+                os.symlink(link_cls_item.src_path, desc_abs_path)
                 return s_img
             # 压缩尺寸
-            w, h = src_img.size
+            w, h = s_img.size
             pic_area = w * h
             if pic_area > middle_area:
                 proportion = (middle_area / pic_area) ** 0.5
@@ -218,56 +271,84 @@ def begin_convert():
                     if orientation == 8:
                         s_img = s_img.rotate(90, expand=True)
                 exif_bytes = piexif.dump({})
-                s_img.save(file, exif=exif_bytes)
+                s_img.save(desc_abs_path, exif=exif_bytes)
             else:
                 try:
-                    s_img.save(file)
+                    s_img.save(desc_abs_path)
                 except:
                     s_img = s_img.convert('RGB')
-                    s_img.save(file)
+                    s_img.save(desc_abs_path)
             return s_img
 
-        for middle_file in mulit_file_list:
-            ext = mulit_file_list[middle_file][2]
-            src_file = mulit_file_list[middle_file][1]
+        def insert2db(link_cls_item):
+            pi = PicInfo()
+            pi.gallery_key = link_cls_item.g_info
+            pi.src_abs_path = link_cls_item.src_path
+            pi.src_md5 = link_cls_item.src_file_md5
+            pi.desc_name = link_cls_item.out_file_name
+            pi.ext = link_cls_item.ext
+            pi.size = link_cls_item.size
+            pi.m_size = link_cls_item.m_size
+            pi.width = link_cls_item.width
+            pi.height = link_cls_item.height
+            pi.m_width = link_cls_item.m_width
+            pi.m_height = link_cls_item.m_height
+            pi.state = PicHelp.STATE_FINISH
+            pi.is_gif = yutils.is_gif(link_cls_item.ext)
+            create_db_list.append(pi)
+            pass
+
+        pic_db_list = []
+        for link_item in mulit_file_list:
+            src_file = link_item.src_path
             try:
                 src_img = Image.open(src_file)
+                link_item.size = os.path.getsize(src_file)
+                link_item.src_md5 = yutils.get_md5(src_file)
             except:
                 err_pic.append(src_file)
                 logger.info('这张图有错误!!!!!!!!!!!!!!!!!!!!!!!:' + src_file)
                 continue
+            w, h = src_img.size
+            link_item.width = w
+            link_item.height = h
+            m_img = convert_middle(src_img, link_item)
+            w, h = m_img.size
+            link_item.m_width = w
+            link_item.m_height = h
+            link_item.m_size = os.path.getsize(link_item.desc_abs_path)
 
-            m_img = convert_middle(src_img, middle_file)
             # webp_file = ypath.join(desc_webp_root, mulit_file_list[middle_file][0] + '.webp')
             # convert_webp(m_img, webp_file, middle_file)
-            thum_file = ypath.join(desc_thum_root, mulit_file_list[middle_file][0] + ext)
+            thum_file = ypath.join(desc_thum_root, link_item.desc_rel_path)
             cut_middle2thum(m_img, thum_file)
-
-        pass
+            insert2db(link_item)
+        # pic_db_list.append()
 
     # file_link
     # MULIT_THREAD_COUNT
     fragment_list = {}
-
-    for index, file in enumerate(file_link):
+    for index, file in enumerate(file_link_list):
         n_ind = index % MULIT_THREAD_COUNT
         if n_ind not in fragment_list:
-            fragment_list[n_ind] = {}
-        fragment_list[n_ind][file] = file_link[file]
-    file_len = len(file_link)
+            fragment_list[n_ind] = []
+        fragment_list[n_ind].append(file)  # file_link_list[file]
+    file_len = len(file_link_list)
     print('原始src数据长度:' + str(file_len), '  开启了' + str(MULIT_THREAD_COUNT) + '个线程.')
     count = 0
-    for i in range(MULIT_THREAD_COUNT):
-        cur_len = len(fragment_list[i])
+    for k in fragment_list:
+        cur_len = len(fragment_list[k])
         count += cur_len
-        print('重新组合的count:' + str(cur_len) + '  当前坐标:' + str(i))
+        print('重新组合的count:' + str(cur_len) + '  当前坐标:' + str(k))
     print('重组后的长度:' + str(count))
     if count != file_len:
         raise RuntimeError('错误了.处理后的长度和处理前的不一致.这到底怎么回事?')
     tpool = ThreadingPool.ThreadingPool()
-    for i in range(MULIT_THREAD_COUNT):
-        tpool.append(begin_threads, fragment_list[i])
+    for k in fragment_list:
+        tpool.append(begin_threads, fragment_list[k])
     tpool.start()
+    if len(create_db_list) > 0:
+        PicInfo.objects.bulk_create(create_db_list)
     pass
 
 
@@ -337,4 +418,5 @@ def loop():
     # ypath.del_none_dir(desc_root)
     logger.info('PicService.一个loop走完了.不知道有没有同步完 false 代表同步完了:' + str(in_sync))
     in_sync = False
+    release()
     return False
