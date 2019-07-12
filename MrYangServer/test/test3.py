@@ -56,8 +56,11 @@ from PIL import Image, ImageDraw, ImageFont
 # pi.save()
 
 # print(0x153b2f3518469ddac257eeef9feb1f55)
-from frames import yutils
+# from frames import yutils
+#
+# file_md5 = yutils.get_md5(r'D:\cache\res\src\pic\Group\)588Q%6H%R8S8XC$$)5IR}9.jpg')
+# file_md52 = yutils.get_md5(r'D:\cache\res\src\pic\Group\Image1\)588Q%6H%R8S8XC$$)5IR}9.jpg')
+# print(file_md5)
 
-file_md5 = yutils.get_md5(r'D:\cache\res\src\pic\Group\)588Q%6H%R8S8XC$$)5IR}9.jpg')
-file_md52 = yutils.get_md5(r'D:\cache\res\src\pic\Group\Image1\)588Q%6H%R8S8XC$$)5IR}9.jpg')
-print(file_md5)
+im = Image.open(r'D:\python\django_work\res_link\src\pic')
+im.size()

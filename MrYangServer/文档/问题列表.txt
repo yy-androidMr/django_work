@@ -4,3 +4,128 @@ https://blog.csdn.net/javali1995/article/details/78486444
 2.mysql编码问题:
 使用该sql语句:“SHOW FULL COLUMNS FROM 表名” 来查看当前表格的编码，结果发现编码依旧没有改变，还是之前的默认编码。
 “ALTER TABLE 表格名 CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci”
+
+
+内存占用:
+
+Line #    Mem usage    Increment   Line Contents
+================================================
+   215     60.9 MiB     60.9 MiB           @memory_profiler.profile
+   216                                     def begin_threads(mulit_file_list):
+   217
+   218    386.6 MiB      0.2 MiB               def cut_middle2thum(m_img, thum):
+   219    387.3 MiB      0.6 MiB                   if os.path.exists(thum):
+   220                                                 return
+   221    387.3 MiB      0.2 MiB                   w, h = m_img.size
+   222    356.2 MiB      5.5 MiB                   crop_img = m_img.crop(yutils.crop_size(w, h))  # 保存裁切后的图片
+   223    375.7 MiB     33.6 MiB                   crop_img.thumbnail((self.thum_size, self.thum_size), Image.ANTIALIAS)
+   224    375.7 MiB      0.1 MiB                   if yutils.is_gif(thum):
+   225    308.6 MiB      0.7 MiB                       crop_img = crop_img.convert("RGB")
+   226    308.6 MiB      0.1 MiB                       draw = ImageDraw.Draw(crop_img)
+   227    296.1 MiB      7.4 MiB                       font = ImageFont.truetype("arial.ttf", 40, encoding="unic")  # 设置字体
+   228    296.9 MiB      0.7 MiB                       draw.text((0, 0), u'GIF', font=font)
+   229    375.7 MiB      0.0 MiB                   try:
+   230    378.1 MiB     11.0 MiB                       crop_img.save(thum)
+   231                                             except:
+   232                                                 crop_img = crop_img.convert('RGB')
+   233                                                 crop_img.save(thum)
+   234
+   235                                         # 转webp
+   236     60.9 MiB      0.0 MiB               def convert_webp(m_img, webp, middle_file):
+   237                                             if os.path.exists(webp):
+   238                                                 return
+   239                                             if yutils.is_gif(middle_file):
+   240                                                 return
+   241                                             m_img.save(webp)
+   242
+   243                                         # 转middle
+   244    348.5 MiB      0.2 MiB               def convert_middle(s_img, link_cls_item):
+   245    348.6 MiB      0.1 MiB                   desc_abs_path = link_cls_item.desc_abs_path
+   246    348.7 MiB      0.6 MiB                   if os.path.exists(desc_abs_path):
+   247                                                 try:
+   248                                                     exist_img = Image.open(desc_abs_path)
+   249                                                     return exist_img
+   250                                                 except:
+   251                                                     os.remove(desc_abs_path)
+   252                                                     pass
+   253                                             # gif link上
+   254    348.7 MiB      0.2 MiB                   if yutils.is_gif(desc_abs_path):
+   255                                                 # gif特殊操作.
+   256    321.0 MiB     15.2 MiB                       os.symlink(link_cls_item.src_path, desc_abs_path)
+   257    321.2 MiB      0.2 MiB                       return s_img
+   258                                             # 压缩尺寸
+   259    348.8 MiB      0.1 MiB                   w, h = s_img.size
+   260    348.8 MiB      0.1 MiB                   pic_area = w * h
+   261    348.8 MiB      0.1 MiB                   if pic_area > self.middle_area:
+   262    188.8 MiB      0.0 MiB                       proportion = (self.middle_area / pic_area) ** 0.5
+   263    188.8 MiB      0.0 MiB                       w = int(w * proportion)
+   264    188.8 MiB      0.0 MiB                       h = int(h * proportion)
+   265    363.0 MiB    236.7 MiB                   s_img.thumbnail((w, h), Image.ANTIALIAS)
+   266                                             # 处理旋转信息.
+   267    363.0 MiB      0.1 MiB                   has_exif = 'exif' in s_img.info
+   268    363.0 MiB      0.1 MiB                   old_exif = None
+   269    363.0 MiB      0.1 MiB                   if has_exif:
+   270                                                 pass
+   271    363.0 MiB      0.0 MiB                       try:
+   272    364.5 MiB      2.2 MiB                           old_exif = piexif.load(s_img.info["exif"])
+   273    364.5 MiB      0.1 MiB                           has_exif = True
+   274     65.8 MiB      0.0 MiB                       except:
+   275     65.8 MiB      0.0 MiB                           has_exif = False
+   276    364.5 MiB      0.1 MiB                   if has_exif:
+   277    364.7 MiB      6.2 MiB                       print('处理这张图:' + s_img.filename)
+   278    364.9 MiB      0.1 MiB                       if '0th' in old_exif and piexif.ImageIFD.Orientation in old_exif['0th']:
+   279    346.3 MiB      0.1 MiB                           orientation = old_exif['0th'][piexif.ImageIFD.Orientation]
+   280    346.3 MiB      0.1 MiB                           if orientation == 6:
+   281    361.4 MiB     20.3 MiB                               s_img = s_img.rotate(-90, expand=True)
+   282    346.3 MiB      0.1 MiB                           elif orientation == 3:
+   283                                                         s_img = s_img.rotate(180)
+   284    346.4 MiB      0.1 MiB                           elif orientation == 8:
+   285                                                         s_img = s_img.rotate(90, expand=True)
+   286    365.7 MiB      0.9 MiB                       exif_bytes = piexif.dump({})
+   287    387.6 MiB     43.5 MiB                       s_img.save(desc_abs_path, exif=exif_bytes)
+   288                                             else:
+   289                                                 pass
+   290    348.9 MiB      0.1 MiB                       try:
+   291    346.0 MiB     21.9 MiB                           s_img.save(desc_abs_path)
+   292    225.6 MiB      0.0 MiB                       except:
+   293    238.8 MiB     14.2 MiB                           s_img = s_img.convert('RGB')
+   294    250.0 MiB     11.1 MiB                           s_img.save(desc_abs_path)
+   295    387.6 MiB      0.4 MiB                   return s_img
+   296
+   297                                         # gc_count = 0
+   298    378.2 MiB      0.2 MiB               for link_item in mulit_file_list:
+   299    378.4 MiB      1.8 MiB                   pi = PicInfo()
+   300    378.4 MiB      0.3 MiB                   src_file = link_item.src_path
+   301    378.4 MiB      0.5 MiB                   pi.gallery_key = link_item.g_info
+   302    378.4 MiB      0.2 MiB                   pi.src_abs_path = link_item.src_path
+   303    378.4 MiB      0.1 MiB                   pi.src_md5 = link_item.src_file_md5
+   304    378.5 MiB      0.1 MiB                   pi.desc_name = link_item.out_file_name
+   305    378.5 MiB      0.1 MiB                   pi.ext = link_item.ext
+   306    378.5 MiB      0.1 MiB                   try:
+   307    348.3 MiB      4.0 MiB                       src_img = Image.open(src_file)
+   308    348.4 MiB      0.8 MiB                       pi.size = os.path.getsize(src_file)
+   309                                             except:
+   310                                                 self.err_pic.append(src_file)
+   311                                                 logger.info('这张图有错误!!!!!!!!!!!!!!!!!!!!!!!:' + src_file)
+   312                                                 continue
+   313    348.4 MiB      0.2 MiB                   w, h = src_img.size
+   314    348.4 MiB      0.2 MiB                   pi.width = w
+   315    348.5 MiB      0.1 MiB                   pi.height = h
+   316    386.2 MiB      1.4 MiB                   m_img = convert_middle(src_img, link_item)
+   317                                             # gc_count += 1
+   318                                             # if gc_count == 300:
+   319                                             #     gc_count = 0
+   320                                             #     gc.collect()
+   321    386.3 MiB      0.2 MiB                   w, h = m_img.size
+   322    386.3 MiB      0.2 MiB                   pi.m_width = w
+   323    386.3 MiB      0.2 MiB                   pi.m_height = h
+   324    386.4 MiB      3.5 MiB                   pi.m_size = os.path.getsize(link_item.desc_abs_path)
+   325    386.5 MiB      0.2 MiB                   pi.state = PicHelp.STATE_FINISH
+   326    386.5 MiB      0.2 MiB                   pi.is_gif = yutils.is_gif(link_item.ext)
+   327                                             # webp_file = ypath.join(desc_webp_root, mulit_file_list[middle_file][0] + '.webp')
+   328                                             # convert_webp(m_img, webp_file, middle_file)
+   329    386.6 MiB      0.6 MiB                   thum_file = ypath.join(self.desc_thum_root, link_item.desc_rel_path)
+   330    378.2 MiB      0.7 MiB                   cut_middle2thum(m_img, thum_file)
+   331    378.2 MiB      0.3 MiB                   create_db_list.append(pi)
+
+

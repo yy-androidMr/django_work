@@ -205,6 +205,7 @@ class PicSync:
                         if os.path.exists(thum_path):
                             os.remove(thum_path)
 
+    @memory_profiler.profile
     # 开启转换.
     def begin_convert(self):
         create_db_list = []
@@ -217,7 +218,7 @@ class PicSync:
 
             def cut_middle2thum(m_img, thum):
                 if os.path.exists(thum):
-                    return
+                    return m_img
                 w, h = m_img.size
                 crop_img = m_img.crop(yutils.crop_size(w, h))  # 保存裁切后的图片
                 crop_img.thumbnail((self.thum_size, self.thum_size), Image.ANTIALIAS)
@@ -231,6 +232,7 @@ class PicSync:
                 except:
                     crop_img = crop_img.convert('RGB')
                     crop_img.save(thum)
+                return crop_img
 
             # 转webp
             def convert_webp(m_img, webp, middle_file):
@@ -262,7 +264,7 @@ class PicSync:
                     proportion = (self.middle_area / pic_area) ** 0.5
                     w = int(w * proportion)
                     h = int(h * proportion)
-                s_img.thumbnail((w, h), Image.ANTIALIAS)
+                s_img.thumbnail((w, h))
                 # 处理旋转信息.
                 has_exif = 'exif' in s_img.info
                 old_exif = None
@@ -314,10 +316,6 @@ class PicSync:
                 pi.width = w
                 pi.height = h
                 m_img = convert_middle(src_img, link_item)
-                # gc_count += 1
-                # if gc_count == 300:
-                #     gc_count = 0
-                #     gc.collect()
                 w, h = m_img.size
                 pi.m_width = w
                 pi.m_height = h
@@ -327,7 +325,12 @@ class PicSync:
                 # webp_file = ypath.join(desc_webp_root, mulit_file_list[middle_file][0] + '.webp')
                 # convert_webp(m_img, webp_file, middle_file)
                 thum_file = ypath.join(self.desc_thum_root, link_item.desc_rel_path)
-                cut_middle2thum(m_img, thum_file)
+                t_img = cut_middle2thum(m_img, thum_file)
+                if m_img is not t_img:
+                    del m_img
+                    del t_img
+                else:
+                    del m_img
                 create_db_list.append(pi)
 
         fragment_list = {}
@@ -351,15 +354,8 @@ class PicSync:
             tpool.append(begin_threads, fragment_list[k])
         tpool.start()
         self.watch.tag_now('图片同步结束:')
-        if len(create_db_list) > 0:
-            PicInfo.objects.bulk_create(create_db_list)
-
-        # snapshot = tracemalloc.take_snapshot()
-        # top_stats = snapshot.statistics('lineno')  # lineno filename traceback
-        # logger.info('开始打印内存检测~~~~~~~~~:以下是峰值:')
-        # logger.info(str(tracemalloc.get_traced_memory()))
-        # for stat in top_stats:
-        #     logger.info(str(stat))
+        # if len(create_db_list) > 0:
+        #     PicInfo.objects.bulk_create(create_db_list)
 
     def start(self):
         logger.info('PicService.开始执行同步!!!!')
