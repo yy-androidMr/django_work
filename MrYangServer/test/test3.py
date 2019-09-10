@@ -62,5 +62,11 @@ from PIL import Image, ImageDraw, ImageFont
 # file_md52 = yutils.get_md5(r'D:\cache\res\src\pic\Group\Image1\)588Q%6H%R8S8XC$$)5IR}9.jpg')
 # print(file_md5)
 
-im = Image.open(r'D:\python\django_work\res_link\src\pic')
-im.size()
+# mm = {}
+# mm['a'] = 1
+# print(mm)
+#
+# mm['a'] = 2
+# print(mm)
+a = [1, 2, 3]
+print(a.index(0))
