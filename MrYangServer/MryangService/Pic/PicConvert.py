@@ -35,9 +35,6 @@ class PicLinkCls:
         #
         # else:
 
-    pass
-
-
 def start():
     PicSync()
 
