@@ -83,7 +83,7 @@ class PConvert:
         exist_pic_dirs = {}
         all_pic_dirs = Dir.objects.filter(type=yutils.M_FTYPE_PIC)
         for pic_db in all_pic_dirs:
-            if pic_db.abs_path not in src_file_list:
+            if pic_db.abs_path not in src_file_list:  # 这里是不是考虑优化? abs_path的父节点有没有在数据库中.并且文件存在.
                 logger.info('该文件夹不存在.删除:' + pic_db.abs_path)
                 pic_db.delete()
             else:
