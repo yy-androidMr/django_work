@@ -8,10 +8,6 @@ import manage
 
 PROJ_ROOT = manage.root()
 CONFIG_INFO_XML = PROJ_ROOT / 'config/configs_info.xml'
-GIF_BANNER = 'gif_banner'
-COS_MEDIA_ROOT = 'cos_media_root'
-RES_URL = 'res_url'
-LIST_TAG = 'list'
 
 base_info = None
 
@@ -141,7 +137,6 @@ class DomPxy:
 def get_base_cfg():
     global base_info
     if not base_info:
-        print('XMLBaseInfo创建了一个DomPxy!!!!!!!!!!!!!!!!!!!!!!!!!')
         base_info = DomPxy(CONFIG_INFO_XML)
     return base_info.instance
 

@@ -154,7 +154,7 @@ class PicSync:
         logger.info('[create_link_dict] end')
 
     # 删除middle和thum中与src不相同的图.
-    @memory_profiler.profile
+    # @memory_profiler.profile
     def del_not_exist(self):
         def binary_search(pic_info, max):
             min = 0
@@ -205,7 +205,7 @@ class PicSync:
                         if os.path.exists(thum_path):
                             os.remove(thum_path)
 
-    @memory_profiler.profile
+    # @memory_profiler.profile
     # 开启转换.
     def begin_convert(self):
         create_db_list = []
@@ -213,7 +213,7 @@ class PicSync:
         # tracemalloc.start(5)
 
         # 传进切割后的map.进行文件转换.
-        @memory_profiler.profile
+        # @memory_profiler.profile
         def begin_threads(mulit_file_list):
 
             def cut_middle2thum(m_img, thum):

@@ -85,9 +85,24 @@ def call(k):
 
 
 if __name__ == '__main__':
-    m1 = {'1': ('a', 'b'), '2': ('c', 'd'), '3': ('e', 'f'), '4': ('e', 'f'), '5': ('e', 'f')}
-    for index, m in enumerate(m1):
-        print(index % 3)
+    import ctypes
+    import os
+    import platform
+    import sys
+
+
+    def get_free_space_mb(folder):
+        if platform.system() == 'Windows':
+            folder = folder.split('\\')[0].split('/')[0]
+            free_bytes = ctypes.c_ulonglong(0)
+            ctypes.windll.kernel32.GetDiskFreeSpaceExW(ctypes.c_wchar_p(folder), None, None, ctypes.pointer(free_bytes))
+            return free_bytes.value / 1024 / 1024 / 1024
+        else:
+            st = os.statvfs(folder)
+            return st.f_bavail * st.f_frsize / 1024 / 1024
+
+
+    print(get_free_space_mb('D:\d\d\d\d'), 'GB')
     # t1 = '.gif'
     # print('.gif' in t1.lower())
     # print('.gif' == t1.lower())

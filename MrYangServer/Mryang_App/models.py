@@ -174,3 +174,19 @@ class Media(models.Model):
     # 其他预留
     param1 = models.CharField(max_length=500, default='')  # 这里存储m3u8路径
     param2 = models.CharField(max_length=500, default='')  # 这里存储缩略图路径
+
+
+# 路径存储.
+class MPath(models.Model):
+    id = models.AutoField(primary_key=True)
+    # 文件夹绝对路径.
+    path = models.CharField(max_length=500, default='', unique=True)
+    # 该文件夹类型: 0 无意义, 1 src, 2 desc ,3 下载目录 4.上传目录
+    type = models.IntegerField(default=0)
+    # 使用优先级.相同的话根据id排序 0为最低
+    level = models.IntegerField(default=0)
+    # 剩余多少M 就不填了
+    drive_memory_mb = models.IntegerField(default=8192)
+    # 预留
+    param1 = models.CharField(max_length=500, default='')
+    param2 = models.CharField(max_length=500, default='')
