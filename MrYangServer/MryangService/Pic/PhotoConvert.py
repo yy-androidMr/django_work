@@ -77,24 +77,19 @@ class PConvert:
         logger.info('[create_link_dict] begin')
         src_file_list = []
         for src_dir in self.src_dirs:
-            src_file_list.append(ypath.path_res(src_dir))
+            src_file_list.extend(ypath.path_res(src_dir))
         dir_md5 = {}  # 文件夹的md5列表. 避免反复获取md5
         # 这里先组织一下md5文件
-        exist_pic_dirs = {}
         all_pic_dirs = Dir.objects.filter(type=yutils.M_FTYPE_PIC)
-        for pic_db in all_pic_dirs:
-            if pic_db.abs_path not in src_file_list:  # 这里是不是考虑优化? abs_path的父节点有没有在数据库中.并且文件存在.
-                logger.info('该文件夹不存在.删除:' + pic_db.abs_path)
-                pic_db.delete()
-            else:
-                exist_pic_dirs[pic_db.abs_path] = pic_db
+
+        exist_pic_dirs = PicHelper.db_dir_exist(all_pic_dirs, self.src_dirs)
         gly_infos = GalleryInfo.objects.all()
         exit_gly_info_list = {}
         for gly_info in gly_infos:
             exit_gly_info_list[gly_info.abs_path] = gly_info
             self.desc_parent_path[gly_info.id] = gly_info.desc_path
         # 先组织文件夹. 同步文件夹数据库
-        for src_file in src_file_list:
+        for src_file in src_file_list:  # 这个也需要优化掉.
             if not src_file.is_dir:
                 continue
             if src_file.path not in dir_md5:

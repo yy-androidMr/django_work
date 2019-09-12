@@ -1,5 +1,27 @@
+import os
+
 from MryangService.mpath import MPath
 from frames import yutils, ypath
+
+
+def db_dir_exist(db_dirs, src_dir_list):
+    # for pic_db in all_pic_dirs:
+    #     if pic_db.abs_path not in src_file_list:  # 这里是不是考虑优化? abs_path的父节点有没有在数据库中.并且文件存在.
+    #         logger.info('该文件夹不存在.删除:' + pic_db.abs_path)
+    #         pic_db.delete()
+    #     else:
+    #         exist_pic_dirs[pic_db.abs_path] = pic_db
+    exist_pic_dirs = {}
+    for pic_db in db_dirs:
+        digout = False
+        for src_dir in src_dir_list:
+            if src_dir in pic_db.abs_path and os.path.isdir(pic_db.abs_path):
+                exist_pic_dirs[pic_db.abs_path] = pic_db
+                digout = True
+                break
+        if not digout:
+            pic_db.delete()
+    return exist_pic_dirs
 
 
 def src_list(src_root):

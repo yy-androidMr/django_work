@@ -119,6 +119,7 @@ def get_path(path_info_list, type, intro):
     return query_res.path
 
 
+# 添加可以. 修改删除不行. 正在同步时
 def src():
     return get_path(src_list, 1, 'src目录对应的磁盘已满,或src目录不正确.请重新输入磁盘目录(目录下有pic文件夹,media文件夹):\n')
 

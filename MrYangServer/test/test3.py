@@ -68,5 +68,4 @@ from PIL import Image, ImageDraw, ImageFont
 #
 # mm['a'] = 2
 # print(mm)
-a = [1, 2, 3]
-print(a.index(0))
+print(os.path.isdir(r'D:\react\t1\react_test_111'))
