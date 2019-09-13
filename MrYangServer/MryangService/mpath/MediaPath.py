@@ -6,10 +6,14 @@ import time
 
 import django
 
+from frames import ypath, yutils
+
 sys.path.append('./../../')
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "MrYangServer.settings")
 django.setup()
+from MryangService import ServiceHelper
+
 from Mryang_App.models import MPath
 
 sotrage_min = 8 * 1024 + 2 * 1024  # 最小空间有这么大G
@@ -35,7 +39,7 @@ class PathInfo:
         return self.query.drive_memory_mb < self.cur_memo
 
     def update_mem(self):
-        self.cur_memo = self.get_free_storage_mb(self.query.path)
+        self.cur_memo = self.get_free_storage_mb(self.query.dir.abs_path)
 
     @staticmethod
     def get_free_storage_mb(folder):
@@ -49,32 +53,6 @@ class PathInfo:
             return st.f_bavail * st.f_frsize // 1024
 
 
-def init():
-    src_list.clear()
-    desc_list.clear()
-    # download_list.clear()
-    query_res = MPath.objects.all()
-    for query in list(query_res):
-        if query.type == 1:
-            src_list.append(PathInfo(query))
-        elif query.type == 2:
-            desc_list.append(PathInfo(query))
-        # elif query.type == 3:
-        #     download_list.append(path_info(query))
-        # elif query.type == 4:
-        #     upload_list.append(path_info(query))
-    # 没有设置.需要设置!
-    if len(src_list) == 0:
-        src()
-    if len(desc_list) == 0:
-        desc()
-    src_list.sort(key=lambda x: x.level, reverse=True)
-    desc_list.sort(key=lambda x: x.level, reverse=True)
-
-
-init()
-
-
 def need_input(intro, storage_low='所选磁盘剩余容量过小,请重新选择\n', path_exist='目标目录已存在!请重新选择:\n'):
     path_str = None
     # 是文件夹.并且磁盘的空间需要大于
@@ -84,28 +62,22 @@ def need_input(intro, storage_low='所选磁盘剩余容量过小,请重新选�
         elif sotrage_min > PathInfo.get_free_storage_mb(path_str):
             path_str = input(storage_low)
         else:
-            path_str = convert_path(path_str)
-            if MPath.objects.filter(path=path_str).count() > 0:
+            path_str = ypath.convert_path(path_str)
+            if MPath.objects.filter(dir__abs_path=path_str).count() > 0:
                 path_str = input(path_exist)
             else:
                 break
-    return convert_path(path_str)
-
-
-# 统一处理一下path
-def convert_path(path):
-    path = path.replace('\\', '/').replace('//', '/')
-    if path.endswith('/'):
-        return path[:-1]
-    return path
+    return ypath.convert_path(path_str)
 
 
 def insert_path(path, type):
-    query_ress = MPath.objects.filter(path=path)
+    query_ress = MPath.objects.filter(dir__abs_path=path)
     if query_ress.count() == 0:
+        dir = ServiceHelper.create_dir_root(path, yutils.M_FTYPE_MOIVE)
         mpath = MPath()
         mpath.path = path
         mpath.type = type
+        mpath.dir = dir
         mpath.save()
         return mpath
     else:
@@ -131,3 +103,32 @@ def src():
 
 def desc():
     return get_path(desc_list, 2, 'desc目录对应的磁盘已满,或desc目录不正确.请重新输入磁盘目录(目录下会创建pic文件夹,media文件夹):\n')
+
+
+def init():
+    src_list.clear()
+    desc_list.clear()
+    # download_list.clear()
+    query_res = MPath.objects.all()
+    for query in list(query_res):
+        if query.type == 1:
+            src_list.append(PathInfo(query))
+        elif query.type == 2:
+            desc_list.append(PathInfo(query))
+        # elif query.type == 3:
+        #     download_list.append(path_info(query))
+        # elif query.type == 4:
+        #     upload_list.append(path_info(query))
+    # 没有设置.需要设置!
+    if len(src_list) == 0:
+        src()
+    if len(desc_list) == 0:
+        desc()
+    src_list.sort(key=lambda x: x.level, reverse=True)
+    desc_list.sort(key=lambda x: x.level, reverse=True)
+
+init()
+
+print(time.time())
+
+print(time.time())

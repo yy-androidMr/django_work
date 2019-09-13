@@ -5,6 +5,7 @@ import memory_profiler
 
 from Mryang_App.models import Dir
 from frames import ypath, logger
+from frames.ypath import PathClass
 
 
 class TimeWatch:
@@ -30,6 +31,22 @@ class TimeWatch:
         self.cur_mem = now_mem
 
 
+def create_dir_root(path, type, tags=''):
+    pc = PathClass(path, path)
+    try:
+        d_model = Dir.objects.get(abs_path=pc.path)
+    except Exception as e:
+        d_model = Dir()
+        d_model.name = pc.name
+        d_model.isdir = True
+        d_model.abs_path = ypath.convert_path(pc.path)
+        d_model.rel_path = pc.relative
+        d_model.type = type
+        d_model.tags = tags  # if info[ypath.KEYS.LEVEL] == 0 else ''
+        d_model.save()
+    return d_model
+
+
 def create_dir(cur_dir_dbs, info, type, tags=''):
     name = info.name
     parent_path = info.parent  # info[ypath.KEYS.PARENT]
@@ -37,7 +54,7 @@ def create_dir(cur_dir_dbs, info, type, tags=''):
     d_model = Dir()
     d_model.name = name
     d_model.isdir = True
-    d_model.abs_path = info.path
+    d_model.abs_path = ypath.convert_path(info.path)
     d_model.rel_path = rel_path
     d_model.type = type
     d_model.tags = tags  # if info[ypath.KEYS.LEVEL] == 0 else ''

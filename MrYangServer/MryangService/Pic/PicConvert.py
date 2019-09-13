@@ -351,8 +351,8 @@ class PicSync:
             tpool.append(begin_threads, fragment_list[k])
         tpool.start()
         self.watch.tag_now('图片同步结束:')
-        # if len(create_db_list) > 0:
-        #     PicInfo.objects.bulk_create(create_db_list)
+        if len(create_db_list) > 0:
+            PicInfo.objects.bulk_create(create_db_list)
 
     def start(self):
         logger.info('PicService.开始执行同步!!!!')

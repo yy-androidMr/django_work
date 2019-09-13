@@ -28,6 +28,7 @@ S_NAME = 'user_name'
 M_FTYPE_MOIVE = 1
 M_FTYPE_PIC = 2
 M_FTYPE_DOC = 3
+M_FTYPE_MPATH = 4  # 这是对资源根目录的类型
 # end
 
 # 运行平台
@@ -260,4 +261,3 @@ def crop_size(w, h, proportion=1):
         crop_w = 0
     region = (crop_w, crop_h, w - crop_w, h - crop_h)
     return region
-

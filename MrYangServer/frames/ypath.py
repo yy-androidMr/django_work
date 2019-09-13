@@ -45,13 +45,13 @@ def ergodic_folder(path, file_call_back=None, folder_call_back=None):
         return
     path = replace(str(path))
     if folder_call_back is not None:
-        folder_call_back(path, True)  # 如果是根目录  直接列表
+        folder_call_back(PathClass(path, path), True)  # 如果是根目录  直接列表
     for root, dirs, files in os.walk(path):
         if file_call_back is not None:
-            file_list = [join(root, file) for file in files]
+            file_list = [PathClass(join(root, file), path) for file in files]
             file_call_back(file_list)
         if folder_call_back is not None:
-            dir_list = [join(root, dir) for dir in dirs]
+            dir_list = [PathClass(join(root, dir), path) for dir in dirs]
             folder_call_back(dir_list, False)  # 如果不是根目录. 是列表. 并且是false
 
 
@@ -67,8 +67,8 @@ def releative_list(path):
 
 class PathClass:
     def __init__(self, path, root):
-        s_root = replace(str(root))
-        self.path = replace(str(path))
+        s_root = convert_path(str(root))
+        self.path = convert_path(str(path))
         if self.path.endswith('/'):
             self.path = self.path[:-1]
         self.is_dir = os.path.isdir(self.path)  # path.is_dir()
@@ -76,6 +76,7 @@ class PathClass:
         self.relative = '.' if s_root == self.path else self.path[len(s_root):]
         self.level = self.relative.count('/')
         self.parent = os.path.dirname(self.path)  # str(path.parent.as_posix())
+        assert self.parent is not self.path
         self.ext = file_exten(self.path)
         self.simple_name = file_name(self.path)
 
@@ -132,8 +133,17 @@ def path_result(res_root, depth_name, dir_filter=None, file_filter=None, parse_d
     return dict
 
 
+# 使用下面的
 def replace(str):
     return str.replace('\\', '/').replace('//', '/')
+
+
+# 统一处理一下path
+def convert_path(path):
+    path = path.replace('\\', '/').replace('//', '/')
+    if path.endswith('/'):
+        return path[:-1]
+    return path
 
 
 def decompose_path(src_file, src_root, target_root, exten=None, rename=None):
@@ -286,7 +296,6 @@ def del_none_dir(dir):
 def sync_role(path):
     return '.' + file_name(path) + '.tmp'
 
-
 # 做文件处理的时候一个无奈锁.   如果有该文件锁,代表这个处理还未完成.
 # def lock_path(path):
 #     create_dirs(sync_role(path))
@@ -301,4 +310,3 @@ def sync_role(path):
 #     if os.path.exists(lock_key):
 #         shutil.rmtree(lock_key)
 # ------------------------------------------------------------------------
-

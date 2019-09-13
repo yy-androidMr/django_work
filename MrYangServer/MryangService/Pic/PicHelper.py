@@ -4,10 +4,16 @@ from MryangService.mpath import MediaPath
 from frames import yutils, ypath
 
 
-def handle_files_md5():
-    dir_md5 = {}  # 文件夹的md5列表. 避免反复获取md5
-
-    pass
+# def handle_files_md5(src_file,dir_md5):
+#
+#     if src_file.path not in dir_md5:
+#         # ypath.join(str(desc_middle_root), desc_md5), ypath.join(str(desc_thum_root), desc_md5)
+#         dir_md5[src_file.path] = yutils.md5_of_str(src_file.relative)
+#         # 需要在这里把所有文件夹给创建出来.不然在多线程创建会造成抢占创建.会崩
+#         ypath.create_dirs(ypath.join(self.desc_middle_root, dir_md5[src_file.path]), is_dir=True)
+#         ypath.create_dirs(ypath.join(self.desc_thum_root, dir_md5[src_file.path]), is_dir=True)
+#         ypath.create_dirs(ypath.join(self.desc_webp_root, dir_md5[src_file.path]), is_dir=True)
+#     pass
 
 
 def db_dir_exist(db_dirs, src_dir_list):

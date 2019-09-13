@@ -102,11 +102,12 @@ class GalleryInfo(models.Model):
 
 class PicInfo(models.Model):
     gallery_key = models.ForeignKey(GalleryInfo, related_name='gallery', on_delete=models.CASCADE)
+    # mpath = models.
     # src中的文件绝对路径.
     src_abs_path = models.CharField(max_length=500, default='')
     # src_md5
     src_md5 = models.CharField(max_length=50, default='')
-    # 图片名称, 需要和GalleryInfo.desc_real_path 拼接.做显示用, middle和thum都用这个,没有后缀.要加
+    # 图片名称, 需要和mpath/GalleryInfo.desc_real_path 拼接.做显示用, middle和thum都用这个,没有后缀.要加
     desc_name = models.CharField(max_length=200)
     # 图片后缀. 如果是gif. thum后缀是jpg, middle后缀是gif. webp没有后缀.
     ext = models.CharField(max_length=20, default='')
@@ -124,6 +125,9 @@ class PicInfo(models.Model):
     state = models.IntegerField(default=-1)
     # 是否是gif
     is_gif = models.BooleanField(default=False)
+    # 分目录的外键
+    mpath = models.ForeignKey('MPath', related_name='mpath', on_delete=models.DO_NOTHING, null=True,
+                              blank=True)
 
     def __eq__(self, other):
         if other.src_file_md5 and other.src_path:
@@ -179,14 +183,15 @@ class Media(models.Model):
 # 路径存储.
 class MPath(models.Model):
     id = models.AutoField(primary_key=True)
-    # 文件夹绝对路径.
-    path = models.CharField(max_length=500, default='', unique=True)
+    # # 文件夹绝对路径.
+    # path = models.CharField(max_length=500, default='', unique=True)
     # 该文件夹类型: 0 无意义, 1 src, 2 desc ,3 下载目录 4.上传目录
     type = models.IntegerField(default=0)
     # 使用优先级.相同的话根据id排序 0为最低
     level = models.IntegerField(default=0)
     # 剩余多少M 就不填了
     drive_memory_mb = models.IntegerField(default=8192)
+    dir = models.ForeignKey(Dir, related_name='dir_info', on_delete=models.CASCADE, unique=True)
     # 预留
     param1 = models.CharField(max_length=500, default='')
     param2 = models.CharField(max_length=500, default='')

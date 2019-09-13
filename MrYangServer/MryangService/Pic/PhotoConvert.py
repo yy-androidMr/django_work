@@ -1,4 +1,5 @@
 # from MryangService import ServiceHelper
+from MryangService import ServiceHelper
 from MryangService.Pic import PicHelper
 from MryangService.ServiceHelper import TimeWatch
 from Mryang_App.models import Dir, GalleryInfo
@@ -73,23 +74,34 @@ class PConvert:
         for dir in self.src_dirs:
             ypath.del_none_dir(dir)
         all_pic_dirs = Dir.objects.filter(type=yutils.M_FTYPE_PIC)
-        exist_pic_dirs = PicHelper.db_dir_exist(all_pic_dirs, self.src_dirs)
+        db_dirs = PicHelper.db_dir_exist(all_pic_dirs, self.src_dirs)
+        exist_pic_dirs = {}
+        for db_dir in db_dirs:
+            exist_pic_dirs[db_dir.abs_path] = db_dir
         return exist_pic_dirs
 
     # 生成middle->(0为不带后缀的相对路径.2为后缀. 1为src) 路径映射
     # @memory_profiler.profile
+    # def craete_gallery_info_db(self,file_list):
+    #     exist_pic_dirs = self.get_db_dirs()
     def create_link_dict(self):
-        def file_call(file_list):
-            print(file_list)
+        def folder_call(folder_list, is_root):
+            if is_root:
+                return
+            for dir in folder_list:
+                if dir.path not in exist_pic_dirs:
+                    exist_pic_dirs[dir.path] = ServiceHelper.create_dir(exist_pic_dirs, dir,
+                                                                        yutils.M_FTYPE_PIC)
+                # PicHelper.handle_files_md5(src_file, dir_md5)
             pass
 
         logger.info('[create_link_dict] begin')
         exist_pic_dirs = self.get_db_dirs()
         # 这里先组织一下md5文件
+        # dir_md5 = {}  # 文件夹的md5列表. 避免反复获取md5
         for src_dir in self.src_dirs:
             # ypath.path_res(src_dir)
-            ypath.ergodic_folder(src_dir, file_call)
-        # PicHelper.handle_files_md5()
+            ypath.ergodic_folder(src_dir, folder_call_back=folder_call)
 
         # gly_infos = GalleryInfo.objects.all()
         # exit_gly_info_list = {}
