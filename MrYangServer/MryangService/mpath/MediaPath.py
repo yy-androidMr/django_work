@@ -63,6 +63,11 @@ def init():
         #     download_list.append(path_info(query))
         # elif query.type == 4:
         #     upload_list.append(path_info(query))
+    # 没有设置.需要设置!
+    if len(src_list) == 0:
+        src()
+    if len(desc_list) == 0:
+        desc()
     src_list.sort(key=lambda x: x.level, reverse=True)
     desc_list.sort(key=lambda x: x.level, reverse=True)
 

@@ -3,7 +3,7 @@ import os
 from socket import *
 from MryangService import MediaService as ms
 from MryangService.ServiceHelper import TimeWatch
-from MryangService.pic import PicService as ps
+from MryangService.Pic import PicService as ps
 from frames import logger
 
 host = '127.0.0.1'

@@ -39,6 +39,22 @@ def list_folder(path, include_file=True, include_dir=True):
     return res
 
 
+# 遍历文件夹回调.
+def ergodic_folder(path, file_call_back=None, folder_call_back=None):
+    if not os.path.isdir(path):
+        return
+    path = replace(str(path))
+    if folder_call_back is not None:
+        folder_call_back(path, True)  # 如果是根目录  直接列表
+    for root, dirs, files in os.walk(path):
+        if file_call_back is not None:
+            file_list = [join(root, file) for file in files]
+            file_call_back(file_list)
+        if folder_call_back is not None:
+            dir_list = [join(root, dir) for dir in dirs]
+            folder_call_back(dir_list, False)  # 如果不是根目录. 是列表. 并且是false
+
+
 # 获取所有文件的相对路径
 def releative_list(path):
     m_path = replace(str(path))
@@ -270,6 +286,7 @@ def del_none_dir(dir):
 def sync_role(path):
     return '.' + file_name(path) + '.tmp'
 
+
 # 做文件处理的时候一个无奈锁.   如果有该文件锁,代表这个处理还未完成.
 # def lock_path(path):
 #     create_dirs(sync_role(path))
@@ -284,3 +301,4 @@ def sync_role(path):
 #     if os.path.exists(lock_key):
 #         shutil.rmtree(lock_key)
 # ------------------------------------------------------------------------
+

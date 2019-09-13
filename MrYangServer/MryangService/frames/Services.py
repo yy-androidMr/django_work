@@ -12,8 +12,8 @@ django.setup()
 from MryangService.watchdog import statewatch
 #
 from frames.ThreadingPool import ThreadingPool as tp
-from MryangService.pic import PicService as ps, PhotoConvert
-from MryangService.pic import PicConvert
+from MryangService.Pic import PicService as ps, PhotoConvert
+from MryangService.Pic import PicConvert
 from MryangService import MediaService as ms
 
 
@@ -35,6 +35,7 @@ if __name__ == '__main__':
     # tp.append(proxy_method, ms, 'MediaService.loop')
     # tp.append(proxy_method, ps, 'PicService.loop')
     PhotoConvert.start()
+    # PicConvert.start()
     # tp.append(PicConvert.start)
     # tp.append(proxy_method, statewatch, 'statewatch.loop')
     # tp.append(statewatch.start)

@@ -1,7 +1,13 @@
 import os
 
-from MryangService.mpath import MPath
+from MryangService.mpath import MediaPath
 from frames import yutils, ypath
+
+
+def handle_files_md5():
+    dir_md5 = {}  # 文件夹的md5列表. 避免反复获取md5
+
+    pass
 
 
 def db_dir_exist(db_dirs, src_dir_list):
@@ -26,7 +32,7 @@ def db_dir_exist(db_dirs, src_dir_list):
 
 def src_list(src_root):
     src_paths = []
-    for src_dir in MPath.src_list:
+    for src_dir in MediaPath.src_list:
         src_paths.append(ypath.join(src_dir.path, src_root))
     return src_paths
 
