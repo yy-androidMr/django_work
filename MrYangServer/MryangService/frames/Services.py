@@ -14,7 +14,6 @@ from MryangService.watchdog import statewatch
 #
 from frames.ThreadingPool import ThreadingPool as tp
 from MryangService.Pic import PicService as ps, PhotoConvert
-from MryangService.Pic import PicConvert
 from MryangService import MediaService as ms
 
 
@@ -30,15 +29,16 @@ def proxy_method(ins, method_log):
 if __name__ == '__main__':
     # FileObserver.append_call(ms, '/media/')
     logger.info("服务启动正常,该服务进程id:" + str(os.getpid()))
-    # tp = tp()
     # tp.append(FileObserver.start, TmpUtil.src())
     # tp.append(proxy_method, ms, 'MediaService.loop')
     # tp.append(proxy_method, ps, 'PicService.loop')
     PhotoConvert.start()
+    # tp = tp()
+    # tp.append(statewatch.start)
+
     # PicConvert.start()
     # MPath.objects.all().delete()
     # tp.append(PicConvert.start)
     # tp.append(proxy_method, statewatch, 'statewatch.loop')
-    # tp.append(statewatch.start)
     # tp.append(ps().start)
     # tp.start()

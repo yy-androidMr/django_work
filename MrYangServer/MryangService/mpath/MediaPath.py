@@ -18,8 +18,55 @@ from MryangService import ServiceHelper
 from Mryang_App.models import MPath
 
 sotrage_min = 8 * 1024 + 2 * 1024  # 最小空间有这么大G
-src_list = []
-desc_list = []
+
+
+class MPathDbCache:
+    def __init__(self):
+        self.src_list = []
+        self.desc_list = []
+        self.src_id_key = {}
+        self.desc_id_key = {}
+        self.src_abs_path_key = {}
+        self.desc_abs_path_key = {}
+
+    # def mpath_dict(type=None, byid=True):
+    #     if type:
+    #         mpath_query = MPath.objects.filter(type=type)
+    #     else:
+    #         mpath_query = MPath.objects.all()
+    #     mpath_cache = {}
+    #     for mpath_db in mpath_query:
+    #         if byid:
+    #             mpath_cache[mpath_db.id] = mpath_db.dir.abs_path
+    #         else:
+    #             mpath_cache[mpath_db.dir.abs_path] = mpath_db
+    #
+    #     return mpath_cache
+
+    def reset(self):
+        self.src_list.clear()
+        self.desc_list.clear()
+
+    def append(self, query):
+        if query.type == 1:
+            self.src_list.append(PathInfo(query))
+            self.src_id_key[query.id] = query.dir.abs_path
+            self.src_abs_path_key[self.src_id_key[query.id]] = query
+        elif query.type == 2:
+            self.desc_list.append(PathInfo(query))
+            self.desc_id_key[query.id] = query.dir.abs_path
+            self.desc_abs_path_key[self.desc_id_key[query.id]] = query
+
+    def init_finish(self):
+        if len(self.src_list) == 0:
+            src()
+        if len(self.desc_list) == 0:
+            desc()
+        self.src_list.sort(key=lambda x: x.level, reverse=True)
+        self.desc_list.sort(key=lambda x: x.level, reverse=True)
+
+
+mpath_db_cache = MPathDbCache()
 
 
 class PathInfo:
@@ -28,7 +75,7 @@ class PathInfo:
         # if platform.system() == 'Windows':
         #     folder = folder.split('\\')[0].split('/')[0]
         # else:
-        #     self.dir_abs_path = self.query.dir.abs_path
+        # self.dir_abs_path = self.query.dir.abs_path
         self.cur_memo = 0
         self.update_mem()
 
@@ -100,40 +147,29 @@ def get_path(path_info_list, type, intro):
             return path_item.query.dir.abs_path
     path = need_input(intro)
     query_res = insert_path(path, type)
-    path_info_list.append(PathInfo(query_res))
+    mpath_db_cache.append(query_res)
     return query_res.dir.abs_path
 
 
 # 添加可以. 修改删除不行. 正在同步时
 def src():
-    return get_path(src_list, DBHelper.MPathHelp.SRC, 'src目录对应的磁盘已满,或src目录不正确.请重新输入磁盘目录(目录下有pic文件夹,media文件夹):\n')
+    return get_path(mpath_db_cache.src_list, DBHelper.MPathHelp.SRC,
+                    'src目录对应的磁盘已满,或src目录不正确.请重新输入磁盘目录(目录下有pic文件夹,media文件夹):\n')
 
 
 def desc():
-    return get_path(desc_list, DBHelper.MPathHelp.DESC, 'desc目录对应的磁盘已满,或desc目录不正确.请重新输入磁盘目录(目录下会创建pic文件夹,media文件夹):\n')
+    return get_path(mpath_db_cache.desc_list, DBHelper.MPathHelp.DESC,
+                    'desc目录对应的磁盘已满,或desc目录不正确.请重新输入磁盘目录(目录下会创建pic文件夹,media文件夹):\n')
 
 
 def init():
-    src_list.clear()
-    desc_list.clear()
+    mpath_db_cache.reset()
     # download_list.clear()
     query_res = MPath.objects.all()
     for query in list(query_res):
-        if query.type == 1:
-            src_list.append(PathInfo(query))
-        elif query.type == 2:
-            desc_list.append(PathInfo(query))
-        # elif query.type == 3:
-        #     download_list.append(path_info(query))
-        # elif query.type == 4:
-        #     upload_list.append(path_info(query))
+        mpath_db_cache.append(query)
     # 没有设置.需要设置!
-    if len(src_list) == 0:
-        src()
-    if len(desc_list) == 0:
-        desc()
-    src_list.sort(key=lambda x: x.level, reverse=True)
-    desc_list.sort(key=lambda x: x.level, reverse=True)
+    mpath_db_cache.init_finish()
 
 
 init()

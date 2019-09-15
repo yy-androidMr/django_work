@@ -82,7 +82,6 @@ class PathClass:
         self.ext = file_exten(self.path)
         self.simple_name = file_name(self.path)
         self.folder_md5 = yutils.md5_of_str(self.relative)
-        self.in_pic_info_db = False  # 数据库插入使用.
 
     def __eq__(self, other):
         return other == self.path

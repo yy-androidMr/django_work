@@ -1,14 +1,18 @@
 import os
 import shutil
+import threading
 
 import piexif
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageFile
 
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 from MryangService import ServiceHelper
 from MryangService.mpath import MediaPath
 from Mryang_App.DBHelper import PicHelp
 from Mryang_App.models import Dir, MPath, GalleryInfo, PicInfo
 from frames import yutils, ypath, logger
+
+lock = threading.Lock()
 
 
 # # 转webp
@@ -119,11 +123,18 @@ def begin_threads(mtp):
             continue
         gallery_dir = os.path.dirname(link_item.relative)
 
-        desc_root = MediaPath.desc()
+        # desc_root = None
+        with lock:
+            desc_root = MediaPath.desc()
+
         desc_middle_path = ypath.join(desc_root, mtp.desc_middle_root, mtp.db_glys[gallery_dir].desc_real_path,
                                       link_item.folder_md5 + link_item.ext)
         desc_thum_path = ypath.join(desc_root, mtp.desc_thum_root, mtp.db_glys[gallery_dir].desc_real_path,
                                     link_item.folder_md5 + link_item.ext)
+        with lock:
+            ypath.create_dirs(desc_middle_path)
+            ypath.create_dirs(desc_thum_path)
+
         pi = PicInfo()
 
         src_file = link_item.path
@@ -145,8 +156,8 @@ def begin_threads(mtp):
         w, h = src_img.size
         pi.width = w
         pi.height = h
-        pi.desc_mpath = mtp.all_mpath_dict[desc_root]
-        ypath.create_dirs(desc_middle_path)
+        # pi.desc_mpath =MediaPath.desc_list mtp.all_mpath_dict[desc_root]
+        pi.desc_mpath = MediaPath.mpath_db_cache.desc_abs_path_key[desc_root]
         m_img = convert_middle(src_img, link_item.path, desc_middle_path, mtp.middle_area)
         w, h = m_img.size
         pi.m_width = w
@@ -156,8 +167,6 @@ def begin_threads(mtp):
         pi.is_gif = yutils.is_gif(link_item.ext)
         # webp_file = ypath.join(desc_webp_root, mulit_file_list[middle_file][0] + '.webp')
         # convert_webp(m_img, webp_file, middle_file)
-
-        ypath.create_dirs(desc_thum_path)
 
         t_img = cut_middle2thum(m_img, desc_thum_path, mtp.thum_size)
         if m_img is not t_img:
@@ -284,14 +293,14 @@ def db_dir_exist(db_dirs, src_dir_list):
 
 def src_list(src_root):
     src_paths = []
-    for src_dir in MediaPath.src_list:
+    for src_dir in MediaPath.mpath_db_cache.src_list:
         src_paths.append(ypath.join(src_dir.path, src_root))
     return src_paths
 
 
 def desc_list(desc_root):
     src_paths = []
-    for desc_dir in MediaPath.desc_list:
+    for desc_dir in MediaPath.mpath_db_cache.src_list:
         src_paths.append(ypath.join(desc_dir.path, desc_root))
     return src_paths
 

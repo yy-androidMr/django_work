@@ -9,7 +9,7 @@ from MryangService.Pic import PicHelper
 from MryangService.ServiceHelper import TimeWatch
 from Mryang_App import DBHelper
 from Mryang_App.models import Dir, GalleryInfo, PicInfo, MPath
-from frames import ypath, logger, yutils
+from frames import ypath, logger, yutils, TmpUtil
 from frames.xml import XMLBase
 
 convertIns = None
@@ -44,6 +44,7 @@ class PConvert:
         # self.start()
 
     def reload(self):
+        self.in_sync = True
         self.src_dirs = PicHelper.src_list(self.src_root)
         self.desc_dirs = PicHelper.desc_list(self.desc_root)
         logger.info('PicService.开始执行同步!!!!')
@@ -72,6 +73,8 @@ class PConvert:
         logger.info('PhotoConvert.begin_convert end!')
         self.watch.tag_now('转换时长:')
         # logger.info('PicService.一个loop走完了.不知道有没有同步完 false 代表同步完了')
+        self.handle_db()
+        self.in_sync = False
 
     # def start(self):
     #     self.reload()
@@ -137,18 +140,10 @@ class PConvert:
         return gly_cache.values()
 
     def begin_convert(self, db_glys):
-
         glys_dict = {}
         for db_gly in db_glys:
             glys_dict[db_gly.src_real_path] = db_gly
         all_file_list = PicHelper.get_handle_path_clz(self.src_dirs, self.desc_middle_root, glys_dict)
-        # def file_call(file_list):
-        #     all_file_list.extend(file_list)
-        #
-        # all_file_list = []
-        # for src_dir in self.src_dirs:
-        #     ypath.ergodic_folder(src_dir, file_call_back=file_call)
-
         fragment_list = {}
         for index, file in enumerate(all_file_list):
             n_ind = index % self.MULIT_THREAD_COUNT
@@ -186,6 +181,22 @@ class PConvert:
         self.watch.tag_now('图片同步结束:')
         if len(create_db_list) > 0:
             PicInfo.objects.bulk_create(create_db_list)
+
+    # 处理数据库里面不相符的图.
+    def handle_db(self):
+        with open(os.path.join(TmpUtil.tmpdir, 'err.txt'), 'w+', encoding='utf-8') as f:
+            for item in self.err_pic:
+                f.write(item + '\n')
+        pass
+
+
+# 重新同步.
+def sync_on_back():
+    if convertIns is None or convertIns.in_sync == False:
+        logger.info('同步成功')
+        start()
+        return {'res': 1, 'res_str': '同步请求发送成功!'}
+    return {'res': 2, 'res_str': '同步请求失败!正在同步中...'}
 
 
 # 多线程的参数
