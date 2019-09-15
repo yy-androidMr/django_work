@@ -3,6 +3,7 @@ import os
 
 from django.db import transaction
 
+import ThreadingPool
 from MryangService import ServiceHelper
 from MryangService.Pic import PicHelper
 from MryangService.ServiceHelper import TimeWatch
@@ -56,20 +57,20 @@ class PConvert:
         # 数据库和文件同步
         self.del_not_exist()
         logger.info('PhotoConvert.create_dirs begin!')
-        db_dirs = PicHelper.create_dirs(self.src_dirs, self.src_root, self.webp_cache_root)
+        PicHelper.create_dirs(self.src_dirs, self.src_root, self.webp_cache_root)
         logger.info('[create_dirs] end')
         # # 删除src中没有.middle中有的图.
         # logger.info('PicService.del_not_exist begin!')
         # self.del_not_exist()
         # logger.info('PicService.del_not_exist end!')
         self.watch.tag_now('同步create_dirs时长:')
-        self.create_gly_info()
+        db_glys = self.create_gly_info()
         #
         # # 正式转换.
-        # logger.info('PicService.begin_convert begin!')
-        # self.begin_convert()
-        # logger.info('PicService.begin_convert end!')
-        # self.watch.tag_now('转换时长:')
+        logger.info('PhotoConvert.begin_convert begin!')
+        self.begin_convert(db_glys)
+        logger.info('PhotoConvert.begin_convert end!')
+        self.watch.tag_now('转换时长:')
         # logger.info('PicService.一个loop走完了.不知道有没有同步完 false 代表同步完了')
 
     # def start(self):
@@ -93,6 +94,12 @@ class PConvert:
                                       self.desc_webp_root, gly_cache[p_info.gallery_key_id],
                                       p_info.desc_name + p_info.ext)
                     del_dict[middle] = [thum, webp]
+                else:
+                    desc_middle_path = ypath.join(p_info.desc_mpath.dir.abs_path, self.desc_middle_root,
+                                                  p_info.gallery_key.desc_real_path,
+                                                  p_info.desc_name + p_info.ext)
+                    if not os.path.exists(desc_middle_path):
+                        p_info.delete()
                     pass  # 这里需要删除
 
         for middle_key in del_dict:
@@ -109,17 +116,16 @@ class PConvert:
                 return
             with transaction.atomic():
                 for folder in folder_list:
-                    folder_md5 = yutils.md5_of_str(folder.relative)
                     mpath = mpath_cache.get(folder.pic_root)
-                    if folder_md5 in gly_cache and mpath:
+                    if folder.folder_md5 in gly_cache and mpath:
                         # 更新mpath
-                        gly_cache[folder_md5].mulit_path.add(mpath)
+                        gly_cache[folder.folder_md5].mulit_path.add(mpath)
                     else:
                         g_info = GalleryInfo()
                         g_info.src_real_path = folder.relative
-                        g_info.desc_real_path = folder_md5
+                        g_info.desc_real_path = folder.folder_md5
                         g_info.save()
-                        gly_cache[folder_md5]=g_info
+                        gly_cache[folder.folder_md5] = g_info
                         if mpath:
                             g_info.mulit_path.add(mpath)
 
@@ -128,6 +134,60 @@ class PConvert:
 
         for src_dir in self.src_dirs:
             ypath.ergodic_folder(src_dir, folder_call_back=folder_call)
+        return gly_cache.values()
 
-    def begin_convert(self):
+    def begin_convert(self, db_glys):
+
+        glys_dict = {}
+        for db_gly in db_glys:
+            glys_dict[db_gly.src_real_path] = db_gly
+        all_file_list = PicHelper.get_handle_path_clz(self.src_dirs, self.desc_middle_root, glys_dict)
+        # def file_call(file_list):
+        #     all_file_list.extend(file_list)
+        #
+        # all_file_list = []
+        # for src_dir in self.src_dirs:
+        #     ypath.ergodic_folder(src_dir, file_call_back=file_call)
+
+        fragment_list = {}
+        for index, file in enumerate(all_file_list):
+            n_ind = index % self.MULIT_THREAD_COUNT
+            if n_ind not in fragment_list:
+                fragment_list[n_ind] = []
+            fragment_list[n_ind].append(file)  # file_link_list[file]
+        file_len = len(all_file_list)
+        print('原始src数据长度:' + str(file_len), '  开启了' + str(self.MULIT_THREAD_COUNT) + '个线程.')
+        count = 0
+        for k in fragment_list:
+            cur_len = len(fragment_list[k])
+            count += cur_len
+            print('重新组合的count:' + str(cur_len) + '  当前坐标:' + str(k))
+        print('重组后的长度:' + str(count))
+        if count != file_len:
+            raise RuntimeError('错误了.处理后的长度和处理前的不一致.这到底怎么回事?')
+        tpool = ThreadingPool.ThreadingPool()
         create_db_list = []
+        err_pic_list = []
+        all_mpath_dict = PicHelper.mpath_dict(byid=False)
+
+        for k in fragment_list:
+            mtp = MulitThreadParam()
+            mtp.f_list = fragment_list[k]
+            mtp.create_db_list = create_db_list
+            mtp.err_list = err_pic_list
+            mtp.db_glys = glys_dict
+            mtp.desc_middle_root = self.desc_middle_root
+            mtp.desc_thum_root = self.desc_thum_root
+            mtp.middle_area = self.middle_area
+            mtp.thum_size = self.thum_size
+            mtp.all_mpath_dict = all_mpath_dict
+            tpool.append(PicHelper.begin_threads, (mtp,))
+        tpool.start()
+        self.watch.tag_now('图片同步结束:')
+        if len(create_db_list) > 0:
+            PicInfo.objects.bulk_create(create_db_list)
+
+
+# 多线程的参数
+class MulitThreadParam:
+    pass

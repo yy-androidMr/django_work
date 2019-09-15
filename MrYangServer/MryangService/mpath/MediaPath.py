@@ -95,12 +95,13 @@ def insert_path(path, type):
 
 def get_path(path_info_list, type, intro):
     for path_item in path_info_list:
+        path_item.update_mem()
         if path_item.can_use():
-            return path_item.query.path
+            return path_item.query.dir.abs_path
     path = need_input(intro)
     query_res = insert_path(path, type)
     path_info_list.append(PathInfo(query_res))
-    return query_res.path
+    return query_res.dir.abs_path
 
 
 # 添加可以. 修改删除不行. 正在同步时

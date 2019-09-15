@@ -1,16 +1,179 @@
 import os
 import shutil
 
-from PIL import Image
+import piexif
+from PIL import Image, ImageDraw, ImageFont
 
 from MryangService import ServiceHelper
 from MryangService.mpath import MediaPath
-from Mryang_App.models import Dir, MPath, GalleryInfo
-from frames import yutils, ypath
+from Mryang_App.DBHelper import PicHelp
+from Mryang_App.models import Dir, MPath, GalleryInfo, PicInfo
+from frames import yutils, ypath, logger
 
 
-def mpath_dict(type, byid=True):
-    mpath_query = MPath.objects.filter(type=type)
+# # 转webp
+# def convert_webp(m_img, webp, middle_file):
+#     if os.path.exists(webp):
+#         return
+#     if yutils.is_gif(middle_file):
+#         return
+#     m_img.save(webp)
+# 获取需要组织picinfo的路径
+def get_handle_path_clz(src_dirs, desc_middle_root, db_glys):
+    def file_call(file_list):
+        for file in file_list:
+            if not yutils.is_gif(file.ext) and not yutils.is_photo(file.ext):
+                logger.info('这张不是图片:' + file.path)
+                continue
+
+            if file.path not in db_pic_info_dict:
+                new_file_dict.append(file)
+
+    new_file_dict = []
+    pic_info_query = PicInfo.objects.all()
+    db_pic_info_dict = {}
+    for pic_info in pic_info_query:
+        if pic_info.state == PicHelp.STATE_FINISH:
+            db_pic_info_dict[pic_info.src_abs_path] = [pic_info.desc_mpath.dir.abs_path, pic_info]
+    for src_dir in src_dirs:
+        ypath.ergodic_folder(src_dir, file_call_back=file_call)
+    return new_file_dict
+
+
+def cut_middle2thum(m_img, thum, thum_size):
+    if os.path.exists(thum):
+        return m_img
+    w, h = m_img.size
+    crop_img = m_img.crop(yutils.crop_size(w, h))  # 保存裁切后的图片
+    crop_img.thumbnail((thum_size, thum_size), Image.ANTIALIAS)
+    if yutils.is_gif(thum):
+        crop_img = crop_img.convert("RGB")
+        draw = ImageDraw.Draw(crop_img)
+        font = ImageFont.truetype("arial.ttf", 40, encoding="unic")  # 设置字体
+        draw.text((0, 0), u'GIF', font=font)
+    try:
+        crop_img.save(thum)
+    except:
+        crop_img = crop_img.convert('RGB')
+        crop_img.save(thum)
+    return crop_img
+
+
+def convert_middle(s_img, src_abs_path, desc_abs_path, middle_area):
+    if os.path.exists(desc_abs_path):
+        try:
+            exist_img = Image.open(desc_abs_path)
+            return exist_img
+        except:
+            os.remove(desc_abs_path)
+            pass
+    # gif link上
+    if yutils.is_gif(desc_abs_path):
+        # gif特殊操作.
+        os.symlink(src_abs_path, desc_abs_path)
+        return s_img
+    # 压缩尺寸
+    w, h = s_img.size
+    pic_area = w * h
+    if pic_area > middle_area:
+        proportion = (middle_area / pic_area) ** 0.5
+        w = int(w * proportion)
+        h = int(h * proportion)
+    s_img.thumbnail((w, h))
+    # 处理旋转信息.
+    has_exif = 'exif' in s_img.info
+    old_exif = None
+    if has_exif:
+        pass
+        try:
+            old_exif = piexif.load(s_img.info["exif"])
+            has_exif = True
+        except:
+            has_exif = False
+    if has_exif:
+        print('处理这张图:' + src_abs_path)
+        if '0th' in old_exif and piexif.ImageIFD.Orientation in old_exif['0th']:
+            orientation = old_exif['0th'][piexif.ImageIFD.Orientation]
+            if orientation == 6:
+                s_img = s_img.rotate(-90, expand=True)
+            elif orientation == 3:
+                s_img = s_img.rotate(180)
+            elif orientation == 8:
+                s_img = s_img.rotate(90, expand=True)
+        exif_bytes = piexif.dump({})
+        s_img.save(desc_abs_path, exif=exif_bytes)
+    else:
+        pass
+        try:
+            s_img.save(desc_abs_path)
+        except:
+            s_img = s_img.convert('RGB')
+            s_img.save(desc_abs_path)
+    return s_img
+
+
+def begin_threads(mtp):
+    for link_item in mtp.f_list:
+        if not yutils.is_gif(link_item.ext) and not yutils.is_photo(link_item.ext):
+            logger.info('这张不是图片:' + link_item.path)
+            continue
+        gallery_dir = os.path.dirname(link_item.relative)
+
+        desc_root = MediaPath.desc()
+        desc_middle_path = ypath.join(desc_root, mtp.desc_middle_root, mtp.db_glys[gallery_dir].desc_real_path,
+                                      link_item.folder_md5 + link_item.ext)
+        desc_thum_path = ypath.join(desc_root, mtp.desc_thum_root, mtp.db_glys[gallery_dir].desc_real_path,
+                                    link_item.folder_md5 + link_item.ext)
+        pi = PicInfo()
+
+        src_file = link_item.path
+        pi.gallery_key = mtp.db_glys[gallery_dir]
+        pi.src_name = link_item.relative
+        pi.desc_name = link_item.folder_md5
+        pi.ext = link_item.ext
+        pi.src_abs_path = src_file
+        pi.src_mpath = mtp.all_mpath_dict[link_item.pic_root]
+        try:
+            file_steam = open(src_file, 'rb')
+            pi.src_md5 = yutils.get_md5_steam(file_steam)
+            src_img = Image.open(file_steam)
+            pi.size = os.path.getsize(src_file)
+        except:
+            mtp.err_list.append(src_file)
+            logger.info('这张图有错误!!!!!!!!!!!!!!!!!!!!!!!:' + src_file)
+            continue
+        w, h = src_img.size
+        pi.width = w
+        pi.height = h
+        pi.desc_mpath = mtp.all_mpath_dict[desc_root]
+        ypath.create_dirs(desc_middle_path)
+        m_img = convert_middle(src_img, link_item.path, desc_middle_path, mtp.middle_area)
+        w, h = m_img.size
+        pi.m_width = w
+        pi.m_height = h
+        pi.m_size = os.path.getsize(desc_middle_path)
+        pi.state = PicHelp.STATE_FINISH
+        pi.is_gif = yutils.is_gif(link_item.ext)
+        # webp_file = ypath.join(desc_webp_root, mulit_file_list[middle_file][0] + '.webp')
+        # convert_webp(m_img, webp_file, middle_file)
+
+        ypath.create_dirs(desc_thum_path)
+
+        t_img = cut_middle2thum(m_img, desc_thum_path, mtp.thum_size)
+        if m_img is not t_img:
+            del m_img
+            del t_img
+        else:
+            del m_img
+        mtp.create_db_list.append(pi)
+    pass
+
+
+def mpath_dict(type=None, byid=True):
+    if type:
+        mpath_query = MPath.objects.filter(type=type)
+    else:
+        mpath_query = MPath.objects.all()
     mpath_cache = {}
     for mpath_db in mpath_query:
         if byid:
@@ -28,7 +191,7 @@ def gallery_dict(byid=True):
         if byid:
             gly_dict[gly.id] = gly.desc_real_path
         else:
-            gly_dict[gly.desc_real_path] =gly
+            gly_dict[gly.desc_real_path] = gly
     return gly_dict
 
 

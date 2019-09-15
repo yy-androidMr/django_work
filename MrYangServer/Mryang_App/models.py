@@ -76,7 +76,7 @@ class GalleryInfo(models.Model):
     # 原始路径 绝对路径
     # abs_path = models.CharField(max_length=500, default='')
     # 源的相对路径.
-    src_real_path = models.CharField(max_length=500, default='')
+    src_real_path = models.CharField(max_length=500, default='', unique=True)
 
     mulit_path = models.ManyToManyField('MPath')
     # 输出相对路径,做显示用.一张图片PicInfo.需要和这个拼接.
@@ -107,12 +107,14 @@ class PicInfo(models.Model):
     gallery_key = models.ForeignKey(GalleryInfo, related_name='gallery', on_delete=models.CASCADE)
     # mpath = models.
     # src中的文件绝对路径.
-    src_dir = models.ForeignKey(Dir, related_name='src_dir', on_delete=models.CASCADE)
+    src_abs_path = models.CharField(max_length=500)
+
     src_name = models.CharField(max_length=50, default='')
     # desc_root_dir = models.ForeignKey(Dir, related_name='dir', on_delete=models.CASCADE)
-    # src_md5
+    # 这是文件的md5值!!暂时没用到.
     src_md5 = models.CharField(max_length=50, default='')
     # 图片名称, 需要和desc_mpath/GalleryInfo.desc_real_path 拼接.做显示用, middle和thum都用这个,没有后缀.要加
+    # 是src_name的md5化
     desc_name = models.CharField(max_length=100)
     # 图片后缀. 如果是gif. thum后缀是jpg, middle后缀是gif. webp没有后缀.
     ext = models.CharField(max_length=20, default='')
@@ -133,10 +135,11 @@ class PicInfo(models.Model):
     # 分目录的外键 做显示用 其他的用不着吧
     desc_mpath = models.ForeignKey('MPath', related_name='desc_mpath', on_delete=models.DO_NOTHING, null=True,
                                    blank=True)
+    src_mpath = models.ForeignKey('MPath', related_name='src_mpath', on_delete=models.CASCADE)
 
     def __eq__(self, other):
         if other.src_file_md5 and other.src_path:
-            eq_bool = other.src_file_md5 == self.src_md5 and other.src_path == self.src_abs_path
+            eq_bool = other.src_file_md5 == self.src_md5 and other.src_path == self.src_name
             return eq_bool
         return super().__eq__(other)
 

@@ -135,6 +135,18 @@ def is_movie(path):
     return True
 
 
+def get_md5_steam(file_steam):
+    md5_obj = hashlib.md5()
+    while True:
+        d = file_steam.read(8096)
+        if not d:
+            break
+        md5_obj.update(d)
+    hash_code = md5_obj.hexdigest()
+    md5 = str(hash_code).lower()
+    return md5
+
+
 def get_md5(file_path):
     f = open(file_path, 'rb')
     md5_obj = hashlib.md5()

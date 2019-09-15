@@ -84,7 +84,16 @@ from PIL import Image, ImageDraw, ImageFont
 # tm = TestMode.objects.create()
 # tm.folder_key.add(m_list[0])
 # tm.save()
-
-
-ddd = {'a': 'b'}
-print(ddd.get('c'))
+f = open(r'F:\cache\res\desc\pic\middle\47c0acfe173d4e198e568e459cf38b44\2c5e89164a9093de860d1e13620a1893.jpg', 'rb')
+md5_obj = hashlib.md5()
+while True:
+    d = f.read(8096)
+    if not d:
+        break
+    md5_obj.update(d)
+hash_code = md5_obj.hexdigest()
+print(hash_code)
+src_img = Image.open(f)
+print(src_img.size)
+# f.close()
+# md5 = str(hash_code).lower()
