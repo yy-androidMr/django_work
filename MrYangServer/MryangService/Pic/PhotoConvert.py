@@ -1,25 +1,33 @@
 # from MryangService import ServiceHelper
 import os
+import threading
+import time
 
 from django.db import transaction
 
 import ThreadingPool
-from MryangService import ServiceHelper
 from MryangService.Pic import PicHelper
 from MryangService.ServiceHelper import TimeWatch
 from Mryang_App import DBHelper
-from Mryang_App.models import Dir, GalleryInfo, PicInfo, MPath
-from frames import ypath, logger, yutils, TmpUtil
+from Mryang_App.models import GalleryInfo, PicInfo
+from frames import ypath, logger, TmpUtil
 from frames.xml import XMLBase
 
 convertIns = None
+next_loop_sync = False
 
 
 def start():
-    global convertIns
-    if convertIns is None:
-        convertIns = PConvert()
-    convertIns.reload()
+    global next_loop_sync
+    next_loop_sync = True
+    while True:
+        if next_loop_sync:
+            global convertIns
+            if convertIns is None:
+                convertIns = PConvert()
+            convertIns.reload()
+            next_loop_sync = False
+        time.sleep(60)
 
 
 class PConvert:
@@ -33,8 +41,6 @@ class PConvert:
         self.desc_webp_root = ypath.join(self.desc_root, pic_config.webp)  # 放置webp的地方
         self.middle_area = int(pic_config.max_pic_size) ** 2
         self.thum_size = int(pic_config.thum_size)
-        self.in_sync = False
-        self.next_loop_sync = False  # 标记. 下次loop要不要执行syn
         self.file_link_list = []
         self.desc_parent_path = {}
         self.MULIT_THREAD_COUNT = 5  # 多线程转换尺寸.
@@ -44,7 +50,6 @@ class PConvert:
         # self.start()
 
     def reload(self):
-        self.in_sync = True
         self.src_dirs = PicHelper.src_list(self.src_root)
         self.desc_dirs = PicHelper.desc_list(self.desc_root)
         logger.info('PicService.开始执行同步!!!!')
@@ -74,7 +79,6 @@ class PConvert:
         self.watch.tag_now('转换时长:')
         # logger.info('PicService.一个loop走完了.不知道有没有同步完 false 代表同步完了')
         self.handle_db()
-        self.in_sync = False
 
     # def start(self):
     #     self.reload()
@@ -192,11 +196,12 @@ class PConvert:
 
 # 重新同步.
 def sync_on_back():
-    if convertIns is None or convertIns.in_sync == False:
-        logger.info('同步成功')
-        start()
-        return {'res': 1, 'res_str': '同步请求发送成功!'}
-    return {'res': 2, 'res_str': '同步请求失败!正在同步中...'}
+    global next_loop_sync
+    if next_loop_sync:
+        return {'res': 3, 'res_str': '正在同步中请稍等...'}
+    next_loop_sync = True
+    return {'res': 1, 'res_str': '同步请求发送成功!'}
+    # return {'res': 2, 'res_str': '同步请求失败!正在同步中...'}
 
 
 # 多线程的参数
