@@ -6,6 +6,7 @@ import time
 
 import django
 
+from Mryang_App import DBHelper
 from frames import ypath, yutils
 
 sys.path.append('./../../')
@@ -24,12 +25,16 @@ desc_list = []
 class PathInfo:
     def __init__(self, query):
         self.query = query
+        # if platform.system() == 'Windows':
+        #     folder = folder.split('\\')[0].split('/')[0]
+        # else:
+        #     self.dir_abs_path = self.query.dir.abs_path
         self.cur_memo = 0
         self.update_mem()
 
     @property
     def path(self):
-        return self.query.path
+        return self.query.dir.abs_path
 
     @property
     def level(self):
@@ -38,6 +43,7 @@ class PathInfo:
     def can_use(self):
         return self.query.drive_memory_mb < self.cur_memo
 
+    # 耗时操作. 需要斟酌:10万次4秒
     def update_mem(self):
         self.cur_memo = self.get_free_storage_mb(self.query.dir.abs_path)
 
@@ -73,10 +79,11 @@ def need_input(intro, storage_low='所选磁盘剩余容量过小,请重新选�
 def insert_path(path, type):
     query_ress = MPath.objects.filter(dir__abs_path=path)
     if query_ress.count() == 0:
-        dir = ServiceHelper.create_dir_root(path, yutils.M_FTYPE_MOIVE)
+        dir = ServiceHelper.create_dir_root(path, yutils.M_FTYPE_MPATH)
         mpath = MPath()
         mpath.path = path
         mpath.type = type
+        mpath.param1 = yutils.md5_of_str(path)
         mpath.dir = dir
         mpath.save()
         return mpath
@@ -98,11 +105,11 @@ def get_path(path_info_list, type, intro):
 
 # 添加可以. 修改删除不行. 正在同步时
 def src():
-    return get_path(src_list, 1, 'src目录对应的磁盘已满,或src目录不正确.请重新输入磁盘目录(目录下有pic文件夹,media文件夹):\n')
+    return get_path(src_list, DBHelper.MPathHelp.SRC, 'src目录对应的磁盘已满,或src目录不正确.请重新输入磁盘目录(目录下有pic文件夹,media文件夹):\n')
 
 
 def desc():
-    return get_path(desc_list, 2, 'desc目录对应的磁盘已满,或desc目录不正确.请重新输入磁盘目录(目录下会创建pic文件夹,media文件夹):\n')
+    return get_path(desc_list, DBHelper.MPathHelp.DESC, 'desc目录对应的磁盘已满,或desc目录不正确.请重新输入磁盘目录(目录下会创建pic文件夹,media文件夹):\n')
 
 
 def init():
@@ -127,8 +134,5 @@ def init():
     src_list.sort(key=lambda x: x.level, reverse=True)
     desc_list.sort(key=lambda x: x.level, reverse=True)
 
+
 init()
-
-print(time.time())
-
-print(time.time())

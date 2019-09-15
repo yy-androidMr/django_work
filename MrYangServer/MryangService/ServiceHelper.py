@@ -47,7 +47,7 @@ def create_dir_root(path, type, tags=''):
     return d_model
 
 
-def create_dir(cur_dir_dbs, info, type, tags=''):
+def create_dir(cur_dir_dbs, info, type, tags='', save_it=True):
     name = info.name
     parent_path = info.parent  # info[ypath.KEYS.PARENT]
     rel_path = info.relative
@@ -64,7 +64,8 @@ def create_dir(cur_dir_dbs, info, type, tags=''):
     except Exception as e:
         logger.info('错误,这货没有爸爸的,忽视这个问题:%s:is not found :%s' % (parent_path, e))
         pass
-    d_model.save()
+    if save_it:
+        d_model.save()
     return d_model
 
 

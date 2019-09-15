@@ -1,3 +1,4 @@
+import hashlib
 import os
 import random
 import sys
@@ -68,4 +69,22 @@ from PIL import Image, ImageDraw, ImageFont
 #
 # mm['a'] = 2
 # print(mm)
-print(os.path.dirname('C:/a/b'))
+# print(os.path.dirname('C:/a/b'))
+# import djangos
+
+# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "MrYangServer.settings")
+# django.setup()
+#
+# md1 = hashlib.md5()
+# md1.update('.'.encode("utf-8"))
+# print(md1.hexdigest())
+# print(sys.maxsize)
+# Dir.objects.all().delete()
+# m_list = list(m_list)
+# tm = TestMode.objects.create()
+# tm.folder_key.add(m_list[0])
+# tm.save()
+
+
+ddd = {'a': 'b'}
+print(ddd.get('c'))

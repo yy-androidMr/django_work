@@ -68,6 +68,8 @@ def releative_list(path):
 class PathClass:
     def __init__(self, path, root):
         s_root = convert_path(str(root))
+        self.pic_root = os.path.dirname(s_root)
+        self.pic_root_md5 = yutils.md5_of_str(self.pic_root)
         self.path = convert_path(str(path))
         if self.path.endswith('/'):
             self.path = self.path[:-1]

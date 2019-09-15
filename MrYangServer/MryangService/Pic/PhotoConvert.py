@@ -1,8 +1,13 @@
 # from MryangService import ServiceHelper
+import os
+
+from django.db import transaction
+
 from MryangService import ServiceHelper
 from MryangService.Pic import PicHelper
 from MryangService.ServiceHelper import TimeWatch
-from Mryang_App.models import Dir, GalleryInfo
+from Mryang_App import DBHelper
+from Mryang_App.models import Dir, GalleryInfo, PicInfo, MPath
 from frames import ypath, logger, yutils
 from frames.xml import XMLBase
 
@@ -39,6 +44,7 @@ class PConvert:
 
     def reload(self):
         self.src_dirs = PicHelper.src_list(self.src_root)
+        self.desc_dirs = PicHelper.desc_list(self.desc_root)
         logger.info('PicService.开始执行同步!!!!')
         self.err_pic.clear()
 
@@ -47,17 +53,17 @@ class PConvert:
         # 先去重
         ypath.delrepeat_file_list(self.src_dirs)
         self.watch.tag_now('去重操作占用时长:')
-        # 生成middle->(thum,src) 路径映射
-        logger.info('PicService.create_link_dict begin!')
-        self.create_link_dict()
-        # logger.info('PicService.create_link_dict end!')
-        # self.watch.tag_now('生成src-middle的link_dict 时长:')
-        #
+        # 数据库和文件同步
+        self.del_not_exist()
+        logger.info('PhotoConvert.create_dirs begin!')
+        db_dirs = PicHelper.create_dirs(self.src_dirs, self.src_root, self.webp_cache_root)
+        logger.info('[create_dirs] end')
         # # 删除src中没有.middle中有的图.
         # logger.info('PicService.del_not_exist begin!')
         # self.del_not_exist()
         # logger.info('PicService.del_not_exist end!')
-        # self.watch.tag_now('同步src-middle-thum时长:')
+        self.watch.tag_now('同步create_dirs时长:')
+        self.create_gly_info()
         #
         # # 正式转换.
         # logger.info('PicService.begin_convert begin!')
@@ -68,84 +74,60 @@ class PConvert:
 
     # def start(self):
     #     self.reload()
+    def del_not_exist(self):
+        mpath_cache = PicHelper.mpath_dict(DBHelper.MPathHelp.DESC)
+        gly_cache = PicHelper.gallery_dict()
+        p_infos = PicInfo.objects.all()
+        del_dict = {}
+        with transaction.atomic():
+            for p_info in p_infos:
+                if not os.path.exists(p_info.src_abs_path):
+                    p_info.delete()
+                    middle = ypath.join(mpath_cache[p_info.desc_mpath_id],
+                                        self.desc_middle_root, gly_cache[p_info.gallery_key_id],
+                                        p_info.desc_name + p_info.ext)
+                    thum = ypath.join(mpath_cache[p_info.desc_mpath_id],
+                                      self.desc_thum_root, gly_cache[p_info.gallery_key_id],
+                                      p_info.desc_name + p_info.ext)
+                    webp = ypath.join(mpath_cache[p_info.desc_mpath_id],
+                                      self.desc_webp_root, gly_cache[p_info.gallery_key_id],
+                                      p_info.desc_name + p_info.ext)
+                    del_dict[middle] = [thum, webp]
+                    pass  # 这里需要删除
 
-    # 获取数据库中dirs. 并且删除空目录.
-    def get_db_dirs(self):
-        for dir in self.src_dirs:
-            ypath.del_none_dir(dir)
-        all_pic_dirs = Dir.objects.filter(type=yutils.M_FTYPE_PIC)
-        db_dirs = PicHelper.db_dir_exist(all_pic_dirs, self.src_dirs)
-        exist_pic_dirs = {}
-        for db_dir in db_dirs:
-            exist_pic_dirs[db_dir.abs_path] = db_dir
-        return exist_pic_dirs
+        for middle_key in del_dict:
+            if os.path.islink(middle_key) or os.path.exists(middle_key):
+                os.remove(middle_key)
+            for del_path in del_dict[middle_key]:
+                if os.path.exists(del_path):
+                    os.remove(del_path)
 
-    # 生成middle->(0为不带后缀的相对路径.2为后缀. 1为src) 路径映射
-    # @memory_profiler.profile
-    # def craete_gallery_info_db(self,file_list):
-    #     exist_pic_dirs = self.get_db_dirs()
-    def create_link_dict(self):
+    # 创建GalleryInfo 数据
+    def create_gly_info(self):
         def folder_call(folder_list, is_root):
             if is_root:
                 return
-            for dir in folder_list:
-                if dir.path not in exist_pic_dirs:
-                    exist_pic_dirs[dir.path] = ServiceHelper.create_dir(exist_pic_dirs, dir,
-                                                                        yutils.M_FTYPE_PIC)
-                # PicHelper.handle_files_md5(src_file, dir_md5)
-            pass
+            with transaction.atomic():
+                for folder in folder_list:
+                    folder_md5 = yutils.md5_of_str(folder.relative)
+                    mpath = mpath_cache.get(folder.pic_root)
+                    if folder_md5 in gly_cache and mpath:
+                        # 更新mpath
+                        gly_cache[folder_md5].mulit_path.add(mpath)
+                    else:
+                        g_info = GalleryInfo()
+                        g_info.src_real_path = folder.relative
+                        g_info.desc_real_path = folder_md5
+                        g_info.save()
+                        gly_cache[folder_md5]=g_info
+                        if mpath:
+                            g_info.mulit_path.add(mpath)
 
-        logger.info('[create_link_dict] begin')
-        exist_pic_dirs = self.get_db_dirs()
-        # 这里先组织一下md5文件
-        # dir_md5 = {}  # 文件夹的md5列表. 避免反复获取md5
+        gly_cache = PicHelper.gallery_dict(False)
+        mpath_cache = PicHelper.mpath_dict(DBHelper.MPathHelp.SRC, byid=False)
+
         for src_dir in self.src_dirs:
-            # ypath.path_res(src_dir)
             ypath.ergodic_folder(src_dir, folder_call_back=folder_call)
 
-        # gly_infos = GalleryInfo.objects.all()
-        # exit_gly_info_list = {}
-        # for gly_info in gly_infos:
-        #     exit_gly_info_list[gly_info.abs_path] = gly_info
-        #     self.desc_parent_path[gly_info.id] = gly_info.desc_path
-        # # 先组织文件夹. 同步文件夹数据库
-        # for src_file in src_file_list:  # 这个也需要优化掉.
-        #     if not src_file.is_dir:
-        #         continue
-        #     if src_file.path not in dir_md5:
-        #         # ypath.join(str(desc_middle_root), desc_md5), ypath.join(str(desc_thum_root), desc_md5)
-        #         dir_md5[src_file.path] = yutils.md5_of_str(src_file.relative)
-        #         # 需要在这里把所有文件夹给创建出来.不然在多线程创建会造成抢占创建.会崩
-        #         ypath.create_dirs(ypath.join(self.desc_middle_root, dir_md5[src_file.path]), is_dir=True)
-        #         ypath.create_dirs(ypath.join(self.desc_thum_root, dir_md5[src_file.path]), is_dir=True)
-        #         ypath.create_dirs(ypath.join(self.desc_webp_root, dir_md5[src_file.path]), is_dir=True)
-        #     # 插入dir数据
-        #     if src_file.path not in exist_pic_dirs:
-        #         exist_pic_dirs[src_file.path] = ServiceHelper.create_dir(exist_pic_dirs, src_file, yutils.M_FTYPE_PIC)
-        #     # 插入GralleryInfo数据.
-        #     if src_file.path not in exit_gly_info_list:
-        #         g_info = GalleryInfo()
-        #         g_info.folder_key = exist_pic_dirs[src_file.path]
-        #         g_info.abs_path = exist_pic_dirs[src_file.path].abs_path
-        #         g_info.desc_path = ypath.join(self.desc_middle_root, dir_md5[src_file.path])
-        #         g_info.desc_real_path = dir_md5[src_file.path]
-        #         g_info.save()
-        #         exit_gly_info_list[src_file.path] = g_info
-        # # 后组织文件
-        # for src_file in src_file_list:
-        #     if src_file.is_dir:
-        #         continue
-        #     if not yutils.is_gif(src_file.ext) and not yutils.is_photo(src_file.ext):
-        #         if not self.convert_webp(src_file):
-        #             logger.info('PicService.del_not_exist:这文件既不是图片,又不是webp:' + src_file.path)
-        #         continue
-        #     out_file_name = self.out_file(src_file.relative)
-        #     plc = PicHelper.PicLinkCls(exit_gly_info_list[src_file.parent], src_file, dir_md5[src_file.parent],
-        #                                out_file_name,
-        #                                self.desc_middle_root)
-        #     self.file_link_list.append(plc)
-        # # 删除文件数据库中没有的数据.
-        # # delete_pic_info_db()
-        # self.file_link_list.sort(key=lambda x: x.src_file_md5)
-        # logger.info('[create_link_dict] end')
-        # pass
+    def begin_convert(self):
+        create_db_list = []

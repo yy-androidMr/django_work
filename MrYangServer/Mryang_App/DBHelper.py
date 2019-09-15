@@ -46,3 +46,8 @@ class PicHelp:
             return '本张图处理完毕'
         if num == PicHelp.STATE_ERROR:
             return '本张图处理有误,请尽快处理.'
+
+
+class MPathHelp:
+    SRC = 1
+    DESC = 2

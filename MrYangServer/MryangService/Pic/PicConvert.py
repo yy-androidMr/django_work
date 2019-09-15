@@ -206,9 +206,7 @@ class PicSync:
     # 开启转换.
     def begin_convert(self):
         create_db_list = []
-
         # tracemalloc.start(5)
-
         # 传进切割后的map.进行文件转换.
         # @memory_profiler.profile
         def begin_threads(mulit_file_list):
