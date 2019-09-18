@@ -1,10 +1,13 @@
+# -*- coding: utf-8 -*-
 import hashlib
 import os
 import random
+import shutil
 import sys
 import time
 import tracemalloc
 
+import piexif
 from PIL import Image, ImageDraw, ImageFont
 
 #
@@ -84,16 +87,52 @@ from PIL import Image, ImageDraw, ImageFont
 # tm = TestMode.objects.create()
 # tm.folder_key.add(m_list[0])
 # tm.save()
-f = open(r'F:\cache\res\desc\pic\middle\47c0acfe173d4e198e568e459cf38b44\2c5e89164a9093de860d1e13620a1893.jpg', 'rb')
-md5_obj = hashlib.md5()
-while True:
-    d = f.read(8096)
-    if not d:
-        break
-    md5_obj.update(d)
-hash_code = md5_obj.hexdigest()
-print(hash_code)
-src_img = Image.open(f)
-print(src_img.size)
 # f.close()
-# md5 = str(hash_code).lower()
+# for root, dirs, files in os.walk(r'D:\\'):
+#     for file in files:
+#         if os.stat(os.path.join(root, file)).st_ctime_ns < 1062510500751:
+#             print(os.path.join(root, file))
+# from frames import yutils
+
+#
+# print(time.time())
+# for i in range(1000*100):
+#     file_md5 = yutils.get_md5(r"C:\Users\Administrator\Desktop\game\云顶之弈.jpg")
+# print(time.time())
+
+# print(file_md5)
+
+
+# yutils.file_fingerprint(r"C:\Users\Administrator\Desktop\game\云顶之弈.jpg")
+# sss = os.stat(r"C:\Users\Administrator\Desktop\game\云顶之弈.jpg")
+# timeStruct = time.localtime(int(sss.st_ctime))
+# # tm_year
+# # tm_mon
+# print(int(sss.st_ctime) % 1000)
+# os.symlink(r'D:\README.en.md', r'D:\README2.en.md')
+# print(os.path.getctime(r'D:\README2.en.md'))
+# print(os.path.exists(r'D:\README2.en.md'))
+# print(os.path.islink(r'D:\README2.en.md'))
+
+# print(time.time())
+# for i in range(100 * 1000):
+#     sss =
+# os.remove(r'D:/cache/mulit_dir/s2/pic\\文件夹1\\GVE周活动_结算奖励_窄屏.png')
+# print(time.time())
+
+s_img = Image.open(r'D:\cache\TouchArea\1\GVE_上周战绩_基准.png')
+# pixel = s_img.load()
+# w, h = s_img.size
+# for i in range(w):
+#     for j in range(h):
+#         if pixel[i, j][3] != 255:
+#             print(pixel[i, j])
+# if s_img.mode == 'RGB':
+#     s_img = s_img.convert('RGB')
+# #     s_img.save(r'D:\cache\TouchArea\1\2.jpg')
+# # else:
+# s_img = s_img.convert('RGB')
+s_img.save(r'D:\cache\TouchArea\1\GVE_上周战绩_基准.jpg')
+
+# s_img.thumbnail((1920, 1080))
+# s_img.save(r'D:\cache\TouchArea\1\2.png')

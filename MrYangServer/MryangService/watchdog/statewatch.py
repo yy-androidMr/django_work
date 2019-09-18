@@ -3,7 +3,7 @@ import os
 from socket import *
 from MryangService import MediaService as ms
 from MryangService.ServiceHelper import TimeWatch
-from MryangService.Pic import PhotoConvert as ps
+# from MryangService.pic import PhotoConvert as ps
 from frames import logger
 
 host = '127.0.0.1'
@@ -37,8 +37,8 @@ def parse_path(path):
         return json.dumps(ms.sync_on_back())
     if 'MediaSyncState' == path:  # 查询media数据库同步状态
         return json.dumps(ms.get_state())
-    if 'PicSyncDb' == path:  # 同步Pic数据库
-        return json.dumps(ps.sync_on_back())
+    # if 'PicSyncDb' == path:  # 同步Pic数据库
+        # return json.dumps(ps.sync_on_back())
     if 'mem' == path:
         return json.dumps({'当前占用内存(Mb):': watch.cur_mem})
 

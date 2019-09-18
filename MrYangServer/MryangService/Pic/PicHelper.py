@@ -136,7 +136,6 @@ def begin_threads(mtp):
             ypath.create_dirs(desc_thum_path)
 
         pi = PicInfo()
-
         src_file = link_item.path
         pi.gallery_key = mtp.db_glys[gallery_dir]
         pi.src_name = link_item.relative
@@ -214,7 +213,6 @@ def create_dirs(src_dirs, src_root, webp_cache_root):
         return db_dirs
 
     def folder_call(folder_list, is_root):
-
         if is_root:
             if folder_list.path not in exist_pic_dirs:
                 exist_pic_dirs[folder_list.path] = ServiceHelper.create_dir(exist_pic_dirs, folder_list,

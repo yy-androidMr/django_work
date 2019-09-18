@@ -4,6 +4,7 @@
 import os
 import re
 import shutil
+import stat
 from pathlib import PurePath
 
 from frames import yutils
@@ -69,7 +70,7 @@ class PathClass:
     def __init__(self, path, root):
         s_root = convert_path(str(root))
         self.pic_root = os.path.dirname(s_root)
-        self.pic_root_md5 = yutils.md5_of_str(self.pic_root)
+        # self.pic_root_md5 = yutils.md5_of_str(self.pic_root)
         self.path = convert_path(str(path))
         if self.path.endswith('/'):
             self.path = self.path[:-1]
@@ -81,7 +82,7 @@ class PathClass:
         assert self.parent is not self.path
         self.ext = file_exten(self.path)
         self.simple_name = file_name(self.path)
-        self.folder_md5 = yutils.md5_of_str(self.relative)
+        # self.folder_md5 = yutils.md5_of_str(self.relative)
 
     def __eq__(self, other):
         return other == self.path
@@ -264,9 +265,8 @@ def delrepeat_file_list(dir_list):
                     repeat_file[source_rela_path] = md5_list[file_md5]
                 else:
                     md5_list[file_md5] = os.path.abspath(source_rela_path)
-        print(repeat_file)
         for file in repeat_file:
-            print(file)
+            os.chmod(file, stat.S_IWRITE)
             os.remove(file)
     print('ypath.delrepeat_file done')
 

@@ -5,12 +5,11 @@ import time
 
 from django.db import transaction
 
-import ThreadingPool
-from MryangService.Pic import PicHelper
+from MryangService.pic import PicHelper
 from MryangService.ServiceHelper import TimeWatch
 from Mryang_App import DBHelper
 from Mryang_App.models import GalleryInfo, PicInfo
-from frames import ypath, logger, TmpUtil
+from frames import ypath, logger, TmpUtil, ThreadingPool
 from frames.xml import XMLBase
 
 convertIns = None
@@ -180,7 +179,7 @@ class PConvert:
             mtp.middle_area = self.middle_area
             mtp.thum_size = self.thum_size
             mtp.all_mpath_dict = all_mpath_dict
-            tpool.append(PicHelper.begin_threads, (mtp,))
+            tpool.append(PicHelper.begin_threads, mtp)
         tpool.start()
         self.watch.tag_now('图片同步结束:')
         if len(create_db_list) > 0:

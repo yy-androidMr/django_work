@@ -1,6 +1,7 @@
 import ctypes
 import os
 import platform
+import shutil
 import sys
 import time
 
@@ -60,6 +61,8 @@ class MPathDbCache:
     def init_finish(self):
         if len(self.src_list) == 0:
             src()
+        src()
+
         if len(self.desc_list) == 0:
             desc()
         self.src_list.sort(key=lambda x: x.level, reverse=True)
@@ -96,14 +99,8 @@ class PathInfo:
 
     @staticmethod
     def get_free_storage_mb(folder):
-        if platform.system() == 'Windows':
-            folder = folder.split('\\')[0].split('/')[0]
-            free_bytes = ctypes.c_ulonglong(0)
-            ctypes.windll.kernel32.GetDiskFreeSpaceExW(ctypes.c_wchar_p(folder), None, None, ctypes.pointer(free_bytes))
-            return free_bytes.value / 1024 // 1024
-        else:
-            st = os.statvfs(folder)
-            return st.f_bavail * st.f_frsize // 1024
+        folder = folder.split('\\')[0].split('/')[0]
+        return shutil.disk_usage(folder)[2] // 1024 // 1024
 
 
 def need_input(intro, storage_low='所选磁盘剩余容量过小,请重新选择\n', path_exist='目标目录已存在!请重新选择:\n'):

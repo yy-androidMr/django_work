@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 'corsheaders',
     'Mryang_App.apps.MryangAppConfig',
-    'Mryang_Tdb.apps.MryangTdbConfig',
+    # 'Mryang_Tdb.apps.MryangTdbConfig',
 ]
 MIDDLEWARE_CLASSES = (
     'django.middleware.gzip.GZipMiddleware',
@@ -159,7 +159,7 @@ DATABASE_ROUTERS = ['MrYangServer.database_router.DatabaseAppsRouter']
 DATABASE_APPS_MAPPING = {
     # example:
     # 'app_name':'database_name',
-    'Mryang_Tdb': 'tdb',
+    # 'Mryang_Tdb': 'tdb',
     'Mryang_App': 'default',
 }
 # Password validation

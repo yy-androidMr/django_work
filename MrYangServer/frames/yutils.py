@@ -1,6 +1,7 @@
 import codecs
 import hashlib
 import locale
+import os
 import platform
 import random
 import string
@@ -273,3 +274,4 @@ def crop_size(w, h, proportion=1):
         crop_w = 0
     region = (crop_w, crop_h, w - crop_w, h - crop_h)
     return region
+
