@@ -269,6 +269,8 @@ class Photo(models.Model):
                                    blank=True)
     src_mpath = models.ForeignKey('MPath', related_name='src_mpath', on_delete=models.DO_NOTHING, null=True,
                                   blank=True)
+    photo_wall = models.ForeignKey(PhotoWall, related_name='photo_wall', on_delete=models.DO_NOTHING, null=True,
+                                   blank=True)
 
     def __eq__(self, other):
         # if other.src_file_md5 and other.src_path:
