@@ -253,13 +253,16 @@ def delrepeat_file(path):
 
 
 # 删除所有文件中 有重复的图. 列表
-def delrepeat_file_list(dir_list):
+def delrepeat_file_list(dir_list, max_size: int = 0):
     repeat_file = {}
     md5_list = {}
     for dir in dir_list:
         for root, dirs, files in os.walk(dir):
             for file in files:
                 source_rela_path = os.path.join(root, file)
+                if max_size != 0:
+                    if os.stat(source_rela_path).st_size > max_size:
+                        continue
                 file_md5 = yutils.get_md5(source_rela_path)
                 if file_md5 in md5_list:
                     repeat_file[source_rela_path] = md5_list[file_md5]

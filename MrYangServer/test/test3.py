@@ -4,6 +4,7 @@ import os
 import random
 import shutil
 import sys
+import threading
 import time
 import tracemalloc
 
@@ -120,7 +121,6 @@ from PIL import Image, ImageDraw, ImageFont
 # os.remove(r'D:/cache/mulit_dir/s2/pic\\文件夹1\\GVE周活动_结算奖励_窄屏.png')
 # print(time.time())
 
-s_img = Image.open(r'D:\cache\TouchArea\1\GVE_上周战绩_基准.png')
 # pixel = s_img.load()
 # w, h = s_img.size
 # for i in range(w):
@@ -132,7 +132,27 @@ s_img = Image.open(r'D:\cache\TouchArea\1\GVE_上周战绩_基准.png')
 # #     s_img.save(r'D:\cache\TouchArea\1\2.jpg')
 # # else:
 # s_img = s_img.convert('RGB')
-s_img.save(r'D:\cache\TouchArea\1\GVE_上周战绩_基准.jpg')
 
 # s_img.thumbnail((1920, 1080))
 # s_img.save(r'D:\cache\TouchArea\1\2.png')
+
+# def creditor(event: threading.Event):
+#     while True:
+#         event.wait()
+#         print(str(time.time()) + '我打印了一次')
+#         event.clear()
+#
+#
+# eve = threading.Event()
+# t = threading.Thread(target=creditor, args=(eve,))
+# t.start()
+# print(eve.isSet())
+# while True:
+#     time.sleep(2)
+#     print(eve.isSet())
+#     eve.set()
+
+
+stream = open(r'D:/cache/mulit_dir/s1/pic/文件夹2/CW_bofangqi.png', 'rb')
+src_img = Image.open(stream)
+print(src_img)

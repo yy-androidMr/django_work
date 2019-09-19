@@ -8,7 +8,6 @@ from frames import logger
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "MrYangServer.settings")
 django.setup()
-# from Mryang_App.models import GalleryInfo, MPath
 
 from MryangService.watchdog import statewatch
 #
@@ -33,15 +32,15 @@ if __name__ == '__main__':
     # tp.append(proxy_method, ms, 'MediaService.loop')
     # tp.append(proxy_method, ps, 'PicService.loop')
     # ()
-    PhotoService.start()
+    # PhotoService.start()
     # PhotoConvert.start()
-    # tp = tp()
-    # tp.append(PhotoConvert.start)
-    # tp.append(statewatch.start)
+    tp = tp()
+    tp.append(PhotoService.start)
+    tp.append(statewatch.start)
 
     # PicConvert.start()
     # MPath.objects.all().delete()
     # tp.append(PicConvert.start)
     # tp.append(proxy_method, statewatch, 'statewatch.loop')
     # tp.append(ps().start)
-    # tp.start()
+    tp.start()

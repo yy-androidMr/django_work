@@ -1,8 +1,10 @@
 import os
 import threading
 
-from PIL import Image
+from PIL import Image, ImageFile, PngImagePlugin
 
+ImageFile.LOAD_TRUNCATED_IMAGES = True
+PngImagePlugin.MAX_TEXT_MEMORY = 1024 * 1024 * 128  # 设置图片容量到128M
 from MryangService.ServiceHelper import TimeWatch
 from MryangService.mpath import MediaPath
 from MryangService.pic import PhotoHelper
@@ -11,20 +13,26 @@ from Mryang_App.models import Photo
 from frames import ypath, logger, ThreadingPool, yutils
 from frames.xml import XMLBase
 
-in_sync = False
 lock = threading.Lock()
+eve = threading.Event()
 
 
 def start():
-    global in_sync
-    with lock:
-        if in_sync:
-            # 正在同步了. 不需要修改.
-            return
-        else:
-            in_sync = True
+    while True:
+        eve.wait()
+        Service().start()
+        eve.clear()
 
-    Service().start()
+
+def sync_on_back():
+    if eve.isSet():
+        logger.info('正在同步,不会做任何操作')
+        # 正在同步了. 不需要修改.
+        return {'res': 2, 'res_str': '正在同步,不会做任何操作'}
+
+    logger.info('当前状态是没有在同步,即将唤起线程')
+    eve.set()
+    return {'res': 1, 'res_str': '发起同步操作成功!'}
 
 
 class Service:
@@ -51,7 +59,7 @@ class Service:
         self.err_pic.clear()
         self.watch.print_now_time('开始图片转换服务. 开启时间:')
         self.watch.tag_now(print_it=False)
-        ypath.delrepeat_file_list(self.src_dirs)
+        ypath.delrepeat_file_list(self.src_dirs, PngImagePlugin.MAX_TEXT_MEMORY)
         self.watch.tag_now('去重操作占用时长:')
         PhotoHelper.del_not_exist(self.desc_middle_root)
         logger.info('PhotoConvert.create_dirs begin!')
@@ -65,28 +73,16 @@ class Service:
     def begin_convert(self):
         fragment_list = PhotoHelper.convert_fragment_list(self.src_dirs, self.MULIT_THREAD_COUNT)
         tpool = ThreadingPool.ThreadingPool()
-        # create_db_list = []
-        # err_pic_list = []
-        # all_mpath_dict = PicHelper.mpath_dict(byid=False)
         create_db_list = []
         error_list = []
         for k in fragment_list:
-            pass
-            # mtp = MulitThreadParam()
-            # mtp.f_list = fragment_list[k]
-            # mtp.create_db_list = create_db_list
-            # mtp.err_list = err_pic_list
-            # mtp.db_glys = glys_dict
-            # mtp.desc_middle_root = self.desc_middle_root
-            # mtp.desc_thum_root = self.desc_thum_root
-            # mtp.middle_area = self.middle_area
-            # mtp.thum_size = self.thum_size
-            # mtp.all_mpath_dict = all_mpath_dict
             tpool.append(self.begin_threads, create_db_list, fragment_list[k], error_list)
         tpool.start()
-        self.watch.tag_now('图片同步结束:')
         if len(create_db_list) > 0:
             Photo.objects.bulk_create(create_db_list)
+        self.watch.tag_now('图片同步结束:')
+
+        logger.info('错误图片列表:' + str(error_list))
 
     # 多线程回调.
     def begin_threads(self, create_db_list, f_list, err_list):
@@ -95,6 +91,9 @@ class Service:
                 logger.info('这张不是图片:' + link_item.path)
                 continue
             src_file = link_item.path
+            if os.stat(src_file).st_size > PngImagePlugin.MAX_TEXT_MEMORY:
+                err_list.append(src_file)
+                continue
             src_md5 = None
             pi = Photo()
             pi.src_abs_path = src_file
