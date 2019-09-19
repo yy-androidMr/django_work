@@ -174,14 +174,14 @@ def convert_fragment_list(src_dirs, thread_count):
     return fragment_list
 
 
-# 文件输出 middle的相对路径.  2017_10/999
+# 文件输出 middle的相对路径.  2017_10/99
 def file_desc_dir(file_path):
     if not os.path.exists(file_path):
         return None
     stat = os.stat(file_path)
     second = int(stat.st_ctime)
     timeStruct = time.localtime(second)
-    return '%d_%d/%d' % (timeStruct.tm_year, timeStruct.tm_mon, second % 1000), stat.st_size
+    return '%d_%d/%d' % (timeStruct.tm_year, timeStruct.tm_mon, second % 100), stat.st_size
 
 
 def convert_middle(s_img, src_abs_path, desc_abs_path, middle_area):
