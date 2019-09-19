@@ -19,9 +19,9 @@ eve = threading.Event()
 
 def start():
     while True:
-        eve.wait()
         Service().start()
         eve.clear()
+        eve.wait()
 
 
 def sync_on_back():

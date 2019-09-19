@@ -7,6 +7,7 @@ import time
 
 import django
 
+import manage
 from Mryang_App import DBHelper
 from frames import ypath, yutils
 
@@ -14,6 +15,7 @@ sys.path.append('./../../')
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "MrYangServer.settings")
 django.setup()
+res_linkdir = (manage.root() / '../res_link').resolve()
 from MryangService import ServiceHelper
 
 from Mryang_App.models import MPath
@@ -53,10 +55,21 @@ class MPathDbCache:
             self.src_list.append(PathInfo(query))
             self.src_id_key[query.id] = query.dir.abs_path
             self.src_abs_path_key[self.src_id_key[query.id]] = query
+            self.link(self.src_id_key[query.id], query.param1)
         elif query.type == 2:
             self.desc_list.append(PathInfo(query))
             self.desc_id_key[query.id] = query.dir.abs_path
             self.desc_abs_path_key[self.desc_id_key[query.id]] = query
+            self.link(self.desc_id_key[query.id], query.param1, False)
+
+    def link(self, abs_path, folder, isSrc=True):
+        if isSrc:
+            link = res_linkdir / 'msrc' / folder
+        else:
+            link = res_linkdir / 'mdesc' / folder
+        if link.exists():
+            os.remove(link)
+        os.symlink(abs_path, link)
 
     def init_finish(self):
         if len(self.src_list) == 0:

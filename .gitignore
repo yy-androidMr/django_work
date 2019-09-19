@@ -34,3 +34,9 @@ MrYangServer/MryangService/frames/right.txt
 MrYangServer/MryangService/frames/diff.txt
 MrYangServer/MryangService/frames/left.txt
 MrYangServer/db_local.sqlite3
+!res_link/mdesc/read_me.txt
+!res_link/msrc/read_me.txt
+res_link/mdesc/
+res_link/msrc/
+res_link/msrc/
+
