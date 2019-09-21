@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from django.views.decorators.gzip import gzip_page
 
+from Mryang_App.controlls import PhotoWallCtrl
 from Mryang_App.forms import CreateUserF, LoginUserF, UserAlbumF
 from Mryang_App.result.Enums import LOGIN, UPLOAD
 from Mryang_App import yquery, forms
@@ -263,3 +264,8 @@ def download_test(request):
     response['Content-Type'] = 'application/octet-stream'
     response['Content-Disposition'] = 'attachment;filename="1.mp4"'
     return response
+
+
+def create_default_pw(request):
+    return HttpResponse(PhotoWallCtrl.batch_create_on_dir())
+ 

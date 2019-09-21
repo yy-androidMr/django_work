@@ -210,9 +210,10 @@ class PhotoWall(models.Model):
     # folder_key = models.ForeignKey(Dir, related_name='dir', on_delete=models.CASCADE)
     # 原始路径 绝对路径
     # abs_path = models.CharField(max_length=500, default='')
-    # 相册名称
-
+    # d原始名称
     name = models.CharField(max_length=100, default='')
+    # 修改后的显示昵称
+    nick = models.CharField(max_length=100, default='')
     # 相册简介
     intro = models.CharField(max_length=100, default='')
     # 相册时间

@@ -16,11 +16,17 @@ from frames.xml import XMLBase
 lock = threading.Lock()
 eve = threading.Event()
 
+
 def start():
     while True:
         Service().start()
         eve.clear()
         eve.wait()
+
+
+# 是否正在同步
+def in_sync():
+    return eve.isSet()
 
 
 def sync_on_back():
