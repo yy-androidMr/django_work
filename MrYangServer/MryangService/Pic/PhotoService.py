@@ -85,7 +85,7 @@ class Service:
         logger.info('错误图片列表:' + str(error_list))
 
     # 多线程回调.
-    def begin_threads(self, create_db_list, f_list, err_list):
+    def begin_threads(self, create_db_list: list, f_list, err_list):
         for link_item in f_list:
             if not yutils.is_gif(link_item.ext) and not yutils.is_photo(link_item.ext):
                 logger.info('这张不是图片:' + link_item.path)
@@ -99,16 +99,16 @@ class Service:
             pi.src_abs_path = src_file
             pi.src_name = link_item.relative
             pi.src_mpath = MediaPath.mpath_db_cache.src_abs_path_key[link_item.pic_root]
-            desc_dir, pi.src_size = PhotoHelper.file_desc_dir(pi.src_abs_path)
 
             try:
                 file_steam = open(src_file, 'rb')
                 pi.src_md5 = yutils.get_md5_steam(file_steam)
+                desc_rela_name, pi.src_size = PhotoHelper.file_desc_dir(pi.src_abs_path, pi.src_md5)
                 src_img = Image.open(file_steam)
                 if src_img.mode == 'RGB':
-                    pi.desc_rela_path = ypath.join(desc_dir, pi.src_md5 + '.jpg')
+                    pi.desc_rela_path = desc_rela_name + '.jpg'
                 else:
-                    pi.desc_rela_path = ypath.join(desc_dir, pi.src_md5 + link_item.ext)
+                    pi.desc_rela_path = desc_rela_name + link_item.ext
                 pi.src_width, pi.src_height = src_img.size
             except:
                 err_list.append(src_file)
@@ -142,4 +142,9 @@ class Service:
                 del t_img
             else:
                 del m_img
-            create_db_list.append(pi)
+
+            with lock:
+                create_db_list.append(pi)
+                if len(create_db_list) >= PhotoHelper.SYNC_PHOTO_DB_COUNT:
+                    Photo.objects.bulk_create(create_db_list)
+                    create_db_list.clear()

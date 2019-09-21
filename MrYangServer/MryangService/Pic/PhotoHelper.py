@@ -12,6 +12,8 @@ from Mryang_App.DBHelper import PicHelp
 from Mryang_App.models import Photo, Dir
 from frames import ypath, yutils, logger
 
+SYNC_PHOTO_DB_COUNT = 66 * 10  # 有N个数据.就进行同步,而不是全部组织完毕才同步.这样效率太慢了  66一批?
+
 
 # key:绝对路径,  value:MPath 数据.
 def src_list(src_root):
@@ -175,13 +177,17 @@ def convert_fragment_list(src_dirs, thread_count):
 
 
 # 文件输出 middle的相对路径.  2017_10/99
-def file_desc_dir(file_path):
+def file_desc_dir(file_path, file_md5):
     if not os.path.exists(file_path):
         return None
     stat = os.stat(file_path)
     second = int(stat.st_ctime)
     timeStruct = time.localtime(second)
-    return '%d_%d/%d' % (timeStruct.tm_year, timeStruct.tm_mon, second % 100), stat.st_size
+
+    # str(int(stat.st_ctime) % 10000) + '_' + pi.src_md5[:5]
+
+    return '%d_%d/%d/%d_%s' % (
+        timeStruct.tm_year, timeStruct.tm_mon, second % 100, int(stat.st_ctime) % 10000, file_md5[:5]), stat.st_size
 
 
 def convert_middle(s_img, src_abs_path, desc_abs_path, middle_area):

@@ -91,8 +91,5 @@ def pic_level2_2json(c_id, page):
     # jsonstr = ''
     return jsonstr
 
-
-# def upp_json():
-#     dirs = UpLoadDir.objects.all()
-#     jsonstr = json.dumps(list(dirs))
-#     return jsonstr
+def photo_wall():
+    PhotoWall.objects.all()
