@@ -151,8 +151,22 @@ from PIL import Image, ImageDraw, ImageFont
 #     time.sleep(2)
 #     print(eve.isSet())
 #     eve.set()
-
-
-stream = open(r'D:/cache/mulit_dir/s1/pic/文件夹2/CW_bofangqi.png', 'rb')
-src_img = Image.open(stream)
-print(src_img)
+# ll = []
+#
+#
+# def tt(start):
+#     for i in range(10):
+#         time.sleep(random.randint(1, 3))
+#         ll.append(start + i)
+#         print(threading.current_thread().name + ' :lcount:' + str(len(ll)))
+#
+#
+# t = []
+# for i in range(10):
+#     t.append(threading.Thread(target=tt, args=(i * 10,)))
+#
+# for tt in t:
+#     tt.start()
+#
+# for tt in t:
+#     tt.join()

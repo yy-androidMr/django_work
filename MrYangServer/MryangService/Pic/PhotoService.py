@@ -16,7 +16,6 @@ from frames.xml import XMLBase
 lock = threading.Lock()
 eve = threading.Event()
 
-
 def start():
     while True:
         Service().start()
@@ -46,7 +45,7 @@ class Service:
         self.desc_webp_root = ypath.join(self.desc_root, pic_config.webp)  # 放置webp的地方
         self.middle_area = int(pic_config.max_pic_size) ** 2
         self.thum_size = int(pic_config.thum_size)
-        self.MULIT_THREAD_COUNT = 5  # 多线程转换尺寸.
+        self.MULIT_THREAD_COUNT = 6  # 多线程转换尺寸.
         self.watch = TimeWatch('PhotoService')
         self.err_pic = []
         self.src_dirs = None
@@ -94,12 +93,10 @@ class Service:
             if os.stat(src_file).st_size > PngImagePlugin.MAX_TEXT_MEMORY:
                 err_list.append(src_file)
                 continue
-            src_md5 = None
             pi = Photo()
             pi.src_abs_path = src_file
             pi.src_name = link_item.relative
             pi.src_mpath = MediaPath.mpath_db_cache.src_abs_path_key[link_item.pic_root]
-
             try:
                 file_steam = open(src_file, 'rb')
                 pi.src_md5 = yutils.get_md5_steam(file_steam)
@@ -117,9 +114,6 @@ class Service:
             with lock:
                 desc_root = MediaPath.desc()
                 pi.desc_mpath = MediaPath.mpath_db_cache.desc_abs_path_key[desc_root]
-                # desc_middle_path = ypath.join(desc_root, self.desc_middle_root, pi.desc_dir, pi.src_md5 + pi.ext)
-                # desc_thum_path = ypath.join(desc_root, self.desc_thum_root, pi.desc_dir, pi.src_md5 + pi.ext)
-                # desc_webp_path = ypath.join(desc_root, self.desc_webp_root, pi.desc_dir, pi.src_md5 + pi.ext)
                 desc_middle_path = ypath.join(desc_root, self.desc_middle_root, pi.desc_rela_path)
                 desc_thum_path = ypath.join(desc_root, self.desc_thum_root, pi.desc_rela_path)
                 desc_webp_path = ypath.join(desc_root, self.desc_webp_root, pi.desc_rela_path)
@@ -142,7 +136,6 @@ class Service:
                 del t_img
             else:
                 del m_img
-
             with lock:
                 create_db_list.append(pi)
                 if len(create_db_list) >= PhotoHelper.SYNC_PHOTO_DB_COUNT:
