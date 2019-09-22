@@ -266,6 +266,15 @@ def download_test(request):
     return response
 
 
-def create_default_pw(request):
+# 测试用  正常不走这里.
+def create_default_photowall(request):
     return HttpResponse(PhotoWallCtrl.batch_create_on_dir())
- 
+
+
+# 这个可能要走. 但是要设计一下.
+def batch_default_photo(request):
+    return HttpResponse(PhotoWallCtrl.batch_photo_to_wall())
+
+
+def photo_wall_list(request):
+    return HttpResponse(PhotoWallCtrl.photo_wall_list(1))

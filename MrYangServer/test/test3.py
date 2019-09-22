@@ -169,4 +169,5 @@ from PIL import Image, ImageDraw, ImageFont
 #     tt.start()
 #
 # for tt in t:
-#     tt.join()
+ddd={'a':'b'}
+print(ddd['a'])

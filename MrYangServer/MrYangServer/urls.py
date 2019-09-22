@@ -44,6 +44,10 @@ urlpatterns = [
     url(r'media/movie', views.media_moive),
     url(r'media/tv', views.media_tv),
     url(r'media/video', views.media_video),
+    url(r'photo/default_pw', views.create_default_photowall),
+    url(r'photo/default_p_pw', views.batch_default_photo),
+    url(r'photo/pw', views.photo_wall_list),
+
     # static(res_url, document_root=res_root)
     # url(r'^any/(.*)/$', views.any_page),
 ]
