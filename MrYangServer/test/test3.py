@@ -169,5 +169,6 @@ from PIL import Image, ImageDraw, ImageFont
 #     tt.start()
 #
 # for tt in t:
-ddd={'a':'b'}
-print(ddd['a'])
+# ddd={'a':'b'}
+# print(ddd['a'])
+Image.open(r'D:\react\t1\react_test_1\h_m\background.jpg').save(r'D:\react\t1\react_test_1\h_m\1.jpg')

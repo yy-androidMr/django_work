@@ -1,4 +1,5 @@
 # -*-coding:utf-8 -*-
+import json
 import os
 from django.contrib import auth
 from django.http import HttpResponse, FileResponse
@@ -196,9 +197,10 @@ def m_gallery(request):
 
 
 def spe_gallery(request):
-    json = yquery.pic_level1_2json(NOT_SEE)
+    ddd=[{"name": "abc","rel_path": "rel_path","intro": "intro","time": "time","thum": "thum"}]
+    print(json.dumps(ddd))
     return render(request, 'gallery/firstLevel/index-color.html',
-                  {'json': json})
+                  {'json':json.dumps(ddd)})
 
 
 def dead_gallery(request):
@@ -278,3 +280,10 @@ def batch_default_photo(request):
 
 def photo_wall_list(request):
     return HttpResponse(PhotoWallCtrl.photo_wall_list(1))
+
+def photo_list(request,wall_id):
+    return HttpResponse(PhotoWallCtrl.photo_list(wall_id))
+
+    # if (request.method == 'POST'):
+    #     request.POST.get('pw_id')
+    #     pass

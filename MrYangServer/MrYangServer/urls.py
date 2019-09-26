@@ -47,6 +47,7 @@ urlpatterns = [
     url(r'photo/default_pw', views.create_default_photowall),
     url(r'photo/default_p_pw', views.batch_default_photo),
     url(r'photo/pw', views.photo_wall_list),
+    url(r'photo/pl/([0-9]+)$', views.photo_list),
 
     # static(res_url, document_root=res_root)
     # url(r'^any/(.*)/$', views.any_page),

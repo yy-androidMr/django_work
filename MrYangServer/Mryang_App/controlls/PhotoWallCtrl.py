@@ -80,4 +80,9 @@ def photo_wall_list(show_level):
                                                                                                       'level',
                                                                                                       'photo_path',
                                                                                                       'mpath')
-    return json.dumps(list(pw_query))
+    return json.dumps(list(pw_query) * 100)
+
+
+def photo_list(wall_id):
+    pl_query = Photo.objects.filter(photo_wall_id=wall_id).values('desc_rela_path')
+    return json.dumps(list(pl_query))
