@@ -272,6 +272,9 @@ class Photo(models.Model):
                                   blank=True)
     photo_wall = models.ForeignKey(PhotoWall, related_name='photo_wall', on_delete=models.DO_NOTHING, null=True,
                                    blank=True)
+    #创建时间和修改时间
+    ctime = models.IntegerField(default=-1)
+    mtime = models.IntegerField(default=-1)
 
     def __eq__(self, other):
         # if other.src_file_md5 and other.src_path:

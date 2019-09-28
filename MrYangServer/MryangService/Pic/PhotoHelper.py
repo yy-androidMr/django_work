@@ -177,11 +177,13 @@ def convert_fragment_list(src_dirs, thread_count):
 
 
 # 文件输出 middle的相对路径.  2017_10/99
-def file_desc_dir(file_path, file_md5):
+def file_desc_dir(stat, file_path, file_md5):
     if not os.path.exists(file_path):
         return None
-    stat = os.stat(file_path)
-    second = int(stat.st_ctime)
+    if stat.st_ctime > stat.st_mtime:
+        second=int(stat.st_mtime)
+    else:
+        second=int(stat.st_ctime)
     timeStruct = time.localtime(second)
 
     # str(int(stat.st_ctime) % 10000) + '_' + pi.src_md5[:5]

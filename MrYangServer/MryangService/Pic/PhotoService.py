@@ -96,7 +96,8 @@ class Service:
                 logger.info('这张不是图片:' + link_item.path)
                 continue
             src_file = link_item.path
-            if os.stat(src_file).st_size > PngImagePlugin.MAX_TEXT_MEMORY:
+            file_stat = os.stat(src_file)
+            if file_stat.st_size > PngImagePlugin.MAX_TEXT_MEMORY:
                 err_list.append(src_file)
                 continue
             pi = Photo()
@@ -106,7 +107,9 @@ class Service:
             try:
                 file_steam = open(src_file, 'rb')
                 pi.src_md5 = yutils.get_md5_steam(file_steam)
-                desc_rela_name, pi.src_size = PhotoHelper.file_desc_dir(pi.src_abs_path, pi.src_md5)
+                pi.ctime=int(file_stat.st_ctime)
+                pi.mtime=int(file_stat.st_mtime)
+                desc_rela_name, pi.src_size = PhotoHelper.file_desc_dir(file_stat,pi.src_abs_path, pi.src_md5)
                 src_img = Image.open(file_steam)
                 if src_img.mode == 'RGB':
                     pi.desc_rela_path = desc_rela_name + '.jpg'
