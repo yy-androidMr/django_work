@@ -153,8 +153,3 @@ def desc_tmp():
     create_dirs(tmp, True)
     return tmp
 
-
-# 检查一些本地的路径. 比如资源根路径.之类的
-def check_tmp_paths():
-    src()
-    desc()

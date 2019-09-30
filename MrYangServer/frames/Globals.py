@@ -11,6 +11,7 @@ HOME_PC = 2
 MAC = 3
 COMPANY_PC = 4
 T_SERVER = 5
+SURFACE_6 = 6
 
 # mediaservice 转码时,是否判断desc中文件存在要不要覆盖.  True为覆盖.
 MEDIA_SERVICE_COVER_DESC = False
@@ -24,6 +25,7 @@ development_type = {
     MAC: 'MAC',
     COMPANY_PC: '公司',
     T_SERVER: '腾讯云',
+    SURFACE_6: 'surface6',
 }
 
 
