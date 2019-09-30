@@ -38,7 +38,6 @@ def get_middle_abs_path(id):
 def del_not_exist(middle_dir):
     # 需要验证 还没验证呢
     p_infos = Photo.objects.all()
-    del_dict = {}
     with transaction.atomic():
         for p_info in p_infos:
             desc_abs_path = get_middle_abs_path(p_info.desc_mpath_id)

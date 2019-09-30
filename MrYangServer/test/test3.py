@@ -7,6 +7,7 @@ import sys
 import threading
 import time
 import tracemalloc
+from pathlib import PurePath, Path
 
 import piexif
 from PIL import Image, ImageDraw, ImageFont
@@ -172,6 +173,32 @@ from PIL import Image, ImageDraw, ImageFont
 # ddd={'a':'b'}
 # print(ddd['a'])
 # Image.open(r'D:\react\t1\react_test_1\h_m\background.jpg').save(r'D:\react\t1\react_test_1\h_m\1.jpg')
-stat = os.stat(r'F:\cache\mmexport1560874663473.gif')
-print(stat.st_ctime)
-print(stat.st_mtime)
+# stat = os.stat(r'F:\cache\mmexport1560874663473.gif')
+# print(stat.st_ctime)
+# print(stat.st_mtime)
+# from frames import yutils
+# from zlib import crc32, adler32
+#
+#
+# def getCrc32(filename):  # 计算crc32
+#     with open(filename, 'rb') as f:
+#         return crc32(f.read())
+#
+#
+# def getAdler32(filename):  # 计算crc32
+#     with open(filename, 'rb') as f:
+#         return ""
+#         # return adler32(f.read())
+#
+#
+# print(time.time())
+# print(hex(getCrc32(r'D:\cache\HY人：QQ追缉.HD1280高清中字版.mp4')))
+# print(time.time())
+#
+# # print(hex(getAdler32(r'D:\cache\1.jpg')))
+# for i in range(1000):
+#     getAdler32(r'D:\cache\1.jpg')
+
+p = Path(r'D:\cache\mulit_dir\s1')
+for child in p.iterdir():
+    print(child)

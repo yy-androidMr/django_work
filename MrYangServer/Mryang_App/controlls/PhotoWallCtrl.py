@@ -80,7 +80,7 @@ def photo_wall_list(show_level):
                                                                                                       'level',
                                                                                                       'photo_path',
                                                                                                       'mpath')
-    return json.dumps(list(pw_query) * 100)
+    return json.dumps(list(pw_query))
 
 
 def photo_list(wall_id):

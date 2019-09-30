@@ -238,10 +238,12 @@ class PhotoWall(models.Model):
 class Photo(models.Model):
     # gallery_key = models.ForeignKey(GalleryInfo, relatedk_name='gallery', on_delete=models.CASCADE)
     # src中的文件绝对路径.
-    src_abs_path = models.CharField(max_length=500)
+    src_abs_path = models.CharField(max_length=500, db_index=True)
 
     # 这是文件的md5值!!暂时没用到.
     src_md5 = models.CharField(max_length=50, default='')
+    # src的Crc32
+    src_crc32 = models.IntegerField(default=0)
     #  desc_mpath + desc_dir + src_md5 +  ext  显示拼接
     #  输出,在middle,thum下的的相对路径, 之前设想通过拼接.  23个文件,减少12k.如果后续有问题.则需要调整.
     desc_rela_path = models.CharField(max_length=100)
@@ -272,7 +274,7 @@ class Photo(models.Model):
                                   blank=True)
     photo_wall = models.ForeignKey(PhotoWall, related_name='photo_wall', on_delete=models.DO_NOTHING, null=True,
                                    blank=True)
-    #创建时间和修改时间
+    # 创建时间和修改时间
     ctime = models.IntegerField(default=-1)
     mtime = models.IntegerField(default=-1)
 

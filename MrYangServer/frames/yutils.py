@@ -6,6 +6,7 @@ import platform
 import random
 import string
 import subprocess
+from zipfile import crc32
 
 import imageio
 
@@ -161,6 +162,10 @@ def get_md5(file_path):
     md5 = str(hash_code).lower()
     return md5
 
+
+def get_crc32(file_path):
+    with open(file_path, 'rb') as f:
+        return crc32(f.read())
 
 def is_photo(path):
     if not any(str_ in path.lower() for str_ in ('.jpeg', '.jpg', 'png', 'bmp')):
