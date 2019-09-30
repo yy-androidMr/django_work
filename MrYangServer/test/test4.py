@@ -1,2 +1,4 @@
 import subprocess
-print(subprocess.check_output('ping www.baidu.com',shell=True).decode('utf-8'))
+out =subprocess.check_output('ping www.baidu.com',shell=True)
+print(out.decode('gbk'))
+# print(decode('utf-8'))
