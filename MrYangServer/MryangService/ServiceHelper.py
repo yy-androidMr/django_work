@@ -57,7 +57,7 @@ def create_dir(cur_dir_dbs, info, type, tags='', save_it=True):
     d_model.abs_path = ypath.convert_path(info.path)
     d_model.rel_path = rel_path
     d_model.type = type
-    d_model.tags = tags  # if info[ypath.KEYS.LEVEL] == 0 else ''
+    # d_model.tags = tags  # if info[ypath.KEYS.LEVEL] == 0 else ''
     try:
         parent = cur_dir_dbs[parent_path]  # Dir.objects.get(abs_path=parent_path)
         d_model.parent_dir = parent

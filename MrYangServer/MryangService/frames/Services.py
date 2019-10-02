@@ -2,6 +2,7 @@ import os
 import sys
 import time
 
+
 sys.path.append('./../../')
 import django
 from frames import logger
@@ -13,6 +14,8 @@ from MryangService.watchdog import statewatch
 #
 from frames.ThreadingPool import ThreadingPool as tp
 from MryangService.pic import PhotoService
+from MryangService.video import VideoService
+
 from MryangService import MediaService as ms
 
 
@@ -35,7 +38,8 @@ if __name__ == '__main__':
     # PhotoService.start()
     # PhotoConvert.start()
     tp = tp()
-    tp.append(PhotoService.start)
+    # tp.append(PhotoService.start)
+    tp.append(VideoService.start)
     tp.append(statewatch.start)
 
     # PicConvert.start()

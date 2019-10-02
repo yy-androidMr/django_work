@@ -152,7 +152,7 @@ class Media(models.Model):
     id = models.AutoField(primary_key=True)
     #   文件绝对路径.
     abs_path = models.CharField(max_length=500, default='')
-    # 输出路径
+    # 输出相对路径
     desc_path = models.CharField(max_length=500, default='')
     # m3u8
     m3u8_path = models.CharField(max_length=500, default='')
@@ -182,6 +182,8 @@ class Media(models.Model):
     #  父文件夹  理论上不可能是空
     folder_key = models.ForeignKey(Dir, related_name='p_dir', null=True,
                                    blank=True, on_delete=models.CASCADE)
+    desc_mpath = models.ForeignKey('MPath', related_name='mulitPath', on_delete=models.DO_NOTHING, null=True,
+                                   blank=True)
     # 字幕文件
     # 其他预留
     param1 = models.CharField(max_length=500, default='')  # 这里存储m3u8路径

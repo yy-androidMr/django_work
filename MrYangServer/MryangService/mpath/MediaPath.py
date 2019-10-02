@@ -138,7 +138,7 @@ def insert_path(path, type):
     if query_ress.count() == 0:
         dir = ServiceHelper.create_dir_root(path, yutils.M_FTYPE_MPATH)
         mpath = MPath()
-        mpath.path = path
+        # mpath.path = path
         mpath.type = type
         mpath.param1 = yutils.md5_of_str(path)
         mpath.dir = dir
