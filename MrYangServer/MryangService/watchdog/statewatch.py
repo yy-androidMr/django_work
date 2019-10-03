@@ -1,7 +1,7 @@
 import json
 import os
 from socket import *
-from MryangService import MediaService as ms
+# from MryangService import MediaService as ms
 from MryangService.ServiceHelper import TimeWatch
 from MryangService.pic import PhotoService
 from frames import logger
@@ -31,12 +31,12 @@ def parse_path(path):
     if path is None:
         return '{\"res\":404}'
     # 解析各种路径.
-    if 'MediaState' == path:  # 当前的mediaService处理进度
-        return json.dumps(ms.cur_state())
-    if 'MediaSyncDb' == path:  # 同步media数据库
-        return json.dumps(ms.sync_on_back())
-    if 'MediaSyncState' == path:  # 查询media数据库同步状态
-        return json.dumps(ms.get_state())
+    # if 'MediaState' == path:  # 当前的mediaService处理进度
+    #     return json.dumps(ms.cur_state())
+    # if 'MediaSyncDb' == path:  # 同步media数据库
+    #     return json.dumps(ms.sync_on_back())
+    # if 'MediaSyncState' == path:  # 查询media数据库同步状态
+    #     return json.dumps(ms.get_state())
     if 'PicSyncDb' == path:  # 同步Pic数据库
         return json.dumps(PhotoService.sync_on_back())
     if 'mem' == path:

@@ -18,20 +18,20 @@ SYNC_PHOTO_DB_COUNT = 66 * 10  # 有N个数据.就进行同步,而不是全部�
 # key:绝对路径,  value:MPath 数据.
 def src_list(src_root):
     src_paths = {}
-    for src_dir in MediaPath.mpath_db_cache.src_list:
+    for src_dir in MediaPath.pdc().src_list:
         src_paths[ypath.join(src_dir.path, src_root)] = src_dir.query
     return src_paths
 
 
 def desc_list(desc_root):
     desc_paths = {}
-    for desc_dir in MediaPath.mpath_db_cache.desc_list:
+    for desc_dir in MediaPath.pdc().desc_list:
         desc_paths[ypath.join(desc_dir.path, desc_root)] = desc_dir.query
     return desc_paths
 
 
 def get_middle_abs_path(id):
-    return MediaPath.mpath_db_cache.desc_id_key[id]
+    return MediaPath.pdc().search_by_id(id, False).path
 
 
 # 与文件夹对应, 如果没有文件夹, 删除数据库 Dir
@@ -180,9 +180,9 @@ def file_desc_dir(stat, file_path, file_md5):
     if not os.path.exists(file_path):
         return None
     if stat.st_ctime > stat.st_mtime:
-        second=int(stat.st_mtime)
+        second = int(stat.st_mtime)
     else:
-        second=int(stat.st_ctime)
+        second = int(stat.st_ctime)
     timeStruct = time.localtime(second)
 
     # str(int(stat.st_ctime) % 10000) + '_' + pi.src_md5[:5]

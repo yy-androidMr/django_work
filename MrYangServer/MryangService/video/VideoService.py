@@ -1,5 +1,6 @@
 import os
 import threading
+from pathlib import Path
 
 from MryangService import ServiceHelper
 from MryangService.pic import PhotoHelper
@@ -50,44 +51,20 @@ class Service:
     def start(self):
         self.src_dirs = PhotoHelper.src_list(self.src_root)
         self.desc_dirs = PhotoHelper.desc_list(self.desc_root)
-        self.gen_dir()
         VideoHelper.handle_meida_db_exists(self.src_dirs)
-        # 生成文件夹数据库.
-
-    def gen_dir(self):
-        # str_media_src = str(media_src_root.as_posix())
-        dir_db_paths = {}
+        dm_dict = VideoHelper.gen_dir(self.src_dirs)
         for src in self.src_dirs:
-            if not os.path.exists(src):
-                continue
-            for dir in os.listdir(src):
-                dir = ypath.join(src, dir)
-                if not os.path.isdir(dir):
+            media_src_root = Path(src)
+            files = media_src_root.rglob('*.*')
+            for file in files:
+                if not file.is_file() or not yutils.is_movie(file):
                     continue
-                m_file_list = ypath.path_res(dir, parse_file=False)
-                all_media_dirs = Dir.objects.filter(abs_path=dir)
-                for dir_db in all_media_dirs:
-                    if dir_db.abs_path not in m_file_list:
-                        logger.info('被删除的路径:' + dir_db.abs_path)
-                        dir_db.delete()
-                    else:
-                        dir_db_paths[dir_db.abs_path] = dir_db
+                media_db, mpath = VideoHelper.get_media_mpath_db(src, str(file.as_posix()), dm_dict)
+                VideoHelper.check_media_db_state(media_db)
+                if MediaHelp.is_err(media_db.state):
+                    media_db.save()
+                    continue
+                VideoHelper.analysis_audio_info(media_db, self.ffprobe_tools, self.ffmpeg_tools, self.mulit_audio_dir,
+                                                mpath)
 
-                for local_dir in m_file_list:
-                    if local_dir.path not in dir_db_paths:
-                        dir_db_paths[local_dir.path] = ServiceHelper.create_dir(dir_db_paths, local_dir,
-                                                                                yutils.M_FTYPE_MOIVE,
-                                                                                dir)  # create_dir(dir_db_paths, local_dir, dir)
-                        logger.info('创建该文件夹:' + str(local_dir))
-        return dir_db_paths
-
-    def compress(media_db):
-        # 这里要做三步骤调用  1.音轨检查 2.格式转换(或者复制) 3.切片
-        if MediaHelp.is_err(media_db.state):
-            return
-        cur_file_info['db'] = media_db
-        analysis_audio_info(media_db)
-
-        compress_media(media_db)
-        create_thum(media_db)
-        cur_file_info['db'] = None
+        # 生成文件夹数据库.

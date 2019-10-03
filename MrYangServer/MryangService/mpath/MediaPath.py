@@ -1,9 +1,6 @@
-import ctypes
 import os
-import platform
 import shutil
 import sys
-import time
 
 import django
 
@@ -27,10 +24,29 @@ class MPathDbCache:
     def __init__(self):
         self.src_list = []
         self.desc_list = []
-        self.src_id_key = {}
-        self.desc_id_key = {}
-        self.src_abs_path_key = {}
-        self.desc_abs_path_key = {}
+
+    def search_by_abs_path(self, path, is_src=True):
+        if is_src:
+            for src in self.src_list:
+                if src.path == path:
+                    return src.query
+        else:
+            for desc in self.desc_list:
+                if desc.path == path:
+                    return desc.query
+
+    def search_by_id(self, id, is_src=True):
+        if is_src:
+            for src in self.src_list:
+                if src.id == id:
+                    return src.query
+        else:
+            for desc in self.desc_list:
+                if desc.id == id:
+                    return desc.query
+        # if is_src:
+        #     for src in self.src_list:
+        #         if src.
 
     # def mpath_dict(type=None, byid=True):
     #     if type:
@@ -53,14 +69,10 @@ class MPathDbCache:
     def append(self, query):
         if query.type == 1:
             self.src_list.append(PathInfo(query))
-            self.src_id_key[query.id] = query.dir.abs_path
-            self.src_abs_path_key[self.src_id_key[query.id]] = query
-            self.link(self.src_id_key[query.id], query.param1)
+            self.link(query.path, query.param1)
         elif query.type == 2:
             self.desc_list.append(PathInfo(query))
-            self.desc_id_key[query.id] = query.dir.abs_path
-            self.desc_abs_path_key[self.desc_id_key[query.id]] = query
-            self.link(self.desc_id_key[query.id], query.param1, False)
+            self.link(query.path, query.param1, False)
 
     def link(self, abs_path, folder, isSrc=True):
         if isSrc:
@@ -85,6 +97,10 @@ class MPathDbCache:
 mpath_db_cache = MPathDbCache()
 
 
+def pdc():
+    return mpath_db_cache
+
+
 class PathInfo:
     def __init__(self, query):
         self.query = query
@@ -97,7 +113,11 @@ class PathInfo:
 
     @property
     def path(self):
-        return self.query.dir.abs_path
+        return self.query.path
+
+    @property
+    def id(self):
+        return self.query.id
 
     @property
     def level(self):
@@ -142,6 +162,7 @@ def insert_path(path, type):
         mpath.type = type
         mpath.param1 = yutils.md5_of_str(path)
         mpath.dir = dir
+        mpath.path = path
         mpath.save()
         return mpath
     else:

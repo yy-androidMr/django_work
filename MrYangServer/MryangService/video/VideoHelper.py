@@ -6,14 +6,71 @@ from pathlib import Path
 
 from django.db import transaction
 
+from MryangService import ServiceHelper
 from MryangService.mpath import MediaPath
 from Mryang_App.DBHelper import MediaHelp
 
 # 这里需要制作一下 删除src没有的所有文件文件夹. 是否需要抽出成一个公共函数?
-from Mryang_App.models import Media, MPath
+from Mryang_App.models import Media, MPath, Dir
 from frames import yutils, ypath, logger
 
 lock = threading.Lock()
+
+
+# 检查该状态是否正确
+def check_media_db_state(media_db:Media):
+    if media_db.state ==  MediaHelp.STATE_INIT:
+        return True
+    if media_db.state == MediaHelp.STATE_AUDIO_FINISH:
+        #需要检查音频是否正常
+        return True 
+
+# 创建dir 目录
+def gen_dir(src_dirs):
+    def db_dir_exist(db_dirs, src_dir_list):
+        # dir不存在则删除.
+        exist_pic_dirs = {}
+        for pic_db in db_dirs:
+            digout = False
+            for src_dir in src_dir_list:
+                if src_dir in pic_db.abs_path and os.path.isdir(pic_db.abs_path):
+                    exist_pic_dirs[pic_db.abs_path] = pic_db
+                    digout = True
+                    break
+            if not digout:
+                pic_db.delete()
+        return exist_pic_dirs
+
+    def get_db_dirs():
+        for dir in src_dirs:
+            ypath.del_none_dir(dir)
+        all_pic_dirs = Dir.objects.filter(type=yutils.M_FTYPE_MOIVE)
+        db_dirs = db_dir_exist(all_pic_dirs, src_dirs)
+        return db_dirs
+
+    def folder_call(folder_list, is_root):
+        if is_root:
+            if folder_list.path not in exist_pic_dirs:
+                exist_pic_dirs[folder_list.path] = ServiceHelper.create_dir(exist_pic_dirs, folder_list,
+                                                                            yutils.M_FTYPE_MOIVE)
+            return
+        save_list = []
+        for dir in folder_list:
+            if dir.path not in exist_pic_dirs:
+                db_dir = ServiceHelper.create_dir(exist_pic_dirs, dir,
+                                                  yutils.M_FTYPE_PIC, save_it=False)
+                exist_pic_dirs[dir.path] = db_dir
+                save_list.append(db_dir)
+                # PicHelper.handle_files_md5(src_file, dir_md5)
+        for save in save_list:
+            save.save()
+        pass
+
+    exist_pic_dirs = get_db_dirs()
+    for src_dir in src_dirs:
+        # ypath.path_res(src_dir)
+        ypath.ergodic_folder(src_dir, folder_call_back=folder_call)
+    return exist_pic_dirs
 
 
 # 删除本地不存在的数据
@@ -28,34 +85,33 @@ def handle_meida_db_exists(src_root_list):
                 media_db.delete()
 
 
-# 获取到media的数据库字段.
-def get_media_db(file_path, dm_dict):
+# 获取到media的数据库字段.(Media,MPath)
+def get_media_mpath_db(src_root, file_path: str, dm_dict):
     if os.path.isdir(file_path):
         return None
     if not yutils.is_movie(file_path):
         return None
-    file = ypath.convert_path(file_path)
-    media_db_query = Media.objects.filter(abs_path=file)
+    file_path = ypath.convert_path(file_path)
+    mpath = MediaPath.pdc().search_by_abs_path(src_root)
+    media_db_query = Media.objects.filter(abs_path=file_path)
     cur_media_db = None
     if len(media_db_query) > 0:
         cur_media_db = media_db_query[0]
+        return (cur_media_db, mpath)
     else:
         # target = ypath.decompose_path(
-        #     file, str(media_src_root), str(convert_root), exten='.mp4')
+        #     file, str(src_root), str(convert_root), exten='.mp4')
         media_db = Media()
-        media_db.abs_path = file
+        media_db.abs_path = file_path
         media_db.state = MediaHelp.STATE_INIT
-        media_db.file_name = os.path.basename(file)
-        # media_db.desc_path = target
+        media_db.file_name = os.path.basename(file_path)
+        media_db.src_mpath = mpath
+        # media_db.nginx_path =
+        media_db.desc_path = file_path.replace(src_root, '')
         # media_db.nginx_path = target.replace(str(convert_root.as_posix()), '')
         # create_db_list.append(media_db)
-        media_db.folder_key = dm_dict[os.path.dirname(file)]
-    pass
-
-
-def compress(media_db):
-    if MediaHelp.is_err(media_db.state):
-        return
+        media_db.folder_key = dm_dict[os.path.dirname(file_path)]
+        return (media_db, mpath)
 
 
 # 转码音频
@@ -130,10 +186,9 @@ def analysis_audio_info(media_db, ffprobe_tools, ffmpeg_tools, mulit_audio_dir, 
         # logger.info(out_file)
         with lock:
             mulit_audio_path = ypath.join(MediaPath.src(), mulit_audio_dir)
-        desc_mulit_path = ypath.decompose_path(media_db.abs_path, str(mpath.pa), str(mulit_audio_path))
-
-        copy_cmd = ffmpeg_tools + ' -i \"' + media_db.abs_path + '\"' + decode_map + '  -vcodec copy -acodec copy \"' + out_file + '\"'
-        yutils.process_cmd(copy_cmd, done_call=rm_on_audio_copy, param=(media_db.abs_path, out_file, desc_mulit_path))
+        desc_mulit_path = ypath.decompose_path(media_db.abs_path, str(mpath.path), str(mulit_audio_path))
+        # copy_cmd = ffmpeg_tools + ' -i \"' + media_db.abs_path + '\"' + decode_map + '  -vcodec copy -acodec copy \"' + out_file + '\"'
+        # yutils.process_cmd(c opy_cmd, done_call=rm_on_audio_copy, param=(media_db.abs_path, out_file, desc_mulit_path))
 
     if MediaHelp.is_err(media_db.state):
         return

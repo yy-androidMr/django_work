@@ -182,8 +182,10 @@ class Media(models.Model):
     #  父文件夹  理论上不可能是空
     folder_key = models.ForeignKey(Dir, related_name='p_dir', null=True,
                                    blank=True, on_delete=models.CASCADE)
-    desc_mpath = models.ForeignKey('MPath', related_name='mulitPath', on_delete=models.DO_NOTHING, null=True,
+    desc_mpath = models.ForeignKey('MPath', related_name='descMPath', on_delete=models.DO_NOTHING, null=True,
                                    blank=True)
+    src_mpath = models.ForeignKey('MPath', related_name='srcMpath', on_delete=models.DO_NOTHING, null=True,
+                                  blank=True)
     # 字幕文件
     # 其他预留
     param1 = models.CharField(max_length=500, default='')  # 这里存储m3u8路径
@@ -193,8 +195,8 @@ class Media(models.Model):
 # 路径存储.
 class MPath(models.Model):
     id = models.AutoField(primary_key=True)
-    # # 文件夹绝对路径.
-    # path = models.CharField(max_length=500, default='', unique=True)
+    # # 文件夹绝对路径.其实对应dir.
+    path = models.CharField(max_length=500, default='', unique=True)
     # 该文件夹类型: 0 无意义, 1 src, 2 desc
     type = models.IntegerField(default=0, verbose_name=u'文件夹的类型(1.src,2.desc)')
     # 使用优先级.相同的话根据id排序 0为最低

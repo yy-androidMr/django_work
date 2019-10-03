@@ -103,13 +103,14 @@ class Service:
             pi = Photo()
             pi.src_abs_path = src_file
             pi.src_name = link_item.relative
-            pi.src_mpath = MediaPath.mpath_db_cache.src_abs_path_key[link_item.pic_root]
+
+            pi.src_mpath = MediaPath.pdc().search_by_abs_path(link_item.pic_root)
             try:
                 file_steam = open(src_file, 'rb')
                 pi.src_md5 = yutils.get_md5_steam(file_steam)
-                pi.ctime=int(file_stat.st_ctime)
-                pi.mtime=int(file_stat.st_mtime)
-                desc_rela_name, pi.src_size = PhotoHelper.file_desc_dir(file_stat,pi.src_abs_path, pi.src_md5)
+                pi.ctime = int(file_stat.st_ctime)
+                pi.mtime = int(file_stat.st_mtime)
+                desc_rela_name, pi.src_size = PhotoHelper.file_desc_dir(file_stat, pi.src_abs_path, pi.src_md5)
                 src_img = Image.open(file_steam)
                 if src_img.mode == 'RGB':
                     pi.desc_rela_path = desc_rela_name + '.jpg'
@@ -122,7 +123,7 @@ class Service:
                 continue
             with lock:
                 desc_root = MediaPath.desc()
-                pi.desc_mpath = MediaPath.mpath_db_cache.desc_abs_path_key[desc_root]
+                pi.desc_mpath = MediaPath.pdc().search_by_abs_path(desc_root, False)
                 desc_middle_path = ypath.join(desc_root, self.desc_middle_root, pi.desc_rela_path)
                 desc_thum_path = ypath.join(desc_root, self.desc_thum_root, pi.desc_rela_path)
                 desc_webp_path = ypath.join(desc_root, self.desc_webp_root, pi.desc_rela_path)

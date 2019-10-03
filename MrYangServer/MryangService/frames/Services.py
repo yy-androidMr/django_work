@@ -16,7 +16,7 @@ from frames.ThreadingPool import ThreadingPool as tp
 from MryangService.pic import PhotoService
 from MryangService.video import VideoService
 
-from MryangService import MediaService as ms
+# from MryangService import MediaService as ms
 
 
 def im_out(s_name, s_time=60):
@@ -38,7 +38,7 @@ if __name__ == '__main__':
     # PhotoService.start()
     # PhotoConvert.start()
     tp = tp()
-    # tp.append(PhotoService.start)
+    tp.append(PhotoService.start)
     tp.append(VideoService.start)
     tp.append(statewatch.start)
 
