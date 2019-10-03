@@ -52,19 +52,18 @@ class Service:
         self.src_dirs = PhotoHelper.src_list(self.src_root)
         self.desc_dirs = PhotoHelper.desc_list(self.desc_root)
         VideoHelper.handle_meida_db_exists(self.src_dirs)
-        dm_dict = VideoHelper.gen_dir(self.src_dirs)
+        VideoHelper.gen_dir(self.src_dirs)
         for src in self.src_dirs:
             media_src_root = Path(src)
             files = media_src_root.rglob('*.*')
             for file in files:
                 if not file.is_file() or not yutils.is_movie(file):
                     continue
-                media_db, mpath = VideoHelper.get_media_mpath_db(src, str(file.as_posix()), dm_dict)
+                media_db = VideoHelper.get_media_mpath_db(ypath.convert_path(src.replace(self.src_root,'')), str(file.as_posix()))
                 VideoHelper.check_media_db_state(media_db)
                 if MediaHelp.is_err(media_db.state):
                     media_db.save()
                     continue
-                VideoHelper.analysis_audio_info(media_db, self.ffprobe_tools, self.ffmpeg_tools, self.mulit_audio_dir,
-                                                mpath)
+                VideoHelper.analysis_audio_info(media_db, self.ffprobe_tools, self.ffmpeg_tools, self.mulit_audio_dir)
 
         # 生成文件夹数据库.

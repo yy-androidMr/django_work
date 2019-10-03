@@ -169,6 +169,8 @@ class Media(models.Model):
     # 编码格式
     codec_type = models.CharField(max_length=20, default='')
     codec_long_name = models.CharField(max_length=200, default='')
+    # audio code_long_name
+    audio_long_name = models.CharField(max_length=100, default='')
 
     # 画面尺寸
     width = models.IntegerField(default=0)
@@ -179,9 +181,6 @@ class Media(models.Model):
     avg_frame_rate = models.IntegerField(default=0)
     # 该文件当前状态 存在 MediaService.STATE_INIT中
     state = models.IntegerField(default=-1)
-    #  父文件夹  理论上不可能是空
-    folder_key = models.ForeignKey(Dir, related_name='p_dir', null=True,
-                                   blank=True, on_delete=models.CASCADE)
     desc_mpath = models.ForeignKey('MPath', related_name='descMPath', on_delete=models.DO_NOTHING, null=True,
                                    blank=True)
     src_mpath = models.ForeignKey('MPath', related_name='srcMpath', on_delete=models.DO_NOTHING, null=True,

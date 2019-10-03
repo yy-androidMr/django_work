@@ -18,14 +18,16 @@ lock = threading.Lock()
 
 
 # 检查该状态是否正确
-def check_media_db_state(media_db:Media):
-    if media_db.state ==  MediaHelp.STATE_INIT:
+def check_media_db_state(media_db: Media):
+    if media_db.state == MediaHelp.STATE_INIT:
         return True
     if media_db.state == MediaHelp.STATE_AUDIO_FINISH:
-        #需要检查音频是否正常
-        return True 
+        # 需要检查音频是否正常
+        return True
 
-# 创建dir 目录
+    # 创建dir 目录
+
+
 def gen_dir(src_dirs):
     def db_dir_exist(db_dirs, src_dir_list):
         # dir不存在则删除.
@@ -86,18 +88,17 @@ def handle_meida_db_exists(src_root_list):
 
 
 # 获取到media的数据库字段.(Media,MPath)
-def get_media_mpath_db(src_root, file_path: str, dm_dict):
+def get_media_mpath_db(src_root, file_path: str):
     if os.path.isdir(file_path):
         return None
     if not yutils.is_movie(file_path):
         return None
     file_path = ypath.convert_path(file_path)
-    mpath = MediaPath.pdc().search_by_abs_path(src_root)
     media_db_query = Media.objects.filter(abs_path=file_path)
     cur_media_db = None
     if len(media_db_query) > 0:
         cur_media_db = media_db_query[0]
-        return (cur_media_db, mpath)
+        return cur_media_db
     else:
         # target = ypath.decompose_path(
         #     file, str(src_root), str(convert_root), exten='.mp4')
@@ -105,17 +106,18 @@ def get_media_mpath_db(src_root, file_path: str, dm_dict):
         media_db.abs_path = file_path
         media_db.state = MediaHelp.STATE_INIT
         media_db.file_name = os.path.basename(file_path)
+        mpath = MediaPath.pdc().search_by_abs_path(src_root)
         media_db.src_mpath = mpath
         # media_db.nginx_path =
         media_db.desc_path = file_path.replace(src_root, '')
         # media_db.nginx_path = target.replace(str(convert_root.as_posix()), '')
         # create_db_list.append(media_db)
-        media_db.folder_key = dm_dict[os.path.dirname(file_path)]
-        return (media_db, mpath)
+        # media_db.folder_key = dm_dict[os.path.dirname(file_path)]
+        return media_db
 
 
 # 转码音频
-def analysis_audio_info(media_db, ffprobe_tools, ffmpeg_tools, mulit_audio_dir, mpath: MPath):
+def analysis_audio_info(media_db: Media, ffprobe_tools, ffmpeg_tools, mulit_audio_dir):
     def movie_info_res(cmdlist, _):
         if len(cmdlist) <= 0:
             modify_state(media_db, MediaHelp.STATE_AUDIO_FINISH)
@@ -179,16 +181,22 @@ def analysis_audio_info(media_db, ffprobe_tools, ffmpeg_tools, mulit_audio_dir, 
             #     select_audio = int(input(out_content + '选择音轨:'))
 
         # mulit_audio_path = TmpUtil.src() / movie_config.base_info.mulit_audio_dir
-        # out_file = desc_mulit_path + '.chi' + ypath.file_exten(media_db.abs_path)
         # ypath.create_dirs(desc_mulit_path)
         # if os.path.exists(out_file):
         #     os.remove(out_file)
         # logger.info(out_file)
         with lock:
             mulit_audio_path = ypath.join(MediaPath.src(), mulit_audio_dir)
-        desc_mulit_path = ypath.decompose_path(media_db.abs_path, str(mpath.path), str(mulit_audio_path))
-        # copy_cmd = ffmpeg_tools + ' -i \"' + media_db.abs_path + '\"' + decode_map + '  -vcodec copy -acodec copy \"' + out_file + '\"'
-        # yutils.process_cmd(c opy_cmd, done_call=rm_on_audio_copy, param=(media_db.abs_path, out_file, desc_mulit_path))
+        desc_mulit_path = ypath.decompose_path(media_db.abs_path, str(media_db.src_mpath.path),
+                                               str(mulit_audio_path))
+
+        out_file = desc_mulit_path + '.chi' + ypath.file_exten(media_db.abs_path)
+        ypath.create_dirs(desc_mulit_path)
+        if os.path.exists(out_file):
+            os.remove(out_file)
+        logger.info(out_file)
+        copy_cmd = ffmpeg_tools + ' -i \"' + media_db.abs_path + '\"' + decode_map + '  -vcodec copy -acodec copy \"' + out_file + '\"'
+        yutils.process_cmd(copy_cmd, done_call=rm_on_audio_copy, param=(media_db.abs_path, out_file, desc_mulit_path))
 
     if MediaHelp.is_err(media_db.state):
         return
