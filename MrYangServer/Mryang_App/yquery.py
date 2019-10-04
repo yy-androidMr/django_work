@@ -24,9 +24,10 @@ def meida_root(tags):
 
 
 def media_dir(tags, p_id):
-    dinfos = Dir.objects.annotate(p_id=F('parent_dir__id')).filter(tags=tags, parent_dir_id=p_id).values(
+    dinfos = Dir.objects.annotate(p_id=F('parent_dir__id')).filter(type=yutils.M_FTYPE_MOIVE,
+                                                                   parent_dir_id=p_id).values(
         'id', 'name')
-    minfos = Media.objects.filter(folder_key=p_id, state=DBHelper.end_media_state()).values('nginx_path',
+    minfos = Media.objects.filter(src_dir_id=p_id, state=DBHelper.end_media_state()).values('nginx_path',
                                                                                             'duration',
                                                                                             'size',
                                                                                             'width',
@@ -90,6 +91,7 @@ def pic_level2_2json(c_id, page):
     jsonstr = json.dumps(list(contacts.object_list))
     # jsonstr = ''
     return jsonstr
+
 
 def photo_wall():
     PhotoWall.objects.all()

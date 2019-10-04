@@ -167,6 +167,7 @@ def get_crc32(file_path):
     with open(file_path, 'rb') as f:
         return crc32(f.read())
 
+
 def is_photo(path):
     if not any(str_ in path.lower() for str_ in ('.jpeg', '.jpg', 'png', 'bmp')):
         return False
@@ -254,7 +255,10 @@ def process_cmd(cmd, call=None, done_call=None, param=None, sep='\r\n'):
                     done_call(cmd_str, param)
                 break
         else:
-            line = data.decode('utf-8')
+            try:
+                line = data.decode('utf-8')
+            except UnicodeDecodeError as err:
+                line = data.decode('gbk')
             # print(line, end='')
             cmd_str.append(line.strip('\r\n'))
             if call is not None:
@@ -279,4 +283,3 @@ def crop_size(w, h, proportion=1):
         crop_w = 0
     region = (crop_w, crop_h, w - crop_w, h - crop_h)
     return region
-

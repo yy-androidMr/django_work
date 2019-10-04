@@ -40,30 +40,35 @@ class Service:
     def __init__(self):
         FFMPEG_KEY = 'FFMPEG_KEY'
         FFPROBE_KEY = 'FFPROBE_KEY'
-        movie_config = XMLBase.list_cfg_infos('media_info')  # XMLMedia.get_infos()
-        self.desc_root = self.src_root = movie_config.dir_root
+        self.movie_config = XMLBase.list_cfg_infos('media_info')  # XMLMedia.get_infos()
+        self.desc_root = self.src_root = self.movie_config.dir_root
         self.ffmpeg_tools = str(TmpUtil.input_note(FFMPEG_KEY, '输入对应的ffmpeg文件位置(参照link_gitProj_files.txt下载对应的文件):\n'))
         self.ffprobe_tools = str(
             TmpUtil.input_note(FFPROBE_KEY, '输入对应的ffprobe文件位置(参照link_gitProj_files.txt下载对应的文件):\n'))
-        self.mulit_audio_dir = movie_config.base_info.mulit_audio_dir
+        self.mulit_audio_dir = self.movie_config.base_info.mulit_audio_dir
         pass
 
     def start(self):
         self.src_dirs = PhotoHelper.src_list(self.src_root)
         self.desc_dirs = PhotoHelper.desc_list(self.desc_root)
         VideoHelper.handle_meida_db_exists(self.src_dirs)
-        VideoHelper.gen_dir(self.src_dirs)
+        exist_media_dirs = VideoHelper.gen_dir(self.src_dirs)
         for src in self.src_dirs:
             media_src_root = Path(src)
             files = media_src_root.rglob('*.*')
             for file in files:
                 if not file.is_file() or not yutils.is_movie(file):
                     continue
-                media_db = VideoHelper.get_media_mpath_db(ypath.convert_path(src.replace(self.src_root,'')), str(file.as_posix()))
+                media_db = VideoHelper.get_media_mpath_db(ypath.convert_path(src.replace(self.src_root, '')),
+                                                          str(file.as_posix()), exist_media_dirs)
+                if media_db == None:
+                    continue
                 VideoHelper.check_media_db_state(media_db)
                 if MediaHelp.is_err(media_db.state):
                     media_db.save()
                     continue
                 VideoHelper.analysis_audio_info(media_db, self.ffprobe_tools, self.ffmpeg_tools, self.mulit_audio_dir)
-
+                VideoHelper.compress_media(media_db, self.ffmpeg_tools)
+                VideoHelper.create_thum(media_db, self.movie_config, self.ffmpeg_tools)
+        logger.info('--------------同步结束!')
         # 生成文件夹数据库.

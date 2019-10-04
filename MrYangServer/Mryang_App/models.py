@@ -152,8 +152,10 @@ class Media(models.Model):
     id = models.AutoField(primary_key=True)
     #   文件绝对路径.
     abs_path = models.CharField(max_length=500, default='')
-    # 输出相对路径
+    # 输出路径
     desc_path = models.CharField(max_length=500, default='')
+    # # 输出相对路径
+    # desc_rela_path = models.CharField(max_length=500, default='')
     # m3u8
     m3u8_path = models.CharField(max_length=500, default='')
     #  nginx访问路径
@@ -169,6 +171,8 @@ class Media(models.Model):
     # 编码格式
     codec_type = models.CharField(max_length=20, default='')
     codec_long_name = models.CharField(max_length=200, default='')
+    # audio code_name
+    audio_name = models.CharField(max_length=10, default='')
     # audio code_long_name
     audio_long_name = models.CharField(max_length=100, default='')
 
@@ -185,6 +189,8 @@ class Media(models.Model):
                                    blank=True)
     src_mpath = models.ForeignKey('MPath', related_name='srcMpath', on_delete=models.DO_NOTHING, null=True,
                                   blank=True)
+    src_dir = models.ForeignKey('Dir', related_name='srcDir', on_delete=models.DO_NOTHING, null=True,
+                                blank=True)
     # 字幕文件
     # 其他预留
     param1 = models.CharField(max_length=500, default='')  # 这里存储m3u8路径
@@ -201,7 +207,7 @@ class MPath(models.Model):
     # 使用优先级.相同的话根据id排序 0为最低
     level = models.IntegerField(default=0, verbose_name=u'放置优先级,数字越大优先级越高')
     # 剩余多少M 就不填了
-    drive_memory_mb = models.IntegerField(default=8192, verbose_name=u'磁盘剩余空间小于此数值时,不选择此路径')
+    drive_memory_mb = models.IntegerField(default=24 * 1024, verbose_name=u'磁盘剩余空间小于此数值时,不选择此路径')
     dir = models.OneToOneField(Dir, on_delete=models.CASCADE)
     # dir = models.ForeignKey(Dir, related_name='dir_info', on_delete=models.CASCADE, unique=True)
     # 预留  param1: dir__abs_path的md5值

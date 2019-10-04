@@ -17,7 +17,7 @@ from MryangService import ServiceHelper
 
 from Mryang_App.models import MPath
 
-sotrage_min = 8 * 1024 + 2 * 1024  # 最小空间有这么大G
+sotrage_min = 24 * 1024 + 2 * 1024  # 最小空间有这么大G
 
 
 class MPathDbCache:

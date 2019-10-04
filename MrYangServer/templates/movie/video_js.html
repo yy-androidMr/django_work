@@ -26,7 +26,7 @@
     <script src="{% static '/js/video_js/videojs-contrib-hls.js' %}"></script>
     <video id="my-video" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" width="960"
            height="400"
-           poster="m.jpg" data-setup="{}">
+           data-setup="{}">
         {#        <track kind="subtitles" src="/static/media/movie/3.vtt" srclang="zh-CN" label="简体中文"/>#}
         <p class="vjs-no-js"> To view this video please enable JavaScript, and consider upgrading to a web browser that
             <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
@@ -34,8 +34,7 @@
 
     <script src="http://vjs.zencdn.net/5.19/lang/zh-CN.js"></script>
     <script type="text/javascript">
-        var url = "/static/res/movie" + sessionStorage.getItem('url') + "/out.m3u8";
-        var url = "http://localhost:909/statics/电影/0b8d5fd8a64b1de603ed53232d903596.ym3/out.m3u8";
+        var url = "http://localhost:1234/ts/out.m3u8";
         videojs("my-video").ready(function () {
             var myPlayer = this;
             myPlayer.src({
