@@ -15,9 +15,30 @@ from Mryang_App.DBHelper import MediaHelp
 
 # 这里需要制作一下 删除src没有的所有文件文件夹. 是否需要抽出成一个公共函数?
 from Mryang_App.models import Media, MPath, Dir
-from frames import yutils, ypath, logger, Globals
+from frames import yutils, ypath, logger, Globals, TmpUtil
+from frames.xml import XMLBase
+
+FFMPEG_KEY = 'FFMPEG_KEY'
+FFPROBE_KEY = 'FFPROBE_KEY'
+movie_config = XMLBase.list_cfg_infos('media_info')  # XMLMedia.get_infos()
+src_root = movie_config.dir_root
+ffmpeg_tools = str(TmpUtil.input_note(FFMPEG_KEY, '输入对应的ffmpeg文件位置(参照link_gitProj_files.txt下载对应的文件):\n'))
+ffprobe_tools = str(
+    TmpUtil.input_note(FFPROBE_KEY, '输入对应的ffprobe文件位置(参照link_gitProj_files.txt下载对应的文件):\n'))
+mulit_audio_dir = movie_config.base_info.mulit_audio_dir
 
 lock = threading.Lock()
+
+def src_dbs():
+    return MediaPath.pdc().src_list
+
+
+def media_root(dir_root):
+    return ypath.join(dir_root, src_root)
+
+
+def desc_path(media_db: Media):
+    return ypath.join(media_root(media_db.desc_mpath.path), media_db.desc_path)
 
 
 # 检查该状态是否正确
@@ -28,18 +49,21 @@ def check_media_db_state(media_db: Media):
     if media_db.state == MediaHelp.STATE_VIDOE_COMPRESS_FINISH or media_db.state == MediaHelp.STATE_VIDEO_TS:
         if not os.path.exists(media_db.abs_path) or media_db.desc_mpath == None:
             media_db.state = MediaHelp.STATE_INIT
+        desc = desc_path(media_db)  # ypath.join(media_db.desc_mpath.path, media_db.desc_path)
+        if not os.path.exists(desc):
+            media_db.state = MediaHelp.STATE_AUDIO_FINISH
 
     # 创建dir 目录
 
 
-def gen_dir(src_dirs):
-    def db_dir_exist(db_dirs, src_dir_list):
+def gen_dir():
+    def db_dir_exist(db_dirs):
         # dir不存在则删除.
         exist_pic_dirs = {}
         for pic_db in db_dirs:
             digout = False
-            for src_dir in src_dir_list:
-                if src_dir in pic_db.abs_path and os.path.isdir(pic_db.abs_path):
+            for src_db in src_dbs():
+                if media_root(src_db.path) in pic_db.abs_path and os.path.isdir(pic_db.abs_path):
                     exist_pic_dirs[pic_db.abs_path] = pic_db
                     digout = True
                     break
@@ -48,10 +72,10 @@ def gen_dir(src_dirs):
         return exist_pic_dirs
 
     def get_db_dirs():
-        for dir in src_dirs:
-            ypath.del_none_dir(dir)
+        for dir in src_dbs():
+            ypath.del_none_dir(media_root(dir.path))
         all_pic_dirs = Dir.objects.filter(type=yutils.M_FTYPE_MOIVE)
-        db_dirs = db_dir_exist(all_pic_dirs, src_dirs)
+        db_dirs = db_dir_exist(all_pic_dirs)
         return db_dirs
 
     def folder_call(folder_list, is_root):
@@ -75,17 +99,18 @@ def gen_dir(src_dirs):
         pass
 
     exist_media_dirs = get_db_dirs()
-    for src_dir in src_dirs:
+    for src_db in src_dbs():
         # ypath.path_res(src_dir)
-        ypath.ergodic_folder(src_dir, folder_call_back=folder_call)
+        ypath.ergodic_folder(media_root(src_db.path), folder_call_back=folder_call)
     return exist_media_dirs
 
 
 # 删除本地不存在的数据
-def handle_meida_db_exists(src_root_list):
+def handle_meida_db_exists():
     posix_file_list = []
-    for dir in src_root_list:
-        posix_file_list.extend([ypath.convert_path(file.as_posix()) for file in Path(dir).rglob('*.*')])
+    for dir in src_dbs():
+        posix_file_list.extend(
+            [ypath.convert_path(file.as_posix()) for file in Path(media_root(dir.path)).rglob('*.*')])
     all_media_set = Media.objects.all()
     with transaction.atomic():
         for media_db in all_media_set:
@@ -94,7 +119,9 @@ def handle_meida_db_exists(src_root_list):
 
 
 # 获取到media的数据库字段.(Media,MPath)
-def get_media_mpath_db(src_root, file_path: str, mdirs):
+def get_media_mpath_db(src_db, file_path: str, mdirs):
+    # ypath.convert_path(src.replace(self.src_root, '')),
+    # str(file.as_posix()), exist_media_dirs, self.desc_root
     if os.path.isdir(file_path):
         return None
     if not yutils.is_movie(file_path):
@@ -117,8 +144,8 @@ def get_media_mpath_db(src_root, file_path: str, mdirs):
         media_db.abs_path = file_path
         media_db.state = MediaHelp.STATE_INIT
         media_db.file_name = os.path.basename(file_path)
-        media_db.src_mpath = MediaPath.pdc().search_by_abs_path(src_root)
-        media_db.desc_path = ypath.del_exten(file_path.replace(src_root, '')) + '.mp4'
+        media_db.src_mpath = src_db
+        media_db.desc_path = ypath.del_exten(file_path.replace(media_root(src_db.path), '')) + '.mp4'
 
         # media_db.nginx_path = target.replace(str(convert_root.as_posix()), '')
         # create_db_list.append(media_db)
@@ -127,7 +154,7 @@ def get_media_mpath_db(src_root, file_path: str, mdirs):
 
 
 # 转码音频
-def analysis_audio_info(media_db: Media, ffprobe_tools, ffmpeg_tools, mulit_audio_dir):
+def analysis_audio_info(media_db: Media, src_db):
     def movie_info_res(cmdlist, _):
         if len(cmdlist) <= 0:
             modify_state(media_db, MediaHelp.STATE_AUDIO_FINISH)
@@ -202,8 +229,7 @@ def analysis_audio_info(media_db: Media, ffprobe_tools, ffmpeg_tools, mulit_audi
 
         with lock:
             mulit_audio_path = ypath.join(MediaPath.src(), mulit_audio_dir)
-        desc_mulit_path = ypath.decompose_path(media_db.abs_path, str(media_db.src_mpath.path),
-                                               str(mulit_audio_path))
+        desc_mulit_path = ypath.decompose_path(media_db.abs_path, src_db.path, str(mulit_audio_path))
 
         out_file = desc_mulit_path + '.chi' + ypath.file_exten(media_db.abs_path)
         ypath.create_dirs(desc_mulit_path)
@@ -232,14 +258,14 @@ def analysis_audio_info(media_db: Media, ffprobe_tools, ffmpeg_tools, mulit_audi
 
 
 # 转码视频
-def compress_media(media_db: Media, ffmpeg_tools):
+def compress_media(media_db: Media):
     if MediaHelp.is_err(media_db.state):
         return
     if media_db.desc_mpath == None:
         with lock:
             media_db.desc_mpath = MediaPath.pdc().search_by_abs_path(MediaPath.desc(), is_src=False)
         pass
-    d_abs_path = ypath.join(media_db.desc_mpath.path, media_db.desc_path)
+    d_abs_path = desc_path(media_db)  # ypath.join(media_db.desc_mpath.path, media_db.desc_path)
     # 如果开关开着. 则不管desc是否已有.,根据数据库去覆盖.
     if media_db.state < MediaHelp.STATE_VIDOE_COMPRESS_FINISH:
         # 标记为 未转码完毕
@@ -285,8 +311,13 @@ def compress_media(media_db: Media, ffmpeg_tools):
         modify_state(media_db, MediaHelp.STATE_VIDOE_COMPRESS_FINISH)
 
 
+def create_ts(media_db: Media):
+    d_abs_path = ypath.join(media_db.desc_mpath.path, media_db.desc_path)
+    print(d_abs_path)
+
+
 # 生成缩略图
-def create_thum(media_db, movie_config, ffmpeg_tools):
+def create_thum(media_db: Media):
     if MediaHelp.is_err(media_db.state):
         return
     desc_root = media_db.desc_mpath.path
@@ -314,7 +345,7 @@ def create_thum(media_db, movie_config, ffmpeg_tools):
 
     r_time = random.randint(min_thum_time if media_db.duration > min_thum_time else 0,
                             max_thum_time if media_db.duration > max_thum_time else media_db.duration)
-    d_abs_path = ypath.join(desc_root, media_db.desc_path)
+    d_abs_path = ypath.join(media_root(desc_root), media_db.desc_path)
     cmd = ffmpeg_tools + ' -i \"' + d_abs_path + '\" -y  -vframes 1 -ss  00:00:' + str(
         r_time) + ' -f image2  \"' + desc + '\"'
     yutils.process_cmd(cmd)

@@ -21,5 +21,5 @@ m3u8_info 做视频切片时,所用的信息
 	<m3u8_info dir_exten=".ym3" name="out.m3u8" ts_dir="movie_ts"  />
 	<base_info mulit_audio_dir="media_mulit_audio" thum_w="400" thum_h="320" max_thum_time="30" min_thum_time="5"/>
 	<img_info img="crop_frame.jpg" thum="thum.jpg" img_root="media_thum" />
-	<ts_info ts_dir="media_ts"/>
+	<ts_info ts_dir="media_ts" u8name="out.m3u8" />
 </movie_info>
