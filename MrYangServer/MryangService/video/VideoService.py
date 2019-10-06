@@ -7,7 +7,7 @@ from MryangService.pic import PhotoHelper
 from MryangService.video import VideoHelper
 from Mryang_App.DBHelper import MediaHelp
 from Mryang_App.models import Dir, Media
-from frames import logger, ypath, yutils, TmpUtil
+from frames import logger, ypath, yutils, TmpUtil, Globals
 from frames.xml import XMLBase
 
 eve = threading.Event()
@@ -40,9 +40,17 @@ class Service:
     def __init__(self):
         pass
 
+    def test_tags(self, exist_media_dirs):
+        for dir in exist_media_dirs:
+            if exist_media_dirs[dir].parent_dir == None:
+                exist_media_dirs[dir].tags = exist_media_dirs[dir].rel_path.replace('/', '')
+                exist_media_dirs[dir].save()
     def start(self):
         VideoHelper.handle_meida_db_exists()
         exist_media_dirs = VideoHelper.gen_dir()
+        if Globals.TEST_MEIDA_DIR_TAGS:
+            self.test_tags(exist_media_dirs)
+
         for src in VideoHelper.src_dbs():
             media_src_root = Path(VideoHelper.media_root(src.path))
             files = media_src_root.rglob('*.*')

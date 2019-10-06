@@ -18,6 +18,7 @@ MEDIA_SERVICE_COVER_DESC = False
 
 # true代表使用本地数据库. 
 USE_LOCAL_DB = True
+TEST_MEIDA_DIR_TAGS = True  # 自动填充 media的tags
 
 development_type = {
     HOME_MINI: '家里mini机',
