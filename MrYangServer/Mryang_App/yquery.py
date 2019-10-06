@@ -5,9 +5,13 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import F
 
 from Mryang_App import DBHelper
+from Mryang_App.controlls import MediaCtrl
 from frames import yutils
 from Mryang_App.models import *
 from frames.logger import logger
+from frames.xml import XMLBase
+
+movie_config = XMLBase.list_cfg_infos('media_info')  # XMLMedia.get_infos()
 
 
 def dir_2json(dirtype):
@@ -19,23 +23,13 @@ def dir_2json(dirtype):
 
 
 def meida_root(tags):
-    root_dir = Dir.objects.get(tags=tags, parent_dir=None)
-    return media_dir(tags, root_dir.id)
+    return MediaCtrl.meida_root(tags)
+    # root_dir = Dir.objects.get(tags=tags, parent_dir=None)
+    # return media_dir(root_dir.id)
 
 
-def media_dir(tags, p_id):
-    dinfos = Dir.objects.annotate(p_id=F('parent_dir__id')).filter(type=yutils.M_FTYPE_MOIVE,
-                                                                   parent_dir_id=p_id).values(
-        'id', 'name')
-    minfos = Media.objects.filter(src_dir_id=p_id, state=DBHelper.end_media_state()).values('nginx_path',
-                                                                                            'duration',
-                                                                                            'size',
-                                                                                            'width',
-                                                                                            'height',
-                                                                                            'r_frame_rate')
-    res = {'dir': list(dinfos), 'info': list(minfos)}
-    json_res = json.dumps(res)
-    return json_res
+def media_dir(p_id):
+    return MediaCtrl.media_dir(p_id)
 
 
 # def movie_infos():

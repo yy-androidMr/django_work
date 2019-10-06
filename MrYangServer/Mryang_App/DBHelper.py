@@ -6,8 +6,9 @@ class MediaHelp:
     STATE_CREATE = -1
     STATE_INIT = 0
     STATE_AUDIO_FINISH = 1  # 音频状态检查完毕 音频会出现非aac和mp3格式的问题.需要转码
-    STATE_VIDOE_COMPRESS_FINISH = 2  # 视频转码完毕.
+    STATE_COMPRESS_HLS = 2  # 转格式
     STATE_VIDEO_TS = 3  # 切片
+    STATE_VIDOE_COMPRESS_FINISH = 20  # 视频转码完毕.
     STATE_ERROR = 999  # 错误了!!!
     STATE_SRC_ERROR = 1000  # 源文件错误
     STATE_ERROR_END = 1200  # 错误码的结束为止.

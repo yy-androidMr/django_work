@@ -29,6 +29,7 @@ mulit_audio_dir = movie_config.base_info.mulit_audio_dir
 
 lock = threading.Lock()
 
+
 def src_dbs():
     return MediaPath.pdc().src_list
 
@@ -46,7 +47,7 @@ def check_media_db_state(media_db: Media):
     if media_db.state == MediaHelp.STATE_AUDIO_FINISH:
         if not os.path.exists(media_db.abs_path):
             media_db.state = MediaHelp.STATE_INIT
-    if media_db.state == MediaHelp.STATE_VIDOE_COMPRESS_FINISH or media_db.state == MediaHelp.STATE_VIDEO_TS:
+    if media_db.state == MediaHelp.STATE_COMPRESS_HLS or media_db.state == MediaHelp.STATE_VIDEO_TS or media_db.state == MediaHelp.STATE_VIDOE_COMPRESS_FINISH:
         if not os.path.exists(media_db.abs_path) or media_db.desc_mpath == None:
             media_db.state = MediaHelp.STATE_INIT
         desc = desc_path(media_db)  # ypath.join(media_db.desc_mpath.path, media_db.desc_path)
@@ -267,18 +268,18 @@ def compress_media(media_db: Media):
         pass
     d_abs_path = desc_path(media_db)  # ypath.join(media_db.desc_mpath.path, media_db.desc_path)
     # 如果开关开着. 则不管desc是否已有.,根据数据库去覆盖.
-    if media_db.state < MediaHelp.STATE_VIDOE_COMPRESS_FINISH:
+    if media_db.state < MediaHelp.STATE_COMPRESS_HLS:
         # 标记为 未转码完毕
         if os.path.exists(d_abs_path):
             if Globals.MEDIA_SERVICE_COVER_DESC:
                 os.remove(d_abs_path)
             else:
                 logger.info('MediaService.target exists   所以直接修改数据')
-                modify_state(media_db, MediaHelp.STATE_VIDOE_COMPRESS_FINISH)
+                modify_state(media_db, MediaHelp.STATE_COMPRESS_HLS)
     else:
         if not os.path.exists(d_abs_path):  # 状态是转码完毕后. 但是desc文件不存在. 则需要重新转码
             modify_state(media_db, MediaHelp.STATE_AUDIO_FINISH)
-    if media_db.state >= MediaHelp.STATE_VIDOE_COMPRESS_FINISH:
+    if media_db.state >= MediaHelp.STATE_COMPRESS_HLS:
         logger.info('该文件已经转码过了:' + media_db.abs_path)
         return
     if os.path.exists(d_abs_path):
@@ -295,7 +296,7 @@ def compress_media(media_db: Media):
             os.symlink(media_db.abs_path, d_abs_path)
         else:
             # 这里进行复制内容
-            audio_cmd = '-acodec copy' if can_audio_copy else '-acodec aac'
+            audio_cmd = '-acodec copy' if can_audio_copy else '-acodec mp3'
             # audio_cmd = '-acodec copy'
             yutils.process_cmd(
                 ffmpeg_tools + ' -i \"' + media_db.abs_path + '\" -vcodec copy ' + audio_cmd + ' \"' + d_abs_path + '\"')
@@ -308,12 +309,30 @@ def compress_media(media_db: Media):
         logger.error('源文件错误:%s' % d_abs_path)
         modify_state(media_db, MediaHelp.STATE_SRC_ERROR)
     else:
-        modify_state(media_db, MediaHelp.STATE_VIDOE_COMPRESS_FINISH)
+        modify_state(media_db, MediaHelp.STATE_COMPRESS_HLS)
 
 
 def create_ts(media_db: Media):
-    d_abs_path = ypath.join(media_db.desc_mpath.path, media_db.desc_path)
-    print(d_abs_path)
+    # d_abs_path = ypath.join(media_root(media_db), media_db.desc_path)
+    desc_root = media_db.desc_mpath.path
+    media_ts_dir = ypath.join(desc_root, movie_config.ts_info.ts_dir, media_db.desc_path)
+    if media_db.state >= MediaHelp.STATE_VIDEO_TS and os.path.isdir(media_ts_dir):
+        logger.info('该视频已经切片过了:' + media_db.abs_path)
+        return
+    if os.path.exists(media_ts_dir):
+        shutil.rmtree(media_ts_dir)
+    ypath.create_dirs(media_ts_dir, True)
+    media_desc_path = desc_path(media_db)  # ypath.join(desc_path(media_db), media_db.desc_path)
+    m3u8_file = ypath.join(media_ts_dir, movie_config.ts_info.u8name)
+    cmd = '\"' + ffmpeg_tools + '\" -i \"' + media_desc_path + \
+          '\" -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_list \"' + \
+          m3u8_file + '\" -segment_time 30 \"' + media_ts_dir + '/%05d.ts\"'
+    yutils.process_cmd(cmd)
+    modify_state(media_db, MediaHelp.STATE_VIDEO_TS)
+    # m3u8_path = ypath.join(media_ts_dir, movie_config.ts_info.u8name)
+
+    # media_db.m3u8_path = ypath.join(media_db.desc_path, movie_config.ts_info.u8name)
+    print(desc_root)
 
 
 # 生成缩略图
@@ -328,7 +347,6 @@ def create_thum(media_db: Media):
     #     logger.info('该文件已经转缩略图过了:' + media_db.abs_path)
     #     return
     target_img_dir = ypath.join(media_tum_root, media_db.desc_path)
-    target_img_dir = ypath.del_exten(target_img_dir)
     ypath.create_dirs(target_img_dir)
     desc = ypath.join(target_img_dir, movie_config.img_info.img)
     desc_thum = ypath.join(target_img_dir, movie_config.img_info.thum)

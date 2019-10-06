@@ -58,7 +58,9 @@ class Service:
                     continue
                 VideoHelper.analysis_audio_info(media_db, src.query)
                 VideoHelper.compress_media(media_db)
-                VideoHelper.create_ts(media_db)
+                # VideoHelper.create_ts(media_db)
                 VideoHelper.create_thum(media_db)
+                VideoHelper.modify_state(media_db, MediaHelp.STATE_VIDOE_COMPRESS_FINISH)
+
         logger.info('--------------同步结束!')
         # 生成文件夹数据库.

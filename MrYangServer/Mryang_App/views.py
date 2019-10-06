@@ -197,10 +197,10 @@ def m_gallery(request):
 
 
 def spe_gallery(request):
-    ddd=[{"name": "abc","rel_path": "rel_path","intro": "intro","time": "time","thum": "thum"}]
+    ddd = [{"name": "abc", "rel_path": "rel_path", "intro": "intro", "time": "time", "thum": "thum"}]
     print(json.dumps(ddd))
     return render(request, 'gallery/firstLevel/index-color.html',
-                  {'json':json.dumps(ddd)})
+                  {'json': json.dumps(ddd)})
 
 
 def dead_gallery(request):
@@ -252,7 +252,7 @@ def media_json(request, type):
     else:
         try:
             id = int(p_id)
-            json = yquery.media_dir(type, id)
+            json = yquery.media_dir(id)
         except:
             json = yquery.meida_root(type)
 
@@ -281,7 +281,8 @@ def batch_default_photo(request):
 def photo_wall_list(request):
     return HttpResponse(PhotoWallCtrl.photo_wall_list(1))
 
-def photo_list(request,wall_id):
+
+def photo_list(request, wall_id):
     return HttpResponse(PhotoWallCtrl.photo_list(wall_id))
 
     # if (request.method == 'POST'):
