@@ -194,7 +194,7 @@ def desc():
 def test_insert():
     while input('还需要添加路径吗?(y|other)').lower() == 'y':
         path = need_input("请输入路径:")
-        type = need_input("请输入类型(1:src,2:desc):")
+        type = input("请输入类型(1:src,2:desc):")
         if path is None or path is '' or not os.path.isdir(path):
             continue
         query_res = insert_path(path, type)
