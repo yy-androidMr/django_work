@@ -269,8 +269,9 @@ def delrepeat_file_list(dir_list, max_size: int = 0):
                 else:
                     md5_list[file_md5] = os.path.abspath(source_rela_path)
         for file in repeat_file:
-            os.chmod(file, stat.S_IWRITE)
-            os.remove(file)
+            if os.path.exists(file):
+                os.chmod(file, stat.S_IWRITE)
+                os.remove(file)
     print('ypath.delrepeat_file done')
 
 

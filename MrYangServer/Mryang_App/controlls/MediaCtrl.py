@@ -11,11 +11,31 @@ movie_config = XMLBase.list_cfg_infos('media_info')  # XMLMedia.get_infos()
 
 
 def meida_root(tags):
-    root_dir = Dir.objects.get(tags=tags, parent_dir=None)
-    return media_dir(root_dir.id)
+    root_dirs = Dir.objects.filter(tags=tags, parent_dir=None)
+    pids = [root_dir.id for root_dir in root_dirs]
+    return search_by_dir_ids(pids)
 
 
 def media_dir(p_id):
+    dinfos, res_infos = search_by_dir_id(p_id)
+    res = {'dir': dinfos, 'info': res_infos}
+    json_res = json.dumps(res)
+    return json_res
+
+
+def search_by_dir_ids(p_ids):
+    dinfos = []
+    res_infos = []
+    for pid in p_ids:
+        tmp_roots, tmp_infos = search_by_dir_id(pid)
+        dinfos.extend(tmp_roots)
+        res_infos.extend(tmp_infos)
+    res = {'dir': dinfos, 'info': res_infos}
+    json_res = json.dumps(res)
+    return json_res
+
+
+def search_by_dir_id(p_id):
     dinfos = Dir.objects.annotate(p_id=F('parent_dir__id')).filter(type=yutils.M_FTYPE_MOIVE,
                                                                    parent_dir_id=p_id).values(
         'id', 'name')
@@ -43,7 +63,4 @@ def media_dir(p_id):
         tmp_dict['img'] = ypath.join(minfo['mpath'], movie_config.img_info.img_root, minfo['desc_path'],
                                      movie_config.img_info.thum)
         res_infos.append(tmp_dict)
-    # res_infos =json.dumps()
-    res = {'dir': list(dinfos), 'info': res_infos}
-    json_res = json.dumps(res)
-    return json_res
+    return (list(dinfos), res_infos)
