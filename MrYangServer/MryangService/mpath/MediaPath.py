@@ -86,8 +86,6 @@ class MPathDbCache:
     def init_finish(self):
         if len(self.src_list) == 0:
             src()
-        src()
-
         if len(self.desc_list) == 0:
             desc()
         self.src_list.sort(key=lambda x: x.level, reverse=True)
@@ -193,6 +191,16 @@ def desc():
                     'desc目录对应的磁盘已满,或desc目录不正确.请重新输入磁盘目录(目录下会创建pic文件夹,media文件夹):\n')
 
 
+def test_insert():
+    while input('还需要添加路径吗?(y|other)').lower() == 'y':
+        path = need_input("请输入路径:")
+        type = need_input("请输入类型(1:src,2:desc):")
+        if path is None or path is '' or not os.path.isdir(path):
+            continue
+        query_res = insert_path(path, type)
+        mpath_db_cache.append(query_res)
+
+
 def init():
     mpath_db_cache.reset()
     # download_list.clear()
@@ -204,3 +212,4 @@ def init():
 
 
 init()
+test_insert()
