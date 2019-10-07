@@ -65,87 +65,6 @@ class Dir(models.Model):
         return 'id:%s,name:%s,isDir:%r,parent_dir:%s,tags:%s,rel_path:%s,type:%s,c_id:%s' % (
             self.id, self.name, self.isdir, parent_dir_name, self.tags, self.rel_path, self.type, self.c_id)
 
-        # def to_json(self):
-        #     map = {'c_id': self.c_id, 'rel_path': self.rel_path}
-        #     # print([f.name for f in self._meta.fields])
-        #     return json.dumps(dict([(attr, getattr(self, attr)) for attr in [f.name for f in self._meta.fields]]))
-
-
-# class GalleryInfo(models.Model):
-#     # folder_key = models.ForeignKey(Dir, related_name='dir', on_delete=models.CASCADE)
-#     # 原始路径 绝对路径
-#     # abs_path = models.CharField(max_length=500, default='')
-#     # 源的相对路径.
-#     src_real_path = models.CharField(max_length=500, default='', unique=True)
-#
-#     mulit_path = models.ManyToManyField('MPath')
-#     # 输出相对路径,做显示用.一张图片PicInfo.需要和这个拼接.
-#     desc_real_path = models.CharField(max_length=500, unique=True)
-#     # 相册名称
-#     name = models.CharField(max_length=100, default='')
-#     # 相册简介
-#     intro = models.CharField(max_length=100, default='')
-#     # 相册时间
-#     time = models.CharField(max_length=100, default='')
-#     # 相册中的指定缩略图
-#     thum = models.CharField(max_length=100, default='')
-#     # 展示等级 不需要,dir有展示等级
-#     level = models.IntegerField(default=0)
-#     # 显示该相册
-#     hidden = models.BooleanField(default=False)
-#     # 其他预留
-#     param1 = models.CharField(max_length=500, default='')
-#     param2 = models.CharField(max_length=500, default='')
-#
-#     def __str__(self):
-#         return 'id:%s,name:%s,intro:%s,time:%s,thum:%s,level:%s,param1:%s,param2:%s' % (
-#             self.src_real_path, self.name, self.intro, self.time, self.thum,
-#             self.level, self.param1, self.param2)
-
-
-# class PicInfo(models.Model):
-#     gallery_key = models.ForeignKey(GalleryInfo, related_name='gallery', on_delete=models.CASCADE)
-#     # mpath = models.
-#     # src中的文件绝对路径.
-#     src_abs_path = models.CharField(max_length=500)
-#
-#     src_name = models.CharField(max_length=50, default='')
-#     # desc_root_dir = models.ForeignKey(Dir, related_name='dir', on_delete=models.CASCADE)
-#     # 这是文件的md5值!!暂时没用到.
-#     src_md5 = models.CharField(max_length=50, default='')
-#     # 图片名称, 需要和desc_mpath/GalleryInfo.desc_real_path 拼接.做显示用, middle和thum都用这个,没有后缀.要加
-#     # 是src_name的md5化
-#     desc_name = models.CharField(max_length=100)
-#     # 图片后缀. 如果是gif. thum后缀是jpg, middle后缀是gif. webp没有后缀.
-#     ext = models.CharField(max_length=20, default='')
-#     # 原图片大小.
-#     size = models.IntegerField(default=0)
-#     # 缩放后大小
-#     m_size = models.IntegerField(default=0)
-#     # 原图片尺寸
-#     width = models.IntegerField(default=0)
-#     height = models.IntegerField(default=0)
-#     # 缩放后的图片尺寸
-#     m_width = models.IntegerField(default=0)
-#     m_height = models.IntegerField(default=0)
-#     # 该文件当前状态 存在 PicHelp.STATE_INIT中
-#     state = models.IntegerField(default=-1)
-#     # 是否是gif
-#     is_gif = models.BooleanField(default=False)
-#     # 分目录的外键 做显示用 其他的用不着吧
-#     desc_mpath = models.ForeignKey('MPath', related_name='desc_mpath', on_delete=models.DO_NOTHING, null=True,
-#                                    blank=True)
-#     src_mpath = models.ForeignKey('MPath', related_name='src_mpath', on_delete=models.CASCADE)
-#
-#     def __eq__(self, other):
-#         if other.src_file_md5 and other.src_path:
-#             eq_bool = other.src_file_md5 == self.src_md5 and other.src_path == self.src_name
-#             return eq_bool
-#         return super().__eq__(other)
-#
-#     def __hash__(self):
-#         return super().__hash__()
-
 
 # 在service做转换的时候的src文件进度
 class Media(models.Model):
@@ -295,3 +214,18 @@ class Photo(models.Model):
 
     def __hash__(self):
         return super().__hash__()
+
+
+class DLInfo(models.Model):
+    src_mpath = models.ForeignKey('MPath', related_name='src_mpath', on_delete=models.DO_NOTHING, null=True,
+                                  blank=True)
+    # 下载的相对路径
+    rela_path = models.CharField(max_length=500)
+    # 当前
+    state = models.IntegerField(default=-1)
+    # url.  需要判断是否是m3u8
+    url = models.CharField(max_length=500)
+    # 文件类型 mp4  m3u8
+    file_type = models.IntegerField(default=-1)
+    # 该文件名. 需要有后缀.
+    file_name = models.CharField(max_length=200)
