@@ -2,13 +2,10 @@ import os
 import threading
 from pathlib import Path
 
-from MryangService import ServiceHelper
-from MryangService.pic import PhotoHelper
 from MryangService.video import VideoHelper
 from Mryang_App.DBHelper import MediaHelp
-from Mryang_App.models import Dir, Media
-from frames import logger, ypath, yutils, TmpUtil, Globals
-from frames.xml import XMLBase
+from frames import logger, yutils, Globals
+from functools import cmp_to_key
 
 eve = threading.Event()
 
@@ -38,6 +35,7 @@ def start():
 
 class Service:
     def __init__(self):
+        self.mp4_ext = '.mp4'
         pass
 
     def test_tags(self, exist_media_dirs):
@@ -45,6 +43,19 @@ class Service:
             if exist_media_dirs[dir].parent_dir == None:
                 exist_media_dirs[dir].tags = exist_media_dirs[dir].rel_path.replace('/', '')
                 exist_media_dirs[dir].save()
+    def sort_files(self,rglob_res):
+        def cmp_new(x, y):
+            if x.suffix == self.mp4_ext:
+                if y.suffix == self.mp4_ext:
+                    return 0
+                return -1
+            else:
+                if y.suffix == self.mp4_ext:
+                    return 1
+                else:
+                    return 0
+
+        return sorted(rglob_res,key=cmp_to_key(cmp_new))
     def start(self):
         VideoHelper.handle_meida_db_exists()
         exist_media_dirs = VideoHelper.gen_dir()
@@ -54,6 +65,7 @@ class Service:
         for src in VideoHelper.src_dbs():
             media_src_root = Path(VideoHelper.media_root(src.path))
             files = media_src_root.rglob('*.*')
+            files = self.sort_files(files)
             for file in files:
                 if not file.is_file() or not yutils.is_movie(file):
                     continue
