@@ -9,7 +9,6 @@ from frames import logger
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "MrYangServer.settings")
 django.setup()
-
 from MryangService.watchdog import statewatch
 #
 from frames.ThreadingPool import ThreadingPool as tp

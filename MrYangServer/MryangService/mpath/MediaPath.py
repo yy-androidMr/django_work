@@ -79,7 +79,7 @@ class MPathDbCache:
             link = res_linkdir / 'msrc' / folder
         else:
             link = res_linkdir / 'mdesc' / folder
-        if link.exists():
+        if link.is_symlink():
             os.remove(link)
         os.symlink(abs_path, link)
 
