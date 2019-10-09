@@ -2,11 +2,25 @@ import smtplib
 import threading
 from email.mime.text import MIMEText
 
+sending = False
+lock = threading.Lock()
+MAX_TAG_CACHE_COUNT = 10  # 每一个tag的最多数量.
+send_cache_list = {}
+
+
+def append_send_list(content, tag, title='01-pc的通知'):
+    if tag not in send_cache_list:
+        send_cache_list[tag] = []
+        pass
+    tag_list = send_cache_list.get(tag)
+    if len(tag_list) > MAX_TAG_CACHE_COUNT:
+        del tag_list[0]
+    tag_list.append((title, content))
+
+
 smtpObj = None
 sender = '1702497572@qq.com'
 receivers = ['1226341090@qq.com']
-sending = False
-lock = threading.Lock()
 
 
 def send(content, title='01-pc的通知'):
@@ -27,6 +41,7 @@ def send(content, title='01-pc的通知'):
             # message['X-Mailer'] = Header('Microsoft Outlook Express 6.00.2900.2869', 'utf-8')
             smtpObj.sendmail(sender, receivers, message.as_string())
             print('发送成功')
+            smtpObj.close()
             sending = False
         except smtplib.SMTPException as e:
             print(e)
