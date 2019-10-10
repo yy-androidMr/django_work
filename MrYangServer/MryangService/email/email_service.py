@@ -47,12 +47,18 @@ class ES(BaseService):
     def loop_call(self):
         keys = list(self.send_cache_list.keys())
         for key in keys:
-            send_content = self.send_cache_list[key]
-            while
-                send_res = self.__send(send_content[0], key, send_content[1])
+            tag_list = self.send_cache_list[key]
+            while len(tag_list) > 0:
+                send_tupe = tag_list[0]
+                print(send_tupe)
+                send_res = self.__send(send_tupe[1], key, send_tupe[0])
+                if send_res:
+                    del tag_list[0]
+                    time.sleep(2)
+                else:
+                    break
             # if send_res:
             #     del self.send_cache_list[key]
-            time.sleep(2)
         pass
 
 
