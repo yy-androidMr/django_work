@@ -4,7 +4,7 @@ from email.mime.text import MIMEText
 
 sending = False
 lock = threading.Lock()
-MAX_TAG_CACHE_COUNT = 10  # 每一个tag的最多数量.
+MAX_TAG_CACHE_COUNT = 5  # 每一个tag的最多数量.
 send_cache_list = {}
 
 
@@ -17,10 +17,6 @@ def append_send_list(content, tag, title='01-pc的通知'):
         del tag_list[0]
     tag_list.append((title, content))
 
-
-smtpObj = None
-sender = '1702497572@qq.com'
-receivers = ['1226341090@qq.com']
 
 
 def send(content, title='01-pc的通知'):
