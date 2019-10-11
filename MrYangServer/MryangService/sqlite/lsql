@@ -1,3 +1,16 @@
 import sqlite3
 
-sqlite3.connect('../local.db')
+conn = sqlite3.connect('../local.db')
+
+
+def create_email_db():
+    cur = conn.cursor()
+    cur.execute('''CREATE TABLE Email
+       (id INT PRIMARY KEY     NOT NULL,
+       receiver           CHAR(100)    NOT NULL,
+       sendtime            INT     NOT NULL,
+       ADDRESS        CHAR(50), 
+       SALARY         REAL);''')
+
+
+create_email_db()
