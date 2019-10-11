@@ -1,6 +1,10 @@
+import base64
+import email
+import poplib
 import smtplib
 import time
 from email.mime.text import MIMEText
+from email.parser import Parser
 
 from MryangService.frames.base import BaseService
 from frames import logger
@@ -38,6 +42,7 @@ class ES(BaseService):
             # message['X-Mailer'] = Header('Microsoft Outlook Express 6.00.2900.2869', 'utf-8')
             smtpObj.sendmail(self.sender, self.receivers, message.as_string())
             print('发送成功')
+            smtpObj.quit()
             smtpObj.close()
             return True
         except smtplib.SMTPException as e:
@@ -57,13 +62,67 @@ class ES(BaseService):
                     time.sleep(2)
                 else:
                     break
-            # if send_res:
-            #     del self.send_cache_list[key]
-        pass
 
 
-ee = ES()
-for i in range(10):
-    ee.append_send_list('内容' + str(i), 'tag')
+def receive():
+    server = poplib.POP3('pop.qq.com')
+    # server.set_debuglevel(1)
+    server.user('1702497572@qq.com')
+    server.pass_('qjmrhlkopaoicige')
+    email_num, email_size = server.stat()
+    print("消息的数量: {0}, 消息的总大小: {1}".format(email_num, email_size))
 
-ee.loop()
+    rsp, msg_list, rsp_siz = server.list()
+    print("服务器的响应: {0},\n消息列表： {1}".format(rsp, msg_list))
+
+    # print('邮件总数： {}'.format(len(msg_list)))
+
+    # 下面单纯获取最新的一封邮件
+    total_mail_numbers = len(msg_list)
+    rsp, msglines, msgsiz = server.retr(total_mail_numbers)
+    # print("服务器的响应: {0},\n原始邮件内容： {1},\n该封邮件所占字节大小： {2}".format(rsp, msglines, msgsiz))
+    msg_content = b'\r\n'.join(msglines).decode('gbk')
+    msg = Parser().parsestr(text=msg_content)
+    # print('解码后的邮件信息:\n{}'.format(msg))
+    server.close()
+
+    def parser_address(msg):
+        hdr, addr = email.utils.parseaddr(msg['From'])
+        # name 发送人邮箱名称， addr 发送人邮箱地址
+        name, charset = email.header.decode_header(hdr)[0]
+        if charset:
+            name = name.decode(charset)
+        print('发送人邮箱名称: {0}，发送人邮箱地址: {1}'.format(name, addr))
+
+    def parser_content(msg):
+        content = msg.get_payload()
+
+        # 文本信息
+        content_charset = content[0].get_content_charset()  # 获取编码格式
+        text = content[0].as_string().split('base64')[-1]
+        text_content = base64.b64decode(text).decode(content_charset)  # base64解码
+
+        # 添加了HTML代码的信息
+        content_charset = content[1].get_content_charset()
+        text = content[1].as_string().split('base64')[-1]
+        html_content = base64.b64decode(text).decode(content_charset)
+        print('文本信息:::' + str(text_content))
+        # print('文本信息: {0}\n添加了HTML代码的信息: {1}'.format(text_content, html_content))
+
+    def parser_subject(msg):
+        subject = msg['Subject']
+        value, charset = email.header.decode_header(subject)[0]
+        if charset:
+            value = value.decode(charset)
+        print('邮件主题： {0}'.format(value))
+        return value
+
+    print("发送时间:" + str(email.utils.parsedate(msg['Date'])))
+    parser_address(msg)
+    # parser_subject(msg)
+    parser_content(msg)
+
+
+while True:
+    receive()
+    time.sleep(2)

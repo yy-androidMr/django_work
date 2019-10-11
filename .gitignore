@@ -10,7 +10,7 @@ MrYangServer/venv/
 MrYangServer/static/res/
 MrYangServer/tmp/
 MrYangServer/Tools/OStorage/out
-
+MrYangServer/MryangService/local.db
 *.mp4
 
 pyHelper/Plugins/

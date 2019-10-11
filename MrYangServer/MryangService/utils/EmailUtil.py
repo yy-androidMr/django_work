@@ -41,3 +41,5 @@ def send(content, title='01-pc的通知'):
             sending = False
         except smtplib.SMTPException as e:
             print(e)
+
+
