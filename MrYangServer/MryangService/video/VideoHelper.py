@@ -291,7 +291,7 @@ def compress_media(media_db: Media):
         can_audio_copy = (media_db.audio_name == 'aac' or media_db.audio_name == 'mp3')
         if not can_audio_copy:
             EmailUtil.send('该文件需要检查audio:' + media_db.abs_path + ' \nmedia_db.audio_name:' + media_db.audio_name)
-            input('该文件需要检查audio:' + media_db.abs_path)
+            # input('该文件需要检查audio:' + media_db.abs_path)
         if media_db.abs_path.endswith('.mp4') and can_audio_copy:
             os.symlink(media_db.abs_path, d_abs_path)
         else:
