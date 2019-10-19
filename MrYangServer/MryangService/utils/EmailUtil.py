@@ -7,6 +7,8 @@ lock = threading.Lock()
 MAX_TAG_CACHE_COUNT = 5  # 每一个tag的最多数量.
 send_cache_list = {}
 
+sender = '1702497572@qq.com'
+receivers = ['1226341090@qq.com']
 
 def append_send_list(content, tag, title='01-pc的通知'):
     if tag not in send_cache_list:
