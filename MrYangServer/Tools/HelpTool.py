@@ -3,6 +3,7 @@ import os
 
 import stat
 
+
 def get_md5(file_path):
     f = open(file_path, 'rb')
     md5_obj = hashlib.md5()
@@ -15,6 +16,7 @@ def get_md5(file_path):
     f.close()
     md5 = str(hash_code).lower()
     return md5
+
 
 def delrepeat_file_list(dir_list, max_size: int = 0):
     repeat_file = {}
@@ -29,18 +31,23 @@ def delrepeat_file_list(dir_list, max_size: int = 0):
                         continue
                 file_md5 = get_md5(source_rela_path)
                 if file_md5 in md5_list:
-                    repeat_file[source_rela_path] = md5_list[file_md5]
-                    print('找到重复:' + md5_list[file_md5])
+                    repeat_file[source_rela_path] = source_rela_path
+                    print('找到重复:' + source_rela_path)
                 else:
                     md5_list[file_md5] = os.path.abspath(source_rela_path)
-        cmd = input('是否确认删除该目录下的重复文件?\n')
-        if(cmd == 'y'):
-            for file in repeat_file:
-                if os.path.exists(file):
-                    os.chmod(file, stat.S_IWRITE)
-                    os.remove(file)
-        else:
-            print('不处理该路径:'+dir)
+        for file in repeat_file:
+            if os.path.exists(file):
+                os.chmod(file, stat.S_IWRITE)
+                os.remove(file)
+        # if len(repeat_file) > 0:
+        #     cmd = input('是否确认删除该目录下的重复文件?\n')
+        #     if (cmd == 'y'):
+        #         for file in repeat_file:
+        #             if os.path.exists(file):
+        #                 os.chmod(file, stat.S_IWRITE)
+        #                 os.remove(file)
+        #     else:
+        #         print('不处理该路径:' + dir)
     print('delrepeat_file done')
 
 
@@ -53,4 +60,5 @@ while True:
     if (os.path.exists(path)):
         print('添加路径成功')
         paths.append(path)
-    delrepeat_file_list(paths)
+delrepeat_file_list(paths)
+print('完成!')
