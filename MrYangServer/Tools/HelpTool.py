@@ -1,8 +1,20 @@
+import hashlib
 import os
 
-from frames import yutils
 import stat
 
+def get_md5(file_path):
+    f = open(file_path, 'rb')
+    md5_obj = hashlib.md5()
+    while True:
+        d = f.read(8096)
+        if not d:
+            break
+        md5_obj.update(d)
+    hash_code = md5_obj.hexdigest()
+    f.close()
+    md5 = str(hash_code).lower()
+    return md5
 
 def delrepeat_file_list(dir_list, max_size: int = 0):
     repeat_file = {}
@@ -15,7 +27,7 @@ def delrepeat_file_list(dir_list, max_size: int = 0):
                 if max_size != 0:
                     if os.stat(source_rela_path).st_size > max_size:
                         continue
-                file_md5 = yutils.get_md5(source_rela_path)
+                file_md5 = get_md5(source_rela_path)
                 if file_md5 in md5_list:
                     repeat_file[source_rela_path] = md5_list[file_md5]
                     print('找到重复:' + md5_list[file_md5])
