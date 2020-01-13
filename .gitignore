@@ -40,3 +40,5 @@ res_link/mdesc/
 res_link/msrc/
 res_link/msrc/
 
+pyHelper/music_player.spec
+pyHelper/sound
