@@ -131,6 +131,8 @@ class PathInfo:
     @staticmethod
     def get_free_storage_mb(folder):
         folder = folder.split('\\')[0].split('/')[0]
+        if folder=='':
+            folder='/'
         return shutil.disk_usage(folder)[2] // 1024 // 1024
 
 
