@@ -278,6 +278,12 @@ def batch_default_photo(request):
     return HttpResponse(PhotoWallCtrl.batch_photo_to_wall())
 
 
+#下发基础信息.一些必要信息
+def dispatch_base_info(request):
+    base_info = PhotoWallCtrl.get_base_info()
+    return HttpResponse(json.dumps(base_info))
+
+
 def photo_wall_list(request):
     return HttpResponse(PhotoWallCtrl.photo_wall_list(1))
 

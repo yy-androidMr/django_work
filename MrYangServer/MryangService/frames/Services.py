@@ -40,7 +40,7 @@ if __name__ == '__main__':
     tp = tp()
     tp.append(PhotoService.start)
     tp.append(VideoService.start)
-    tp.append(statewatch.start)
+    # tp.append(statewatch.start)
 
     # PicConvert.start()
     # MPath.objects.all().delete()

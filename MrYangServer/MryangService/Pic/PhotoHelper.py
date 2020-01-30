@@ -252,12 +252,13 @@ def cut_middle2thum(m_img, thum, thum_size):
     crop_img.thumbnail((thum_size, thum_size), Image.ANTIALIAS)
     if yutils.is_gif(thum):
         crop_img = crop_img.convert("RGB")
-        draw = ImageDraw.Draw(crop_img)
-        font = ImageFont.truetype("arial.ttf", 40, encoding="unic")  # 设置字体
-        draw.text((0, 0), u'GIF', font=font)
+        # draw = ImageDraw.Draw(crop_img)
+        # font = ImageFont.truetype("arial.ttf", 40, encoding="unic")  # 设置字体
+        # draw.text((0, 0), u'GIF', font=font)
     try:
         crop_img.save(thum)
     except:
-        crop_img = crop_img.convert('RGB')
-        crop_img.save(thum)
+        pass
+        # crop_img = crop_img.convert('RGB')
+        # crop_img.save(thum)
     return crop_img

@@ -11,8 +11,6 @@ from Mryang_App.models import *
 from frames.logger import logger
 from frames.xml import XMLBase
 
-movie_config = XMLBase.list_cfg_infos('media_info')  # XMLMedia.get_infos()
-
 
 def dir_2json(dirtype):
     # id  名字, 父亲的id, 是否是文件夹, tag, 相对路径.

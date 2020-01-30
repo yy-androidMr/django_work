@@ -82,5 +82,5 @@ class Service:
                 VideoHelper.create_thum(media_db)
                 VideoHelper.modify_state(media_db, MediaHelp.STATE_VIDOE_COMPRESS_FINISH)
 
-        logger.info('--------------同步结束!')
+        logger.info('VideoService--------------同步结束!')
         # 生成文件夹数据库.

@@ -7,6 +7,14 @@ from django.db.models import F
 
 from Mryang_App.models import Dir, PhotoWall, Photo
 from frames import yutils
+from frames.xml import XMLBase
+
+pic_config = XMLBase.list_cfg_infos('pic_info')  # XMLMedia.get_infos()
+
+
+def get_base_info():
+    bi = {'pic_dir':pic_config.dir_root,'pic_thum':pic_config.thum,'pic_mid':pic_config.middle}
+    return bi
 
 
 def batch_create_on_dir():

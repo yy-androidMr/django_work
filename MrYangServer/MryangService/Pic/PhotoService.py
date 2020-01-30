@@ -76,7 +76,8 @@ class Service:
         # self.watch.tag_now('转换时长:')
 
     def begin_convert(self):
-        fragment_list = PhotoHelper.convert_fragment_list(self.src_dirs, self.MULIT_THREAD_COUNT)
+        fragment_list\
+            = PhotoHelper.convert_fragment_list(self.src_dirs, self.MULIT_THREAD_COUNT)
         tpool = ThreadingPool.ThreadingPool()
         create_db_list = []
         error_list = []
