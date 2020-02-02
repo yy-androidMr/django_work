@@ -88,6 +88,10 @@ def photo_wall_list(show_level):
                                                                                                       'level',
                                                                                                       'photo_path',
                                                                                                       'mpath')
+    pw_list= []
+    for pw in pw_query:
+        pw_list.append(pw)
+        pw['pic_count']=Photo.objects.filter(photo_wall_id=pw["id"]).count()
     return json.dumps(list(pw_query))
 
 
