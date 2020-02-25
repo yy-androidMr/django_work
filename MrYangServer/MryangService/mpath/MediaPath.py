@@ -79,6 +79,8 @@ class MPathDbCache:
             link = res_linkdir / 'msrc' / folder
         else:
             link = res_linkdir / 'mdesc' / folder
+        if os.path.exists(link):
+            os.remove(link)
         if link.is_symlink():
             os.remove(link)
         os.symlink(abs_path, link)
@@ -131,8 +133,8 @@ class PathInfo:
     @staticmethod
     def get_free_storage_mb(folder):
         folder = folder.split('\\')[0].split('/')[0]
-        if folder=='':
-            folder='/'
+        if folder == '':
+            folder = '/'
         return shutil.disk_usage(folder)[2] // 1024 // 1024
 
 
