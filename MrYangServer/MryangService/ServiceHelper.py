@@ -1,7 +1,7 @@
 import datetime
 import time
 
-# import memory_profiler
+import memory_profiler
 
 from Mryang_App.models import Dir
 from frames import ypath, logger
@@ -14,23 +14,21 @@ class TimeWatch:
         self._pre = pre
         self._nowTime = lambda: int(round(time.time() * 1000))
         self._last_tag_time = self._nowTime()
-        # self.cur_mem = memory_profiler.memory_usage()[0]
+        self.cur_mem = memory_profiler.memory_usage()[0]
 
     def print_now_time(self, intro):
-        pass
-        # logger.info(self._pre + intro + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + '  占用内存:' + str(
-        #     self.cur_mem) + 'Mb')
+        logger.info(self._pre + intro + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + '  占用内存:' + str(
+            self.cur_mem) + 'Mb')
 
     def tag_now(self, intro='', print_it=True, tag_time=True, tag_mem=True):
-        # now_t = self._nowTime()
-        pass
-        # now_mem = memory_profiler.memory_usage()[0]
-        # if print_it:
-        #     logger.info(
-        #         self._pre + intro + str(now_t - self._last_tag_time) + '毫秒,占用内存:' + str(now_mem) + 'Mb,比较之前上升了:' + str(
-        #             now_mem - self.cur_mem) + 'Mb')
-        # self._last_tag_time = now_t
-        # self.cur_mem = now_mem
+        now_t = self._nowTime()
+        now_mem = memory_profiler.memory_usage()[0]
+        if print_it:
+            logger.info(
+                self._pre + intro + str(now_t - self._last_tag_time) + '毫秒,占用内存:' + str(now_mem) + 'Mb,比较之前上升了:' + str(
+                    now_mem - self.cur_mem) + 'Mb')
+        self._last_tag_time = now_t
+        self.cur_mem = now_mem
 
 
 def create_dir_root(path, type, tags=''):

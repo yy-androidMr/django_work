@@ -64,6 +64,7 @@ class Service:
         self.err_pic.clear()
         self.watch.print_now_time('开始图片转换服务. 开启时间:')
         self.watch.tag_now(print_it=False)
+        logger.info("开始去重...");
         ypath.delrepeat_file_list(self.src_dirs, PngImagePlugin.MAX_TEXT_MEMORY)
         self.watch.tag_now('去重操作占用时长:')
         PhotoHelper.del_not_exist(self.desc_middle_root)
