@@ -39,7 +39,7 @@ if __name__ == '__main__':
     # PhotoConvert.start()
     tp = tp()
     tp.append(PhotoService.start)
-    tp.append(VideoService.start)
+    # tp.append(VideoService.start)
     # tp.append(statewatch.start)
 
     # PicConvert.start()
