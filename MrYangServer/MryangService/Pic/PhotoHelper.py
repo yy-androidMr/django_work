@@ -75,7 +75,7 @@ def convert_webp(path_class, src_root, webp_cache_root):
         convert_target = None
         try:
             im = Image.open(path_class.path)
-            ext = '.png' if im.format == 'PNG' else '.jpg'
+            ext = '.png' if im.format == 'PNG' or im.mode == 'RGBA' else '.jpg'
             convert_target = ypath.del_exten(path_class.path) + ext
             if os.path.exists(convert_target):
                 os.remove(convert_target)

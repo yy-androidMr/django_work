@@ -6,7 +6,7 @@ import django
 
 import manage
 from Mryang_App import DBHelper
-from frames import ypath, yutils
+from frames import ypath,
 
 sys.path.append('./../../')
 
@@ -158,7 +158,7 @@ def need_input(intro, storage_low='所选磁盘剩余容量过小,请重新选�
 def insert_path(path, type):
     query_ress = MPath.objects.filter(dir__abs_path=path)
     if query_ress.count() == 0:
-        dir = ServiceHelper.create_dir_root(path, yutils.M_FTYPE_MPATH)
+        dir = ServiceHelper.create_dir_root(path, .M_FTYPE_MPATH)
         mpath = MPath()
         # mpath.path = path
         mpath.type = type

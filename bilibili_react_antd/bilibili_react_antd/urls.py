@@ -17,8 +17,20 @@ from django.contrib import admin
 from django.urls import path
 
 from bilibili_react_antd import views
+from django.views.static import serve
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/auth/manager_login', views.login),
+    path(r'api/v1/admin/products/list', views.list_products),
+    path(r'api/v1/admin/products', views.products_action),
+    path(r'api/v1/admin/products/getOne', views.get_product),
+    path(r'api/v1/admin/products/setOne', views.set_product),
+    path(r'api/v1/admin/products/delOne', views.del_product),
+    path(r'api/v1/common/file_upload', views.upload_avatar),
+
+    path('Auth/Register', views.login_authentication),
+
+    path(r'medias', serve,{'document_root':r'D:\work\django_work\bilibili_react_antd\dir'}),
+
 ]

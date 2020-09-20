@@ -3,6 +3,7 @@
 # print(out.decode('gbk'))
 # print(decode('utf-8'))
 import os
+import stat
 import time
 
 from frames import yutils, ypath
@@ -11,4 +12,12 @@ from frames import yutils, ypath
 
 
 
-ypath.delrepeat_file(r"Z:\缓存路径\unzip")
+# ypath.delrepeat_file(r"F:\cache\照片导出")
+yutils.convertWebp(r'F:\cache\照片导出')
+# repeat_file = ypath.delrepeat_file_list([r"U:\数据备份",r"F:\cache\照片导出"])
+# input("按任意键继续")
+# for file in repeat_file:
+#     if os.path.exists(file):
+#         os.chmod(file, stat.S_IWRITE)
+#         os.remove(file)
+#

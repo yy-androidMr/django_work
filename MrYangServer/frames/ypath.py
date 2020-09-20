@@ -237,19 +237,25 @@ def compair_path(left, right):
 def delrepeat_file(path):
     repeat_file = {}
     md5_list = {}
+    countNum = 100
+    curCount = 0
     for root, dirs, files in os.walk(path):
         for file in files:
+            curCount += 1
+            if curCount % countNum == 0:
+                print('已进行'+ str(curCount) +'个文件查找')
             source_rela_path = os.path.join(root, file)
             file_md5 = yutils.get_md5(source_rela_path)
             if file_md5 in md5_list:
                 repeat_file[source_rela_path] = md5_list[file_md5]
             else:
                 md5_list[file_md5] = os.path.abspath(source_rela_path)
+    print('重复文件列表:')
     print(repeat_file)
     for file in repeat_file:
         print(file)
         os.remove(file)
-    print('ypath.delrepeat_file done')
+    print('ypath.delrepeat_file done,总共有:'+ str(len(repeat_file))+'个文件')
 
 
 # 删除所有文件中 有重复的图. 列表
@@ -268,11 +274,14 @@ def delrepeat_file_list(dir_list, max_size: int = 0):
                     repeat_file[source_rela_path] = source_rela_path
                 else:
                     md5_list[file_md5] = os.path.abspath(source_rela_path)
-        for file in repeat_file:
-            if os.path.exists(file):
-                os.chmod(file, stat.S_IWRITE)
-                os.remove(file)
-    print('ypath.delrepeat_file done')
+
+    print(repeat_file)
+        # for file in repeat_file:
+        #     if os.path.exists(file):
+        #         os.chmod(file, stat.S_IWRITE)
+        #         os.remove(file)
+    print('ypath.delrepeat_file done'+ str(len(repeat_file))+'个文件')
+    return repeat_file
 
 
 def create_dirs(file_path, is_dir=False, delete_exist=False):

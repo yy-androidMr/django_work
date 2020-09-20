@@ -30,8 +30,8 @@ def down_ts(m3u8_file, u8_url):
 
 
 # local_m3 = download_m3u8('https://videos4.jsyunbf.com/2018/12/11/k4MTPAntpWxEaCjP/playlist.m3u8', r'F:\cache\毒液')
-down_ts(os.path.join(r'F:\cache\毒液', m3u8_file),
-        'https://videos4.jsyunbf.com/2018/12/11/k4MTPAntpWxEaCjP/playlist.m3u8')
+down_ts(os.path.join(r'F:\cache\22', m3u8_file),
+        'http://hls.cntv.lxdns.com/asp/hls/1200/0303000a/3/default/3202b4175b364464824ffcd39bc880e4/1200.m3u8')
 
 print("finish!!!!")
 # 再用如下命令合成

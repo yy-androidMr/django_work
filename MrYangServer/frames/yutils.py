@@ -9,6 +9,9 @@ import subprocess
 from zipfile import crc32
 
 import imageio
+from PIL import Image
+
+from frames import ypath
 
 
 def random_int():
@@ -227,6 +230,33 @@ def to_dict(ins):
     else:
         return ins.__dict__
 
+
+def convertWebp(dir):
+
+        for root, dirs, files in os.walk(dir):
+            for file in files:
+                try:
+                    if not file.endswith('.webp'):
+                        continue
+                    source_rela_path = os.path.join(root, file)
+                    im = Image.open(source_rela_path)
+                    ext = '.png' if im.format == 'PNG' or im.mode == 'RGBA' else '.jpg'
+                    convert_target = ypath.del_exten(source_rela_path) + ext
+                    if os.path.exists(convert_target):
+                        os.remove(convert_target)
+                    im.save(convert_target)
+                except Exception as e:
+                    print('错误')
+                    pass
+    #
+    # convert_target = ypath.del_exten(path_class.path) + ext
+    # if os.path.exists(convert_target):
+    #     os.remove(convert_target)
+    # im.save(convert_target)
+    # ypath.create_dirs(move_target)
+    # shutil.move(path_class.path, move_target)
+    # path_class.path = convert_target
+    # return True
 
 # 视频的工具----------------------------------------------------
 # INFO_FILE = 'info'
